@@ -4,60 +4,60 @@ import { Subscription } from 'rxjs';
 import { CommonTargetValue } from 'model/common.model';
 
 @Component({
-    selector: 'app-profile-info-dropbox',
-    templateUrl: './info-dropbox.component.html',
-    styleUrls: [
-        '../../../../assets/menu.scss',
-        '../../../../assets/button.scss',
-        '../../../../assets/text-control.scss',
-        '../../../../assets/profile.scss',
-    ],
-    viewProviders: [{
-        provide: ControlContainer,
-        useFactory: (controlContainer: ControlContainer) => controlContainer,
-        deps: [[new SkipSelf(), ControlContainer]]
-    }]
+	selector: 'app-profile-info-dropbox',
+	templateUrl: './info-dropbox.component.html',
+	styleUrls: [
+		'../../../../assets/menu.scss',
+		'../../../../assets/button.scss',
+		'../../../../assets/text-control.scss',
+		'../../../../assets/profile.scss',
+	],
+	viewProviders: [{
+		provide: ControlContainer,
+		useFactory: (controlContainer: ControlContainer) => controlContainer,
+		deps: [[new SkipSelf(), ControlContainer]]
+	}]
 })
 export class ProfileInfoDropboxComponent implements OnInit, OnDestroy {
     @Input() editable = true;
     @Input() label = '';
     @Input() required = false;
     @Input() set value(val: string | undefined) {
-        this.autoChange = true;
-        this.dataField?.setValue(val);
+    	this.autoChange = true;
+    	this.dataField?.setValue(val);
     }
     @Input() dataList: CommonTargetValue[] = [];
     @Output() onComplete = new EventEmitter<string>();
 
     dataForm = this.formBuilder.group({
-        field: ['', { validators: [], updateOn: 'change' }]
+    	field: ['', { validators: [], updateOn: 'change' }]
     });
 
     private subscriptions: Subscription = new Subscription();
     private autoChange = false;
 
     get dataField(): AbstractControl | null {
-        return this.dataForm.get('field');
+    	return this.dataForm.get('field');
     }
 
     get selectedValue(): CommonTargetValue | undefined {
-        return this.dataList.find(x => x.id === this.dataField?.value);
+    	return this.dataList.find(x => x.id === this.dataField?.value);
     }
 
     constructor(private formBuilder: UntypedFormBuilder) { }
 
     ngOnInit(): void {
-        this.subscriptions.add(
-            this.dataField?.valueChanges.subscribe(data => {
-                if (!this.autoChange) {
-                    this.onComplete.emit(data);
-                }
-                this.autoChange = false;
-            })
-        );
+    	this.subscriptions.add(
+    		this.dataField?.valueChanges.subscribe(data => {
+    			if (!this.autoChange) {
+    				this.onComplete.emit(data);
+    			}
+    			this.autoChange = false;
+    		})
+    	);
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
+    	this.subscriptions.unsubscribe();
     }
 }

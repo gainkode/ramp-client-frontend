@@ -631,317 +631,317 @@ const DELETE_MY_CONTACT = gql`
 
 @Injectable()
 export class ProfileDataService {
-  constructor(private apollo: Apollo) { }
+	constructor(private apollo: Apollo) { }
 
-  getMyTransactions(
-    pageIndex: number,
-    takeItems: number,
-    sources: TransactionSource[],
-    transactionDate: Date | undefined,
-    transactionTypes: TransactionType[],
-    sendersOrReceivers: string,
-    walletAddress: string,
-    orderField: string,
-    orderDesc: boolean
-  ): QueryRef<any, EmptyObject> {
-    const orderFields = [
-      { orderBy: orderField, desc: orderDesc },
-      { orderBy: 'created', desc: orderDesc }
-    ];
-    const vars = {
-      sourcesOnly: sources,
-      transactionDateOnly: transactionDate,
-      transactionTypesOnly: transactionTypes,
-      sendersOrReceiversOnly: (sendersOrReceivers === '') ? undefined : [sendersOrReceivers],
-      walletAddressOnly: (walletAddress !== '') ? walletAddress : undefined,
-      filter: undefined,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: orderFields,
-    };
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_TRANSACTIONS,
-      variables: vars,
-      fetchPolicy: 'network-only',
-    });
-  }
+	getMyTransactions(
+		pageIndex: number,
+		takeItems: number,
+		sources: TransactionSource[],
+		transactionDate: Date | undefined,
+		transactionTypes: TransactionType[],
+		sendersOrReceivers: string,
+		walletAddress: string,
+		orderField: string,
+		orderDesc: boolean
+	): QueryRef<any, EmptyObject> {
+		const orderFields = [
+			{ orderBy: orderField, desc: orderDesc },
+			{ orderBy: 'created', desc: orderDesc }
+		];
+		const vars = {
+			sourcesOnly: sources,
+			transactionDateOnly: transactionDate,
+			transactionTypesOnly: transactionTypes,
+			sendersOrReceiversOnly: (sendersOrReceivers === '') ? undefined : [sendersOrReceivers],
+			walletAddressOnly: (walletAddress !== '') ? walletAddress : undefined,
+			filter: undefined,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: orderFields,
+		};
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_TRANSACTIONS,
+			variables: vars,
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  getMyTransactionStatus(id: string): QueryRef<any, EmptyObject> {
-    const vars = {
-      transactionIdsOnly: [id]
-    };
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_TRANSACTION_STATUS,
-      variables: vars,
-      fetchPolicy: 'network-only',
-    });
-  }
+	getMyTransactionStatus(id: string): QueryRef<any, EmptyObject> {
+		const vars = {
+			transactionIdsOnly: [id]
+		};
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_TRANSACTION_STATUS,
+			variables: vars,
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  getTransactionStatuses(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_TRANSACTION_STATUSES,
-      fetchPolicy: 'network-only',
-    });
-  }
+	getTransactionStatuses(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_TRANSACTION_STATUSES,
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  getMyDefaultSettingsFee(): QueryRef<any, EmptyObject>{
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_DEFAULT_FEE,
-      fetchPolicy: 'network-only',
-    });
-  }
-  getMyWallets(assets: string[]): QueryRef<any, EmptyObject> {
-    const orderFields = [
-      { orderBy: 'default', desc: true },
-      { orderBy: 'total', desc: true }
-    ];
-    const assetIds = (assets.length > 0) ? assets : undefined;
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_WALLETS,
-      variables: {
-        assetIdsOnly: assetIds,
-        orderBy: orderFields,
-      },
-      fetchPolicy: 'network-only',
-    });
-  }
+	getMyDefaultSettingsFee(): QueryRef<any, EmptyObject>{
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_DEFAULT_FEE,
+			fetchPolicy: 'network-only',
+		});
+	}
+	getMyWallets(assets: string[]): QueryRef<any, EmptyObject> {
+		const orderFields = [
+			{ orderBy: 'default', desc: true },
+			{ orderBy: 'total', desc: true }
+		];
+		const assetIds = (assets.length > 0) ? assets : undefined;
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_WALLETS,
+			variables: {
+				assetIdsOnly: assetIds,
+				orderBy: orderFields,
+			},
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  getMyReceiveWallets(asset: string): QueryRef<any, EmptyObject> {
-    const orderFields = [
-      { orderBy: 'default', desc: true },
-      { orderBy: 'total', desc: true }
-    ];
-    const assetId = asset
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_RECEIVE_WALLETS,
-      variables: {
-        assetIdOnly: assetId,
-        orderBy: orderFields,
-      },
-      fetchPolicy: 'network-only',
-    });
-  }
+	getMyReceiveWallets(asset: string): QueryRef<any, EmptyObject> {
+		const orderFields = [
+			{ orderBy: 'default', desc: true },
+			{ orderBy: 'total', desc: true }
+		];
+		const assetId = asset;
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_RECEIVE_WALLETS,
+			variables: {
+				assetIdOnly: assetId,
+				orderBy: orderFields,
+			},
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  getProfileData(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_PROFILE_ME,
-      fetchPolicy: 'network-only',
-    });
-  }
+	getProfileData(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_PROFILE_ME,
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  getMyContacts(
-    assets: string[],
-    emails: string[],
-    displayNames: string[],
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean
-  ): QueryRef<any, EmptyObject> {
-    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_CONTACTS,
-      variables: {
-        filter: '',
-        skip: pageIndex * takeItems,
-        first: takeItems,
-        orderBy: orderFields,
-        assetIds: assets,
-        contactEmails: (emails.length > 0) ? emails : undefined,
-        contactDisplayNames: (displayNames.length > 0) ? displayNames : undefined
-      },
-      fetchPolicy: 'network-only',
-    });
-  }
+	getMyContacts(
+		assets: string[],
+		emails: string[],
+		displayNames: string[],
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean
+	): QueryRef<any, EmptyObject> {
+		const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_CONTACTS,
+			variables: {
+				filter: '',
+				skip: pageIndex * takeItems,
+				first: takeItems,
+				orderBy: orderFields,
+				assetIds: assets,
+				contactEmails: (emails.length > 0) ? emails : undefined,
+				contactDisplayNames: (displayNames.length > 0) ? displayNames : undefined
+			},
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  getMyNotifications(
-    unreadOnlyFilter: boolean,
-    search: string,
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean
-  ): QueryRef<any, EmptyObject> {
-    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_NOTIFICATIONS,
-      variables: {
-        unreadOnly: unreadOnlyFilter,
-        filter: search,
-        skip: pageIndex * takeItems,
-        first: takeItems,
-        orderBy: orderFields,
-      },
-      fetchPolicy: 'network-only',
-    });
-  }
+	getMyNotifications(
+		unreadOnlyFilter: boolean,
+		search: string,
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean
+	): QueryRef<any, EmptyObject> {
+		const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_NOTIFICATIONS,
+			variables: {
+				unreadOnly: unreadOnlyFilter,
+				filter: search,
+				skip: pageIndex * takeItems,
+				first: takeItems,
+				orderBy: orderFields,
+			},
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  getMyProfit(fiatCurrency: string, selectPeriod: UserBalanceHistoryPeriod): QueryRef<any, EmptyObject> {
-    const orderFields = [{ orderBy: 'date', desc: true }];
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_PROFIT,
-      variables: {
-        currencyTo: fiatCurrency,
-        period: selectPeriod
-      },
-      fetchPolicy: 'network-only',
-    });
-  }
+	getMyProfit(fiatCurrency: string, selectPeriod: UserBalanceHistoryPeriod): QueryRef<any, EmptyObject> {
+		const orderFields = [{ orderBy: 'date', desc: true }];
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_PROFIT,
+			variables: {
+				currencyTo: fiatCurrency,
+				period: selectPeriod
+			},
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  getMyApiKeys(
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean): QueryRef<any, EmptyObject> {
-    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_API_KEYS,
-      variables: {
-        skip: pageIndex * takeItems,
-        first: takeItems,
-        orderBy: orderFields
-      },
-      fetchPolicy: 'network-only',
-    });
-  }
+	getMyApiKeys(
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean): QueryRef<any, EmptyObject> {
+		const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_API_KEYS,
+			variables: {
+				skip: pageIndex * takeItems,
+				first: takeItems,
+				orderBy: orderFields
+			},
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  getMyDevices(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_MY_DEVICES,
-      fetchPolicy: 'network-only',
-    });
-  }
+	getMyDevices(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_DEVICES,
+			fetchPolicy: 'network-only',
+		});
+	}
 
-  createMyApiKey(): Observable<any> {
-    return this.apollo.mutate({
-      mutation: CREATE_MY_API_KEY
-    });
-  }
+	createMyApiKey(): Observable<any> {
+		return this.apollo.mutate({
+			mutation: CREATE_MY_API_KEY
+		});
+	}
 
-  deleteMyApiKey(apiKeyId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_MY_API_KEY,
-      variables: {
-        apiKeyId
-      },
-    });
-  }
+	deleteMyApiKey(apiKeyId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_MY_API_KEY,
+			variables: {
+				apiKeyId
+			},
+		});
+	}
 
-  deleteMyDevice(deviceId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_MY_DEVICE,
-      variables: {
-        deviceIds: [deviceId]
-      },
-    });
-  }
+	deleteMyDevice(deviceId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_MY_DEVICE,
+			variables: {
+				deviceIds: [deviceId]
+			},
+		});
+	}
 
-  deleteMyNotifications(idList: string[]): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_MY_NOTIFICATIONS,
-      variables: {
-        notificationIds: idList,
-      },
-    });
-  }
+	deleteMyNotifications(idList: string[]): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_MY_NOTIFICATIONS,
+			variables: {
+				notificationIds: idList,
+			},
+		});
+	}
 
-  makeNotificationsViewed(idList: string[]): Observable<any> {
-    return this.apollo.mutate({
-      mutation: MAKE_NOTIFICATIONS_VIEWED,
-      variables: {
-        notificationIds: idList,
-      },
-    });
-  }
+	makeNotificationsViewed(idList: string[]): Observable<any> {
+		return this.apollo.mutate({
+			mutation: MAKE_NOTIFICATIONS_VIEWED,
+			variables: {
+				notificationIds: idList,
+			},
+		});
+	}
 
-  addMyVault(asset: string, name: String, eth: string): Observable<any> {
-    const walletName = (name === '') ? undefined : name;
-    const ethWallet = (eth === '') ? undefined : eth;
-    const vars = {
-      assetId: asset,
-      vaultName: walletName,
-      originalId: ethWallet
-    };
-    return this.apollo.mutate({
-      mutation: ADD_MY_VAULT,
-      variables: vars
-    });
-  }
+	addMyVault(asset: string, name: String, eth: string): Observable<any> {
+		const walletName = (name === '') ? undefined : name;
+		const ethWallet = (eth === '') ? undefined : eth;
+		const vars = {
+			assetId: asset,
+			vaultName: walletName,
+			originalId: ethWallet
+		};
+		return this.apollo.mutate({
+			mutation: ADD_MY_VAULT,
+			variables: vars
+		});
+	}
 
-  updateMyVault(vault: string, name: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: UPDATE_MY_VAULT,
-      variables: {
-        vaultId: vault,
-        vaultName: name
-      },
-    });
-  }
+	updateMyVault(vault: string, name: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: UPDATE_MY_VAULT,
+			variables: {
+				vaultId: vault,
+				vaultName: name
+			},
+		});
+	}
 
-  deleteMyVault(id: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_MY_VAULT,
-      variables: {
-        vaultId: id
-      },
-    });
-  }
+	deleteMyVault(id: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_MY_VAULT,
+			variables: {
+				vaultId: id
+			},
+		});
+	}
 
-  saveUserInfo(vars: any): Observable<any> {
-    return this.apollo.mutate({
-      mutation: UPDATE_ME_INFO,
-      variables: vars
-    });
-  }
+	saveUserInfo(vars: any): Observable<any> {
+		return this.apollo.mutate({
+			mutation: UPDATE_ME_INFO,
+			variables: vars
+		});
+	}
 
-  changePassword(
-    code2fa: string,
-    oldPassword: string,
-    newPassword: string
-  ): Observable<any> {
-    let code: string | undefined;
-    if (code2fa) {
-      code = (code2fa !== '') ? code2fa : undefined;
-    }
-    return this.apollo.mutate({
-      mutation: CHANGE_PASSWORD,
-      variables: {
-        code2fa: code,
-        oldPassword,
-        newPassword
-      },
-    });
-  }
+	changePassword(
+		code2fa: string,
+		oldPassword: string,
+		newPassword: string
+	): Observable<any> {
+		let code: string | undefined;
+		if (code2fa) {
+			code = (code2fa !== '') ? code2fa : undefined;
+		}
+		return this.apollo.mutate({
+			mutation: CHANGE_PASSWORD,
+			variables: {
+				code2fa: code,
+				oldPassword,
+				newPassword
+			},
+		});
+	}
 
-  saveMyContact(id: string, name: string, email: string, currency: string, contactAddress: string): Observable<any> {
-    if (id === '') {
-      return this.apollo.mutate({
-        mutation: ADD_MY_CONTACT,
-        variables: {
-          contactEmail: email,
-          displayName: name,
-          assetId: currency,
-          address: contactAddress
-        },
-      });
-    } else {
-      return this.apollo.mutate({
-        mutation: UPDATE_MY_CONTACT,
-        variables: {
-          contactId: id,
-          contactEmail: email,
-          displayName: name
-        },
-      });
-    }
-  }
+	saveMyContact(id: string, name: string, email: string, currency: string, contactAddress: string): Observable<any> {
+		if (id === '') {
+			return this.apollo.mutate({
+				mutation: ADD_MY_CONTACT,
+				variables: {
+					contactEmail: email,
+					displayName: name,
+					assetId: currency,
+					address: contactAddress
+				},
+			});
+		} else {
+			return this.apollo.mutate({
+				mutation: UPDATE_MY_CONTACT,
+				variables: {
+					contactId: id,
+					contactEmail: email,
+					displayName: name
+				},
+			});
+		}
+	}
 
-  deleteMyContact(id: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_MY_CONTACT,
-      variables: {
-        contactId: id
-      },
-    });
-  }
+	deleteMyContact(id: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_MY_CONTACT,
+			variables: {
+				contactId: id
+			},
+		});
+	}
 }

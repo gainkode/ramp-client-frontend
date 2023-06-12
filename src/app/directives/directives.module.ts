@@ -4,16 +4,16 @@ import { SidemenuToggleDirective } from '../admin/directives/sidemenuToggle';
 import { OnlyNumberDirective } from './only-number.directive';
 
 @NgModule({
-  declarations: [
-    OnlyNumberDirective,
-    SidemenuToggleDirective,
-    HoverEffectSidebarDirective
-  ],
-  exports: [
-    OnlyNumberDirective,
-    SidemenuToggleDirective,
-    HoverEffectSidebarDirective
-  ]
+	declarations: [
+		OnlyNumberDirective,
+		SidemenuToggleDirective,
+		HoverEffectSidebarDirective
+	],
+	exports: [
+		OnlyNumberDirective,
+		SidemenuToggleDirective,
+		HoverEffectSidebarDirective
+	]
 })
 
 export class DirectiveModule { }

@@ -14,9 +14,9 @@ import { PaymentDataService } from 'services/payment.service';
 import { getTierBlocks } from 'utils/profile.utils';
 
 @Component({
-    selector: 'app-profile-verification-settings',
-    templateUrl: './verification.component.html',
-    styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
+	selector: 'app-profile-verification-settings',
+	templateUrl: './verification.component.html',
+	styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
 })
 export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     @Output() error = new EventEmitter<string>();
@@ -30,100 +30,100 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     private pSubscriptions: Subscription = new Subscription();
 
     constructor(
-        private auth: AuthService,
-        private errorHandler: ErrorService,
-        private dataService: PaymentDataService,
-        private commonService: CommonDataService,
-        private notification: NotificationService,
-        private router: Router,
-        public dialog: MatDialog) {
+    	private auth: AuthService,
+    	private errorHandler: ErrorService,
+    	private dataService: PaymentDataService,
+    	private commonService: CommonDataService,
+    	private notification: NotificationService,
+    	private router: Router,
+    	public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
-        this.startKycNotifications();
-        this.auth.registerUserUpdated(this.updateTiers.bind(this));
-        this.loadTransactionsTotal();
+    	this.startKycNotifications();
+    	this.auth.registerUserUpdated(this.updateTiers.bind(this));
+    	this.loadTransactionsTotal();
     }
 
     ngOnDestroy(): void {
-        this.pSubscriptions.unsubscribe();
+    	this.pSubscriptions.unsubscribe();
     }
 
     onVerify(tier: TierItem): void {
-        const dialogRef = this.dialog.open(KycVerificationDialogBox, {
-            width: '700px',
-            height: '80%',
-            data: {
-                title: '',
-                message: this.kycUrl,
-                button: tier.flow,
-                companyLevelVerification: tier.companyLevelVerification
-            }
-        });
+    	const dialogRef = this.dialog.open(KycVerificationDialogBox, {
+    		width: '700px',
+    		height: '80%',
+    		data: {
+    			title: '',
+    			message: this.kycUrl,
+    			button: tier.flow,
+    			companyLevelVerification: tier.companyLevelVerification
+    		}
+    	});
     }
 
     private loadTransactionsTotal(): void {
-        this.total = 0;
-        const totalData$ = this.commonService.getMyTransactionsTotal().valueChanges.pipe(take(1));
-        this.progressChange.emit(true);
-        this.pSubscriptions.add(
-            totalData$.subscribe(({ data }) => {
-                const totalState = data.myState as UserState;
-                this.total = totalState.totalAmountEur ?? 0;
-                this.getTiers();
-            }, (error) => {
-                this.progressChange.emit(false);
-                this.error.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
-            })
-        );
+    	this.total = 0;
+    	const totalData$ = this.commonService.getMyTransactionsTotal().valueChanges.pipe(take(1));
+    	this.progressChange.emit(true);
+    	this.pSubscriptions.add(
+    		totalData$.subscribe(({ data }) => {
+    			const totalState = data.myState as UserState;
+    			this.total = totalState.totalAmountEur ?? 0;
+    			this.getTiers();
+    		}, (error) => {
+    			this.progressChange.emit(false);
+    			this.error.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
+    		})
+    	);
     }
 
     private getTiers(): void {
-        this.tiers = [];
-        const tiersData$ = this.dataService.mySettingsKycTiers(undefined).valueChanges.pipe(take(1));
-        const settingsCommon = this.auth.getLocalSettingsCommon();
-        if (settingsCommon === null) {
-            this.error.emit('Unable to load common settings');
-        } else {
-            this.pSubscriptions.add(
-                tiersData$.subscribe(({ data }) => {
-                    this.progressChange.emit(false);
-                    if (this.auth.user) {
-                        this.tiers = getTierBlocks(this.auth.user, this.verifiedTierId, data.mySettingsKycTiers);
-                    }
-                    this.kycUrl = settingsCommon.kycBaseAddress as string;
-                }, (error) => {
-                    this.progressChange.emit(false);
-                    if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-                        this.router.navigateByUrl('/');
-                    } else {
-                        this.error.emit(this.errorHandler.getError(error.message, 'Unable to get verification levels'));
-                    }
-                })
-            );
-        }
+    	this.tiers = [];
+    	const tiersData$ = this.dataService.mySettingsKycTiers(undefined).valueChanges.pipe(take(1));
+    	const settingsCommon = this.auth.getLocalSettingsCommon();
+    	if (settingsCommon === null) {
+    		this.error.emit('Unable to load common settings');
+    	} else {
+    		this.pSubscriptions.add(
+    			tiersData$.subscribe(({ data }) => {
+    				this.progressChange.emit(false);
+    				if (this.auth.user) {
+    					this.tiers = getTierBlocks(this.auth.user, this.verifiedTierId, data.mySettingsKycTiers);
+    				}
+    				this.kycUrl = settingsCommon.kycBaseAddress as string;
+    			}, (error) => {
+    				this.progressChange.emit(false);
+    				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+    					this.router.navigateByUrl('/');
+    				} else {
+    					this.error.emit(this.errorHandler.getError(error.message, 'Unable to get verification levels'));
+    				}
+    			})
+    		);
+    	}
     }
 
     private startKycNotifications(): void {
-        this.pSubscriptions.add(
-            this.notification.subscribeToKycNotifications().subscribe(
-                ({ data }) => {
-                    const subscriptionData = data.kycServiceNotification;
-                    this.verifiedTierId = subscriptionData.kycTierId;
-                    this.getTiers();
-                },
-                (error) => {
-                    console.error('KYC notification error', error);
-                }
-            )
-        );
+    	this.pSubscriptions.add(
+    		this.notification.subscribeToKycNotifications().subscribe(
+    			({ data }) => {
+    				const subscriptionData = data.kycServiceNotification;
+    				this.verifiedTierId = subscriptionData.kycTierId;
+    				this.getTiers();
+    			},
+    			(error) => {
+    				console.error('KYC notification error', error);
+    			}
+    		)
+    	);
     }
 
     private updateTiers(): void {
-        const user = this.auth.user;
-        if (user !== null) {
-            this.verifiedTierId = user?.kycTierId ?? '';
-            this.getTiers();
-        }
+    	const user = this.auth.user;
+    	if (user !== null) {
+    		this.verifiedTierId = user?.kycTierId ?? '';
+    		this.getTiers();
+    	}
     }
 }

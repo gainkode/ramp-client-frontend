@@ -4,22 +4,22 @@ import { DialogData } from 'model/dialog.model';
 import { EnvService } from 'services/env.service';
 
 @Component({
-    selector: 'app-common-dialog-box',
-    templateUrl: 'common-box.dialog.html',
-    styleUrls: ['../../../assets/button.scss', '../../../assets/dialog.scss']
+	selector: 'app-common-dialog-box',
+	templateUrl: 'common-box.dialog.html',
+	styleUrls: ['../../../assets/button.scss', '../../../assets/dialog.scss']
 })
 export class CommonDialogBox {
-    buttonTitle = '';
-    supportEmail = EnvService.support_email;
-    constructor(public dialogRef: MatDialogRef<CommonDialogBox>,
-        @Inject(MAT_DIALOG_DATA) public data: DialogData) {
-        this.buttonTitle = data.button ?? 'OK';
-        if (this.buttonTitle === '') {
-            this.buttonTitle = 'OK';
-        }
-    }
+	buttonTitle = '';
+	supportEmail = EnvService.support_email;
+	constructor(public dialogRef: MatDialogRef<CommonDialogBox>,
+		@Inject(MAT_DIALOG_DATA) public data: DialogData) {
+		this.buttonTitle = data.button ?? 'OK';
+		if (this.buttonTitle === '') {
+			this.buttonTitle = 'OK';
+		}
+	}
 
-    onClose(): void {
-        this.dialogRef.close();
-    }
+	onClose(): void {
+		this.dialogRef.close();
+	}
 }

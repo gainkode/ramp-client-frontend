@@ -418,7 +418,7 @@ mutation CompanyLevelVerification($newLevel: String, $companyName: String) {
         companyName: $companyName
         ) { userId }
     }
-`
+`;
 
 const MY_KYC_STATUS = gql`
 query { myKycStatus }
@@ -462,530 +462,530 @@ query {
 
 @Injectable()
 export class AuthService {
-    cookieName = 'cookieconsent_status';
+	cookieName = 'cookieconsent_status';
 
-    private onUserUpdated: Function | undefined = undefined;
+	private onUserUpdated: Function | undefined = undefined;
 
-    get authenticated(): boolean {
-        return (this.token !== '' && this.user !== undefined);
-    }
+	get authenticated(): boolean {
+		return (this.token !== '' && this.user !== undefined);
+	}
 
-    get user(): User | null {
-        let user: User | null = null;
-        const userStr = localStorage.getItem('currentUser');
-        if (userStr !== null) {
-            user = JSON.parse(userStr);
-        }
-        return user;
-    }
+	get user(): User | null {
+		let user: User | null = null;
+		const userStr = localStorage.getItem('currentUser');
+		if (userStr !== null) {
+			user = JSON.parse(userStr);
+		}
+		return user;
+	}
 
-    get token(): string {
-        const tokenData: string | null = localStorage.getItem('currentToken');
-        return (tokenData === null) ? '' : tokenData;
-    }
+	get token(): string {
+		const tokenData: string | null = localStorage.getItem('currentToken');
+		return (tokenData === null) ? '' : tokenData;
+	}
 
-    constructor(
-        private apollo: Apollo,
-        private notification: NotificationService,
-        private socialAuth: SocialAuthService
-    ) { }
+	constructor(
+		private apollo: Apollo,
+		private notification: NotificationService,
+		private socialAuth: SocialAuthService
+	) { }
 
-    registerUserUpdated(callback: Function | undefined) {
-        this.onUserUpdated = callback;
-    }
+	registerUserUpdated(callback: Function | undefined) {
+		this.onUserUpdated = callback;
+	}
 
-    notifyUserUpdated(): void {
-        if (this.onUserUpdated) {
-            this.onUserUpdated();
-        }
-    }
+	notifyUserUpdated(): void {
+		if (this.onUserUpdated) {
+			this.onUserUpdated();
+		}
+	}
 
-    refreshToken(): Observable<any> {
-        const result = this.apollo.mutate({
-            mutation: REFRESH_TOKEN
-        });
-        result.subscribe(x => {
-            const d = x.data as any;
-            localStorage.setItem('currentToken', d.refreshToken as string);
-        }, (error) => {
-            // error
-        });
-        return result;
-    }
+	refreshToken(): Observable<any> {
+		const result = this.apollo.mutate({
+			mutation: REFRESH_TOKEN
+		});
+		result.subscribe(x => {
+			const d = x.data as any;
+			localStorage.setItem('currentToken', d.refreshToken as string);
+		}, (error) => {
+			// error
+		});
+		return result;
+	}
 
-    private getUserSectionPage(section: string): string {
-        let result = '/';
-        const u = this.user;
-        if (u !== null) {
-            if (u.mode === UserMode.InternalWallet) {
-                if (u.type === 'Personal') {
-                    result = `/personal/${section}`;
-                } else if (u.type === 'Merchant') {
-                    result = `/merchant/${section}`;
-                }
-            }
-        }
-        return result;
-    }
+	private getUserSectionPage(section: string): string {
+		let result = '/';
+		const u = this.user;
+		if (u !== null) {
+			if (u.mode === UserMode.InternalWallet) {
+				if (u.type === 'Personal') {
+					result = `/personal/${section}`;
+				} else if (u.type === 'Merchant') {
+					result = `/merchant/${section}`;
+				}
+			}
+		}
+		return result;
+	}
 
-    getUserMainPage(): string {
-        return this.getUserSectionPage('main');
-    }
+	getUserMainPage(): string {
+		return this.getUserSectionPage('main');
+	}
 
-    getUserAccountPage(): string {
-        return this.getUserSectionPage('account');
-    }
+	getUserAccountPage(): string {
+		return this.getUserSectionPage('account');
+	}
 
-    getUserAuthPage(): string {
-        return this.getUserSectionPage('auth');
-    }
+	getUserAuthPage(): string {
+		return this.getUserSectionPage('auth');
+	}
 
-    authenticate(ignoreCookies: boolean, username: string, userpassword: string, noPassword: boolean, widgetId: string | undefined = undefined): Observable<any> {
-        const w = window as any;
-        const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
-        const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-        if (consentStatus || ignoreCookies) {
-            const vars = {
-                recaptcha: recaptchaId,
-                email: username,
-                password: noPassword ? undefined : userpassword,
-                widgetId
-            };
-            return this.apollo.mutate({
-                mutation: LOGIN,
-                variables: vars
-            });
-        } else {
-            throw 'Cookie consent is rejected. Allow cookie in order to have access';
-        }
-    }
+	authenticate(ignoreCookies: boolean, username: string, userpassword: string, noPassword: boolean, widgetId: string | undefined = undefined): Observable<any> {
+		const w = window as any;
+		const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		if (consentStatus || ignoreCookies) {
+			const vars = {
+				recaptcha: recaptchaId,
+				email: username,
+				password: noPassword ? undefined : userpassword,
+				widgetId
+			};
+			return this.apollo.mutate({
+				mutation: LOGIN,
+				variables: vars
+			});
+		} else {
+			throw 'Cookie consent is rejected. Allow cookie in order to have access';
+		}
+	}
 
-    authenticateSocial(provider: string, token: string): Observable<any> {
-        const w = window as any;
-        const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
-        const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-        if (consentStatus) {
-            return this.apollo.mutate({
-                mutation: SOCIAL_LOGIN,
-                variables: {
-                    recaptcha: recaptchaId,
-                    oauthprovider: provider,
-                    oauthtoken: token
-                }
-            });
-        } else {
-            throw 'Cookie consent is rejected. Allow cookie in order to have access';
-        }
-    }
+	authenticateSocial(provider: string, token: string): Observable<any> {
+		const w = window as any;
+		const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		if (consentStatus) {
+			return this.apollo.mutate({
+				mutation: SOCIAL_LOGIN,
+				variables: {
+					recaptcha: recaptchaId,
+					oauthprovider: provider,
+					oauthtoken: token
+				}
+			});
+		} else {
+			throw 'Cookie consent is rejected. Allow cookie in order to have access';
+		}
+	}
 
-    authenticateVerifiedMerchant(): Observable<any> {
-        const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-        const vars = {
-            recaptcha: recaptchaId
-        };
-        return this.apollo.mutate({
-            mutation: AUTHENTICATE_VERIFIED_MERCHANT,
-            variables: vars
-        });
-    }
+	authenticateVerifiedMerchant(): Observable<any> {
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		const vars = {
+			recaptcha: recaptchaId
+		};
+		return this.apollo.mutate({
+			mutation: AUTHENTICATE_VERIFIED_MERCHANT,
+			variables: vars
+		});
+	}
 
-    socialSignIn(provider: string): Observable<any> {
-        let providerId = '';
-        if (provider.toLowerCase() === 'google') {
-            providerId = GoogleLoginProvider.PROVIDER_ID;
-        } else if (provider.toLowerCase() === 'facebook') {
-            providerId = FacebookLoginProvider.PROVIDER_ID;
-        }
-        return from(
-            this.socialAuth.signIn(providerId).then(function (data) {
-                return { user: data, error: undefined };
-            }).catch(function (data) {
-                return { user: undefined, error: data };
-            })
-        );
-    }
+	socialSignIn(provider: string): Observable<any> {
+		let providerId = '';
+		if (provider.toLowerCase() === 'google') {
+			providerId = GoogleLoginProvider.PROVIDER_ID;
+		} else if (provider.toLowerCase() === 'facebook') {
+			providerId = FacebookLoginProvider.PROVIDER_ID;
+		}
+		return from(
+			this.socialAuth.signIn(providerId).then(function (data) {
+				return { user: data, error: undefined };
+			}).catch(function (data) {
+				return { user: undefined, error: data };
+			})
+		);
+	}
 
-    register(ignoreCookies: boolean, usermail: string, userpassword: string, usertype: UserType): Observable<any> {
-        const w = window as any;
-        const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
-        const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-        if (consentStatus || ignoreCookies) {
-            return this.apollo.mutate({
-                mutation: SIGNUP,
-                variables: {
-                    recaptcha: recaptchaId,
-                    email: usermail,
-                    password: userpassword,
-                    userType: usertype,
-                    mode: 'InternalWallet',
-                    termsOfUse: true,
-                    pep: true
-                }
-            });
-        } else {
-            throw 'Cookie consent is rejected. Allow cookie in order to have access';
-        }
-    }
+	register(ignoreCookies: boolean, usermail: string, userpassword: string, usertype: UserType): Observable<any> {
+		const w = window as any;
+		const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		if (consentStatus || ignoreCookies) {
+			return this.apollo.mutate({
+				mutation: SIGNUP,
+				variables: {
+					recaptcha: recaptchaId,
+					email: usermail,
+					password: userpassword,
+					userType: usertype,
+					mode: 'InternalWallet',
+					termsOfUse: true,
+					pep: true
+				}
+			});
+		} else {
+			throw 'Cookie consent is rejected. Allow cookie in order to have access';
+		}
+	}
 
-    confirmName(
-        tokenId: string,
-        usertype: string,
-        firstname: string,
-        lastname: string,
-        countrycode2: string,
-        countrycode3: string,
-        phoneNumber: string): Observable<any> {
-        const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-        return this.apollo.mutate({
-            mutation: CONFIRM_NAME,
-            variables: {
-                token: tokenId,
-                recaptcha: recaptchaId,
-                userType: usertype,
-                mode: 'InternalWallet',
-                firstName: firstname,
-                lastName: lastname,
-                countryCode2: countrycode2,
-                countryCode3: countrycode3,
-                phone: phoneNumber
-            }
-        });
-    }
+	confirmName(
+		tokenId: string,
+		usertype: string,
+		firstname: string,
+		lastname: string,
+		countrycode2: string,
+		countrycode3: string,
+		phoneNumber: string): Observable<any> {
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		return this.apollo.mutate({
+			mutation: CONFIRM_NAME,
+			variables: {
+				token: tokenId,
+				recaptcha: recaptchaId,
+				userType: usertype,
+				mode: 'InternalWallet',
+				firstName: firstname,
+				lastName: lastname,
+				countryCode2: countrycode2,
+				countryCode3: countrycode3,
+				phone: phoneNumber
+			}
+		});
+	}
 
-    forgotPassword(usermail: string): Observable<any> {
-        const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-        return this.apollo.mutate({
-            mutation: FORGOT_PASSWORD,
-            variables: {
-                recaptcha: recaptchaId,
-                email: usermail
-            }
-        });
-    }
+	forgotPassword(usermail: string): Observable<any> {
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		return this.apollo.mutate({
+			mutation: FORGOT_PASSWORD,
+			variables: {
+				recaptcha: recaptchaId,
+				email: usermail
+			}
+		});
+	}
 
-    setPassword(usertoken: string, userpassword: string): Observable<any> {
-        const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-        return this.apollo.mutate({
-            mutation: SET_PASSWORD,
-            variables: {
-                recaptcha: recaptchaId,
-                token: usertoken,
-                password: userpassword
-            }
-        });
-    }
+	setPassword(usertoken: string, userpassword: string): Observable<any> {
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		return this.apollo.mutate({
+			mutation: SET_PASSWORD,
+			variables: {
+				recaptcha: recaptchaId,
+				token: usertoken,
+				password: userpassword
+			}
+		});
+	}
 
-    confirmEmail(tokenValue: string): Observable<any> {
-        const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-        return this.apollo.mutate({
-            mutation: CONFIRM_EMAIL,
-            variables: {
-                recaptcha: recaptchaId,
-                token: tokenValue
-            }
-        });
-    }
+	confirmEmail(tokenValue: string): Observable<any> {
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		return this.apollo.mutate({
+			mutation: CONFIRM_EMAIL,
+			variables: {
+				recaptcha: recaptchaId,
+				token: tokenValue
+			}
+		});
+	}
 
-    confirmCode(codeValue: number, emailValue: string): Observable<any> {
-        const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-        return this.apollo.mutate({
-            mutation: CONFIRM_EMAIL,
-            variables: {
-                recaptcha: recaptchaId,
-                email: emailValue,
-                code: codeValue
-            }
-        });
-    }
+	confirmCode(codeValue: number, emailValue: string): Observable<any> {
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		return this.apollo.mutate({
+			mutation: CONFIRM_EMAIL,
+			variables: {
+				recaptcha: recaptchaId,
+				email: emailValue,
+				code: codeValue
+			}
+		});
+	}
 
-    confirmDevice(tokenValue: string): Observable<any> {
-        const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-        return this.apollo.mutate({
-            mutation: CONFIRM_DEVICE,
-            variables: {
-                recaptcha: recaptchaId,
-                token: tokenValue
-            }
-        });
-    }
+	confirmDevice(tokenValue: string): Observable<any> {
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		return this.apollo.mutate({
+			mutation: CONFIRM_DEVICE,
+			variables: {
+				recaptcha: recaptchaId,
+				token: tokenValue
+			}
+		});
+	}
 
-    setMyInfo(
-        firstNameValue: string,
-        lastNameValue: string,
-        companyNameValue: string | null = null,
-        phoneValue: string,
-        addressValue: PostAddress | undefined,
-        birthdayValue: Date | undefined): Observable<any> {
-        const vars = {
-            firstName: (firstNameValue === '') ? undefined : firstNameValue,
-            lastName: (lastNameValue === '') ? undefined : lastNameValue,
-            companyName: (companyNameValue === '') ? undefined : companyNameValue,
-            phone: (phoneValue === '') ? undefined : phoneValue,
-            address: addressValue,
-            birthday: birthdayValue
-        };
-        return this.apollo.mutate({
-            mutation: SET_MY_INFO,
-            variables: vars
-        });
-    }
+	setMyInfo(
+		firstNameValue: string,
+		lastNameValue: string,
+		companyNameValue: string | null = null,
+		phoneValue: string,
+		addressValue: PostAddress | undefined,
+		birthdayValue: Date | undefined): Observable<any> {
+		const vars = {
+			firstName: (firstNameValue === '') ? undefined : firstNameValue,
+			lastName: (lastNameValue === '') ? undefined : lastNameValue,
+			companyName: (companyNameValue === '') ? undefined : companyNameValue,
+			phone: (phoneValue === '') ? undefined : phoneValue,
+			address: addressValue,
+			birthday: birthdayValue
+		};
+		return this.apollo.mutate({
+			mutation: SET_MY_INFO,
+			variables: vars
+		});
+	}
 
-    companyLevelVerification(
-        companyNameValue: string,
-        levelName: string
-    ): Observable<any> {
-        const vars = {
-            companyNameValue: (companyNameValue === '') ? undefined : companyNameValue,
-            newLevel: levelName
-        };
-        return this.apollo.mutate({
-            mutation: COMPANY_LEVEL_VERIFICATION,
-            variables: vars
-        });
-    }
+	companyLevelVerification(
+		companyNameValue: string,
+		levelName: string
+	): Observable<any> {
+		const vars = {
+			companyNameValue: (companyNameValue === '') ? undefined : companyNameValue,
+			newLevel: levelName
+		};
+		return this.apollo.mutate({
+			mutation: COMPANY_LEVEL_VERIFICATION,
+			variables: vars
+		});
+	}
 
-    generate2FaCode(): Observable<any> {
-        return this.apollo.mutate({
-            mutation: GENERATE_2FA_CODE
-        });
-    }
+	generate2FaCode(): Observable<any> {
+		return this.apollo.mutate({
+			mutation: GENERATE_2FA_CODE
+		});
+	}
 
-    enable2Fa(authCode: string): Observable<any> {
-        return this.apollo.mutate({
-            mutation: ENABLE_2FA,
-            variables: {
-                password: 'ignored',
-                code: authCode
-            }
-        });
-    }
+	enable2Fa(authCode: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: ENABLE_2FA,
+			variables: {
+				password: 'ignored',
+				code: authCode
+			}
+		});
+	}
 
-    disable2Fa(authCode: string): Observable<any> {
-        return this.apollo.mutate({
-            mutation: DISABLE_2FA,
-            variables: {
-                password: 'ignored',
-                code: authCode
-            }
-        });
-    }
+	disable2Fa(authCode: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DISABLE_2FA,
+			variables: {
+				password: 'ignored',
+				code: authCode
+			}
+		});
+	}
 
-    verify2Fa(code: string): Observable<any> {
-        return this.apollo.mutate({
-            mutation: VERIFY_2FA,
-            variables: {
-                code
-            }
-        });
-    }
+	verify2Fa(code: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: VERIFY_2FA,
+			variables: {
+				code
+			}
+		});
+	}
 
-    addFeedback(feedback: FeedbackInput): Observable<any> {
-        return this.apollo.mutate({
-            mutation: ADD_FEEDBACK,
-            variables: {
-                name: feedback.name,
-                email: feedback.email,
-                title: feedback.title,
-                description: feedback.description
-            }
-        });
-    }
+	addFeedback(feedback: FeedbackInput): Observable<any> {
+		return this.apollo.mutate({
+			mutation: ADD_FEEDBACK,
+			variables: {
+				name: feedback.name,
+				email: feedback.email,
+				title: feedback.title,
+				description: feedback.description
+			}
+		});
+	}
 
-    setLoginUser(login: LoginResult): void {
+	setLoginUser(login: LoginResult): void {
 
-        //test
-        // if (login.user) {
-        //     if (login.user.kycTierId === 'cdf58803-5195-4252-ab95-d65050adb397') {
-        //         login.user.kycTierId = 'c9ef76b8-9814-4a96-9bdd-985d6ef62708';
-        //     }
-        // }
+		//test
+		// if (login.user) {
+		//     if (login.user.kycTierId === 'cdf58803-5195-4252-ab95-d65050adb397') {
+		//         login.user.kycTierId = 'c9ef76b8-9814-4a96-9bdd-985d6ef62708';
+		//     }
+		// }
 
 
 
-        localStorage.setItem('currentUser', JSON.stringify(login.user));
-        localStorage.setItem('currentToken', login.authToken as string);
-        localStorage.setItem('currentAction', login.authTokenAction as string);
+		localStorage.setItem('currentUser', JSON.stringify(login.user));
+		localStorage.setItem('currentToken', login.authToken as string);
+		localStorage.setItem('currentAction', login.authTokenAction as string);
 
-        this.notification.wsClientInit()
-    }
+		this.notification.wsClientInit();
+	}
 
-    setUser(user: User): void {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-    }
+	setUser(user: User): void {
+		localStorage.setItem('currentUser', JSON.stringify(user));
+	}
 
-    setLocalSettingsCommon(settings: SettingsCommon): void {
-        localStorage.setItem('common', JSON.stringify(settings));
-    }
+	setLocalSettingsCommon(settings: SettingsCommon): void {
+		localStorage.setItem('common', JSON.stringify(settings));
+	}
 
-    getLocalSettingsCommon(): SettingsCommon | null {
-        let settings: SettingsCommon | null = null;
-        const str = localStorage.getItem('common');
-        if (str !== null) {
-            settings = JSON.parse(str);
-        }
-        return settings;
-    }
+	getLocalSettingsCommon(): SettingsCommon | null {
+		let settings: SettingsCommon | null = null;
+		const str = localStorage.getItem('common');
+		if (str !== null) {
+			settings = JSON.parse(str);
+		}
+		return settings;
+	}
 
-    setUserName(firstName: string, lastName: string): void {
-        const userData = this.user;
-        if (userData) {
-            userData.firstName = firstName;
-            userData.lastName = lastName;
-            localStorage.setItem('currentUser', JSON.stringify(userData));
-        }
-    }
+	setUserName(firstName: string, lastName: string): void {
+		const userData = this.user;
+		if (userData) {
+			userData.firstName = firstName;
+			userData.lastName = lastName;
+			localStorage.setItem('currentUser', JSON.stringify(userData));
+		}
+	}
 
-    setUserCurrencies(crypto: string, fiat: string): void {
-        const userData = this.user;
-        if (userData) {
-            userData.defaultCryptoCurrency = crypto;
-            userData.defaultFiatCurrency = fiat;
-            localStorage.setItem('currentUser', JSON.stringify(userData));
-        }
-    }
+	setUserCurrencies(crypto: string, fiat: string): void {
+		const userData = this.user;
+		if (userData) {
+			userData.defaultCryptoCurrency = crypto;
+			userData.defaultFiatCurrency = fiat;
+			localStorage.setItem('currentUser', JSON.stringify(userData));
+		}
+	}
 
-    setUserAvatar(data: string): void {
-        const userData = this.user;
-        if (userData) {
-            userData.avatar = data;
-            localStorage.setItem('currentUser', JSON.stringify(userData));
-        }
-    }
+	setUserAvatar(data: string): void {
+		const userData = this.user;
+		if (userData) {
+			userData.avatar = data;
+			localStorage.setItem('currentUser', JSON.stringify(userData));
+		}
+	}
 
-    private getAuthenticatedUser(): User | null {
-        let result: User | null = null;
-        const userData: string | null = localStorage.getItem('currentUser');
-        if (userData !== null) {
-            result = JSON.parse(userData as string) as User;
-        }
-        return result;
-    }
+	private getAuthenticatedUser(): User | null {
+		let result: User | null = null;
+		const userData: string | null = localStorage.getItem('currentUser');
+		if (userData !== null) {
+			result = JSON.parse(userData as string) as User;
+		}
+		return result;
+	}
 
-    getAuthAction(): string {
-        let result = localStorage.getItem('currentAction');
-        return result ?? '';
-    }
+	getAuthAction(): string {
+		const result = localStorage.getItem('currentAction');
+		return result ?? '';
+	}
 
-    isMerchantApproved(): boolean {
-        let result = false;
-        const user: User | null = this.getAuthenticatedUser();
-        if (user !== null) {
-            result = (user.type === UserType.Merchant && user.kycValid === true);
-        }
-        return result;
-    }
+	isMerchantApproved(): boolean {
+		let result = false;
+		const user: User | null = this.getAuthenticatedUser();
+		if (user !== null) {
+			result = (user.type === UserType.Merchant && user.kycValid === true);
+		}
+		return result;
+	}
 
-    isPersonalApproved(): boolean {
-        let result = false;
-        const user: User | null = this.getAuthenticatedUser();
-        if (user !== null) {
-            result = (user.type === UserType.Personal && user.kycValid === true);
-        }
-        return result;
-    }
+	isPersonalApproved(): boolean {
+		let result = false;
+		const user: User | null = this.getAuthenticatedUser();
+		if (user !== null) {
+			result = (user.type === UserType.Personal && user.kycValid === true);
+		}
+		return result;
+	}
 
-    isAuthenticatedUserType(type: UserType): boolean {
-        let result = false;
-        const user = this.getAuthenticatedUser();
-        if (user !== null) {
-            result = (user.type === type);
-        }
-        return result;
-    }
+	isAuthenticatedUserType(type: UserType): boolean {
+		let result = false;
+		const user = this.getAuthenticatedUser();
+		if (user !== null) {
+			result = (user.type === type);
+		}
+		return result;
+	}
 
-    isAuthenticatedUserRole(roles: string[]): boolean {
-        let result = false;
-        const user: User | null = this.getAuthenticatedUser();
-        if (user != null) {
-            result = this.isUserRole(user, roles);
-        }
-        return result;
-    }
+	isAuthenticatedUserRole(roles: string[]): boolean {
+		let result = false;
+		const user: User | null = this.getAuthenticatedUser();
+		if (user != null) {
+			result = this.isUserRole(user, roles);
+		}
+		return result;
+	}
 
-    isUserRole(user: User, roles: string[]): boolean {
-        let result = false;
-        if (user != null) {
-            user.roles?.forEach(item => {
-                if (roles.includes(item.name)) {
-                    result = true;
-                }
-            });
-        }
-        return result;
-    }
+	isUserRole(user: User, roles: string[]): boolean {
+		let result = false;
+		if (user != null) {
+			user.roles?.forEach(item => {
+				if (roles.includes(item.name)) {
+					result = true;
+				}
+			});
+		}
+		return result;
+	}
 
-    /*
+	/*
     Get info, whether the current user has permissions to the page with specified code.
     If permission is found, function returns access rights: 1 - read only access, 2 - full access.
     If permissions not found, function returns 0
      */
-    isPermittedObjectCode(code: string): number {
-        let result = 0;
-        const user: User | null = this.getAuthenticatedUser();
-        if (user != null) {
-            const permissionItem = (user.permissions?.find(x => x.objectCode === code));
-            if (permissionItem !== undefined) {
-                result = (permissionItem.fullAccess) ? 2 : 1;
-            }
-        }
-        return result;
-    }
+	isPermittedObjectCode(code: string): number {
+		let result = 0;
+		const user: User | null = this.getAuthenticatedUser();
+		if (user != null) {
+			const permissionItem = (user.permissions?.find(x => x.objectCode === code));
+			if (permissionItem !== undefined) {
+				result = (permissionItem.fullAccess) ? 2 : 1;
+			}
+		}
+		return result;
+	}
 
-    getSettingsCommon(): QueryRef<any, EmptyObject> {
-        return this.apollo.watchQuery<any>({
-            query: GET_SETTINGS_COMMON,
-            fetchPolicy: 'network-only'
-        });
-    }
+	getSettingsCommon(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_SETTINGS_COMMON,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-    getMyKycSettings(): QueryRef<any, EmptyObject> {
-        return this.apollo.watchQuery<any>({
-            query: GET_MY_SETTINGS_KYC,
-            fetchPolicy: 'network-only'
-        });
-    }
+	getMyKycSettings(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_SETTINGS_KYC,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-    getSignupRequiredFields(): QueryRef<any, EmptyObject> {
-        return this.apollo.watchQuery<any>({
-            query: GET_SIGNUP_REQUIRED_FIELDS,
-            fetchPolicy: 'network-only'
-        });
-    }
+	getSignupRequiredFields(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_SIGNUP_REQUIRED_FIELDS,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-    getKycToken(newLevel: string, widgetId?: string): QueryRef<any, EmptyObject> {
-        return this.apollo.watchQuery<any>({
-            query: GET_KYC_TOKEN,
-            variables: {
-                newLevel,
-                widgetId
-            },
-            fetchPolicy: 'network-only'
-        });
-    }
+	getKycToken(newLevel: string, widgetId?: string): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_KYC_TOKEN,
+			variables: {
+				newLevel,
+				widgetId
+			},
+			fetchPolicy: 'network-only'
+		});
+	}
 
-    getMyKycStatus(): QueryRef<any, EmptyObject> {
-        return this.apollo.watchQuery<any>({
-            query: MY_KYC_STATUS,
-            fetchPolicy: 'network-only'
-        });
-    }
+	getMyKycStatus(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: MY_KYC_STATUS,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-    getMyKycData(): QueryRef<any, EmptyObject> {
-        return this.apollo.watchQuery<any>({
-            query: ME_KYC,
-            fetchPolicy: 'network-only'
-        });
-    }
+	getMyKycData(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: ME_KYC,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-    socialSignOut(): void {
-        this.socialAuth.signOut().then(function (data) { }).catch(function (error) { });
-    }
+	socialSignOut(): void {
+		this.socialAuth.signOut().then(function (data) { }).catch(function (error) { });
+	}
 
-    logout(): void {
-        this.apollo.client.resetStore();
-        localStorage.removeItem('currentToken');
-        localStorage.removeItem('currentUser');
-        localStorage.removeItem('currentAction');
-        localStorage.removeItem('common');
-    }
+	logout(): void {
+		this.apollo.client.resetStore();
+		localStorage.removeItem('currentToken');
+		localStorage.removeItem('currentUser');
+		localStorage.removeItem('currentAction');
+		localStorage.removeItem('common');
+	}
 }

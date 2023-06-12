@@ -4,14 +4,14 @@ import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType, WidgetS
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-buy-sell-fiat-widget',
-  templateUrl: 'buy-sell-fiat.component.html',
-  styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
+	selector: 'app-buy-sell-fiat-widget',
+	templateUrl: 'buy-sell-fiat.component.html',
+	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
 export class BuySellFiatWidgetComponent {
-  @Input() set widgetType(val: PaymentWidgetType) {
-    this.selectPaymentType(val);
-  }
+	@Input() set widgetType(val: PaymentWidgetType) {
+		this.selectPaymentType(val);
+	}
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
 
@@ -25,38 +25,38 @@ export class BuySellFiatWidgetComponent {
   }
 
   selectPaymentType(selected: PaymentWidgetType): void {
-    if (this.selectedWidgetType === selected) {
-      return;
-    }
-    this.widgetVisible = false;
-    this.selectedWidgetType = selected;
-    this.widgetSettings = new WidgetSettings();
-    this.widgetSettings.embedded = true;
-    this.widgetSettings.email = this.auth.user?.email ?? '';
-    switch (selected) {
-      case PaymentWidgetType.Deposit:
-        this.widgetSettings.transaction = TransactionType.Deposit;
-        break;
-      case PaymentWidgetType.Withdrawal:
-        this.widgetSettings.transaction = TransactionType.Withdrawal;
-        break;
-      default:
-        break;
-    }
-    this.widgetSettings.source = TransactionSource.Wallet;
-    this.widgetSettings.walletAddressPreset = false;
-    this.widgetSettings.kycFirst = false;
-    this.widgetSettings.disclaimer = false;
-    this.widgetVisible = true;
+  	if (this.selectedWidgetType === selected) {
+  		return;
+  	}
+  	this.widgetVisible = false;
+  	this.selectedWidgetType = selected;
+  	this.widgetSettings = new WidgetSettings();
+  	this.widgetSettings.embedded = true;
+  	this.widgetSettings.email = this.auth.user?.email ?? '';
+  	switch (selected) {
+  		case PaymentWidgetType.Deposit:
+  			this.widgetSettings.transaction = TransactionType.Deposit;
+  			break;
+  		case PaymentWidgetType.Withdrawal:
+  			this.widgetSettings.transaction = TransactionType.Withdrawal;
+  			break;
+  		default:
+  			break;
+  	}
+  	this.widgetSettings.source = TransactionSource.Wallet;
+  	this.widgetSettings.walletAddressPreset = false;
+  	this.widgetSettings.kycFirst = false;
+  	this.widgetSettings.disclaimer = false;
+  	this.widgetVisible = true;
   }
 
   widgetComplete(details: PaymentCompleteDetails): void {
-    details.paymentType = this.selectedWidgetType;
-    this.onComplete.emit(details);
+  	details.paymentType = this.selectedWidgetType;
+  	this.onComplete.emit(details);
   }
 
   widgetError(error: PaymentErrorDetails): void {
-    error.paymentType = this.selectedWidgetType;
-    this.onError.emit(error);
+  	error.paymentType = this.selectedWidgetType;
+  	this.onError.emit(error);
   }
 }

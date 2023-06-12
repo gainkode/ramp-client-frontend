@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -64,58 +64,58 @@ import { WidgetWizardComponent } from './widget-wizard.component';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const modules = [
-    MatChipsModule,
-    MatTooltipModule,
-    MatTabsModule,
-    MatTableModule,
-    MatListModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatStepperModule,
-    MatCheckboxModule,
-    ComponentsModule
+	MatChipsModule,
+	MatTooltipModule,
+	MatTabsModule,
+	MatTableModule,
+	MatListModule,
+	MatButtonModule,
+	MatFormFieldModule,
+	MatInputModule,
+	MatRadioModule,
+	MatSelectModule,
+	MatAutocompleteModule,
+	MatIconModule,
+	MatProgressBarModule,
+	MatStepperModule,
+	MatCheckboxModule,
+	ComponentsModule
 ];
 
 @NgModule({
-    imports: [...modules],
-    exports: [...modules]
+	imports: [...modules],
+	exports: [...modules]
 })
 export class MaterialModule { }
 
 @NgModule({
-    imports: [
-        NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
-    declarations: [
-        WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, BuySellFiatWidgetComponent,
-        BuySellWidgetComponent, FiatWidgetComponent, CryptoWidgetComponent, CryptoWizardComponent, WidgetWizardComponent,
-        WidgetProgressComponent, WidgetRecentTransactionsComponent,
-        WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent, WidgetWireTransferInfoRequiredComponent,
-        WidgetWireTransferResultComponent, WidgetSellDetailsComponent, WidgetDepositDetailsComponent, CompanyLevelVerificationComponent,
-        WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
-        WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
-        WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent, WidgetCryptoDetailsComponent,
-        WidgetCryptoCompleteComponent, WidgetCryptoFinishComponent, WidgetProcessingInstantpayComponent, WidgetCompleteComponent, WidgetErrorComponent,
-        PaymentIntroComponent],
-    exports: [
-        WidgetComponent,
-        BuySellFiatWidgetComponent,
-        BuySellWidgetComponent,
-        ReceiveWidgetComponent,
-        SendWidgetComponent,
-        TransferWidgetComponent,
-        PaymentIntroComponent,
-        CryptoWidgetComponent,
-        CryptoWizardComponent,
-        WidgetWizardComponent,
-        CompanyLevelVerificationComponent
-    ],
-    providers: [],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+	imports: [
+		NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
+	declarations: [
+		WidgetComponent, ReceiveWidgetComponent, SendWidgetComponent, TransferWidgetComponent, BuySellFiatWidgetComponent,
+		BuySellWidgetComponent, FiatWidgetComponent, CryptoWidgetComponent, CryptoWizardComponent, WidgetWizardComponent,
+		WidgetProgressComponent, WidgetRecentTransactionsComponent,
+		WidgetSummaryComponent, WidgetRateComponent, WidgetCreditCardComponent, WidgetWireTransferComponent, WidgetWireTransferInfoRequiredComponent,
+		WidgetWireTransferResultComponent, WidgetSellDetailsComponent, WidgetDepositDetailsComponent, CompanyLevelVerificationComponent,
+		WidgetRegisterComponent, WidgetLoginAuthComponent, WidgetCodeAuthComponent,
+		WidgetInitializationComponent, WidgetOrderDetailsComponent, WidgetReceiveDetailsComponent, WidgetSendDetailsComponent,
+		WidgetDisclaimerComponent, WidgetKycComponent, WidgetPaymentComponent, WidgetProcessingFrameComponent, WidgetCryptoDetailsComponent,
+		WidgetCryptoCompleteComponent, WidgetCryptoFinishComponent, WidgetProcessingInstantpayComponent, WidgetCompleteComponent, WidgetErrorComponent,
+		PaymentIntroComponent],
+	exports: [
+		WidgetComponent,
+		BuySellFiatWidgetComponent,
+		BuySellWidgetComponent,
+		ReceiveWidgetComponent,
+		SendWidgetComponent,
+		TransferWidgetComponent,
+		PaymentIntroComponent,
+		CryptoWidgetComponent,
+		CryptoWizardComponent,
+		WidgetWizardComponent,
+		CompanyLevelVerificationComponent
+	],
+	providers: [],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class WidgetModule { }

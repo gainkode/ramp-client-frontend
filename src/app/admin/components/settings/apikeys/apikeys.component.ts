@@ -10,19 +10,19 @@ import { ApiKeyItem } from 'model/apikey.model';
 import { AuthService } from 'services/auth.service';
 
 @Component({
-  selector: 'app-admin-apikeys',
-  templateUrl: 'apikeys.component.html',
-  styleUrls: ['apikeys.component.scss']
+	selector: 'app-admin-apikeys',
+	templateUrl: 'apikeys.component.html',
+	styleUrls: ['apikeys.component.scss']
 })
 export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   displayedColumns: string[] = [
-    'lock',
-    'title',
-    'user',
-    'created',
-    'delete'
+  	'lock',
+  	'title',
+  	'user',
+  	'created',
+  	'delete'
   ];
   inProgress = false;
   errorMessage = '';
@@ -42,113 +42,113 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
   private createDialog: NgbModalRef | undefined = undefined;
 
   constructor(
-    private modalService: NgbModal,
-    private auth: AuthService,
-    private adminService: AdminDataService,
-    private clipboard: Clipboard,
-    private router: Router
+  	private modalService: NgbModal,
+  	private auth: AuthService,
+  	private adminService: AdminDataService,
+  	private clipboard: Clipboard,
+  	private router: Router
   ) {
-    this.permission = this.auth.isPermittedObjectCode('SETTINGS');
+  	this.permission = this.auth.isPermittedObjectCode('SETTINGS');
   }
 
   ngOnInit(): void {
-    this.loadKeys();
+  	this.loadKeys();
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  	this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit() {
-    this.subscriptions.add(
-      this.sort.sortChange.subscribe(() => {
-        this.sortedDesc = (this.sort.direction === 'desc');
-        this.sortedField = this.sort.active;
-        this.loadKeys();
-      })
-    );
+  	this.subscriptions.add(
+  		this.sort.sortChange.subscribe(() => {
+  			this.sortedDesc = (this.sort.direction === 'desc');
+  			this.sortedField = this.sort.active;
+  			this.loadKeys();
+  		})
+  	);
   }
 
   handlePage(index: number): void {
-    this.pageIndex = index - 1;
-    this.loadKeys();
+  	this.pageIndex = index - 1;
+  	this.loadKeys();
   }
 
   addKey(content: any): void {
-    this.detailsDialog = this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
+  	this.detailsDialog = this.modalService.open(content, {
+  		backdrop: 'static',
+  		windowClass: 'modalCusSty',
+  	});
   }
 
   deleteKey(key: ApiKeyItem, content: any): void {
-    this.selectedKey = key;
-    this.createDialog = this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
-    this.subscriptions.add(
-      this.createDialog.closed.subscribe(val => {
-        this.removeApiKeyConfirmed(key.title);
-      })
-    );
+  	this.selectedKey = key;
+  	this.createDialog = this.modalService.open(content, {
+  		backdrop: 'static',
+  		windowClass: 'modalCusSty',
+  	});
+  	this.subscriptions.add(
+  		this.createDialog.closed.subscribe(val => {
+  			this.removeApiKeyConfirmed(key.title);
+  		})
+  	);
   }
 
   private removeApiKeyConfirmed(apiKey: string): void {
-    this.errorMessage = '';
-    const deleteKeyData$ = this.adminService.deleteApiKey(apiKey);
-    this.subscriptions.add(
-      deleteKeyData$.subscribe(({ data }) => {
-        this.loadKeys();
-      }, (error) => {
-        this.errorMessage = error;
-      })
-    );
+  	this.errorMessage = '';
+  	const deleteKeyData$ = this.adminService.deleteApiKey(apiKey);
+  	this.subscriptions.add(
+  		deleteKeyData$.subscribe(({ data }) => {
+  			this.loadKeys();
+  		}, (error) => {
+  			this.errorMessage = error;
+  		})
+  	);
   }
 
   private loadKeys(): void {
-    let sf = this.sortedField;
-    if (sf === '') {
-      sf = 'created';
-    } else if (sf === 'title') {
-      sf = 'apiKeyId';
-    }
-    this.apiKeys = [];
-    this.inProgress = true;
-    const listData$ = this.adminService.getApiKeys(
-      this.pageIndex,
-      this.pageSize,
-      sf,
-      this.sortedDesc).pipe(take(1));
-    this.subscriptions.add(
-      listData$.subscribe(({ list, count }) => {
-        this.apiKeys = list;
-        this.keyCount = count;
-        this.inProgress = false;
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  	let sf = this.sortedField;
+  	if (sf === '') {
+  		sf = 'created';
+  	} else if (sf === 'title') {
+  		sf = 'apiKeyId';
+  	}
+  	this.apiKeys = [];
+  	this.inProgress = true;
+  	const listData$ = this.adminService.getApiKeys(
+  		this.pageIndex,
+  		this.pageSize,
+  		sf,
+  		this.sortedDesc).pipe(take(1));
+  	this.subscriptions.add(
+  		listData$.subscribe(({ list, count }) => {
+  			this.apiKeys = list;
+  			this.keyCount = count;
+  			this.inProgress = false;
+  		}, (error) => {
+  			this.inProgress = false;
+  			if (this.auth.token === '') {
+  				this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 
   onSaveKey(keyData: string, content: any): void {
-    const data = keyData.split('|');
-    this.apiKey = data[0];
-    this.secret = data[1];
-    if (this.detailsDialog) {
-      this.detailsDialog.close();
-      this.modalService.open(content, {
-        backdrop: 'static',
-        windowClass: 'modalCusSty',
-      });
-      this.loadKeys();
-    }
+  	const data = keyData.split('|');
+  	this.apiKey = data[0];
+  	this.secret = data[1];
+  	if (this.detailsDialog) {
+  		this.detailsDialog.close();
+  		this.modalService.open(content, {
+  			backdrop: 'static',
+  			windowClass: 'modalCusSty',
+  		});
+  		this.loadKeys();
+  	}
   }
 
   copySecret(secret: string): void {
-    this.clipboard.copy(secret);
+  	this.clipboard.copy(secret);
   }
 }

@@ -3,9 +3,9 @@ import { LoginResult } from 'model/generated-models';
 import { WidgetSettings } from 'model/payment-base.model';
 
 @Component({
-    selector: 'app-widget-login-auth',
-    templateUrl: 'login-auth.component.html',
-    styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
+	selector: 'app-widget-login-auth',
+	templateUrl: 'login-auth.component.html',
+	styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
 export class WidgetLoginAuthComponent {
     @Input() email = '';
@@ -20,6 +20,6 @@ export class WidgetLoginAuthComponent {
     constructor() { }
 
     loginError(error: string): void {
-        this.errorMessage = error;
+    	this.errorMessage = error;
     }
 }

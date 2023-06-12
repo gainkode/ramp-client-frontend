@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MAT_CHIPS_DEFAULT_OPTIONS, MatChipsModule } from '@angular/material/chips';
@@ -93,94 +93,94 @@ import { AdminActionDetailsComponent } from './components/users/actions/action-d
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-  suppressScrollX: true
+	suppressScrollX: true
 };
 
 @NgModule({
-  imports: [
-    NgxMaskModule.forRoot(), 
-    CommonModule,
-    NgSelectModule,
-    FormsModule,
-    ReactiveFormsModule,
-    NgbModule,
-    MatCardModule,
-    MatChipsModule,
-    MatRadioModule,
-    MatExpansionModule,
-    MatSidenavModule,
-    MatTooltipModule,
-    MatTabsModule,
-    MatListModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    MatSortModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatIconModule,
-    MatSlideToggleModule,
-    MatProgressBarModule,
-    DragDropModule,
-    MatToolbarModule,
-    MatSnackBarModule,
-    ColorPickerModule,
-    PerfectScrollbarModule,
-    ComponentsModule,
-    AdminRoutingModule,
-    MaterialModule,
-    DirectiveModule
-  ],
-  declarations: [
-    AdminComponent,
-    AdminHeaderComponent,
-    AdminPageHeaderComponent,
-    AdminSidebarComponent,
-    AdminSwitcherComponent,
-    AdminDetailsItemComponent,
-    AdminDashboardCardComponent,
-    AdminDateRangeComponent,
-    AdminFilterComponent,
-    AdminDashboardComponent,
-    AdminTransactionsComponent, AdminTransactionDetailsComponent, AdminTransactionStatusHistoryComponent, AdminTransactionCreateComponent,
-    AdminFiatWalletsComponent, AdminFiatWalletDetailsComponent,
-    AdminCryptoWalletsComponent, AdminCryptoWalletDetailsComponent,
-    AdminCustomersComponent, AdminCustomerDetailsComponent,
-    AdminSystemUsersComponent, AdminUserDetailsComponent, AdminRoleSelectComponent, AdminMessageDialogComponent,
-    AdminUserDevicesComponent, AdminDeviceDetailsComponent,
-    AdminUserActionsComponent, AdminActionDetailsComponent,
-    AdminNotificationsComponent, AdminNotificationDetailsComponent,
-    AdminRisksComponent, AdminRiskDetailsComponent,
-    AdminWidgetsComponent, AdminWidgetDetailsComponent,
-    AdminFeeSchemesComponent, AdminFeeSchemeDetailsComponent,
-    AdminLevelsComponent, AdminLevelDetailsComponent,
-    AdminKycTiersComponent, AdminKycTierDetailsComponent,
-    AdminKycSchemesComponent, AdminKycSchemeDetailsComponent,
-    AdminCountryBlackListComponent, AdminCountryBlackListDetailsComponent,
-    AdminCostSchemesComponent, AdminCostSchemeDetailsComponent,
-    AdminBankAccountsComponent, AdminBankAccountDetailsComponent,
-    AdminCommonSettingsComponent, AdminWithdrawalAddressComponent,
-    AdminApiKeysComponent, AdminApiKeyDetailsComponent, 
-    AdminCurrencyPairsComponent, AdminCurrencyPairDetailsComponent
-  ],
-  providers: [
-    AdminGuard,
-    AdminDataService,
-    {
-      provide: MAT_CHIPS_DEFAULT_OPTIONS,
-      useValue: {
-        separatorKeyCodes: [ENTER, COMMA]
-      }
-    },
-    {
-      provide: PERFECT_SCROLLBAR_CONFIG,
-      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-    }
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+	imports: [
+		NgxMaskModule.forRoot(), 
+		CommonModule,
+		NgSelectModule,
+		FormsModule,
+		ReactiveFormsModule,
+		NgbModule,
+		MatCardModule,
+		MatChipsModule,
+		MatRadioModule,
+		MatExpansionModule,
+		MatSidenavModule,
+		MatTooltipModule,
+		MatTabsModule,
+		MatListModule,
+		MatTableModule,
+		MatPaginatorModule,
+		MatProgressSpinnerModule,
+		MatSortModule,
+		MatButtonModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatSelectModule,
+		MatAutocompleteModule,
+		MatIconModule,
+		MatSlideToggleModule,
+		MatProgressBarModule,
+		DragDropModule,
+		MatToolbarModule,
+		MatSnackBarModule,
+		ColorPickerModule,
+		PerfectScrollbarModule,
+		ComponentsModule,
+		AdminRoutingModule,
+		MaterialModule,
+		DirectiveModule
+	],
+	declarations: [
+		AdminComponent,
+		AdminHeaderComponent,
+		AdminPageHeaderComponent,
+		AdminSidebarComponent,
+		AdminSwitcherComponent,
+		AdminDetailsItemComponent,
+		AdminDashboardCardComponent,
+		AdminDateRangeComponent,
+		AdminFilterComponent,
+		AdminDashboardComponent,
+		AdminTransactionsComponent, AdminTransactionDetailsComponent, AdminTransactionStatusHistoryComponent, AdminTransactionCreateComponent,
+		AdminFiatWalletsComponent, AdminFiatWalletDetailsComponent,
+		AdminCryptoWalletsComponent, AdminCryptoWalletDetailsComponent,
+		AdminCustomersComponent, AdminCustomerDetailsComponent,
+		AdminSystemUsersComponent, AdminUserDetailsComponent, AdminRoleSelectComponent, AdminMessageDialogComponent,
+		AdminUserDevicesComponent, AdminDeviceDetailsComponent,
+		AdminUserActionsComponent, AdminActionDetailsComponent,
+		AdminNotificationsComponent, AdminNotificationDetailsComponent,
+		AdminRisksComponent, AdminRiskDetailsComponent,
+		AdminWidgetsComponent, AdminWidgetDetailsComponent,
+		AdminFeeSchemesComponent, AdminFeeSchemeDetailsComponent,
+		AdminLevelsComponent, AdminLevelDetailsComponent,
+		AdminKycTiersComponent, AdminKycTierDetailsComponent,
+		AdminKycSchemesComponent, AdminKycSchemeDetailsComponent,
+		AdminCountryBlackListComponent, AdminCountryBlackListDetailsComponent,
+		AdminCostSchemesComponent, AdminCostSchemeDetailsComponent,
+		AdminBankAccountsComponent, AdminBankAccountDetailsComponent,
+		AdminCommonSettingsComponent, AdminWithdrawalAddressComponent,
+		AdminApiKeysComponent, AdminApiKeyDetailsComponent, 
+		AdminCurrencyPairsComponent, AdminCurrencyPairDetailsComponent
+	],
+	providers: [
+		AdminGuard,
+		AdminDataService,
+		{
+			provide: MAT_CHIPS_DEFAULT_OPTIONS,
+			useValue: {
+				separatorKeyCodes: [ENTER, COMMA]
+			}
+		},
+		{
+			provide: PERFECT_SCROLLBAR_CONFIG,
+			useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+		}
+	],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AdminModule {
 }

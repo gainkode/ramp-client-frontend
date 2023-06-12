@@ -3,7 +3,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { QRCodeModule } from 'angularx-qrcode';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -68,69 +68,69 @@ import { SafeUrlPipe } from '../utils/safe-url.pipe';
 import { SumsubPanelComponent } from './kyc/sumsub-panel.component';
 import { RecaptchaComponent } from './recaptcha/recaptcha.component';
 import { ShuftiPanelComponent } from './kyc/shufti-panel.component';
-import { NgxTurnstileModule } from "ngx-turnstile"
-import { RecaptchaModule } from "ng-recaptcha";
+import { NgxTurnstileModule } from 'ngx-turnstile';
+import { RecaptchaModule } from 'ng-recaptcha';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const materialModules = [
-    ClipboardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatSlideToggleModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatTooltipModule,
-    MatChipsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatDialogModule,
-    MatIconModule,
-    MatListModule,
-    MatMenuModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    MatSnackBarModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    NgxTurnstileModule,
-    RecaptchaModule
+	ClipboardModule,
+	MatButtonModule,
+	MatFormFieldModule,
+	MatInputModule,
+	MatAutocompleteModule,
+	MatSlideToggleModule,
+	MatCheckboxModule,
+	MatSelectModule,
+	MatTooltipModule,
+	MatChipsModule,
+	MatDatepickerModule,
+	MatNativeDateModule,
+	MatDialogModule,
+	MatIconModule,
+	MatListModule,
+	MatMenuModule,
+	MatProgressSpinnerModule,
+	MatProgressBarModule,
+	MatSnackBarModule,
+	MatTableModule,
+	MatPaginatorModule,
+	MatSortModule,
+	NgxTurnstileModule,
+	RecaptchaModule
 ];
 
 @NgModule({
-    imports: [...materialModules],
-    exports: [...materialModules]
+	imports: [...materialModules],
+	exports: [...materialModules]
 })
 export class MaterialModule { }
 
 @NgModule({
-    imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
-    declarations: [
-        DropdownItemComponent, TabLabelComponent, ContactFormComponent,
-        KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent, KycCompanyLevelVerificationComponent, RecaptchaComponent,
-        FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
-        FormEditBoxComponent, SettingsPasswordBoxComponent,
-        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,
-        YesNoDialogBox, ApiSecretDialogBox,
-        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
-        NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
-        LineBreakPipe, NumberFillPipe, SafeUrlPipe,
-        TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
-    exports: [
-        DropdownItemComponent, TabLabelComponent, ContactFormComponent,
-        KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent, RecaptchaComponent,
-        FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
-        FormEditBoxComponent, SettingsPasswordBoxComponent,
-        DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,
-        YesNoDialogBox, ApiSecretDialogBox,
-        LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
-        NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
-        LineBreakPipe, NumberFillPipe, SafeUrlPipe,
-        TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+	imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
+	declarations: [
+		DropdownItemComponent, TabLabelComponent, ContactFormComponent,
+		KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent, KycCompanyLevelVerificationComponent, RecaptchaComponent,
+		FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
+		FormEditBoxComponent, SettingsPasswordBoxComponent,
+		DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,
+		YesNoDialogBox, ApiSecretDialogBox,
+		LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
+		NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
+		LineBreakPipe, NumberFillPipe, SafeUrlPipe,
+		TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
+	exports: [
+		DropdownItemComponent, TabLabelComponent, ContactFormComponent,
+		KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent, RecaptchaComponent,
+		FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
+		FormEditBoxComponent, SettingsPasswordBoxComponent,
+		DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,
+		YesNoDialogBox, ApiSecretDialogBox,
+		LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
+		NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
+		LineBreakPipe, NumberFillPipe, SafeUrlPipe,
+		TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class ComponentsModule { }

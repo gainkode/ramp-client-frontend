@@ -229,79 +229,79 @@ query{
 
 @Injectable()
 export class CommonDataService {
-  constructor(private apollo: Apollo) { }
+	constructor(private apollo: Apollo) { }
 
-  getSettingsCurrency(): QueryRef<any, EmptyObject> {
-    const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-    return this.apollo.watchQuery<any>({
-      query: GET_SETTINGS_CURRENCY,
-      variables: {
-      },
-      fetchPolicy: 'network-only'
-    });
-  }
+	getSettingsCurrency(): QueryRef<any, EmptyObject> {
+		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
+		return this.apollo.watchQuery<any>({
+			query: GET_SETTINGS_CURRENCY,
+			variables: {
+			},
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  getRoles(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_ROLES,
-      fetchPolicy: 'network-only'
-    });
-  }
+	getRoles(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_ROLES,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  getMyTransactionsTotal(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: MY_TRANSACTIONS_TOTAL,
-      fetchPolicy: 'network-only'
-    });
-  }
+	getMyTransactionsTotal(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: MY_TRANSACTIONS_TOTAL,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  getMyBalances(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: MY_BALANCES,
-      fetchPolicy: 'network-only'
-    });
-  }
+	getMyBalances(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: MY_BALANCES,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  myFiatVaults(assetsOnly: string[]): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: MY_FIAT_VAULTS,
-      variables: {
-        assetsOnly: assetsOnly
-      },
-      fetchPolicy: 'network-only'
-    });
-  }
+	myFiatVaults(assetsOnly: string[]): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: MY_FIAT_VAULTS,
+			variables: {
+				assetsOnly: assetsOnly
+			},
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  getUsers(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_USERS,
-      fetchPolicy: 'network-only'
-    });
-  }
+	getUsers(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_USERS,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  getUserById(id: string): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_USER_BY_ID,
-      variables: { userId: id },
-      fetchPolicy: 'network-only'
-    });
-  }
+	getUserById(id: string): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_USER_BY_ID,
+			variables: { userId: id },
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  addMyWidgetUserParams(id: string, email: string, parameters: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: ADD_MY_WIDGET_PARAMS,
-      variables: {
-        widgetId: id,
-        userEmail: email,
-        params: parameters
-      }
-    });
-  }
+	addMyWidgetUserParams(id: string, email: string, parameters: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: ADD_MY_WIDGET_PARAMS,
+			variables: {
+				widgetId: id,
+				userEmail: email,
+				params: parameters
+			}
+		});
+	}
 
-  getCustomText(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_TEXT_PAGES,
-      fetchPolicy: 'network-only'
-    });
-  }
+	getCustomText(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_TEXT_PAGES,
+			fetchPolicy: 'network-only'
+		});
+	}
 }

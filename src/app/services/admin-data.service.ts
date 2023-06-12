@@ -5,57 +5,57 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
 import {
-  ApiKeyListResult,
-  AssetAddress,
-  AssetAddressListResult,
-  CountryCodeType,
-  DashboardStats,
-  FiatVaultUserListResult,
-  KycInfo,
-  QueryGetApiKeysArgs,
-  QueryGetDashboardStatsArgs,
-  QueryGetFiatVaultsArgs,
-  QueryGetNotificationsArgs, QueryGetRiskAlertsArgs,
-  QueryGetSettingsFeeArgs,
-  QueryGetSettingsKycArgs,
-  QueryGetSettingsKycLevelsArgs,
-  QueryGetSettingsKycTiersArgs,
-  QueryGetTransactionsArgs,
-  QueryGetUserActionsArgs,
-  QueryGetUserKycInfoArgs,
-  QueryGetUsersArgs,
-  QueryGetUserStateArgs,
-  QueryGetWalletsArgs,
-  QueryGetWidgetsArgs, RiskAlertResultList,
-  SettingsCommon,
-  SettingsFeeListResult, SettingsKycLevelListResult,
-  SettingsKycListResult,
-  SettingsKycTier,
-  SettingsKycTierListResult,
-  Transaction,
-  TransactionListResult,
-  TransactionUpdateTransferOrderChanges,
-  UserActionListResult,
-  UserDeviceListResult,
-  UserInput,
-  UserListResult,
-  UserMode,
-  UserNotificationLevel,
-  UserNotificationListResult,
-  UserState,
-  UserType,
-  WidgetListResult,
-  WireTransferBankAccount,
-  TransactionStatusHistoryListResult,
-  TransactionStatusHistory,
-  QueryGetTransactionStatusHistoryArgs,
-  PaymentProviderPayoutType,
-  TransactionInput,
-  CurrencyPairLiquidityProvider,
-  CurrencyPairLiquidityProvidersListResult,
-  QueryGetCurrencyPairLiquidityProviderArgs,
-  LiquidityProvider,
-  LiquidityProviderEntity
+	ApiKeyListResult,
+	AssetAddress,
+	AssetAddressListResult,
+	CountryCodeType,
+	DashboardStats,
+	FiatVaultUserListResult,
+	KycInfo,
+	QueryGetApiKeysArgs,
+	QueryGetDashboardStatsArgs,
+	QueryGetFiatVaultsArgs,
+	QueryGetNotificationsArgs, QueryGetRiskAlertsArgs,
+	QueryGetSettingsFeeArgs,
+	QueryGetSettingsKycArgs,
+	QueryGetSettingsKycLevelsArgs,
+	QueryGetSettingsKycTiersArgs,
+	QueryGetTransactionsArgs,
+	QueryGetUserActionsArgs,
+	QueryGetUserKycInfoArgs,
+	QueryGetUsersArgs,
+	QueryGetUserStateArgs,
+	QueryGetWalletsArgs,
+	QueryGetWidgetsArgs, RiskAlertResultList,
+	SettingsCommon,
+	SettingsFeeListResult, SettingsKycLevelListResult,
+	SettingsKycListResult,
+	SettingsKycTier,
+	SettingsKycTierListResult,
+	Transaction,
+	TransactionListResult,
+	TransactionUpdateTransferOrderChanges,
+	UserActionListResult,
+	UserDeviceListResult,
+	UserInput,
+	UserListResult,
+	UserMode,
+	UserNotificationLevel,
+	UserNotificationListResult,
+	UserState,
+	UserType,
+	WidgetListResult,
+	WireTransferBankAccount,
+	TransactionStatusHistoryListResult,
+	TransactionStatusHistory,
+	QueryGetTransactionStatusHistoryArgs,
+	PaymentProviderPayoutType,
+	TransactionInput,
+	CurrencyPairLiquidityProvider,
+	CurrencyPairLiquidityProvidersListResult,
+	QueryGetCurrencyPairLiquidityProviderArgs,
+	LiquidityProvider,
+	LiquidityProviderEntity
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -2583,1849 +2583,1849 @@ const DELETE_KYC_LEVEL_SETTINGS = gql`
 
 @Injectable()
 export class AdminDataService {
-  constructor(
-    private router: Router,
-    private apollo: Apollo,
-    private auth: AuthService,
-    private errorHandler: ErrorService,
-    private snackBar: MatSnackBar
-  ) {
-  }
-
-  private activeQueryCounter = 0;
-  private isBusySubject = new BehaviorSubject(false);
-
-  public get isBusy(): Observable<boolean> {
-    return this.isBusySubject.asObservable();
-  }
-
-  getDashboardStats(filter: Filter): Observable<DashboardStats> {
-    const vars: QueryGetDashboardStatsArgs = {
-      createdDateInterval: filter.createdDateInterval,
-      completedDateInterval: filter.completedDateInterval,
-      updateDateInterval: filter.updatedDateInterval,
-      userIdsOnly: filter.user ? [filter.user] : [],
-      widgetIdsOnly: filter.widgetNames,
-      sourcesOnly: filter.sources,
-      countriesOnly: filter.countries,
-      countryCodeType: CountryCodeType.Code3,
-      accountTypesOnly: filter.accountTypes
-    };
-    return this.watchQuery<{ getDashboardStats: DashboardStats }, QueryGetDashboardStatsArgs>({
-      query: GET_DASHBOARD_STATS,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    }).pipe(map(result => {
-      return result.data.getDashboardStats;
-    }));
-  }
-
-  getFeeSettings(): Observable<{ list: Array<FeeScheme>; count: number; }> {
-    return this.watchQuery<{ getSettingsFee: SettingsFeeListResult }, QueryGetSettingsFeeArgs>({
-      query: GET_FEE_SETTINGS,
-      fetchPolicy: 'network-only'
-    }).pipe(
-      map(result => {
-        if (result.data?.getSettingsFee?.list && result.data?.getSettingsFee?.count) {
-          return {
-            list: result.data.getSettingsFee.list.map(item => new FeeScheme(item)),
-            count: result.data.getSettingsFee.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      })
-    );
-  }
-
-  getCostSettings(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_COST_SETTINGS,
-      fetchPolicy: 'network-only'
-    });
-  }
-
-  getWireTransferBankAccounts(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_WIRE_TRANSFER_SETTINGS,
-      fetchPolicy: 'network-only'
-    });
-  }
-
-  getSettingsKycTiers(id: string): Observable<{ list: Array<SettingsKycTier>; count: number; }> {
-    return this.watchQuery<{ getSettingsKycTiers: SettingsKycTierListResult }, QueryGetSettingsKycTiersArgs>({
-      query: GET_SETTINGS_KYC_TIERS_SHORT,
-      variables: { userId: (id !== '') ? id : undefined },
-      fetchPolicy: 'network-only'
-    }).pipe(
-      map(result => {
-        if (result.data?.getSettingsKycTiers?.list && result.data?.getSettingsKycTiers?.count) {
-          return {
-            list: result.data.getSettingsKycTiers.list,
-            count: result.data.getSettingsKycTiers.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      })
-    );
-  }
-
-  getKycTiers(): Observable<{ list: Array<KycTier>; count: number; }> {
-    return this.watchQuery<{ getSettingsKycTiers: SettingsKycTierListResult }, QueryGetSettingsKycTiersArgs>({
-      query: GET_SETTINGS_KYC_TIERS,
-      fetchPolicy: 'network-only'
-    }).pipe(
-      map(result => {
-        if (result.data?.getSettingsKycTiers?.list && result.data?.getSettingsKycTiers?.count) {
-          return {
-            list: result.data.getSettingsKycTiers.list.map(item => new KycTier(item)),
-            count: result.data.getSettingsKycTiers.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      })
-    );
-  }
-
-  getKycSettings(): Observable<{ list: Array<KycScheme>; count: number; }> {
-    return this.watchQuery<{ getSettingsKyc: SettingsKycListResult }, QueryGetSettingsKycArgs>({
-      query: GET_KYC_SETTINGS,
-      fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          if (result.data?.getSettingsKyc?.list && result.data?.getSettingsKyc?.count) {
-            return {
-              list: result.data.getSettingsKyc.list.map(item => new KycScheme(item)),
-              count: result.data.getSettingsKyc.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
-  }
-
-  getKycLevels(userType: UserType | null): Observable<{ list: Array<KycLevel>; count: number; }> {
-    const userTypeFilter = userType === null ? '' : userType?.toString();
-
-    return this.watchQuery<{ getSettingsKycLevels: SettingsKycLevelListResult }, QueryGetSettingsKycLevelsArgs>({
-      query: GET_KYC_LEVELS,
-      variables: { filter: userTypeFilter },
-      fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          if (result.data?.getSettingsKycLevels?.list && result.data?.getSettingsKycLevels?.count) {
-            return {
-              list: result.data.getSettingsKycLevels.list.map(item => new KycLevel(item)),
-              count: result.data.getSettingsKycLevels.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
-  }
-
-  getCountryBlackList(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_COUNTRY_BLACK_LIST,
-      fetchPolicy: 'network-only'
-    });
-  }
-
-  getNotifications(
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean,
-    filter?: Filter
-  ): Observable<{ list: Array<NotificationItem>; count: number; }> {
-
-    const vars: QueryGetNotificationsArgs = {
-      filter: filter?.search,
-      userNotificationTypeCode: filter?.notificationType,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: [{ orderBy: orderField, desc: orderDesc }]
-    };
-
-    return this.watchQuery<{ getNotifications: UserNotificationListResult }, QueryGetNotificationsArgs>(
-      {
-        query: GET_NOTIFICATIONS,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      }).pipe(map(result => {
-        if (result.data?.getNotifications?.list && result.data?.getNotifications?.count) {
-          return {
-            list: result.data.getNotifications.list.map(val => new NotificationItem(val)),
-            count: result.data.getNotifications.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      }));
-  }
-
-  getUserActions(
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean,
-    filter?: Filter
-  ): Observable<{ list: Array<UserActionItem>; count: number; }> {
-
-    const vars: QueryGetUserActionsArgs = {
-      filter: filter?.search,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: [{ orderBy: orderField, desc: orderDesc }],
-      userId: filter?.user,
-      resultsOnly: filter?.resultsOnly,
-      statusesOnly: filter?.statusesOnly,
-      actionTypesOnly: filter?.userActionTypes,
-      createdDateInterval: filter?.createdDateInterval
-      // $withResult: UserActionResult
-    };
-
-    return this.watchQuery<{ getUserActions: UserActionListResult }, QueryGetUserActionsArgs>(
-      {
-        query: GET_USER_ACTIONS,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      }).pipe(map(result => {
-        if (result.data?.getUserActions?.list && result.data?.getUserActions?.count) {
-          return {
-            list: result.data.getUserActions.list.map(val => new UserActionItem(val)),
-            count: result.data.getUserActions.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      }));
-  }
-
-  getRiskAlerts(
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean,
-    filter?: Filter
-  ): Observable<{ list: Array<RiskAlertItem>; count: number; }> {
-
-    const vars: QueryGetRiskAlertsArgs = {
-      userId: filter?.user ?? null,
-      code: filter?.riskAlertCode,
-      filter: filter?.search,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: [{ orderBy: orderField, desc: orderDesc }]
-    };
-
-    return this.watchQuery<{ getRiskAlerts: RiskAlertResultList }, QueryGetRiskAlertsArgs>(
-      {
-        query: GET_RISK_ALERTS,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      }).pipe(map(result => {
-        if (result.data?.getRiskAlerts?.list && result.data?.getRiskAlerts?.count) {
-          return {
-            list: result.data.getRiskAlerts.list.map(val => new RiskAlertItem(val)),
-            count: result.data.getRiskAlerts.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      }));
-  }
-
-  getDevices(userId: string): Observable<{ list: Array<DeviceItem>; count: number; }> {
-    return this.watchQuery<{ getDevices: UserDeviceListResult }, any>(
-      {
-        query: GET_DEVICES,
-        fetchPolicy: 'network-only'
-      }).pipe(map(result => {
-        if (result.data?.getDevices?.list && result.data?.getDevices?.count) {
-          return {
-            list: result.data.getDevices.list
-              .filter(x => x?.userId === userId)
-              .map(val => new DeviceItem(val)),
-            count: result.data.getDevices.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      }));
-  }
-
-  getTransaction(transactionId: string): Observable<TransactionItemFull | undefined> {
-    return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>({
-      query: GET_TRANSACTIONS,
-      variables: {
-        transactionIdsOnly: [transactionId],
-        filter: undefined,
-        skip: 0,
-        first: 1
-      },
-      fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(res => {
-          const listResult = res?.data?.getTransactions.list;
-
-          if (listResult && listResult.length === 1) {
-            return new TransactionItemFull(listResult[0]);
-          }
-
-          return undefined;
-        })
-      );
-  }
-
-  getTransactions(
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean,
-    filter?: Filter
-  ): Observable<{ list: Array<TransactionItemFull>; count: number; }> {
-    let widgetIds: string[] = [];
-    if (filter?.widgets) {
-      widgetIds = widgetIds.concat(filter.widgets);
-    }
-    if (filter?.widgetNames) {
-      widgetIds = widgetIds.concat(filter.widgetNames);
-    }
-    const vars: QueryGetTransactionsArgs = {
-      transactionIdsOnly: filter?.transactionIds,
-      accountTypesOnly: filter?.accountTypes,
-      accountModesOnly: filter?.accountModes,
-      countriesOnly: filter?.countries,
-      countryCodeType: CountryCodeType.Code3,
-      sourcesOnly: filter?.sources,
-      userIdsOnly: filter?.users,
-      widgetIdsOnly: widgetIds,
-      flag: filter?.transactionFlag,
-      preauth: filter?.preauthFlag,
-      kycStatusesOnly: filter?.transactionKycStatuses,
-      transactionTypesOnly: filter?.transactionTypes,
-      transactionStatusesOnly: filter?.transactionStatuses,
-      userTierLevelsOnly: filter?.tiers,
-      riskLevelsOnly: filter?.riskLevels,
-      paymentInstrumentsOnly: filter?.paymentInstruments,
-      createdDateInterval: filter?.createdDateInterval,
-      completedDateInterval: filter?.completedDateInterval,
-      walletAddressOnly: filter?.walletAddress,
-      filter: filter?.search,
-      verifyWhenPaid: filter?.verifyWhenPaid,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: [{ orderBy: orderField, desc: orderDesc }]
-    };
-    return this.watchQuery<{ getTransactions: TransactionListResult }, QueryGetTransactionsArgs>({
-      query: GET_TRANSACTIONS,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    }).pipe(map(result => {
-      if (result.data?.getTransactions?.list && result.data?.getTransactions?.count) {
-        return {
-          list: result.data.getTransactions.list.map(val => new TransactionItemFull(val)),
-          count: result.data.getTransactions.count
-        };
-      } else {
-        return {
-          list: [],
-          count: 0
-        };
-      }
-    }));
-  }
-
-  getTransactionStatusHistory(
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean,
-    filter?: Filter
-  ): Observable<{ list: Array<TransactionStatusHistoryItem>; count: number; }> {
-    let widgetIds: string[] = [];
-    if (filter?.widgets) {
-      widgetIds = widgetIds.concat(filter.widgets);
-    }
-    if (filter?.widgetNames) {
-      widgetIds = widgetIds.concat(filter.widgetNames);
-    }
-    const vars: QueryGetTransactionStatusHistoryArgs = {
-      transactionIds: filter?.transactionIds,
-      userIds: filter?.users,
-      statusesOnly: filter?.transactionStatuses,
-      createdDateInterval: filter?.createdDateInterval,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: [{ orderBy: orderField, desc: orderDesc }]
-    };
-    return this.watchQuery<{ getTransactionStatusHistory: TransactionStatusHistoryListResult }, QueryGetTransactionStatusHistoryArgs>({
-      query: GET_TRANSACTION_STATUS_HISTORY,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    }).pipe(map(result => {
-      if (result.data?.getTransactionStatusHistory?.list && result.data?.getTransactionStatusHistory?.count) {
-        return {
-          list: result.data.getTransactionStatusHistory.list.map(val => new TransactionStatusHistoryItem(val)),
-          count: result.data.getTransactionStatusHistory.count
-        };
-      } else {
-        return {
-          list: [],
-          count: 0
-        };
-      }
-    }));
-  }
-
-  getUsers(
-    roleIds: string[],
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean,
-    filter: Filter
-  ): Observable<{ list: UserItem[], count: number }> {
-    const vars = {
-      userIdsOnly: filter?.users,
-      roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
-      accountTypesOnly: filter?.accountTypes,
-      accountModesOnly: filter?.accountModes,
-      accountStatusesOnly: filter?.accountStatuses,
-      userTierLevelsOnly: filter?.tiers,
-      riskLevelsOnly: filter?.riskLevels,
-      countriesOnly: filter?.countries,
-      countryCodeType: CountryCodeType.Code3,
-      kycStatusesOnly: filter.kycStatuses,
-      registrationDateInterval: filter?.registrationDateInterval,
-      widgetIdsOnly: filter?.widgetNames,
-      totalBuyVolumeOver: filter?.totalBuyVolumeOver,
-      transactionCountOver: filter?.transactionCountOver,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: [{ orderBy: orderField, desc: orderDesc }],
-      filter: filter?.search,
-      verifyWhenPaid: filter?.verifyWhenPaid,
-      flag: filter?.transactionFlag
-    };
-    return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
-      query: GET_USERS,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
-            return {
-              list: result.data.getUsers.list.map(u => new UserItem(u)),
-              count: result.data.getUsers.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
-  }
-
-  getSystemUsers(
-    roleIds: string[],
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean,
-    filter: Filter
-  ): Observable<{ list: UserItem[], count: number }> {
-    const vars = {
-      userIdsOnly: filter?.users,
-      roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
-      accountTypesOnly: filter?.accountTypes,
-      accountStatusesOnly: filter?.accountStatuses,
-      countriesOnly: filter?.countries,
-      countryCodeType: CountryCodeType.Code3,
-      registrationDateInterval: filter?.registrationDateInterval,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: [{ orderBy: orderField, desc: orderDesc }],
-      filter: filter?.search
-    };
-    return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
-      query: GET_USERS_EX,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
-            return {
-              list: result.data.getUsers.list.map(u => new UserItem(u)),
-              count: result.data.getUsers.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
-  }
-
-  findUsers(filter: Filter): Observable<{ list: UserItem[], count: number }> {
-    const vars = {
-      userIdsOnly: filter?.users,
-      accountTypesOnly: filter?.accountTypes,
-      accountStatusesOnly: filter?.accountStatuses,
-      riskLevelsOnly: filter?.riskLevels,
-      countriesOnly: filter?.countries,
-      countryCodeType: CountryCodeType.Code3,
-      kycStatusesOnly: filter.kycStatuses,
-      registrationDateInterval: filter?.registrationDateInterval,
-      widgetIdsOnly: filter?.widgets,
-      totalBuyVolumeOver: filter?.totalBuyVolumeOver,
-      transactionCountOver: filter?.transactionCountOver,
-      skip: 0,
-      first: 1000,
-      orderBy: [{ orderBy: 'email', desc: true }],
-      filter: filter?.search
-    };
-    return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
-      query: FIND_USERS,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
-            return {
-              list: result.data.getUsers.list.map(u => new UserItem(u)),
-              count: result.data.getUsers.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
-  }
-
-  getUser(userId: string): Observable<UserItem | undefined> {
-    return this.watchQuery<{ getUsers: UserListResult }, QueryGetUsersArgs>({
-      query: GET_USERS,
-      variables: {
-        userIdsOnly: [userId],
-        countryCodeType: CountryCodeType.Code3,
-        //filter: undefined,
-        skip: 0,
-        first: 1
-      },
-      fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(res => {
-          const listResult = res?.data?.getUsers.list;
-          if (listResult && listResult.length === 1) {
-            return new UserItem(listResult[0]);
-          }
-          return undefined;
-        })
-      );
-  }
-
-  getUserKycInfo(userId: string): Observable<KycInfo | undefined> {
-    return this.watchQuery<{ getUserKycInfo: KycInfo }, QueryGetUserKycInfoArgs>({
-      query: GET_USER_KYC_INFO,
-      variables: {
-        userId
-      },
-      fetchPolicy: 'network-only'
-    }).pipe(map(res => {
-      const result = res?.data?.getUserKycInfo;
-      if (result) {
-        return result;
-      }
-      return undefined;
-    }));
-  }
-
-  getUserState(id: string): Observable<UserState | undefined> {
-    return this.watchQuery<{ getUserState: UserState }, QueryGetUserStateArgs>({
-      query: GET_USER_STATE,
-      variables: {
-        userId: id
-      },
-      fetchPolicy: 'network-only'
-    }).pipe(map(res => {
-      const result = res?.data?.getUserState;
-      if (result) {
-        return result;
-      }
-      return undefined;
-    }));
-  }
-
-  getVerificationLink(id: string): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_VERIFICATION_LINK,
-      variables: {
-        userId: id
-      },
-      fetchPolicy: 'network-only'
-  });
-  }
-
-  getWallets(
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean,
-    filter?: Filter
-  ): Observable<{ list: Array<WalletItem>; count: number; }> {
-    const vars: QueryGetWalletsArgs = {
-      userIdsOnly: filter?.users,
-      assetIdsOnly: filter?.assets,
-      zeroBalance: filter?.zeroBalance,
-      walletIdsOnly: filter?.walletIds,
-      filter: filter?.search,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: [{ orderBy: orderField, desc: orderDesc }]
-    };
-    return this.watchQuery<{ getWallets: AssetAddressListResult }, QueryGetWalletsArgs>(
-      {
-        query: GET_WALLETS,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      })
-      .pipe(map(result => {
-        if (result.data?.getWallets?.list && result.data?.getWallets?.count) {
-          return {
-            list: result.data.getWallets.list.map(item => new WalletItem(item)),
-            count: result.data.getWallets.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      }));
-  }
-
-  getFiatWallets(
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean,
-    filter?: Filter
-  ): Observable<{ list: Array<FiatWalletItem>; count: number; }> {
-    const vars: QueryGetFiatVaultsArgs = {
-      userIdsOnly: filter?.users,
-      assetsOnly: filter?.assets,
-      vaultIdsOnly: filter?.walletIds,
-      zeroBalance: filter?.zeroBalance,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: [{ orderBy: orderField, desc: orderDesc }]
-    };
-    return this.watchQuery<{ getFiatVaults: FiatVaultUserListResult }, QueryGetFiatVaultsArgs>(
-      {
-        query: GET_FIAT_VAULTS,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      })
-      .pipe(
-        map(result => {
-          if (result.data?.getFiatVaults?.list && result.data?.getFiatVaults?.count) {
-            return {
-              list: result.data.getFiatVaults.list.map(item => new FiatWalletItem(item)),
-              count: result.data.getFiatVaults.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
-  }
-
-  getWidgetIds(
-    userFilter: string,
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean
-  ): Observable<{ list: WidgetItem[], count: number }> {
-    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
-    const customerFilter = userFilter === null ? '' : userFilter?.toString();
-    const vars = {
-      filter: customerFilter,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: orderFields
-    };
-    return this.watchQuery<{ getWidgets: WidgetListResult }, QueryGetWidgetsArgs>({
-      query: GET_WIDGET_IDS,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    })
-      .pipe(
-        map(result => {
-          if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
-            return {
-              list: result.data.getWidgets.list.map(w => new WidgetItem(w)),
-              count: result.data.getWidgets.count
-            };
-          } else {
-            return {
-              list: [],
-              count: 0
-            };
-          }
-        })
-      );
-
-  }
-
-  getWidgets(
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean,
-    filter: Filter
-  ): Observable<{ list: WidgetItem[], count: number }> {
-    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
-    const vars = {
-      userIdsOnly: filter.users,
-      widgetIdsOnly: filter.widgets,
-      filter: filter.search,
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: orderFields
-    };
-    return this.watchQuery<{ getWidgets: WidgetListResult }, QueryGetWidgetsArgs>({
-      query: GET_WIDGETS,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    }).pipe(
-      map(result => {
-        if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
-          return {
-            list: result.data.getWidgets.list.map(w => {
-              return new WidgetItem(w);
-            }),
-            count: result.data.getWidgets.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      })
-    );
-  }
-
-  getProviders(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_PROVIDERS,
-      fetchPolicy: 'network-only'
-    });
-  }
-
-  getSettingsCommon(): QueryRef<any, EmptyObject> | null {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.watchQuery<any>({
-        query: GET_SETTINGS_COMMON,
-        fetchPolicy: 'network-only'
-      });
-    } else {
-      return null;
-    }
-  }
-
-  getCurrencyPairLiquidityProviders(): Observable<{ list: Array<CurrencyPairItem>; count: number; }>{
-    return this.watchQuery<{ getCurrencyPairLiquidityProviders: CurrencyPairLiquidityProvidersListResult }, QueryGetCurrencyPairLiquidityProviderArgs>(
-      {
-        query: GET_CURRENCY_PAIR_LIQUIDITY_PROVIDERS,
-        fetchPolicy: 'network-only'
-      }).pipe(map(result => {
-        if (result.data?.getCurrencyPairLiquidityProviders?.list && result.data?.getCurrencyPairLiquidityProviders?.count) {
-          return {
-            list: result.data.getCurrencyPairLiquidityProviders.list.map(val => new CurrencyPairItem(val)),
-            count: result.data.getCurrencyPairLiquidityProviders.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      }));
-  }
-
-  getLiquidityProviders(): Observable<{ list: Array<LiquidityProviderEntityItem>; count: number; }>{
-    return this.watchQuery<{ getLiquidityProviders: Array<LiquidityProviderEntity> }, null>(
-      {
-        query: GET_LIQUIDITY_PROVIDERS,
-        fetchPolicy: 'network-only'
-      }).pipe(map(result => {
-        if (result.data?.getLiquidityProviders && result.data?.getLiquidityProviders?.length != 0) {
-          return {
-            list: result.data.getLiquidityProviders.map(item => new LiquidityProviderEntityItem(item)),
-            count: result.data.getLiquidityProviders.length
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      }));
-  }
-
-  getApiKeys(
-    pageIndex: number,
-    takeItems: number,
-    orderField: string,
-    orderDesc: boolean
-  ): Observable<{ list: Array<ApiKeyItem>; count: number; }> {
-
-    const vars: QueryGetApiKeysArgs = {
-      skip: pageIndex * takeItems,
-      first: takeItems,
-      orderBy: [{ orderBy: orderField, desc: orderDesc }]
-    };
-
-    return this.watchQuery<{ getApiKeys: ApiKeyListResult }, QueryGetApiKeysArgs>(
-      {
-        query: GET_USER_API_KEYS,
-        variables: vars,
-        fetchPolicy: 'network-only'
-      }).pipe(map(result => {
-        if (result.data?.getApiKeys?.list && result.data?.getApiKeys?.count) {
-          return {
-            list: result.data.getApiKeys.list.map(val => new ApiKeyItem(val)),
-            count: result.data.getApiKeys.count
-          };
-        } else {
-          return {
-            list: [],
-            count: 0
-          };
-        }
-      }));
-  }
-
-  updateSettingsCommon(data: SettingsCommon): Observable<any> {
-    return this.mutate({
-      mutation: UPDATE_SETTINGS_COMMON,
-      variables: {
-        settingsId: data.settingsCommonId,
-        liquidityProvider: data.liquidityProvider,
-        custodyProvider: data.custodyProvider,
-        kycProvider: data.kycProvider,
-        adminEmails: data.adminEmails,
-        stoppedForServicing: data.stoppedForServicing,
-        additionalSettings: data.additionalSettings
-      }
-    });
-  }
-
-  createPaymentProviderPayout(paymentProvider: String, type: PaymentProviderPayoutType): Observable<any> {
-    return this.mutate({
-      mutation: CREATE_PAYMENT_PROVIDER_PAYOUT,
-      variables: {
-        paymentProvider: paymentProvider,
-        type: type
-      }
-    });
-  }
-
-  createPaymentProviderRefund(paymentProvider: String, amount: Number, transactionId: String): Observable<any> {
-    return this.mutate({
-      mutation: CREATE_PAYMENT_PROVIDER_REFUND,
-      variables: {
-        paymentProvider: paymentProvider,
-        amount: amount,
-        transactionId: transactionId
-      }
-    });
-  }
-
-  saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
-    return !feeScheme.id
-      ? this.mutate({
-        mutation: ADD_SETTINGS_FEE,
-        variables: {
-          name: feeScheme.name,
-          description: feeScheme.description,
-          targetFilterType: feeScheme.target,
-          targetFilterValues: feeScheme.targetValues,
-          targetInstruments: feeScheme.instrument,
-          targetUserTypes: feeScheme.userType,
-          targetUserModes: feeScheme.userMode,
-          targetTransactionTypes: feeScheme.trxType,
-          targetPaymentProviders: feeScheme.provider,
-          targetCurrenciesFrom: feeScheme.currenciesFrom,
-          targetCurrenciesTo: feeScheme.currenciesTo,
-          terms: feeScheme.terms.getObject(),
-          wireDetails: feeScheme.details.getObject()
-        }
-      })
-      : this.mutate({
-        mutation: UPDATE_SETTINGS_FEE,
-        variables: {
-          settingsId: feeScheme.id,
-          name: feeScheme.name,
-          description: feeScheme.description,
-          targetFilterType: feeScheme.target,
-          targetFilterValues: feeScheme.targetValues,
-          targetInstruments: feeScheme.instrument,
-          targetUserTypes: feeScheme.userType,
-          targetUserModes: feeScheme.userMode,
-          targetTransactionTypes: feeScheme.trxType,
-          targetPaymentProviders: feeScheme.provider,
-          terms: feeScheme.terms.getObject(),
-          wireDetails: feeScheme.details.getObject(),
-          targetCurrenciesFrom: feeScheme.currenciesFrom,
-          targetCurrenciesTo: feeScheme.currenciesTo
-        }
-      });
-  }
-
-  saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
-    return create
-      ? this.apollo.mutate({
-        mutation: ADD_SETTINGS_COST,
-        variables: {
-          name: settings.name,
-          description: settings.description,
-          bankAccountIds: settings.bankAccountIds,
-          targetFilterType: settings.target,
-          targetFilterValues: settings.targetValues,
-          targetInstruments: settings.instrument,
-          targetTransactionTypes: settings.trxType,
-          targetPaymentProviders: settings.provider,
-          terms: settings.terms.getObject()
-        }
-      })
-      : this.apollo.mutate({
-        mutation: UPDATE_SETTINGS_COST,
-        variables: {
-          settingsId: settings.id,
-          name: settings.name,
-          description: settings.description,
-          bankAccountIds: settings.bankAccountIds,
-          targetFilterType: settings.target,
-          targetFilterValues: settings.targetValues,
-          targetInstruments: settings.instrument,
-          targetTransactionTypes: settings.trxType,
-          targetPaymentProviders: settings.provider,
-          terms: settings.terms.getObject()
-        }
-      });
-  }
-
-  saveBankAccountSettings(account: WireTransferBankAccount, create: boolean): Observable<any> {
-    const vars = {
-      bankAccountId: account.bankAccountId,
-      name: account.name,
-      description: account.description,
-      au: account.au,
-      uk: account.uk,
-      eu: account.eu
-    };
-    return create
-      ? this.apollo.mutate({
-        mutation: ADD_WIRE_TRANSFER_SETTINGS,
-        variables: {
-          name: account.name,
-          description: account.description,
-          au: account.au,
-          uk: account.uk,
-          eu: account.eu,
-          monoova: account.monoova,
-          primeTrust: account.primeTrust,
-          openpayd: account.openpayd,
-          flashfx: account.flashfx
-        }
-      })
-      : this.apollo.mutate({
-        mutation: UPDATE_WIRE_TRANSFER_SETTINGS,
-        variables: {
-          bankAccountId: account.bankAccountId,
-          name: account.name,
-          description: account.description,
-          au: account.au,
-          uk: account.uk,
-          eu: account.eu,
-          monoova: account.monoova,
-          primeTrust: account.primeTrust,
-          openpayd: account.openpayd,
-          flashfx: account.flashfx
-        }
-      });
-  }
-
-  saveKycSettings(settings: KycScheme, create: boolean): Observable<any> {
-    return create
-      ? this.apollo.mutate({
-        mutation: ADD_SETTINGS_KYC,
-        variables: {
-          name: settings.name,
-          description: settings.description,
-          targetFilterType: settings.target,
-          targetFilterValues: settings.targetValues,
-          targetKycProviders: settings.kycProviders,
-          targetUserType: settings.userType,
-          targetUserModes: settings.userModes,
-          requireUserFullName: settings.requireUserFullName,
-          requireUserPhone: settings.requireUserPhone,
-          requireUserBirthday: settings.requireUserBirthday,
-          requireUserAddress: settings.requireUserAddress,
-          requireUserFlatNumber: settings.requireUserFlatNumber,
-          levelIds: [settings.levelId]
-        }
-      })
-      : this.apollo.mutate({
-        mutation: UPDATE_SETTINGS_KYC,
-        variables: {
-          settingsId: settings.id,
-          name: settings.name,
-          description: settings.description,
-          targetFilterType: settings.target,
-          targetFilterValues: settings.targetValues,
-          targetKycProviders: settings.kycProviders,
-          targetUserType: settings.userType,
-          targetUserModes: settings.userModes,
-          requireUserFullName: settings.requireUserFullName,
-          requireUserPhone: settings.requireUserPhone,
-          requireUserBirthday: settings.requireUserBirthday,
-          requireUserAddress: settings.requireUserAddress,
-          requireUserFlatNumber: settings.requireUserFlatNumber,
-          levelIds: [settings.levelId]
-        }
-      });
-  }
-
-  saveKycTierSettings(settings: KycTier, create: boolean): Observable<any> {
-    return create
-      ? this.apollo.mutate({
-        mutation: ADD_SETTINGS_KYC_TIER,
-        variables: {
-          name: settings.name,
-          description: settings.description,
-          amount: settings.amount,
-          default: settings.isDefault,
-          targetFilterType: settings.target,
-          targetFilterValues: settings.targetValues,
-          targetKycProviders: settings.kycProviders,
-          targetUserType: settings.userType,
-          targetUserModes: settings.userModes,
-          requireUserFullName: settings.requireUserFullName,
-          requireUserPhone: settings.requireUserPhone,
-          requireUserBirthday: settings.requireUserBirthday,
-          requireUserAddress: settings.requireUserAddress,
-          requireUserFlatNumber: settings.requireUserFlatNumber,
-          levelId: settings.levelId
-        }
-      })
-      : this.apollo.mutate({
-        mutation: UPDATE_SETTINGS_KYC_TIER,
-        variables: {
-          settingsId: settings.id,
-          name: settings.name,
-          description: settings.description,
-          amount: settings.amount,
-          default: settings.isDefault,
-          targetFilterType: settings.target,
-          targetFilterValues: settings.targetValues,
-          targetKycProviders: settings.kycProviders,
-          targetUserType: settings.userType,
-          targetUserModes: settings.userModes,
-          requireUserFullName: settings.requireUserFullName,
-          requireUserPhone: settings.requireUserPhone,
-          requireUserBirthday: settings.requireUserBirthday,
-          requireUserAddress: settings.requireUserAddress,
-          requireUserFlatNumber: settings.requireUserFlatNumber,
-          levelId: settings.levelId
-        }
-      });
-  }
-
-  saveKycLevelSettings(level: KycLevel, create: boolean): Observable<any> {
-    return create
-      ? this.apollo.mutate({
-        mutation: ADD_KYC_LEVEL_SETTINGS,
-        variables: {
-          name: level.name,
-          description: level.description,
-          userType: level.userType,
-          originalLevelName: level.levelData.value,
-          originalFlowName: level.flowData.value,
-          data: level.getDataObject()
-        }
-      })
-      : this.apollo.mutate({
-        mutation: UPDATE_KYC_LEVEL_SETTINGS,
-        variables: {
-          settingsId: level.id,
-          name: level.name,
-          description: level.description,
-          userType: level.userType,
-          originalLevelName: level.levelData.value,
-          originalFlowName: level.flowData.value,
-          data: level.getDataObject()
-        }
-      });
-  }
-
-  addBlackCountry(code: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: ADD_BLACK_COUNTRY,
-      variables: {
-        countryCode2: code
-      }
-    });
-  }
-
-  saveWidget(widget: WidgetItem): Observable<any> {
-    return !widget.id
-      ? this.apollo.mutate({
-        mutation: CREATE_WIDGET,
-        variables: {
-          userId: widget.userId,
-          name: widget.name,
-          description: widget.description,
-          transactionTypes: widget.transactionTypes,
-          currenciesCrypto: widget.currenciesCrypto,
-          currenciesFiat: widget.currenciesFiat,
-          destinationAddress: widget.destinationAddress,
-          countriesCode2: widget.countriesCode2,
-          instruments: widget.instruments,
-          paymentProviders: widget.paymentProviders,
-          liquidityProvider: widget.liquidityProvider,
-          additionalSettings: widget.additionalSettings,
-          secret: widget.secret,
-          allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
-          newVaultPerTransaction: widget.newVaultPerTransaction,
-          fee: widget.fee
-        }
-      }).pipe(tap(() => {
-        this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
-      }))
-      : this.apollo.mutate({
-        mutation: UPDATE_WIDGET,
-        variables: {
-          widgetId: widget.id,
-          userId: widget.userId,
-          name: widget.name,
-          description: widget.description,
-          transactionTypes: widget.transactionTypes,
-          currenciesCrypto: widget.currenciesCrypto,
-          currenciesFiat: widget.currenciesFiat,
-          destinationAddress: widget.destinationAddress,
-          countriesCode2: widget.countriesCode2,
-          instruments: widget.instruments,
-          paymentProviders: widget.paymentProviders,
-          liquidityProvider: widget.liquidityProvider,
-          additionalSettings: widget.additionalSettings,
-          secret: widget.secret,
-          allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
-          newVaultPerTransaction: widget.newVaultPerTransaction,
-          fee: widget.fee
-        }
-      }).pipe(tap(() => {
-        this.snackBar.open(`Widget was updated`, undefined, { duration: 5000 });
-      }));
-  }
-
-  updateUserFlag(flag: boolean, userId: string): Observable<any> {
-    const vars = {
-      userId: userId,
-      flag: flag
-    };
-    return this.apollo.mutate({
-      mutation: UPDATE_USER_FLAG,
-      variables: vars
-    });
-  }
-
-  saveCustomer(id: string, customer: UserInput, customerRoles: string[] = ['USER']): Observable<any> {
-    if (id === '') {
-      return this.apollo.mutate({
-        mutation: CREATE_USER,
-        variables: {
-          roles: customerRoles,
-          type: customer.type,
-          mode: UserMode.InternalWallet,
-          email: customer.email,
-          changePasswordRequired: customer.changePasswordRequired,
-          firstName: customer.firstName,
-          lastName: customer.lastName,
-          gender: customer.gender,
-          birthday: customer.birthday,
-          countryCode2: customer.countryCode2,
-          countryCode3: customer.countryCode3,
-          postCode: customer.postCode,
-          town: customer.town,
-          street: customer.street,
-          subStreet: customer.subStreet,
-          stateName: customer.stateName,
-          buildingName: customer.buildingName,
-          buildingNumber: customer.buildingNumber,
-          flatNumber: customer.flatNumber,
-          phone: customer.phone,
-          risk: customer.risk,
-          accountStatus: customer.accountStatus,
-          kycTierId: customer.kycTierId,
-          defaultFiatCurrency: customer.defaultFiatCurrency,
-          defaultCryptoCurrency: customer.defaultCryptoCurrency,
-          kycProvider: customer.kycProvider,
-          comment: customer.comment,
-          flag: customer.flag,
-          companyName: customer.companyName
-        }
-      }).pipe(tap(() => {
-        this.snackBar.open(`User was created`, undefined, { duration: 5000 });
-      }));
-    } else {
-      return this.apollo.mutate({
-        mutation: UPDATE_USER,
-        variables: {
-          userId: id,
-          email: customer.email,
-          changePasswordRequired: customer.changePasswordRequired,
-          firstName: customer.firstName,
-          lastName: customer.lastName,
-          gender: customer.gender,
-          birthday: customer.birthday,
-          countryCode2: customer.countryCode2,
-          countryCode3: customer.countryCode3,
-          postCode: customer.postCode,
-          town: customer.town,
-          street: customer.street,
-          subStreet: customer.subStreet,
-          stateName: customer.stateName,
-          buildingName: customer.buildingName,
-          buildingNumber: customer.buildingNumber,
-          flatNumber: customer.flatNumber,
-          phone: customer.phone,
-          risk: customer.risk,
-          accountStatus: customer.accountStatus,
-          kycTierId: customer.kycTierId,
-          defaultFiatCurrency: customer.defaultFiatCurrency,
-          defaultCryptoCurrency: customer.defaultCryptoCurrency,
-          kycProvider: customer.kycProvider,
-          comment: customer.comment,
-          flag: customer.flag,
-          companyName: customer.companyName
-        }
-      }).pipe(tap(() => {
-        this.snackBar.open(`User was updated`, undefined, { duration: 5000 });
-      }));
-    }
-  }
-
-  updateUserVault(wallet: AssetAddress): Observable<any> {
-    return this.apollo.mutate({
-      mutation: UPDATE_USER_VAULT,
-      variables: {
-        userId: wallet.userId,
-        vaultId: wallet.vaultId,
-        vaultName: wallet.vaultName
-      }
-    }).pipe(tap(() => {
-      this.snackBar.open(
-        `Wallet was updated`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  deleteFeeSettings(settingsId: string): Observable<any> {
-    return this.mutate({
-      mutation: DELETE_SETTINGS_FEE,
-      variables: {
-        settingsId
-      }
-    });
-  }
-
-  deleteCostSettings(settingsId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_SETTINGS_COST,
-      variables: {
-        settingsId
-      }
-    });
-  }
-
-  deleteBankAccountSettings(accountId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_WIRE_TRANSFER_SETTINGS,
-      variables: {
-        bankAccountId: accountId
-      }
-    });
-  }
-
-  deleteKycSettings(settingsId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_SETTINGS_KYC,
-      variables: {
-        settingsId
-      }
-    });
-  }
-
-  deleteKycTierSettings(settingsId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_SETTINGS_KYC_TIER,
-      variables: {
-        settingsId
-      }
-    });
-  }
-
-  deleteKycLevelSettings(settingsId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_KYC_LEVEL_SETTINGS,
-      variables: {
-        settingsId
-      }
-    });
-  }
-
-  deleteBlackCountry(code: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_BLACK_COUNTRY,
-      variables: {
-        countryCode2: code
-      }
-    });
-  }
-
-  deleteWidget(widgetId: string): Observable<any> {
-    return this.mutate({
-      mutation: DELETE_WIDGET,
-      variables: {
-        widgetId
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Widget was deleted`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  deleteWallet(vaultId: string, userId: string): Observable<any> {
-    return this.mutate({
-      mutation: DELETE_USER_VAULT,
-      variables: {
-        vaultId,
-        userId
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Wallet was deleted`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  deleteCustomer(customerId: string): Observable<any> {
-    return this.mutate({
-      mutation: DELETE_CUSTOMER,
-      variables: {
-        customerId
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Customer was disabled`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  restoreCustomer(customerId: string): Observable<any> {
-    return this.mutate({
-      mutation: RESTORE_CUSTOMER,
-      variables: {
-        customerId
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Customer was restored`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  confirmEmail(userId: string): Observable<any> {
-    return this.mutate({
-      mutation: CONFIRM_EMAIL,
-      variables: {
-        user_id: userId
-      }
-    }).pipe(tap((res) => {
-      // this.snackBar.open(
-      //   `Email has been confirmed`,
-      //   undefined, { duration: 5000 }
-      // );
-    }));
-  }
-
-  confirmDevice(deviceId: string): Observable<any> {
-    return this.mutate({
-      mutation: CONFIRM_DEVICE,
-      variables: {
-        device_id: deviceId
-      }
-    }).pipe(tap((res) => {
-      // this.snackBar.open(
-      //   `Device has been confirmed`,
-      //   undefined, { duration: 5000 }
-      // );
-    }));
-  }
-
-  deleteTransaction(transactionId: string): Observable<any> {
-    return this.mutate({
-      mutation: CANCEL_TRANSACTION,
-      variables: {
-        transactionId
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Transaction was cancelled`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  createUserTransaction(transaction: TransactionInput, userId: string, rate: number): Observable<any> {
-    return this.mutate({
-      mutation: CREATE_USER_TRANSACTION,
-      variables: {
-        transactionType: transaction.type,
-        source: transaction.source,
-        currencyToSpend: transaction.currencyToSpend,
-        currencyToReceive: transaction.currencyToReceive,
-        amountToSpend: transaction.amountToSpend,
-        instrument: transaction.instrument,
-        paymentProvider: transaction.paymentProvider,
-        userId: userId,
-        rate: rate
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Transaction was created`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  unbenchmarkTransaction(ids: string[]): Observable<any> {
-    return this.mutate({
-      mutation: UNBENCHMARK_TRANSACTIONS,
-      variables: {
-        transactionIds: ids
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Transactions were changed`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  updateTransaction(data: Transaction, restartTransaction: boolean, recalculateAmounts: boolean): Observable<any> {
-    let benchmark: TransactionUpdateTransferOrderChanges | undefined = undefined;
-    let transfer: TransactionUpdateTransferOrderChanges | undefined = undefined;
-    if (data.transferOrder?.orderId !== '' && data.transferOrder?.transferHash !== '') {
-      transfer = {
-        orderId: data.transferOrder?.orderId,
-        hash: data.transferOrder?.transferHash
-      };
-    }
-    if (data.benchmarkTransferOrder?.orderId !== '' && data.benchmarkTransferOrder?.transferHash !== '') {
-      benchmark = {
-        orderId: data.benchmarkTransferOrder?.orderId,
-        hash: data.benchmarkTransferOrder?.transferHash
-      };
-    }
-    const vars = {
-      transactionId: data.transactionId,
-      currencyToSpend: data.currencyToSpend,
-      currencyToReceive: data.currencyToReceive,
-      amountToSpend: data.amountToSpend,
-      amountToReceive: data.amountToReceive,
-      rate: data.rate,
-      feeFiat: data.feeFiat,
-      destination: data.destination,
-      status: data.status,
-      kycStatus: data.kycStatus,
-      accountStatus: data.accountStatus,
-      comment: data.comment,
-      launchAfterUpdate: restartTransaction,
-      transferOrder: transfer,
-      benchmarkTransferOrder: benchmark,
-      recalculate: recalculateAmounts,
-      flag: data.flag
-    };
-    return this.mutate({
-      mutation: UPDATE_TRANSACTIONS,
-      variables: vars
-    });
-  }
-
-  updateTransactionFlag(flag: boolean, transactionId: string): Observable<any> {
-    const vars = {
-      transactionId: transactionId,
-      flag: flag
-    };
-    return this.mutate({
-      mutation: UPDATE_TRANSACTION_FLAG,
-      variables: vars
-    });
-  }
-
-  sendAdminNotification(ids: string[], level: UserNotificationLevel, title: string, text: string): Observable<any> {
-    return this.mutate({
-      mutation: SEND_ADMIN_NOTIFICATION,
-      variables: {
-        notifiedUserIds: ids,
-        title,
-        text,
-        level
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Message was sent`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  resendAdminNotification(notificationId: string): Observable<any> {
-    return this.mutate({
-      mutation: RESEND_NOTIFICATION,
-      variables: {
-        notificationId: notificationId
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Message was resent`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  assignRole(userId: string, roleCodes: string[]): Observable<any> {
-    return this.mutate({
-      mutation: ASSIGN_ROLE,
-      variables: {
-        userId,
-        roleCodes
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Roles are assigned`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  removeRole(userId: string, roleCodes: string[]): Observable<any> {
-    return this.mutate({
-      mutation: REMOVE_ROLE,
-      variables: {
-        userId,
-        roleCodes
-      }
-    }).pipe(tap((res) => {
-      this.snackBar.open(
-        `Roles are removed`,
-        undefined, { duration: 5000 }
-      );
-    }));
-  }
-
-  createApiKey(userId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: CREATE_USER_API_KEY,
-      variables: {
-        userId
-      }
-    });
-  }
-
-  createCurrencyPair(fromCurrency: string, toCurrency: string, liquidityProviderId: string, fixedRate: number): Observable<any> {
-    return this.apollo.mutate({
-      mutation: CREATE_CURRENCY_PAIR,
-      variables: {
-        fromCurrency,
-        toCurrency,
-        liquidityProviderId,
-        fixedRate 
-      }
-    });
-  }
+	constructor(
+		private router: Router,
+		private apollo: Apollo,
+		private auth: AuthService,
+		private errorHandler: ErrorService,
+		private snackBar: MatSnackBar
+	) {
+	}
+
+	private activeQueryCounter = 0;
+	private isBusySubject = new BehaviorSubject(false);
+
+	public get isBusy(): Observable<boolean> {
+		return this.isBusySubject.asObservable();
+	}
+
+	getDashboardStats(filter: Filter): Observable<DashboardStats> {
+		const vars: QueryGetDashboardStatsArgs = {
+			createdDateInterval: filter.createdDateInterval,
+			completedDateInterval: filter.completedDateInterval,
+			updateDateInterval: filter.updatedDateInterval,
+			userIdsOnly: filter.user ? [filter.user] : [],
+			widgetIdsOnly: filter.widgetNames,
+			sourcesOnly: filter.sources,
+			countriesOnly: filter.countries,
+			countryCodeType: CountryCodeType.Code3,
+			accountTypesOnly: filter.accountTypes
+		};
+		return this.watchQuery<{ getDashboardStats: DashboardStats; }, QueryGetDashboardStatsArgs>({
+			query: GET_DASHBOARD_STATS,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		}).pipe(map(result => {
+			return result.data.getDashboardStats;
+		}));
+	}
+
+	getFeeSettings(): Observable<{ list: Array<FeeScheme>; count: number; }> {
+		return this.watchQuery<{ getSettingsFee: SettingsFeeListResult; }, QueryGetSettingsFeeArgs>({
+			query: GET_FEE_SETTINGS,
+			fetchPolicy: 'network-only'
+		}).pipe(
+			map(result => {
+				if (result.data?.getSettingsFee?.list && result.data?.getSettingsFee?.count) {
+					return {
+						list: result.data.getSettingsFee.list.map(item => new FeeScheme(item)),
+						count: result.data.getSettingsFee.count
+					};
+				} else {
+					return {
+						list: [],
+						count: 0
+					};
+				}
+			})
+		);
+	}
+
+	getCostSettings(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_COST_SETTINGS,
+			fetchPolicy: 'network-only'
+		});
+	}
+
+	getWireTransferBankAccounts(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_WIRE_TRANSFER_SETTINGS,
+			fetchPolicy: 'network-only'
+		});
+	}
+
+	getSettingsKycTiers(id: string): Observable<{ list: Array<SettingsKycTier>; count: number; }> {
+		return this.watchQuery<{ getSettingsKycTiers: SettingsKycTierListResult; }, QueryGetSettingsKycTiersArgs>({
+			query: GET_SETTINGS_KYC_TIERS_SHORT,
+			variables: { userId: (id !== '') ? id : undefined },
+			fetchPolicy: 'network-only'
+		}).pipe(
+			map(result => {
+				if (result.data?.getSettingsKycTiers?.list && result.data?.getSettingsKycTiers?.count) {
+					return {
+						list: result.data.getSettingsKycTiers.list,
+						count: result.data.getSettingsKycTiers.count
+					};
+				} else {
+					return {
+						list: [],
+						count: 0
+					};
+				}
+			})
+		);
+	}
+
+	getKycTiers(): Observable<{ list: Array<KycTier>; count: number; }> {
+		return this.watchQuery<{ getSettingsKycTiers: SettingsKycTierListResult; }, QueryGetSettingsKycTiersArgs>({
+			query: GET_SETTINGS_KYC_TIERS,
+			fetchPolicy: 'network-only'
+		}).pipe(
+			map(result => {
+				if (result.data?.getSettingsKycTiers?.list && result.data?.getSettingsKycTiers?.count) {
+					return {
+						list: result.data.getSettingsKycTiers.list.map(item => new KycTier(item)),
+						count: result.data.getSettingsKycTiers.count
+					};
+				} else {
+					return {
+						list: [],
+						count: 0
+					};
+				}
+			})
+		);
+	}
+
+	getKycSettings(): Observable<{ list: Array<KycScheme>; count: number; }> {
+		return this.watchQuery<{ getSettingsKyc: SettingsKycListResult; }, QueryGetSettingsKycArgs>({
+			query: GET_KYC_SETTINGS,
+			fetchPolicy: 'network-only'
+		})
+			.pipe(
+				map(result => {
+					if (result.data?.getSettingsKyc?.list && result.data?.getSettingsKyc?.count) {
+						return {
+							list: result.data.getSettingsKyc.list.map(item => new KycScheme(item)),
+							count: result.data.getSettingsKyc.count
+						};
+					} else {
+						return {
+							list: [],
+							count: 0
+						};
+					}
+				})
+			);
+	}
+
+	getKycLevels(userType: UserType | null): Observable<{ list: Array<KycLevel>; count: number; }> {
+		const userTypeFilter = userType === null ? '' : userType?.toString();
+
+		return this.watchQuery<{ getSettingsKycLevels: SettingsKycLevelListResult; }, QueryGetSettingsKycLevelsArgs>({
+			query: GET_KYC_LEVELS,
+			variables: { filter: userTypeFilter },
+			fetchPolicy: 'network-only'
+		})
+			.pipe(
+				map(result => {
+					if (result.data?.getSettingsKycLevels?.list && result.data?.getSettingsKycLevels?.count) {
+						return {
+							list: result.data.getSettingsKycLevels.list.map(item => new KycLevel(item)),
+							count: result.data.getSettingsKycLevels.count
+						};
+					} else {
+						return {
+							list: [],
+							count: 0
+						};
+					}
+				})
+			);
+	}
+
+	getCountryBlackList(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_COUNTRY_BLACK_LIST,
+			fetchPolicy: 'network-only'
+		});
+	}
+
+	getNotifications(
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean,
+		filter?: Filter
+	): Observable<{ list: Array<NotificationItem>; count: number; }> {
+
+		const vars: QueryGetNotificationsArgs = {
+			filter: filter?.search,
+			userNotificationTypeCode: filter?.notificationType,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: [{ orderBy: orderField, desc: orderDesc }]
+		};
+
+		return this.watchQuery<{ getNotifications: UserNotificationListResult; }, QueryGetNotificationsArgs>(
+			{
+				query: GET_NOTIFICATIONS,
+				variables: vars,
+				fetchPolicy: 'network-only'
+			}).pipe(map(result => {
+			if (result.data?.getNotifications?.list && result.data?.getNotifications?.count) {
+				return {
+					list: result.data.getNotifications.list.map(val => new NotificationItem(val)),
+					count: result.data.getNotifications.count
+				};
+			} else {
+				return {
+					list: [],
+					count: 0
+				};
+			}
+		}));
+	}
+
+	getUserActions(
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean,
+		filter?: Filter
+	): Observable<{ list: Array<UserActionItem>; count: number; }> {
+
+		const vars: QueryGetUserActionsArgs = {
+			filter: filter?.search,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: [{ orderBy: orderField, desc: orderDesc }],
+			userId: filter?.user,
+			resultsOnly: filter?.resultsOnly,
+			statusesOnly: filter?.statusesOnly,
+			actionTypesOnly: filter?.userActionTypes,
+			createdDateInterval: filter?.createdDateInterval
+			// $withResult: UserActionResult
+		};
+
+		return this.watchQuery<{ getUserActions: UserActionListResult; }, QueryGetUserActionsArgs>(
+			{
+				query: GET_USER_ACTIONS,
+				variables: vars,
+				fetchPolicy: 'network-only'
+			}).pipe(map(result => {
+			if (result.data?.getUserActions?.list && result.data?.getUserActions?.count) {
+				return {
+					list: result.data.getUserActions.list.map(val => new UserActionItem(val)),
+					count: result.data.getUserActions.count
+				};
+			} else {
+				return {
+					list: [],
+					count: 0
+				};
+			}
+		}));
+	}
+
+	getRiskAlerts(
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean,
+		filter?: Filter
+	): Observable<{ list: Array<RiskAlertItem>; count: number; }> {
+
+		const vars: QueryGetRiskAlertsArgs = {
+			userId: filter?.user ?? null,
+			code: filter?.riskAlertCode,
+			filter: filter?.search,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: [{ orderBy: orderField, desc: orderDesc }]
+		};
+
+		return this.watchQuery<{ getRiskAlerts: RiskAlertResultList; }, QueryGetRiskAlertsArgs>(
+			{
+				query: GET_RISK_ALERTS,
+				variables: vars,
+				fetchPolicy: 'network-only'
+			}).pipe(map(result => {
+			if (result.data?.getRiskAlerts?.list && result.data?.getRiskAlerts?.count) {
+				return {
+					list: result.data.getRiskAlerts.list.map(val => new RiskAlertItem(val)),
+					count: result.data.getRiskAlerts.count
+				};
+			} else {
+				return {
+					list: [],
+					count: 0
+				};
+			}
+		}));
+	}
+
+	getDevices(userId: string): Observable<{ list: Array<DeviceItem>; count: number; }> {
+		return this.watchQuery<{ getDevices: UserDeviceListResult; }, any>(
+			{
+				query: GET_DEVICES,
+				fetchPolicy: 'network-only'
+			}).pipe(map(result => {
+			if (result.data?.getDevices?.list && result.data?.getDevices?.count) {
+				return {
+					list: result.data.getDevices.list
+						.filter(x => x?.userId === userId)
+						.map(val => new DeviceItem(val)),
+					count: result.data.getDevices.count
+				};
+			} else {
+				return {
+					list: [],
+					count: 0
+				};
+			}
+		}));
+	}
+
+	getTransaction(transactionId: string): Observable<TransactionItemFull | undefined> {
+		return this.watchQuery<{ getTransactions: TransactionListResult; }, QueryGetTransactionsArgs>({
+			query: GET_TRANSACTIONS,
+			variables: {
+				transactionIdsOnly: [transactionId],
+				filter: undefined,
+				skip: 0,
+				first: 1
+			},
+			fetchPolicy: 'network-only'
+		})
+			.pipe(
+				map(res => {
+					const listResult = res?.data?.getTransactions.list;
+
+					if (listResult && listResult.length === 1) {
+						return new TransactionItemFull(listResult[0]);
+					}
+
+					return undefined;
+				})
+			);
+	}
+
+	getTransactions(
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean,
+		filter?: Filter
+	): Observable<{ list: Array<TransactionItemFull>; count: number; }> {
+		let widgetIds: string[] = [];
+		if (filter?.widgets) {
+			widgetIds = widgetIds.concat(filter.widgets);
+		}
+		if (filter?.widgetNames) {
+			widgetIds = widgetIds.concat(filter.widgetNames);
+		}
+		const vars: QueryGetTransactionsArgs = {
+			transactionIdsOnly: filter?.transactionIds,
+			accountTypesOnly: filter?.accountTypes,
+			accountModesOnly: filter?.accountModes,
+			countriesOnly: filter?.countries,
+			countryCodeType: CountryCodeType.Code3,
+			sourcesOnly: filter?.sources,
+			userIdsOnly: filter?.users,
+			widgetIdsOnly: widgetIds,
+			flag: filter?.transactionFlag,
+			preauth: filter?.preauthFlag,
+			kycStatusesOnly: filter?.transactionKycStatuses,
+			transactionTypesOnly: filter?.transactionTypes,
+			transactionStatusesOnly: filter?.transactionStatuses,
+			userTierLevelsOnly: filter?.tiers,
+			riskLevelsOnly: filter?.riskLevels,
+			paymentInstrumentsOnly: filter?.paymentInstruments,
+			createdDateInterval: filter?.createdDateInterval,
+			completedDateInterval: filter?.completedDateInterval,
+			walletAddressOnly: filter?.walletAddress,
+			filter: filter?.search,
+			verifyWhenPaid: filter?.verifyWhenPaid,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: [{ orderBy: orderField, desc: orderDesc }]
+		};
+		return this.watchQuery<{ getTransactions: TransactionListResult; }, QueryGetTransactionsArgs>({
+			query: GET_TRANSACTIONS,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		}).pipe(map(result => {
+			if (result.data?.getTransactions?.list && result.data?.getTransactions?.count) {
+				return {
+					list: result.data.getTransactions.list.map(val => new TransactionItemFull(val)),
+					count: result.data.getTransactions.count
+				};
+			} else {
+				return {
+					list: [],
+					count: 0
+				};
+			}
+		}));
+	}
+
+	getTransactionStatusHistory(
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean,
+		filter?: Filter
+	): Observable<{ list: Array<TransactionStatusHistoryItem>; count: number; }> {
+		let widgetIds: string[] = [];
+		if (filter?.widgets) {
+			widgetIds = widgetIds.concat(filter.widgets);
+		}
+		if (filter?.widgetNames) {
+			widgetIds = widgetIds.concat(filter.widgetNames);
+		}
+		const vars: QueryGetTransactionStatusHistoryArgs = {
+			transactionIds: filter?.transactionIds,
+			userIds: filter?.users,
+			statusesOnly: filter?.transactionStatuses,
+			createdDateInterval: filter?.createdDateInterval,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: [{ orderBy: orderField, desc: orderDesc }]
+		};
+		return this.watchQuery<{ getTransactionStatusHistory: TransactionStatusHistoryListResult; }, QueryGetTransactionStatusHistoryArgs>({
+			query: GET_TRANSACTION_STATUS_HISTORY,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		}).pipe(map(result => {
+			if (result.data?.getTransactionStatusHistory?.list && result.data?.getTransactionStatusHistory?.count) {
+				return {
+					list: result.data.getTransactionStatusHistory.list.map(val => new TransactionStatusHistoryItem(val)),
+					count: result.data.getTransactionStatusHistory.count
+				};
+			} else {
+				return {
+					list: [],
+					count: 0
+				};
+			}
+		}));
+	}
+
+	getUsers(
+		roleIds: string[],
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean,
+		filter: Filter
+	): Observable<{ list: UserItem[]; count: number; }> {
+		const vars = {
+			userIdsOnly: filter?.users,
+			roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
+			accountTypesOnly: filter?.accountTypes,
+			accountModesOnly: filter?.accountModes,
+			accountStatusesOnly: filter?.accountStatuses,
+			userTierLevelsOnly: filter?.tiers,
+			riskLevelsOnly: filter?.riskLevels,
+			countriesOnly: filter?.countries,
+			countryCodeType: CountryCodeType.Code3,
+			kycStatusesOnly: filter.kycStatuses,
+			registrationDateInterval: filter?.registrationDateInterval,
+			widgetIdsOnly: filter?.widgetNames,
+			totalBuyVolumeOver: filter?.totalBuyVolumeOver,
+			transactionCountOver: filter?.transactionCountOver,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: [{ orderBy: orderField, desc: orderDesc }],
+			filter: filter?.search,
+			verifyWhenPaid: filter?.verifyWhenPaid,
+			flag: filter?.transactionFlag
+		};
+		return this.watchQuery<{ getUsers: UserListResult; }, QueryGetUsersArgs>({
+			query: GET_USERS,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		})
+			.pipe(
+				map(result => {
+					if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
+						return {
+							list: result.data.getUsers.list.map(u => new UserItem(u)),
+							count: result.data.getUsers.count
+						};
+					} else {
+						return {
+							list: [],
+							count: 0
+						};
+					}
+				})
+			);
+	}
+
+	getSystemUsers(
+		roleIds: string[],
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean,
+		filter: Filter
+	): Observable<{ list: UserItem[]; count: number; }> {
+		const vars = {
+			userIdsOnly: filter?.users,
+			roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
+			accountTypesOnly: filter?.accountTypes,
+			accountStatusesOnly: filter?.accountStatuses,
+			countriesOnly: filter?.countries,
+			countryCodeType: CountryCodeType.Code3,
+			registrationDateInterval: filter?.registrationDateInterval,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: [{ orderBy: orderField, desc: orderDesc }],
+			filter: filter?.search
+		};
+		return this.watchQuery<{ getUsers: UserListResult; }, QueryGetUsersArgs>({
+			query: GET_USERS_EX,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		})
+			.pipe(
+				map(result => {
+					if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
+						return {
+							list: result.data.getUsers.list.map(u => new UserItem(u)),
+							count: result.data.getUsers.count
+						};
+					} else {
+						return {
+							list: [],
+							count: 0
+						};
+					}
+				})
+			);
+	}
+
+	findUsers(filter: Filter): Observable<{ list: UserItem[]; count: number; }> {
+		const vars = {
+			userIdsOnly: filter?.users,
+			accountTypesOnly: filter?.accountTypes,
+			accountStatusesOnly: filter?.accountStatuses,
+			riskLevelsOnly: filter?.riskLevels,
+			countriesOnly: filter?.countries,
+			countryCodeType: CountryCodeType.Code3,
+			kycStatusesOnly: filter.kycStatuses,
+			registrationDateInterval: filter?.registrationDateInterval,
+			widgetIdsOnly: filter?.widgets,
+			totalBuyVolumeOver: filter?.totalBuyVolumeOver,
+			transactionCountOver: filter?.transactionCountOver,
+			skip: 0,
+			first: 1000,
+			orderBy: [{ orderBy: 'email', desc: true }],
+			filter: filter?.search
+		};
+		return this.watchQuery<{ getUsers: UserListResult; }, QueryGetUsersArgs>({
+			query: FIND_USERS,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		})
+			.pipe(
+				map(result => {
+					if (result.data?.getUsers?.list && result.data?.getUsers?.count) {
+						return {
+							list: result.data.getUsers.list.map(u => new UserItem(u)),
+							count: result.data.getUsers.count
+						};
+					} else {
+						return {
+							list: [],
+							count: 0
+						};
+					}
+				})
+			);
+	}
+
+	getUser(userId: string): Observable<UserItem | undefined> {
+		return this.watchQuery<{ getUsers: UserListResult; }, QueryGetUsersArgs>({
+			query: GET_USERS,
+			variables: {
+				userIdsOnly: [userId],
+				countryCodeType: CountryCodeType.Code3,
+				//filter: undefined,
+				skip: 0,
+				first: 1
+			},
+			fetchPolicy: 'network-only'
+		})
+			.pipe(
+				map(res => {
+					const listResult = res?.data?.getUsers.list;
+					if (listResult && listResult.length === 1) {
+						return new UserItem(listResult[0]);
+					}
+					return undefined;
+				})
+			);
+	}
+
+	getUserKycInfo(userId: string): Observable<KycInfo | undefined> {
+		return this.watchQuery<{ getUserKycInfo: KycInfo; }, QueryGetUserKycInfoArgs>({
+			query: GET_USER_KYC_INFO,
+			variables: {
+				userId
+			},
+			fetchPolicy: 'network-only'
+		}).pipe(map(res => {
+			const result = res?.data?.getUserKycInfo;
+			if (result) {
+				return result;
+			}
+			return undefined;
+		}));
+	}
+
+	getUserState(id: string): Observable<UserState | undefined> {
+		return this.watchQuery<{ getUserState: UserState; }, QueryGetUserStateArgs>({
+			query: GET_USER_STATE,
+			variables: {
+				userId: id
+			},
+			fetchPolicy: 'network-only'
+		}).pipe(map(res => {
+			const result = res?.data?.getUserState;
+			if (result) {
+				return result;
+			}
+			return undefined;
+		}));
+	}
+
+	getVerificationLink(id: string): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_VERIFICATION_LINK,
+			variables: {
+				userId: id
+			},
+			fetchPolicy: 'network-only'
+		});
+	}
+
+	getWallets(
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean,
+		filter?: Filter
+	): Observable<{ list: Array<WalletItem>; count: number; }> {
+		const vars: QueryGetWalletsArgs = {
+			userIdsOnly: filter?.users,
+			assetIdsOnly: filter?.assets,
+			zeroBalance: filter?.zeroBalance,
+			walletIdsOnly: filter?.walletIds,
+			filter: filter?.search,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: [{ orderBy: orderField, desc: orderDesc }]
+		};
+		return this.watchQuery<{ getWallets: AssetAddressListResult; }, QueryGetWalletsArgs>(
+			{
+				query: GET_WALLETS,
+				variables: vars,
+				fetchPolicy: 'network-only'
+			})
+			.pipe(map(result => {
+				if (result.data?.getWallets?.list && result.data?.getWallets?.count) {
+					return {
+						list: result.data.getWallets.list.map(item => new WalletItem(item)),
+						count: result.data.getWallets.count
+					};
+				} else {
+					return {
+						list: [],
+						count: 0
+					};
+				}
+			}));
+	}
+
+	getFiatWallets(
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean,
+		filter?: Filter
+	): Observable<{ list: Array<FiatWalletItem>; count: number; }> {
+		const vars: QueryGetFiatVaultsArgs = {
+			userIdsOnly: filter?.users,
+			assetsOnly: filter?.assets,
+			vaultIdsOnly: filter?.walletIds,
+			zeroBalance: filter?.zeroBalance,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: [{ orderBy: orderField, desc: orderDesc }]
+		};
+		return this.watchQuery<{ getFiatVaults: FiatVaultUserListResult; }, QueryGetFiatVaultsArgs>(
+			{
+				query: GET_FIAT_VAULTS,
+				variables: vars,
+				fetchPolicy: 'network-only'
+			})
+			.pipe(
+				map(result => {
+					if (result.data?.getFiatVaults?.list && result.data?.getFiatVaults?.count) {
+						return {
+							list: result.data.getFiatVaults.list.map(item => new FiatWalletItem(item)),
+							count: result.data.getFiatVaults.count
+						};
+					} else {
+						return {
+							list: [],
+							count: 0
+						};
+					}
+				})
+			);
+	}
+
+	getWidgetIds(
+		userFilter: string,
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean
+	): Observable<{ list: WidgetItem[]; count: number; }> {
+		const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+		const customerFilter = userFilter === null ? '' : userFilter?.toString();
+		const vars = {
+			filter: customerFilter,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: orderFields
+		};
+		return this.watchQuery<{ getWidgets: WidgetListResult; }, QueryGetWidgetsArgs>({
+			query: GET_WIDGET_IDS,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		})
+			.pipe(
+				map(result => {
+					if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
+						return {
+							list: result.data.getWidgets.list.map(w => new WidgetItem(w)),
+							count: result.data.getWidgets.count
+						};
+					} else {
+						return {
+							list: [],
+							count: 0
+						};
+					}
+				})
+			);
+
+	}
+
+	getWidgets(
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean,
+		filter: Filter
+	): Observable<{ list: WidgetItem[]; count: number; }> {
+		const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+		const vars = {
+			userIdsOnly: filter.users,
+			widgetIdsOnly: filter.widgets,
+			filter: filter.search,
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: orderFields
+		};
+		return this.watchQuery<{ getWidgets: WidgetListResult; }, QueryGetWidgetsArgs>({
+			query: GET_WIDGETS,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		}).pipe(
+			map(result => {
+				if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
+					return {
+						list: result.data.getWidgets.list.map(w => {
+							return new WidgetItem(w);
+						}),
+						count: result.data.getWidgets.count
+					};
+				} else {
+					return {
+						list: [],
+						count: 0
+					};
+				}
+			})
+		);
+	}
+
+	getProviders(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_PROVIDERS,
+			fetchPolicy: 'network-only'
+		});
+	}
+
+	getSettingsCommon(): QueryRef<any, EmptyObject> | null {
+		if (this.apollo.client !== undefined) {
+			return this.apollo.watchQuery<any>({
+				query: GET_SETTINGS_COMMON,
+				fetchPolicy: 'network-only'
+			});
+		} else {
+			return null;
+		}
+	}
+
+	getCurrencyPairLiquidityProviders(): Observable<{ list: Array<CurrencyPairItem>; count: number; }>{
+		return this.watchQuery<{ getCurrencyPairLiquidityProviders: CurrencyPairLiquidityProvidersListResult; }, QueryGetCurrencyPairLiquidityProviderArgs>(
+			{
+				query: GET_CURRENCY_PAIR_LIQUIDITY_PROVIDERS,
+				fetchPolicy: 'network-only'
+			}).pipe(map(result => {
+			if (result.data?.getCurrencyPairLiquidityProviders?.list && result.data?.getCurrencyPairLiquidityProviders?.count) {
+				return {
+					list: result.data.getCurrencyPairLiquidityProviders.list.map(val => new CurrencyPairItem(val)),
+					count: result.data.getCurrencyPairLiquidityProviders.count
+				};
+			} else {
+				return {
+					list: [],
+					count: 0
+				};
+			}
+		}));
+	}
+
+	getLiquidityProviders(): Observable<{ list: Array<LiquidityProviderEntityItem>; count: number; }>{
+		return this.watchQuery<{ getLiquidityProviders: Array<LiquidityProviderEntity>; }, null>(
+			{
+				query: GET_LIQUIDITY_PROVIDERS,
+				fetchPolicy: 'network-only'
+			}).pipe(map(result => {
+			if (result.data?.getLiquidityProviders && result.data?.getLiquidityProviders?.length != 0) {
+				return {
+					list: result.data.getLiquidityProviders.map(item => new LiquidityProviderEntityItem(item)),
+					count: result.data.getLiquidityProviders.length
+				};
+			} else {
+				return {
+					list: [],
+					count: 0
+				};
+			}
+		}));
+	}
+
+	getApiKeys(
+		pageIndex: number,
+		takeItems: number,
+		orderField: string,
+		orderDesc: boolean
+	): Observable<{ list: Array<ApiKeyItem>; count: number; }> {
+
+		const vars: QueryGetApiKeysArgs = {
+			skip: pageIndex * takeItems,
+			first: takeItems,
+			orderBy: [{ orderBy: orderField, desc: orderDesc }]
+		};
+
+		return this.watchQuery<{ getApiKeys: ApiKeyListResult; }, QueryGetApiKeysArgs>(
+			{
+				query: GET_USER_API_KEYS,
+				variables: vars,
+				fetchPolicy: 'network-only'
+			}).pipe(map(result => {
+			if (result.data?.getApiKeys?.list && result.data?.getApiKeys?.count) {
+				return {
+					list: result.data.getApiKeys.list.map(val => new ApiKeyItem(val)),
+					count: result.data.getApiKeys.count
+				};
+			} else {
+				return {
+					list: [],
+					count: 0
+				};
+			}
+		}));
+	}
+
+	updateSettingsCommon(data: SettingsCommon): Observable<any> {
+		return this.mutate({
+			mutation: UPDATE_SETTINGS_COMMON,
+			variables: {
+				settingsId: data.settingsCommonId,
+				liquidityProvider: data.liquidityProvider,
+				custodyProvider: data.custodyProvider,
+				kycProvider: data.kycProvider,
+				adminEmails: data.adminEmails,
+				stoppedForServicing: data.stoppedForServicing,
+				additionalSettings: data.additionalSettings
+			}
+		});
+	}
+
+	createPaymentProviderPayout(paymentProvider: String, type: PaymentProviderPayoutType): Observable<any> {
+		return this.mutate({
+			mutation: CREATE_PAYMENT_PROVIDER_PAYOUT,
+			variables: {
+				paymentProvider: paymentProvider,
+				type: type
+			}
+		});
+	}
+
+	createPaymentProviderRefund(paymentProvider: String, amount: Number, transactionId: String): Observable<any> {
+		return this.mutate({
+			mutation: CREATE_PAYMENT_PROVIDER_REFUND,
+			variables: {
+				paymentProvider: paymentProvider,
+				amount: amount,
+				transactionId: transactionId
+			}
+		});
+	}
+
+	saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
+		return !feeScheme.id
+			? this.mutate({
+				mutation: ADD_SETTINGS_FEE,
+				variables: {
+					name: feeScheme.name,
+					description: feeScheme.description,
+					targetFilterType: feeScheme.target,
+					targetFilterValues: feeScheme.targetValues,
+					targetInstruments: feeScheme.instrument,
+					targetUserTypes: feeScheme.userType,
+					targetUserModes: feeScheme.userMode,
+					targetTransactionTypes: feeScheme.trxType,
+					targetPaymentProviders: feeScheme.provider,
+					targetCurrenciesFrom: feeScheme.currenciesFrom,
+					targetCurrenciesTo: feeScheme.currenciesTo,
+					terms: feeScheme.terms.getObject(),
+					wireDetails: feeScheme.details.getObject()
+				}
+			})
+			: this.mutate({
+				mutation: UPDATE_SETTINGS_FEE,
+				variables: {
+					settingsId: feeScheme.id,
+					name: feeScheme.name,
+					description: feeScheme.description,
+					targetFilterType: feeScheme.target,
+					targetFilterValues: feeScheme.targetValues,
+					targetInstruments: feeScheme.instrument,
+					targetUserTypes: feeScheme.userType,
+					targetUserModes: feeScheme.userMode,
+					targetTransactionTypes: feeScheme.trxType,
+					targetPaymentProviders: feeScheme.provider,
+					terms: feeScheme.terms.getObject(),
+					wireDetails: feeScheme.details.getObject(),
+					targetCurrenciesFrom: feeScheme.currenciesFrom,
+					targetCurrenciesTo: feeScheme.currenciesTo
+				}
+			});
+	}
+
+	saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
+		return create
+			? this.apollo.mutate({
+				mutation: ADD_SETTINGS_COST,
+				variables: {
+					name: settings.name,
+					description: settings.description,
+					bankAccountIds: settings.bankAccountIds,
+					targetFilterType: settings.target,
+					targetFilterValues: settings.targetValues,
+					targetInstruments: settings.instrument,
+					targetTransactionTypes: settings.trxType,
+					targetPaymentProviders: settings.provider,
+					terms: settings.terms.getObject()
+				}
+			})
+			: this.apollo.mutate({
+				mutation: UPDATE_SETTINGS_COST,
+				variables: {
+					settingsId: settings.id,
+					name: settings.name,
+					description: settings.description,
+					bankAccountIds: settings.bankAccountIds,
+					targetFilterType: settings.target,
+					targetFilterValues: settings.targetValues,
+					targetInstruments: settings.instrument,
+					targetTransactionTypes: settings.trxType,
+					targetPaymentProviders: settings.provider,
+					terms: settings.terms.getObject()
+				}
+			});
+	}
+
+	saveBankAccountSettings(account: WireTransferBankAccount, create: boolean): Observable<any> {
+		const vars = {
+			bankAccountId: account.bankAccountId,
+			name: account.name,
+			description: account.description,
+			au: account.au,
+			uk: account.uk,
+			eu: account.eu
+		};
+		return create
+			? this.apollo.mutate({
+				mutation: ADD_WIRE_TRANSFER_SETTINGS,
+				variables: {
+					name: account.name,
+					description: account.description,
+					au: account.au,
+					uk: account.uk,
+					eu: account.eu,
+					monoova: account.monoova,
+					primeTrust: account.primeTrust,
+					openpayd: account.openpayd,
+					flashfx: account.flashfx
+				}
+			})
+			: this.apollo.mutate({
+				mutation: UPDATE_WIRE_TRANSFER_SETTINGS,
+				variables: {
+					bankAccountId: account.bankAccountId,
+					name: account.name,
+					description: account.description,
+					au: account.au,
+					uk: account.uk,
+					eu: account.eu,
+					monoova: account.monoova,
+					primeTrust: account.primeTrust,
+					openpayd: account.openpayd,
+					flashfx: account.flashfx
+				}
+			});
+	}
+
+	saveKycSettings(settings: KycScheme, create: boolean): Observable<any> {
+		return create
+			? this.apollo.mutate({
+				mutation: ADD_SETTINGS_KYC,
+				variables: {
+					name: settings.name,
+					description: settings.description,
+					targetFilterType: settings.target,
+					targetFilterValues: settings.targetValues,
+					targetKycProviders: settings.kycProviders,
+					targetUserType: settings.userType,
+					targetUserModes: settings.userModes,
+					requireUserFullName: settings.requireUserFullName,
+					requireUserPhone: settings.requireUserPhone,
+					requireUserBirthday: settings.requireUserBirthday,
+					requireUserAddress: settings.requireUserAddress,
+					requireUserFlatNumber: settings.requireUserFlatNumber,
+					levelIds: [settings.levelId]
+				}
+			})
+			: this.apollo.mutate({
+				mutation: UPDATE_SETTINGS_KYC,
+				variables: {
+					settingsId: settings.id,
+					name: settings.name,
+					description: settings.description,
+					targetFilterType: settings.target,
+					targetFilterValues: settings.targetValues,
+					targetKycProviders: settings.kycProviders,
+					targetUserType: settings.userType,
+					targetUserModes: settings.userModes,
+					requireUserFullName: settings.requireUserFullName,
+					requireUserPhone: settings.requireUserPhone,
+					requireUserBirthday: settings.requireUserBirthday,
+					requireUserAddress: settings.requireUserAddress,
+					requireUserFlatNumber: settings.requireUserFlatNumber,
+					levelIds: [settings.levelId]
+				}
+			});
+	}
+
+	saveKycTierSettings(settings: KycTier, create: boolean): Observable<any> {
+		return create
+			? this.apollo.mutate({
+				mutation: ADD_SETTINGS_KYC_TIER,
+				variables: {
+					name: settings.name,
+					description: settings.description,
+					amount: settings.amount,
+					default: settings.isDefault,
+					targetFilterType: settings.target,
+					targetFilterValues: settings.targetValues,
+					targetKycProviders: settings.kycProviders,
+					targetUserType: settings.userType,
+					targetUserModes: settings.userModes,
+					requireUserFullName: settings.requireUserFullName,
+					requireUserPhone: settings.requireUserPhone,
+					requireUserBirthday: settings.requireUserBirthday,
+					requireUserAddress: settings.requireUserAddress,
+					requireUserFlatNumber: settings.requireUserFlatNumber,
+					levelId: settings.levelId
+				}
+			})
+			: this.apollo.mutate({
+				mutation: UPDATE_SETTINGS_KYC_TIER,
+				variables: {
+					settingsId: settings.id,
+					name: settings.name,
+					description: settings.description,
+					amount: settings.amount,
+					default: settings.isDefault,
+					targetFilterType: settings.target,
+					targetFilterValues: settings.targetValues,
+					targetKycProviders: settings.kycProviders,
+					targetUserType: settings.userType,
+					targetUserModes: settings.userModes,
+					requireUserFullName: settings.requireUserFullName,
+					requireUserPhone: settings.requireUserPhone,
+					requireUserBirthday: settings.requireUserBirthday,
+					requireUserAddress: settings.requireUserAddress,
+					requireUserFlatNumber: settings.requireUserFlatNumber,
+					levelId: settings.levelId
+				}
+			});
+	}
+
+	saveKycLevelSettings(level: KycLevel, create: boolean): Observable<any> {
+		return create
+			? this.apollo.mutate({
+				mutation: ADD_KYC_LEVEL_SETTINGS,
+				variables: {
+					name: level.name,
+					description: level.description,
+					userType: level.userType,
+					originalLevelName: level.levelData.value,
+					originalFlowName: level.flowData.value,
+					data: level.getDataObject()
+				}
+			})
+			: this.apollo.mutate({
+				mutation: UPDATE_KYC_LEVEL_SETTINGS,
+				variables: {
+					settingsId: level.id,
+					name: level.name,
+					description: level.description,
+					userType: level.userType,
+					originalLevelName: level.levelData.value,
+					originalFlowName: level.flowData.value,
+					data: level.getDataObject()
+				}
+			});
+	}
+
+	addBlackCountry(code: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: ADD_BLACK_COUNTRY,
+			variables: {
+				countryCode2: code
+			}
+		});
+	}
+
+	saveWidget(widget: WidgetItem): Observable<any> {
+		return !widget.id
+			? this.apollo.mutate({
+				mutation: CREATE_WIDGET,
+				variables: {
+					userId: widget.userId,
+					name: widget.name,
+					description: widget.description,
+					transactionTypes: widget.transactionTypes,
+					currenciesCrypto: widget.currenciesCrypto,
+					currenciesFiat: widget.currenciesFiat,
+					destinationAddress: widget.destinationAddress,
+					countriesCode2: widget.countriesCode2,
+					instruments: widget.instruments,
+					paymentProviders: widget.paymentProviders,
+					liquidityProvider: widget.liquidityProvider,
+					additionalSettings: widget.additionalSettings,
+					secret: widget.secret,
+					allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
+					newVaultPerTransaction: widget.newVaultPerTransaction,
+					fee: widget.fee
+				}
+			}).pipe(tap(() => {
+				this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
+			}))
+			: this.apollo.mutate({
+				mutation: UPDATE_WIDGET,
+				variables: {
+					widgetId: widget.id,
+					userId: widget.userId,
+					name: widget.name,
+					description: widget.description,
+					transactionTypes: widget.transactionTypes,
+					currenciesCrypto: widget.currenciesCrypto,
+					currenciesFiat: widget.currenciesFiat,
+					destinationAddress: widget.destinationAddress,
+					countriesCode2: widget.countriesCode2,
+					instruments: widget.instruments,
+					paymentProviders: widget.paymentProviders,
+					liquidityProvider: widget.liquidityProvider,
+					additionalSettings: widget.additionalSettings,
+					secret: widget.secret,
+					allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
+					newVaultPerTransaction: widget.newVaultPerTransaction,
+					fee: widget.fee
+				}
+			}).pipe(tap(() => {
+				this.snackBar.open(`Widget was updated`, undefined, { duration: 5000 });
+			}));
+	}
+
+	updateUserFlag(flag: boolean, userId: string): Observable<any> {
+		const vars = {
+			userId: userId,
+			flag: flag
+		};
+		return this.apollo.mutate({
+			mutation: UPDATE_USER_FLAG,
+			variables: vars
+		});
+	}
+
+	saveCustomer(id: string, customer: UserInput, customerRoles: string[] = ['USER']): Observable<any> {
+		if (id === '') {
+			return this.apollo.mutate({
+				mutation: CREATE_USER,
+				variables: {
+					roles: customerRoles,
+					type: customer.type,
+					mode: UserMode.InternalWallet,
+					email: customer.email,
+					changePasswordRequired: customer.changePasswordRequired,
+					firstName: customer.firstName,
+					lastName: customer.lastName,
+					gender: customer.gender,
+					birthday: customer.birthday,
+					countryCode2: customer.countryCode2,
+					countryCode3: customer.countryCode3,
+					postCode: customer.postCode,
+					town: customer.town,
+					street: customer.street,
+					subStreet: customer.subStreet,
+					stateName: customer.stateName,
+					buildingName: customer.buildingName,
+					buildingNumber: customer.buildingNumber,
+					flatNumber: customer.flatNumber,
+					phone: customer.phone,
+					risk: customer.risk,
+					accountStatus: customer.accountStatus,
+					kycTierId: customer.kycTierId,
+					defaultFiatCurrency: customer.defaultFiatCurrency,
+					defaultCryptoCurrency: customer.defaultCryptoCurrency,
+					kycProvider: customer.kycProvider,
+					comment: customer.comment,
+					flag: customer.flag,
+					companyName: customer.companyName
+				}
+			}).pipe(tap(() => {
+				this.snackBar.open(`User was created`, undefined, { duration: 5000 });
+			}));
+		} else {
+			return this.apollo.mutate({
+				mutation: UPDATE_USER,
+				variables: {
+					userId: id,
+					email: customer.email,
+					changePasswordRequired: customer.changePasswordRequired,
+					firstName: customer.firstName,
+					lastName: customer.lastName,
+					gender: customer.gender,
+					birthday: customer.birthday,
+					countryCode2: customer.countryCode2,
+					countryCode3: customer.countryCode3,
+					postCode: customer.postCode,
+					town: customer.town,
+					street: customer.street,
+					subStreet: customer.subStreet,
+					stateName: customer.stateName,
+					buildingName: customer.buildingName,
+					buildingNumber: customer.buildingNumber,
+					flatNumber: customer.flatNumber,
+					phone: customer.phone,
+					risk: customer.risk,
+					accountStatus: customer.accountStatus,
+					kycTierId: customer.kycTierId,
+					defaultFiatCurrency: customer.defaultFiatCurrency,
+					defaultCryptoCurrency: customer.defaultCryptoCurrency,
+					kycProvider: customer.kycProvider,
+					comment: customer.comment,
+					flag: customer.flag,
+					companyName: customer.companyName
+				}
+			}).pipe(tap(() => {
+				this.snackBar.open(`User was updated`, undefined, { duration: 5000 });
+			}));
+		}
+	}
+
+	updateUserVault(wallet: AssetAddress): Observable<any> {
+		return this.apollo.mutate({
+			mutation: UPDATE_USER_VAULT,
+			variables: {
+				userId: wallet.userId,
+				vaultId: wallet.vaultId,
+				vaultName: wallet.vaultName
+			}
+		}).pipe(tap(() => {
+			this.snackBar.open(
+				`Wallet was updated`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	deleteFeeSettings(settingsId: string): Observable<any> {
+		return this.mutate({
+			mutation: DELETE_SETTINGS_FEE,
+			variables: {
+				settingsId
+			}
+		});
+	}
+
+	deleteCostSettings(settingsId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_SETTINGS_COST,
+			variables: {
+				settingsId
+			}
+		});
+	}
+
+	deleteBankAccountSettings(accountId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_WIRE_TRANSFER_SETTINGS,
+			variables: {
+				bankAccountId: accountId
+			}
+		});
+	}
+
+	deleteKycSettings(settingsId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_SETTINGS_KYC,
+			variables: {
+				settingsId
+			}
+		});
+	}
+
+	deleteKycTierSettings(settingsId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_SETTINGS_KYC_TIER,
+			variables: {
+				settingsId
+			}
+		});
+	}
+
+	deleteKycLevelSettings(settingsId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_KYC_LEVEL_SETTINGS,
+			variables: {
+				settingsId
+			}
+		});
+	}
+
+	deleteBlackCountry(code: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_BLACK_COUNTRY,
+			variables: {
+				countryCode2: code
+			}
+		});
+	}
+
+	deleteWidget(widgetId: string): Observable<any> {
+		return this.mutate({
+			mutation: DELETE_WIDGET,
+			variables: {
+				widgetId
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Widget was deleted`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	deleteWallet(vaultId: string, userId: string): Observable<any> {
+		return this.mutate({
+			mutation: DELETE_USER_VAULT,
+			variables: {
+				vaultId,
+				userId
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Wallet was deleted`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	deleteCustomer(customerId: string): Observable<any> {
+		return this.mutate({
+			mutation: DELETE_CUSTOMER,
+			variables: {
+				customerId
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Customer was disabled`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	restoreCustomer(customerId: string): Observable<any> {
+		return this.mutate({
+			mutation: RESTORE_CUSTOMER,
+			variables: {
+				customerId
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Customer was restored`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	confirmEmail(userId: string): Observable<any> {
+		return this.mutate({
+			mutation: CONFIRM_EMAIL,
+			variables: {
+				user_id: userId
+			}
+		}).pipe(tap((res) => {
+			// this.snackBar.open(
+			//   `Email has been confirmed`,
+			//   undefined, { duration: 5000 }
+			// );
+		}));
+	}
+
+	confirmDevice(deviceId: string): Observable<any> {
+		return this.mutate({
+			mutation: CONFIRM_DEVICE,
+			variables: {
+				device_id: deviceId
+			}
+		}).pipe(tap((res) => {
+			// this.snackBar.open(
+			//   `Device has been confirmed`,
+			//   undefined, { duration: 5000 }
+			// );
+		}));
+	}
+
+	deleteTransaction(transactionId: string): Observable<any> {
+		return this.mutate({
+			mutation: CANCEL_TRANSACTION,
+			variables: {
+				transactionId
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Transaction was cancelled`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	createUserTransaction(transaction: TransactionInput, userId: string, rate: number): Observable<any> {
+		return this.mutate({
+			mutation: CREATE_USER_TRANSACTION,
+			variables: {
+				transactionType: transaction.type,
+				source: transaction.source,
+				currencyToSpend: transaction.currencyToSpend,
+				currencyToReceive: transaction.currencyToReceive,
+				amountToSpend: transaction.amountToSpend,
+				instrument: transaction.instrument,
+				paymentProvider: transaction.paymentProvider,
+				userId: userId,
+				rate: rate
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Transaction was created`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	unbenchmarkTransaction(ids: string[]): Observable<any> {
+		return this.mutate({
+			mutation: UNBENCHMARK_TRANSACTIONS,
+			variables: {
+				transactionIds: ids
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Transactions were changed`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	updateTransaction(data: Transaction, restartTransaction: boolean, recalculateAmounts: boolean): Observable<any> {
+		let benchmark: TransactionUpdateTransferOrderChanges | undefined = undefined;
+		let transfer: TransactionUpdateTransferOrderChanges | undefined = undefined;
+		if (data.transferOrder?.orderId !== '' && data.transferOrder?.transferHash !== '') {
+			transfer = {
+				orderId: data.transferOrder?.orderId,
+				hash: data.transferOrder?.transferHash
+			};
+		}
+		if (data.benchmarkTransferOrder?.orderId !== '' && data.benchmarkTransferOrder?.transferHash !== '') {
+			benchmark = {
+				orderId: data.benchmarkTransferOrder?.orderId,
+				hash: data.benchmarkTransferOrder?.transferHash
+			};
+		}
+		const vars = {
+			transactionId: data.transactionId,
+			currencyToSpend: data.currencyToSpend,
+			currencyToReceive: data.currencyToReceive,
+			amountToSpend: data.amountToSpend,
+			amountToReceive: data.amountToReceive,
+			rate: data.rate,
+			feeFiat: data.feeFiat,
+			destination: data.destination,
+			status: data.status,
+			kycStatus: data.kycStatus,
+			accountStatus: data.accountStatus,
+			comment: data.comment,
+			launchAfterUpdate: restartTransaction,
+			transferOrder: transfer,
+			benchmarkTransferOrder: benchmark,
+			recalculate: recalculateAmounts,
+			flag: data.flag
+		};
+		return this.mutate({
+			mutation: UPDATE_TRANSACTIONS,
+			variables: vars
+		});
+	}
+
+	updateTransactionFlag(flag: boolean, transactionId: string): Observable<any> {
+		const vars = {
+			transactionId: transactionId,
+			flag: flag
+		};
+		return this.mutate({
+			mutation: UPDATE_TRANSACTION_FLAG,
+			variables: vars
+		});
+	}
+
+	sendAdminNotification(ids: string[], level: UserNotificationLevel, title: string, text: string): Observable<any> {
+		return this.mutate({
+			mutation: SEND_ADMIN_NOTIFICATION,
+			variables: {
+				notifiedUserIds: ids,
+				title,
+				text,
+				level
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Message was sent`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	resendAdminNotification(notificationId: string): Observable<any> {
+		return this.mutate({
+			mutation: RESEND_NOTIFICATION,
+			variables: {
+				notificationId: notificationId
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Message was resent`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	assignRole(userId: string, roleCodes: string[]): Observable<any> {
+		return this.mutate({
+			mutation: ASSIGN_ROLE,
+			variables: {
+				userId,
+				roleCodes
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Roles are assigned`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	removeRole(userId: string, roleCodes: string[]): Observable<any> {
+		return this.mutate({
+			mutation: REMOVE_ROLE,
+			variables: {
+				userId,
+				roleCodes
+			}
+		}).pipe(tap((res) => {
+			this.snackBar.open(
+				`Roles are removed`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+	createApiKey(userId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: CREATE_USER_API_KEY,
+			variables: {
+				userId
+			}
+		});
+	}
+
+	createCurrencyPair(fromCurrency: string, toCurrency: string, liquidityProviderId: string, fixedRate: number): Observable<any> {
+		return this.apollo.mutate({
+			mutation: CREATE_CURRENCY_PAIR,
+			variables: {
+				fromCurrency,
+				toCurrency,
+				liquidityProviderId,
+				fixedRate 
+			}
+		});
+	}
   
-  deleteCurrencyPair(currencyPairLiquidityProviderId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_CURRENCY_PAIR,
-      variables: {
-        currencyPairLiquidityProviderId
-      },
-    });
-  }
+	deleteCurrencyPair(currencyPairLiquidityProviderId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_CURRENCY_PAIR,
+			variables: {
+				currencyPairLiquidityProviderId
+			},
+		});
+	}
 
-  deleteApiKey(apiKeyId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_USER_API_KEY,
-      variables: {
-        apiKeyId
-      },
-    });
-  }
+	deleteApiKey(apiKeyId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_USER_API_KEY,
+			variables: {
+				apiKeyId
+			},
+		});
+	}
 
-  deleteDevice(deviceId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: DELETE_DEVICE,
-      variables: {
-        deviceIds: [deviceId]
-      },
-    });
-  }
+	deleteDevice(deviceId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: DELETE_DEVICE,
+			variables: {
+				deviceIds: [deviceId]
+			},
+		});
+	}
 
-  exportUsersToCsv(
-    userIds: string[],
-    roleIds: string[],
-    orderField: string,
-    orderDesc: boolean,
-    filter: Filter
-  ): Observable<any> {
-    let vars = {};
-    if (userIds.length === 0) {
-      vars = {
-        userIdsOnly: filter?.users,
-        roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
-        accountTypesOnly: filter?.accountTypes,
-        accountStatusesOnly: filter?.accountStatuses,
-        riskLevelsOnly: filter?.riskLevels,
-        countriesOnly: filter?.countries,
-        countryCodeType: CountryCodeType.Code3,
-        kycStatusesOnly: filter.kycStatuses,
-        registrationDateInterval: filter?.registrationDateInterval,
-        widgetIdsOnly: filter?.widgets,
-        totalBuyVolumeOver: filter?.totalBuyVolumeOver,
-        transactionCountOver: filter?.transactionCountOver,
-        orderBy: [{ orderBy: orderField, desc: orderDesc }],
-        filter: filter?.search
-      };
-    } else {
-      vars = {
-        userIdsOnly: userIds,
-        roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
-        countryCodeType: CountryCodeType.Code3,
-        orderBy: [{ orderBy: orderField, desc: orderDesc }]
-      };
-    }
-    return this.apollo.mutate({
-      mutation: EXPORT_USERS,
-      variables: vars
-    });
-  }
+	exportUsersToCsv(
+		userIds: string[],
+		roleIds: string[],
+		orderField: string,
+		orderDesc: boolean,
+		filter: Filter
+	): Observable<any> {
+		let vars = {};
+		if (userIds.length === 0) {
+			vars = {
+				userIdsOnly: filter?.users,
+				roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
+				accountTypesOnly: filter?.accountTypes,
+				accountStatusesOnly: filter?.accountStatuses,
+				riskLevelsOnly: filter?.riskLevels,
+				countriesOnly: filter?.countries,
+				countryCodeType: CountryCodeType.Code3,
+				kycStatusesOnly: filter.kycStatuses,
+				registrationDateInterval: filter?.registrationDateInterval,
+				widgetIdsOnly: filter?.widgets,
+				totalBuyVolumeOver: filter?.totalBuyVolumeOver,
+				transactionCountOver: filter?.transactionCountOver,
+				orderBy: [{ orderBy: orderField, desc: orderDesc }],
+				filter: filter?.search
+			};
+		} else {
+			vars = {
+				userIdsOnly: userIds,
+				roleIdsOnly: (roleIds.length > 0) ? roleIds : undefined,
+				countryCodeType: CountryCodeType.Code3,
+				orderBy: [{ orderBy: orderField, desc: orderDesc }]
+			};
+		}
+		return this.apollo.mutate({
+			mutation: EXPORT_USERS,
+			variables: vars
+		});
+	}
 
-  exportTransactionsToCsv(
-    transactionIds: string[],
-    orderField: string,
-    orderDesc: boolean,
-    filter?: Filter): Observable<any> {
-    let vars = {};
-    if (transactionIds.length === 0) {
-      vars = {
-        transactionIdsOnly: filter?.transactionIds,
-        accountTypesOnly: filter?.accountTypes,
-        countriesOnly: filter?.countries,
-        countryCodeType: CountryCodeType.Code3,
-        sourcesOnly: filter?.sources,
-        userIdsOnly: filter?.users,
-        widgetIdsOnly: filter?.widgets,
-        transactionTypesOnly: filter?.transactionTypes,
-        transactionStatusesOnly: filter?.transactionStatuses,
-        userTierLevelsOnly: filter?.tiers,
-        riskLevelsOnly: filter?.riskLevels,
-        paymentInstrumentsOnly: filter?.paymentInstruments,
-        createdDateInterval: filter?.createdDateInterval,
-        completedDateInterval: filter?.completedDateInterval,
-        walletAddressOnly: filter?.walletAddress,
-        filter: filter?.search,
-        orderBy: [{ orderBy: orderField, desc: orderDesc }]
-      };
-    } else {
-      vars = {
-        transactionIdsOnly: transactionIds,
-        countryCodeType: CountryCodeType.Code3,
-        orderBy: [{ orderBy: orderField, desc: orderDesc }]
-      };
-    }
-    return this.apollo.mutate({
-      mutation: EXPORT_TRANSACTIONS,
-      variables: vars
-    });
-  }
+	exportTransactionsToCsv(
+		transactionIds: string[],
+		orderField: string,
+		orderDesc: boolean,
+		filter?: Filter): Observable<any> {
+		let vars = {};
+		if (transactionIds.length === 0) {
+			vars = {
+				transactionIdsOnly: filter?.transactionIds,
+				accountTypesOnly: filter?.accountTypes,
+				countriesOnly: filter?.countries,
+				countryCodeType: CountryCodeType.Code3,
+				sourcesOnly: filter?.sources,
+				userIdsOnly: filter?.users,
+				widgetIdsOnly: filter?.widgets,
+				transactionTypesOnly: filter?.transactionTypes,
+				transactionStatusesOnly: filter?.transactionStatuses,
+				userTierLevelsOnly: filter?.tiers,
+				riskLevelsOnly: filter?.riskLevels,
+				paymentInstrumentsOnly: filter?.paymentInstruments,
+				createdDateInterval: filter?.createdDateInterval,
+				completedDateInterval: filter?.completedDateInterval,
+				walletAddressOnly: filter?.walletAddress,
+				filter: filter?.search,
+				orderBy: [{ orderBy: orderField, desc: orderDesc }]
+			};
+		} else {
+			vars = {
+				transactionIdsOnly: transactionIds,
+				countryCodeType: CountryCodeType.Code3,
+				orderBy: [{ orderBy: orderField, desc: orderDesc }]
+			};
+		}
+		return this.apollo.mutate({
+			mutation: EXPORT_TRANSACTIONS,
+			variables: vars
+		});
+	}
 
-  exportWidgetsToCsv(
-    widgetIds: string[],
-    orderField: string,
-    orderDesc: boolean,
-    filter: Filter): Observable<any> {
-    const orderFields = [{ orderBy: orderField, desc: orderDesc }];
-    let vars = {};
-    if (widgetIds.length === 0) {
-      vars = {
-        userIdsOnly: filter.users,
-        widgetIdsOnly: filter.widgets,
-        filter: filter.search,
-        orderBy: orderFields
-      };
-    } else {
-      vars = {
-        widgetIdsOnly: widgetIds,
-        orderBy: orderFields
-      };
-    }
-    return this.apollo.mutate({
-      mutation: EXPORT_WIDGETS,
-      variables: vars
-    });
-  }
+	exportWidgetsToCsv(
+		widgetIds: string[],
+		orderField: string,
+		orderDesc: boolean,
+		filter: Filter): Observable<any> {
+		const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+		let vars = {};
+		if (widgetIds.length === 0) {
+			vars = {
+				userIdsOnly: filter.users,
+				widgetIdsOnly: filter.widgets,
+				filter: filter.search,
+				orderBy: orderFields
+			};
+		} else {
+			vars = {
+				widgetIdsOnly: widgetIds,
+				orderBy: orderFields
+			};
+		}
+		return this.apollo.mutate({
+			mutation: EXPORT_WIDGETS,
+			variables: vars
+		});
+	}
 
-  // TODO: move somewhere closer to HTTP, this approach can give false negatives (normally observable doesn't finish,
-  //       so tap can be triggered more than once per subscription)
-  private updateIsBusy(action: 'on' | 'off'): void {
-    if (action === 'on') {
-      this.activeQueryCounter++;
+	// TODO: move somewhere closer to HTTP, this approach can give false negatives (normally observable doesn't finish,
+	//       so tap can be triggered more than once per subscription)
+	private updateIsBusy(action: 'on' | 'off'): void {
+		if (action === 'on') {
+			this.activeQueryCounter++;
 
-      if (!this.isBusySubject.value) {
-        setTimeout(() => {
-          this.isBusySubject.next(true);
-        }, 0);
-      }
-    } else {
-      this.activeQueryCounter--;
-      this.activeQueryCounter = this.activeQueryCounter < 0 ? 0 : this.activeQueryCounter;
-      if (this.activeQueryCounter === 0) {
-        setTimeout(() => {
-          this.isBusySubject.next(false);
-        }, 0);
-      }
-    }
-  }
+			if (!this.isBusySubject.value) {
+				setTimeout(() => {
+					this.isBusySubject.next(true);
+				}, 0);
+			}
+		} else {
+			this.activeQueryCounter--;
+			this.activeQueryCounter = this.activeQueryCounter < 0 ? 0 : this.activeQueryCounter;
+			if (this.activeQueryCounter === 0) {
+				setTimeout(() => {
+					this.isBusySubject.next(false);
+				}, 0);
+			}
+		}
+	}
 
-  private watchQuery<TData, TVariables>(options: WatchQueryOptions<TVariables, TData>): Observable<ApolloQueryResult<TData>> {
-    this.updateIsBusy('on');
+	private watchQuery<TData, TVariables>(options: WatchQueryOptions<TVariables, TData>): Observable<ApolloQueryResult<TData>> {
+		this.updateIsBusy('on');
 
-    if (this.apollo.client !== undefined) {
+		if (this.apollo.client !== undefined) {
 
-      return this.apollo.watchQuery<TData, TVariables>(options)
-        .valueChanges
-        .pipe(
-          tap(() => {
-            this.updateIsBusy('off');
-          }),
-          finalize(() => {
-            this.updateIsBusy('off');
-          }),
-          catchError(error => {
-            if (this.auth.token !== '') {
-              this.snackBar.open(
-                this.errorHandler.getError(error.message, 'Unable to load data'),
-                undefined,
-                { duration: 5000 }
-              );
-            } else {
-              this.router.navigateByUrl('/')
-                .then();
-            }
+			return this.apollo.watchQuery<TData, TVariables>(options)
+				.valueChanges
+				.pipe(
+					tap(() => {
+						this.updateIsBusy('off');
+					}),
+					finalize(() => {
+						this.updateIsBusy('off');
+					}),
+					catchError(error => {
+						if (this.auth.token !== '') {
+							this.snackBar.open(
+								this.errorHandler.getError(error.message, 'Unable to load data'),
+								undefined,
+								{ duration: 5000 }
+							);
+						} else {
+							this.router.navigateByUrl('/')
+								.then();
+						}
 
-            return throwError(null);
-          })
-        );
-    }
+						return throwError(null);
+					})
+				);
+		}
 
-    this.snackBar.open('Apollo not ready', undefined, { duration: 5000 });
-    return throwError(null);
-  }
+		this.snackBar.open('Apollo not ready', undefined, { duration: 5000 });
+		return throwError(null);
+	}
 
-  private mutate<TData, TVariables>(options: MutationOptions<TData, TVariables>): Observable<FetchResult<TData>> {
-    if (this.apollo.client !== undefined) {
-      return this.apollo.mutate<TData, TVariables>(options)
-        .pipe(
-          catchError(error => {
-            if (this.auth.token !== '') {
-              this.snackBar.open(
-                this.errorHandler.getError(error.message, 'Unable to perform action'),
-                undefined,
-                { duration: 5000 }
-              );
-            } else {
-              this.router.navigateByUrl('/')
-                .then();
-            }
+	private mutate<TData, TVariables>(options: MutationOptions<TData, TVariables>): Observable<FetchResult<TData>> {
+		if (this.apollo.client !== undefined) {
+			return this.apollo.mutate<TData, TVariables>(options)
+				.pipe(
+					catchError(error => {
+						if (this.auth.token !== '') {
+							this.snackBar.open(
+								this.errorHandler.getError(error.message, 'Unable to perform action'),
+								undefined,
+								{ duration: 5000 }
+							);
+						} else {
+							this.router.navigateByUrl('/')
+								.then();
+						}
 
-            return throwError(null);
-          })
-        );
-    }
+						return throwError(null);
+					})
+				);
+		}
 
-    this.snackBar.open('Apollo not ready', undefined, { duration: 5000 });
-    return throwError(null);
-  }
+		this.snackBar.open('Apollo not ready', undefined, { duration: 5000 });
+		return throwError(null);
+	}
 }

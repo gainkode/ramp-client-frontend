@@ -6,44 +6,44 @@ import { DialogData } from 'model/dialog.model';
 import { UserNotificationLevel } from 'model/generated-models';
 
 @Component({
-    selector: 'app-send-notification-dialog-box',
-    templateUrl: 'send-notification-box.dialog.html',
-    styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/dialog.scss']
+	selector: 'app-send-notification-dialog-box',
+	templateUrl: 'send-notification-box.dialog.html',
+	styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/dialog.scss']
 })
 export class SendNotificationDialogBox {
-    messageForm = this.formBuilder.group({
-        level: [UserNotificationLevel.Info],
-        title: [''],
-        text: ['', { validators: [Validators.required], updateOn: 'change' }]
-    });
+	messageForm = this.formBuilder.group({
+		level: [UserNotificationLevel.Info],
+		title: [''],
+		text: ['', { validators: [Validators.required], updateOn: 'change' }]
+	});
 
-    textErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Message text is required'
-    };
+	textErrorMessages: { [key: string]: string; } = {
+		['required']: 'Message text is required'
+	};
 
-    get levelField(): AbstractControl | null {
-        return this.messageForm.get('level');
-    }
+	get levelField(): AbstractControl | null {
+		return this.messageForm.get('level');
+	}
 
-    get titleField(): AbstractControl | null {
-        return this.messageForm.get('title');
-    }
+	get titleField(): AbstractControl | null {
+		return this.messageForm.get('title');
+	}
 
-    get textField(): AbstractControl | null {
-        return this.messageForm.get('text');
-    }
+	get textField(): AbstractControl | null {
+		return this.messageForm.get('text');
+	}
 
-    levels: CommonTargetValue[] = [
-        { id: UserNotificationLevel.Request, title: 'Request', imgClass: '', imgSource: '' },
-        { id: UserNotificationLevel.Debug, title: 'Debug', imgClass: '', imgSource: '' },
-        { id: UserNotificationLevel.Info, title: 'Info', imgClass: '', imgSource: '' },
-        { id: UserNotificationLevel.Warning, title: 'Warning', imgClass: '', imgSource: '' },
-        { id: UserNotificationLevel.Error, title: 'Error', imgClass: '', imgSource: '' }
-    ];
+	levels: CommonTargetValue[] = [
+		{ id: UserNotificationLevel.Request, title: 'Request', imgClass: '', imgSource: '' },
+		{ id: UserNotificationLevel.Debug, title: 'Debug', imgClass: '', imgSource: '' },
+		{ id: UserNotificationLevel.Info, title: 'Info', imgClass: '', imgSource: '' },
+		{ id: UserNotificationLevel.Warning, title: 'Warning', imgClass: '', imgSource: '' },
+		{ id: UserNotificationLevel.Error, title: 'Error', imgClass: '', imgSource: '' }
+	];
 
-    constructor(
-        private formBuilder: UntypedFormBuilder,
-        public dialogRef: MatDialogRef<SendNotificationDialogBox>,
-        @Inject(MAT_DIALOG_DATA)
-        public data: DialogData) { }
+	constructor(
+		private formBuilder: UntypedFormBuilder,
+		public dialogRef: MatDialogRef<SendNotificationDialogBox>,
+		@Inject(MAT_DIALOG_DATA)
+		public data: DialogData) { }
 }

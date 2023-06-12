@@ -21,26 +21,26 @@ import { CostScheme } from 'model/cost-scheme.model';
 import { UserItem } from 'model/user.model';
 
 @Component({
-  selector: 'app-admin-transaction-create',
-  templateUrl: 'transaction-create.component.html',
-  styleUrls: ['transaction-create.component.scss', '../../assets/scss/_validation.scss','../../../../assets/menu.scss', '../../../../assets/button.scss']
+	selector: 'app-admin-transaction-create',
+	templateUrl: 'transaction-create.component.html',
+	styleUrls: ['transaction-create.component.scss', '../../assets/scss/_validation.scss','../../../../assets/menu.scss', '../../../../assets/button.scss']
 })
 export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
   @Input() set users(val: UserItem[] | undefined) {
-    if(val){
-      this.usersPreset = val.map(x => {
-        return {
-            id: x.id,
-            title: (x.fullName !== '') ? `${x.fullName} (${x.email})` : x.email
-          } as CommonTargetValue;
-        }
-      );
+  	if(val){
+  		this.usersPreset = val.map(x => {
+  			return {
+  				id: x.id,
+  				title: (x.fullName !== '') ? `${x.fullName} (${x.email})` : x.email
+  			} as CommonTargetValue;
+  		}
+  		);
 
-      this.form.get('users')?.setValue(val.map(x => {
-        return x.id;
-      }))
-    }
+  		this.form.get('users')?.setValue(val.map(x => {
+  			return x.id;
+  		}));
+  	}
   }
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
@@ -84,381 +84,381 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
 
   costSchemes: CostScheme[] = [];
 
-  showFullAmount: boolean = true;
+  showFullAmount = true;
 
   form = this.formBuilder.group({
-    currencyToSpend: [null, { validators: [Validators.required], updateOn: 'change' }],
-    currencyToReceive: [null, { validators: [Validators.required], updateOn: 'change' }],
-    amountToSpend: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-    amountToReceive: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-    rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-    transactionType: [null, { validators: [Validators.required], updateOn: 'change' }],
-    users: [[], { validators: [Validators.required], updateOn: 'change' }],
-    fullAmount: [false],
-    instrument:[PaymentInstrument.FiatVault, { validators: [Validators.required], updateOn: 'change' }],
-    provider: [undefined],
+  	currencyToSpend: [null, { validators: [Validators.required], updateOn: 'change' }],
+  	currencyToReceive: [null, { validators: [Validators.required], updateOn: 'change' }],
+  	amountToSpend: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+  	amountToReceive: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+  	rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+  	transactionType: [null, { validators: [Validators.required], updateOn: 'change' }],
+  	users: [[], { validators: [Validators.required], updateOn: 'change' }],
+  	fullAmount: [false],
+  	instrument:[PaymentInstrument.FiatVault, { validators: [Validators.required], updateOn: 'change' }],
+  	provider: [undefined],
   });
 
   get transactionTypeField(): AbstractControl | null {
-    return this.form.get('transactionType');
+  	return this.form.get('transactionType');
   }
   get currencyToSpendField(): AbstractControl | null {
-    return this.form.get('currencyToSpend');
+  	return this.form.get('currencyToSpend');
   }
   get currencyToReceiveField(): AbstractControl | null {
-    return this.form.get('currencyToReceive');
+  	return this.form.get('currencyToReceive');
   }
   get rateField(): AbstractControl | null {
-    return this.form.get('rate');
+  	return this.form.get('rate');
   }
   get amountToSpendField(): AbstractControl | null {
-    return this.form.get('amountToSpend');
+  	return this.form.get('amountToSpend');
   }
   get amountToReceiveField(): AbstractControl | null {
-    return this.form.get('amountToReceive');
+  	return this.form.get('amountToReceive');
   }
   get fullAmountField(): AbstractControl | null {
-    return this.form.get('fullAmount');
+  	return this.form.get('fullAmount');
   }
   get instrumentTypeField(): AbstractControl | null {
-    return this.form.get('instrument');
+  	return this.form.get('instrument');
   }
   get usersField(): AbstractControl | null {
-    return this.form.get('users');
+  	return this.form.get('users');
   }
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
-    private router: Router,
-    private auth: AuthService,
-    private modalService: NgbModal,
-    private errorHandler: ErrorService,
-    private exchangeRate: ExchangeRateService,
-    private commonService: CommonDataService,
-    private adminService: AdminDataService) { }
+  	private formBuilder: UntypedFormBuilder,
+  	private router: Router,
+  	private auth: AuthService,
+  	private modalService: NgbModal,
+  	private errorHandler: ErrorService,
+  	private exchangeRate: ExchangeRateService,
+  	private commonService: CommonDataService,
+  	private adminService: AdminDataService) { }
 
   ngOnInit(): void {
-    this.getSettingsCommon();
-    this.loadCurrencies();
-    this.usersSearch();
-    this.getPaymentProviders();
-    // this.setFData();
-    this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
-    this.subscriptions.add(
-      this.form.get('currencyToSpend')?.valueChanges.subscribe(val => {
-        this.startExchangeRate();
-      })
-    );
-    this.subscriptions.add(
-      this.form.get('currencyToReceive')?.valueChanges.subscribe(val => {
-        this.startExchangeRate();
-      })
-    );
+  	this.getSettingsCommon();
+  	this.loadCurrencies();
+  	this.usersSearch();
+  	this.getPaymentProviders();
+  	// this.setFData();
+  	this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
+  	this.subscriptions.add(
+  		this.form.get('currencyToSpend')?.valueChanges.subscribe(val => {
+  			this.startExchangeRate();
+  		})
+  	);
+  	this.subscriptions.add(
+  		this.form.get('currencyToReceive')?.valueChanges.subscribe(val => {
+  			this.startExchangeRate();
+  		})
+  	);
 
-    this.subscriptions.add(this.transactionTypeField?.valueChanges
-      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
-      .subscribe(val => this.onTransactionTypeUpdate(val)));
+  	this.subscriptions.add(this.transactionTypeField?.valueChanges
+  		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
+  		.subscribe(val => this.onTransactionTypeUpdate(val)));
 
-    this.subscriptions.add(this.amountToSpendField?.valueChanges
-      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
-      .subscribe(val => this.onAmountToSpendUpdate(val)));
+  	this.subscriptions.add(this.amountToSpendField?.valueChanges
+  		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
+  		.subscribe(val => this.onAmountToSpendUpdate(val)));
 
-    this.subscriptions.add(this.rateField?.valueChanges
-      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
-      .subscribe(val => this.onAmountToSpendUpdate(val)));
+  	this.subscriptions.add(this.rateField?.valueChanges
+  		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
+  		.subscribe(val => this.onAmountToSpendUpdate(val)));
 
-    this.subscriptions.add(this.amountToReceiveField?.valueChanges
-      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
-      .subscribe(val => this.onAmountToReceiveUpdate(val)));
+  	this.subscriptions.add(this.amountToReceiveField?.valueChanges
+  		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
+  		.subscribe(val => this.onAmountToReceiveUpdate(val)));
       
-    this.subscriptions.add(this.instrumentTypeField?.valueChanges
-      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
-      .subscribe(val => this.onFilterPaymentProviders(val)));
+  	this.subscriptions.add(this.instrumentTypeField?.valueChanges
+  		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
+  		.subscribe(val => this.onFilterPaymentProviders(val)));
     
-    this.subscriptions.add(this.fullAmountField?.valueChanges
-      .pipe(distinctUntilChanged((prev, curr) => prev === curr))
-      .subscribe(val => this.onFullAmount(val)));
+  	this.subscriptions.add(this.fullAmountField?.valueChanges
+  		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
+  		.subscribe(val => this.onFullAmount(val)));
     
   }
 
   ngOnDestroy(): void {
-    this.exchangeRate.stop();
-    this.subscriptions.unsubscribe();
+  	this.exchangeRate.stop();
+  	this.subscriptions.unsubscribe();
   }
 
   onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
-    //this.rateErrorMessage = error;
-    if (rate) {
-      this.currentRate = rate.depositRate;
-    }
+  	//this.rateErrorMessage = error;
+  	if (rate) {
+  		this.currentRate = rate.depositRate;
+  	}
   }
 
   private getPaymentProviders(): void {
-    this.providers = [];
-    const data$ = this.adminService.getProviders()?.valueChanges;
-    this.subscriptions.add(
-      data$.subscribe(({ data }) => {
-        const providers = data.getPaymentProviders as PaymentProvider[];
-        this.providers = providers?.map((val) => new PaymentProviderView(val));
-        const instrument = this.form.get('instrument')?.value;
-        this.onFilterPaymentProviders(instrument);
-      })
-    );
+  	this.providers = [];
+  	const data$ = this.adminService.getProviders()?.valueChanges;
+  	this.subscriptions.add(
+  		data$.subscribe(({ data }) => {
+  			const providers = data.getPaymentProviders as PaymentProvider[];
+  			this.providers = providers?.map((val) => new PaymentProviderView(val));
+  			const instrument = this.form.get('instrument')?.value;
+  			this.onFilterPaymentProviders(instrument);
+  		})
+  	);
   }
 
   private loadCurrencies(): void {
-    this.subscriptions.add(
-      this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-          this.currencyOptions = currencySettings.settingsCurrency.list?. map((val) => new CurrencyView(val)) as CurrencyView[];
-        } else {
-          this.currencyOptions = [];
-        }
-      }, (error) => {
-        this.errorMessage = error;
-      })
-    );
+  	this.subscriptions.add(
+  		this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+  			const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+  			if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+  				this.currencyOptions = currencySettings.settingsCurrency.list?. map((val) => new CurrencyView(val)) as CurrencyView[];
+  			} else {
+  				this.currencyOptions = [];
+  			}
+  		}, (error) => {
+  			this.errorMessage = error;
+  		})
+  	);
   }
 
   private onFullAmount(fullAmount: boolean): void {
-    if (fullAmount) {
-      this.amountToSpendField?.setValue(0);
-      this.amountToReceiveField?.setValue(0);
-    }
+  	if (fullAmount) {
+  		this.amountToSpendField?.setValue(0);
+  		this.amountToReceiveField?.setValue(0);
+  	}
   }
   
   private onFilterPaymentProviders(instrument: PaymentInstrument): void {
-    if (instrument) {
-      if (instrument.length > 0) {
-        if (!instrument.includes(PaymentInstrument.WireTransfer)) {
-          console.log(this.providers, instrument)
-          this.filteredProviders = getProviderList([instrument], this.providers);
-          this.showPaymentProvider = this.filteredProviders.length > 0;
-          if (this.providers.length > 0) {
-            this.form.get('provider')?.setValue(getCheckedProviderList(
-              this.form.get('provider')?.value ?? [],
-              this.filteredProviders));
-          } else {
-            this.form.get('provider')?.setValue([]);
-          }
-        }
-      } else {
-        this.form.get('instrument')?.setValue(undefined);
-        this.form.get('provider')?.setValue([]);
-      }
-    } else {
-      this.form.get('provider')?.setValue([]);
-    }
+  	if (instrument) {
+  		if (instrument.length > 0) {
+  			if (!instrument.includes(PaymentInstrument.WireTransfer)) {
+  				console.log(this.providers, instrument);
+  				this.filteredProviders = getProviderList([instrument], this.providers);
+  				this.showPaymentProvider = this.filteredProviders.length > 0;
+  				if (this.providers.length > 0) {
+  					this.form.get('provider')?.setValue(getCheckedProviderList(
+  						this.form.get('provider')?.value ?? [],
+  						this.filteredProviders));
+  				} else {
+  					this.form.get('provider')?.setValue([]);
+  				}
+  			}
+  		} else {
+  			this.form.get('instrument')?.setValue(undefined);
+  			this.form.get('provider')?.setValue([]);
+  		}
+  	} else {
+  		this.form.get('provider')?.setValue([]);
+  	}
   }
 
   private onTransactionTypeUpdate(val): void {
-    this.transactionType = val;
-    if(val == TransactionType.Buy || val == TransactionType.Sell){
-      this.onCurrenciesUpdate(val);
-    }else{
-      this.filteredProviders = this.filteredProviders.filter(item => item.id == 'FiatVault');
-      this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat === true);
-      this.amountToSpendTitle = 'Amount';
-    }
+  	this.transactionType = val;
+  	if(val == TransactionType.Buy || val == TransactionType.Sell){
+  		this.onCurrenciesUpdate(val);
+  	}else{
+  		this.filteredProviders = this.filteredProviders.filter(item => item.id == 'FiatVault');
+  		this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat === true);
+  		this.amountToSpendTitle = 'Amount';
+  	}
   }
 
   private onCurrenciesUpdate(val): void {
-    if(val == TransactionType.Buy){
-      this.currenciesToReceive = this.currencyOptions.filter(item => item.fiat !== true);
-      this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat === true);
-    }else if(val == TransactionType.Sell){
-      this.currenciesToReceive = this.currencyOptions.filter(item => item.fiat === true);
-      this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat !== true);
-    }
-    this.currencyToSpendField?.setValue(this.currenciesToSpend[0].symbol);
-    this.currencyToReceiveField?.setValue(this.currenciesToReceive[0].symbol);
+  	if(val == TransactionType.Buy){
+  		this.currenciesToReceive = this.currencyOptions.filter(item => item.fiat !== true);
+  		this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat === true);
+  	}else if(val == TransactionType.Sell){
+  		this.currenciesToReceive = this.currencyOptions.filter(item => item.fiat === true);
+  		this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat !== true);
+  	}
+  	this.currencyToSpendField?.setValue(this.currenciesToSpend[0].symbol);
+  	this.currencyToReceiveField?.setValue(this.currenciesToReceive[0].symbol);
   }
 
   private onAmountToSpendUpdate(val): void {
-    if(!this.pSpendAutoUpdated && this.pAmountToSpend != val){
-      let receiveAmount = 0;
-      const rate = this.rateField?.value;
-      const amount = this.amountToSpendField?.value;
+  	if(!this.pSpendAutoUpdated && this.pAmountToSpend != val){
+  		let receiveAmount = 0;
+  		const rate = this.rateField?.value;
+  		const amount = this.amountToSpendField?.value;
       
-      if(rate && amount){
-        if(this.transactionTypeField?.value == TransactionType.Buy){
-          receiveAmount = amount / rate;
-        }else if(this.transactionTypeField?.value == TransactionType.Sell){
-          receiveAmount = amount * rate;
-        }
-      }
+  		if(rate && amount){
+  			if(this.transactionTypeField?.value == TransactionType.Buy){
+  				receiveAmount = amount / rate;
+  			}else if(this.transactionTypeField?.value == TransactionType.Sell){
+  				receiveAmount = amount * rate;
+  			}
+  		}
       
-      this.pReceiveAutoUpdated = true;
-      this.pAmountToSpend = val;
-      this.amountToReceiveField?.setValue(receiveAmount);
-    }
-    this.pSpendAutoUpdated = false;
+  		this.pReceiveAutoUpdated = true;
+  		this.pAmountToSpend = val;
+  		this.amountToReceiveField?.setValue(receiveAmount);
+  	}
+  	this.pSpendAutoUpdated = false;
   }
 
   private onAmountToReceiveUpdate(val): void {
-    if(!this.pReceiveAutoUpdated && this.pAmountToReceive != val){
-      let receiveAmount = 0;
-      const rate = this.rateField?.value;
-      const amount = this.amountToReceiveField?.value;
+  	if(!this.pReceiveAutoUpdated && this.pAmountToReceive != val){
+  		let receiveAmount = 0;
+  		const rate = this.rateField?.value;
+  		const amount = this.amountToReceiveField?.value;
       
-      if(rate && amount){
-        if(this.transactionTypeField?.value == TransactionType.Buy){
-          receiveAmount = amount * rate;
-        }else if(this.transactionTypeField?.value == TransactionType.Sell){
-          receiveAmount = amount / rate;
-        }
-      }
+  		if(rate && amount){
+  			if(this.transactionTypeField?.value == TransactionType.Buy){
+  				receiveAmount = amount * rate;
+  			}else if(this.transactionTypeField?.value == TransactionType.Sell){
+  				receiveAmount = amount / rate;
+  			}
+  		}
 
-      this.pSpendAutoUpdated = true;
-      this.pAmountToReceive = val;
-      this.amountToSpendField?.setValue(receiveAmount);
-    }
-    this.pReceiveAutoUpdated = false;
+  		this.pSpendAutoUpdated = true;
+  		this.pAmountToReceive = val;
+  		this.amountToSpendField?.setValue(receiveAmount);
+  	}
+  	this.pReceiveAutoUpdated = false;
   }
 
   private usersSearch(): void {
-    let searchItems:CommonTargetValue[] = [];
-    if(this.usersPreset && this.usersPreset.length != 0){
-      searchItems = this.usersPreset;
-    }
-    this.usersOptions$ = concat(
-      of(searchItems),
-      this.usersSearchInput$.pipe(
-        filter(res => {
-          return res !== null && res.length >= this.minUsersLengthTerm
-        }),
-        debounceTime(300),
-        distinctUntilChanged(),
-        tap(() => {
-          this.isUsersLoading = true;
-        }),
-        switchMap(searchString => {
-          this.isUsersLoading = false;
-          return this.adminService.getUsers(
-            [],
-            0,
-            100,
-            'email',
-            false,
-            new Filter({ search: searchString })
-          ).pipe(map(result => {
-            return result.list.map(x => {
-              return {
-                id: x.id,
-                title: (x.fullName !== '') ? `${x.fullName} (${x.email})` : x.email
-              } as CommonTargetValue;
-            });
-          }));
-        })
-      ));
+  	let searchItems:CommonTargetValue[] = [];
+  	if(this.usersPreset && this.usersPreset.length != 0){
+  		searchItems = this.usersPreset;
+  	}
+  	this.usersOptions$ = concat(
+  		of(searchItems),
+  		this.usersSearchInput$.pipe(
+  			filter(res => {
+  				return res !== null && res.length >= this.minUsersLengthTerm;
+  			}),
+  			debounceTime(300),
+  			distinctUntilChanged(),
+  			tap(() => {
+  				this.isUsersLoading = true;
+  			}),
+  			switchMap(searchString => {
+  				this.isUsersLoading = false;
+  				return this.adminService.getUsers(
+  					[],
+  					0,
+  					100,
+  					'email',
+  					false,
+  					new Filter({ search: searchString })
+  				).pipe(map(result => {
+  					return result.list.map(x => {
+  						return {
+  							id: x.id,
+  							title: (x.fullName !== '') ? `${x.fullName} (${x.email})` : x.email
+  						} as CommonTargetValue;
+  					});
+  				}));
+  			})
+  		));
   }
 
   private startExchangeRate(): void {
-    if (this.currenciesToSpend.length === 0) {
-      return;
-    }
-    const currencyToSpendSymbol = this.data?.currencyToSpend;
-    const currencyToSpend = this.currenciesToSpend.find(x => x.symbol === currencyToSpendSymbol);
-    const spendFiat = currencyToSpend?.fiat ?? false;
-    const spend = this.form.get('currencyToSpend')?.value;
-    const receive = this.form.get('currencyToReceive')?.value;
-    if (spendFiat) {
-      this.exchangeRate.setCurrency(spend, receive, TransactionType.Buy);
-    } else {
-      this.exchangeRate.setCurrency(receive, spend, TransactionType.Buy);
-    }
-    this.exchangeRate.update();
+  	if (this.currenciesToSpend.length === 0) {
+  		return;
+  	}
+  	const currencyToSpendSymbol = this.data?.currencyToSpend;
+  	const currencyToSpend = this.currenciesToSpend.find(x => x.symbol === currencyToSpendSymbol);
+  	const spendFiat = currencyToSpend?.fiat ?? false;
+  	const spend = this.form.get('currencyToSpend')?.value;
+  	const receive = this.form.get('currencyToReceive')?.value;
+  	if (spendFiat) {
+  		this.exchangeRate.setCurrency(spend, receive, TransactionType.Buy);
+  	} else {
+  		this.exchangeRate.setCurrency(receive, spend, TransactionType.Buy);
+  	}
+  	this.exchangeRate.update();
   }
 
   private getSettingsCommon(): void {
-    this.subscriptions.add(
-      this.adminService.getSettingsCommon()?.valueChanges.subscribe(settings => {
-        const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
-        const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
-      })
-    );
+  	this.subscriptions.add(
+  		this.adminService.getSettingsCommon()?.valueChanges.subscribe(settings => {
+  			const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
+  			const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
+  		})
+  	);
   }
 
   getTransactionToCreate(){
-    const currentRateValue = this.form.get('rate')?.value;
-    let currentRate: number | undefined = undefined;
-    if (currentRateValue !== undefined) {
-      currentRate = parseFloat(currentRateValue);
-    }
-    let transactionToCreate = {
-      type: this.form.get('transactionType')?.value,
-      source: TransactionSource.Wallet,
-      currencyToSpend: this.form.get('currencyToSpend')?.value,
-      currencyToReceive: this.form.get('currencyToReceive')?.value,
-      amountToSpend: parseFloat(this.form.get('amountToSpend')?.value ?? '0'),
-      instrument: this.form.get('instrument')?.value,
-      paymentProvider: this.form.get('provider')?.value,
-    } as TransactionInput;
+  	const currentRateValue = this.form.get('rate')?.value;
+  	let currentRate: number | undefined = undefined;
+  	if (currentRateValue !== undefined) {
+  		currentRate = parseFloat(currentRateValue);
+  	}
+  	const transactionToCreate = {
+  		type: this.form.get('transactionType')?.value,
+  		source: TransactionSource.Wallet,
+  		currencyToSpend: this.form.get('currencyToSpend')?.value,
+  		currencyToReceive: this.form.get('currencyToReceive')?.value,
+  		amountToSpend: parseFloat(this.form.get('amountToSpend')?.value ?? '0'),
+  		instrument: this.form.get('instrument')?.value,
+  		paymentProvider: this.form.get('provider')?.value,
+  	} as TransactionInput;
 
-    return transactionToCreate;
+  	return transactionToCreate;
   }
 
   updateRate(): void {
-    if (this.currentRate) {
-      this.form.get('rate')?.setValue(this.currentRate);
-    }
+  	if (this.currentRate) {
+  		this.form.get('rate')?.setValue(this.currentRate);
+  	}
   }
 
   setParamsIfRequired(): void{
-    if(this.transactionType == TransactionType.Deposit || this.transactionType == TransactionType.Withdrawal){
-      this.form.get('currencyToReceive')?.setValue(this.currencyToSpendField?.value);
-      this.form.get('amountToReceive')?.setValue(this.amountToSpendField?.value);
-    }
+  	if(this.transactionType == TransactionType.Deposit || this.transactionType == TransactionType.Withdrawal){
+  		this.form.get('currencyToReceive')?.setValue(this.currencyToSpendField?.value);
+  		this.form.get('amountToReceive')?.setValue(this.amountToSpendField?.value);
+  	}
   }
 
   onSubmit(content: any): void {
-    this.submitted = true;
-    this.setParamsIfRequired();
-    if (this.form.valid) {
-      this.createDialog = this.modalService.open(content, {
-        backdrop: 'static',
-        windowClass: 'modalCusSty',
-      });
-    }
+  	this.submitted = true;
+  	this.setParamsIfRequired();
+  	if (this.form.valid) {
+  		this.createDialog = this.modalService.open(content, {
+  			backdrop: 'static',
+  			windowClass: 'modalCusSty',
+  		});
+  	}
   }
 
   private createUserTransaction(): void {
-    const users = this.usersField?.value;
-    const rate = this.rateField?.value;
-    if(users && users.length != 0){
-      for(let user of users){
-        const transactionToCreate = this.getTransactionToCreate();
-        this.saveInProgress = true;
-        const requestData = this.adminService.createUserTransaction(transactionToCreate, user, parseFloat(rate));
-        this.subscriptions.add(
-          requestData.subscribe(({ data }) => {
-            this.saveInProgress = false;
-            this.save.emit();
-          }, (error) => {
-            this.errorMessage = error;
-            this.saveInProgress = false;
-            if (this.auth.token === '') {
-              this.router.navigateByUrl('/');
-            }
-          })
-        );
-      }
-    }
-    this.close.emit();
+  	const users = this.usersField?.value;
+  	const rate = this.rateField?.value;
+  	if(users && users.length != 0){
+  		for(const user of users){
+  			const transactionToCreate = this.getTransactionToCreate();
+  			this.saveInProgress = true;
+  			const requestData = this.adminService.createUserTransaction(transactionToCreate, user, parseFloat(rate));
+  			this.subscriptions.add(
+  				requestData.subscribe(({ data }) => {
+  					this.saveInProgress = false;
+  					this.save.emit();
+  				}, (error) => {
+  					this.errorMessage = error;
+  					this.saveInProgress = false;
+  					if (this.auth.token === '') {
+  						this.router.navigateByUrl('/');
+  					}
+  				})
+  			);
+  		}
+  	}
+  	this.close.emit();
   }
 
   onClose(): void {
-    this.close.emit();
+  	this.close.emit();
   }
 
   onCreateUserTransactionConfirm(confirm: number): void {
-    if (this.createDialog) {
-      this.createDialog.close('');
-    }
+  	if (this.createDialog) {
+  		this.createDialog.close('');
+  	}
     
-    if(confirm == 1){
-      this.createUserTransaction();
-    }
+  	if(confirm == 1){
+  		this.createUserTransaction();
+  	}
   }
 }

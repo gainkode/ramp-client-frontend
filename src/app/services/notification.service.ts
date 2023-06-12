@@ -55,83 +55,83 @@ mutation SendTestTransactionServiceNotification(
 
 @Injectable()
 export class NotificationService {
-  private apolloNotificationClient;
-  constructor(private apollo: Apollo) {
-    this.apolloNotificationClient = apollo;
-  }
+	private apolloNotificationClient;
+	constructor(private apollo: Apollo) {
+		this.apolloNotificationClient = apollo;
+	}
   
-  wsClientInit(){
-    console.log(`wsClientInit with token ${localStorage.getItem('currentToken')}`);
-    const webSocketLink = new GraphQLWsLink(createClient({
-      url: `${EnvService.ws_server}/subscriptions`,
-      lazy: true,
-      connectionParams: {
-        authToken: `Bearer ${localStorage.getItem('currentToken')}`
-      },
-    }));
-    const transportLink: ApolloLink = split(
-      ({ query }) => {
-        const definition = getMainDefinition(query);
-        return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-      },
-      webSocketLink
-    );
-    const apolloLink = ApolloLink.from([
-      transportLink
-    ]);
+	wsClientInit(){
+		console.log(`wsClientInit with token ${localStorage.getItem('currentToken')}`);
+		const webSocketLink = new GraphQLWsLink(createClient({
+			url: `${EnvService.ws_server}/subscriptions`,
+			lazy: true,
+			connectionParams: {
+				authToken: `Bearer ${localStorage.getItem('currentToken')}`
+			},
+		}));
+		const transportLink: ApolloLink = split(
+			({ query }) => {
+				const definition = getMainDefinition(query);
+				return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+			},
+			webSocketLink
+		);
+		const apolloLink = ApolloLink.from([
+			transportLink
+		]);
 
-    this.apolloNotificationClient = new ApolloClient({
-      link: apolloLink,
-      cache: new InMemoryCache()
-    });
-  }
+		this.apolloNotificationClient = new ApolloClient({
+			link: apolloLink,
+			cache: new InMemoryCache()
+		});
+	}
 
-  sendTestNotification(): Observable<any> {
-    return this.apolloNotificationClient.mutate({
-      mutation: SEND_TEST_NOTIFICATION_POST
-    });
-  }
+	sendTestNotification(): Observable<any> {
+		return this.apolloNotificationClient.mutate({
+			mutation: SEND_TEST_NOTIFICATION_POST
+		});
+	}
 
-  sendTestKycNotification(): Observable<any> {
-    return this.apolloNotificationClient.mutate({
-      mutation: SEND_TEST_KYC_NOTIFICATION_POST
-    });
-  }
+	sendTestKycNotification(): Observable<any> {
+		return this.apolloNotificationClient.mutate({
+			mutation: SEND_TEST_KYC_NOTIFICATION_POST
+		});
+	}
 
-  sendTestTransactionNotification(notificationType: TransactionServiceNotificationType): Observable<any> {
-    return this.apolloNotificationClient.mutate({
-      mutation: SEND_TEST_TRANSACTION_NOTIFICATION_POST,
-      variables: {
-        type: notificationType
-      }
-    });
-  }
+	sendTestTransactionNotification(notificationType: TransactionServiceNotificationType): Observable<any> {
+		return this.apolloNotificationClient.mutate({
+			mutation: SEND_TEST_TRANSACTION_NOTIFICATION_POST,
+			variables: {
+				type: notificationType
+			}
+		});
+	}
 
-  subscribeToTransactionNotifications(): Observable<any> {
-    return this.apolloNotificationClient.subscribe({
-      query: SUBSCRIBE_TRANSACTION_NOTIFICATIONS,
-      fetchPolicy: 'no-cache'
-    });
-  }
+	subscribeToTransactionNotifications(): Observable<any> {
+		return this.apolloNotificationClient.subscribe({
+			query: SUBSCRIBE_TRANSACTION_NOTIFICATIONS,
+			fetchPolicy: 'no-cache'
+		});
+	}
 
-  subscribeToNotifications(): Observable<any> {
-    return this.apolloNotificationClient.subscribe({
-      query: SUBSCRIBE_NOTIFICATIONS,
-      fetchPolicy: 'no-cache'
-    });
-  }
+	subscribeToNotifications(): Observable<any> {
+		return this.apolloNotificationClient.subscribe({
+			query: SUBSCRIBE_NOTIFICATIONS,
+			fetchPolicy: 'no-cache'
+		});
+	}
 
-  subscribeToKycNotifications(): Observable<any> {
-    return this.apolloNotificationClient.subscribe({
-      query: SUBSCRIBE_KYC_NOTIFICATIONS,
-      fetchPolicy: 'no-cache'
-    });
-  }
+	subscribeToKycNotifications(): Observable<any> {
+		return this.apolloNotificationClient.subscribe({
+			query: SUBSCRIBE_KYC_NOTIFICATIONS,
+			fetchPolicy: 'no-cache'
+		});
+	}
 
-  subscribeToKycCompleteNotifications(): Observable<any> {
-    return this.apolloNotificationClient.subscribe({
-      query: SUBSCRIBE_KYC_COMPLETED_NOTIFICATIONS,
-      fetchPolicy: 'no-cache'
-    });
-  }
+	subscribeToKycCompleteNotifications(): Observable<any> {
+		return this.apolloNotificationClient.subscribe({
+			query: SUBSCRIBE_KYC_COMPLETED_NOTIFICATIONS,
+			fetchPolicy: 'no-cache'
+		});
+	}
 }

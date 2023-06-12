@@ -529,289 +529,289 @@ mutation AbandonCryptoInvoice(
 
 @Injectable()
 export class PaymentDataService {
-  constructor(private apollo: Apollo) { }
+	constructor(private apollo: Apollo) { }
 
-  getRates(listCrypto: string[], fiat: string): QueryRef<any, EmptyObject> {
-    const vars = {
-      currenciesFrom: listCrypto,
-      currencyTo: fiat
-    };
-    return this.apollo.watchQuery<any>({
-      query: GET_RATES,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    });
-  }
+	getRates(listCrypto: string[], fiat: string): QueryRef<any, EmptyObject> {
+		const vars = {
+			currenciesFrom: listCrypto,
+			currencyTo: fiat
+		};
+		return this.apollo.watchQuery<any>({
+			query: GET_RATES,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  getOneToManyRates(from: string, to: string[], reverseRate: boolean): QueryRef<any, EmptyObject> {
-    const vars = {
-      reverse: reverseRate,
-      currencyFrom: from,
-      currenciesTo: to
-    };
-    return this.apollo.watchQuery<any>({
-      query: GET_ONE_TO_MANY_RATES,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    });
-  }
+	getOneToManyRates(from: string, to: string[], reverseRate: boolean): QueryRef<any, EmptyObject> {
+		const vars = {
+			reverse: reverseRate,
+			currencyFrom: from,
+			currenciesTo: to
+		};
+		return this.apollo.watchQuery<any>({
+			query: GET_ONE_TO_MANY_RATES,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  getSettingsKycTiers(): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_SETTINGS_KYC_TIERS,
-      fetchPolicy: 'network-only'
-    });
-  }
+	getSettingsKycTiers(): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_SETTINGS_KYC_TIERS,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  mySettingsKycTiers(widgetId: string | undefined): QueryRef<any, EmptyObject> {
-    const vars = {
-      widgetId: (widgetId === '') ? undefined : widgetId
-    };
-    return this.apollo.watchQuery<any>({
-      query: MY_SETTINGS_KYC_TIERS,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    });
-  }
+	mySettingsKycTiers(widgetId: string | undefined): QueryRef<any, EmptyObject> {
+		const vars = {
+			widgetId: (widgetId === '') ? undefined : widgetId
+		};
+		return this.apollo.watchQuery<any>({
+			query: MY_SETTINGS_KYC_TIERS,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  getAppropriateSettingsKycTiers(
-    amountVal: number,
-    currencyVal: string,
-    sourceVal: TransactionSource,
-    kycProvider: KycProvider,
-    widgetId: string): QueryRef<any, EmptyObject> {
-    const widget = (widgetId !== '') ? widgetId : undefined;
-    const vars = {
-      amount: amountVal,
-      currency: currencyVal,
-      targetKycProvider: kycProvider,
-      source: sourceVal,
-      widgetId: widget
-    };
-    return this.apollo.watchQuery<any>({
-      query: GET_APPROPRIATE_SETTINGS_KYC_TIERS,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    });
-  }
+	getAppropriateSettingsKycTiers(
+		amountVal: number,
+		currencyVal: string,
+		sourceVal: TransactionSource,
+		kycProvider: KycProvider,
+		widgetId: string): QueryRef<any, EmptyObject> {
+		const widget = (widgetId !== '') ? widgetId : undefined;
+		const vars = {
+			amount: amountVal,
+			currency: currencyVal,
+			targetKycProvider: kycProvider,
+			source: sourceVal,
+			widgetId: widget
+		};
+		return this.apollo.watchQuery<any>({
+			query: GET_APPROPRIATE_SETTINGS_KYC_TIERS,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  createTransaction(
-    transactionType: TransactionType,
-    transactionSource: TransactionSource,
-    sourceVault: string,
-    currencyToSpend: string,
-    currencyToReceive: string,
-    amount: number,
-    instrument: PaymentInstrument | undefined,
-    instrumentDetails: string,
-    providerName: string,
-    userParamsId: string,
-    walletAddress: string,
-    verifyWhenPaid: boolean): Observable<any> {
-    const wallet = (walletAddress === '') ? undefined : walletAddress;
-    const transactionSourceVaultId = (sourceVault === '') ? undefined : sourceVault;
-    const vars = {
-      transactionType,
-      source: transactionSource,
-      sourceVaultId: transactionSourceVaultId,
-      currencyToSpend,
-      currencyToReceive: (currencyToReceive !== '') ? currencyToReceive : undefined,
-      amountToSpend: amount,
-      instrument,
-      instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
-      paymentProvider: (providerName !== '') ? providerName : undefined,
-      widgetUserParamsId: (userParamsId !== '') ? userParamsId : undefined,
-      destination: wallet,
-      verifyWhenPaid
-    };
-    return this.apollo.mutate({
-      mutation: CREATE_TRANSACTION,
-      variables: vars
-    });
-  }
+	createTransaction(
+		transactionType: TransactionType,
+		transactionSource: TransactionSource,
+		sourceVault: string,
+		currencyToSpend: string,
+		currencyToReceive: string,
+		amount: number,
+		instrument: PaymentInstrument | undefined,
+		instrumentDetails: string,
+		providerName: string,
+		userParamsId: string,
+		walletAddress: string,
+		verifyWhenPaid: boolean): Observable<any> {
+		const wallet = (walletAddress === '') ? undefined : walletAddress;
+		const transactionSourceVaultId = (sourceVault === '') ? undefined : sourceVault;
+		const vars = {
+			transactionType,
+			source: transactionSource,
+			sourceVaultId: transactionSourceVaultId,
+			currencyToSpend,
+			currencyToReceive: (currencyToReceive !== '') ? currencyToReceive : undefined,
+			amountToSpend: amount,
+			instrument,
+			instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
+			paymentProvider: (providerName !== '') ? providerName : undefined,
+			widgetUserParamsId: (userParamsId !== '') ? userParamsId : undefined,
+			destination: wallet,
+			verifyWhenPaid
+		};
+		return this.apollo.mutate({
+			mutation: CREATE_TRANSACTION,
+			variables: vars
+		});
+	}
 
-  createTransactionWithWidgetUserParams(
-    transactionType: TransactionType,
-    transactionSource: TransactionSource,
-    sourceVault: string,
-    currencyToSpend: string,
-    currencyToReceive: string,
-    amount: number,
-    instrument: PaymentInstrument | undefined,
-    instrumentDetails: string,
-    providerName: string,
-    userParamsId: string,
-    walletAddress: string,
-    verifyWhenPaid: boolean,
-    widgetId: string): Observable<any> {
-    const wallet = (walletAddress === '') ? undefined : walletAddress;
-    const transactionSourceVaultId = (sourceVault === '') ? undefined : sourceVault;
-    const vars = {
-      transactionType,
-      source: transactionSource,
-      sourceVaultId: transactionSourceVaultId,
-      currencyToSpend,
-      currencyToReceive: (currencyToReceive !== '') ? currencyToReceive : undefined,
-      amountToSpend: amount,
-      instrument,
-      instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
-      paymentProvider: (providerName !== '') ? providerName : undefined,
-      widgetUserParamsId: (userParamsId !== '') ? userParamsId : undefined,
-      destination: wallet,
-      verifyWhenPaid,
-      widgetId
-    };
-    return this.apollo.mutate({
-      mutation: CREATE_TRANSACTION_WITH_WIDGET_USER_PARAMS,
-      variables: vars
-    });
-  }
+	createTransactionWithWidgetUserParams(
+		transactionType: TransactionType,
+		transactionSource: TransactionSource,
+		sourceVault: string,
+		currencyToSpend: string,
+		currencyToReceive: string,
+		amount: number,
+		instrument: PaymentInstrument | undefined,
+		instrumentDetails: string,
+		providerName: string,
+		userParamsId: string,
+		walletAddress: string,
+		verifyWhenPaid: boolean,
+		widgetId: string): Observable<any> {
+		const wallet = (walletAddress === '') ? undefined : walletAddress;
+		const transactionSourceVaultId = (sourceVault === '') ? undefined : sourceVault;
+		const vars = {
+			transactionType,
+			source: transactionSource,
+			sourceVaultId: transactionSourceVaultId,
+			currencyToSpend,
+			currencyToReceive: (currencyToReceive !== '') ? currencyToReceive : undefined,
+			amountToSpend: amount,
+			instrument,
+			instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
+			paymentProvider: (providerName !== '') ? providerName : undefined,
+			widgetUserParamsId: (userParamsId !== '') ? userParamsId : undefined,
+			destination: wallet,
+			verifyWhenPaid,
+			widgetId
+		};
+		return this.apollo.mutate({
+			mutation: CREATE_TRANSACTION_WITH_WIDGET_USER_PARAMS,
+			variables: vars
+		});
+	}
 
-  confirmQuickCheckout(id: string, code: number): Observable<any> {
-    return this.apollo.mutate({
-      mutation: EXECUTE_TRANSACTION,
-      variables: {
-        transactionId: id,
-        code
-      }
-    });
-  }
+	confirmQuickCheckout(id: string, code: number): Observable<any> {
+		return this.apollo.mutate({
+			mutation: EXECUTE_TRANSACTION,
+			variables: {
+				transactionId: id,
+				code
+			}
+		});
+	}
 
-  preAuthCard(id: string, paymentInstrument: string, paymentProvider: string, card: CardView): Observable<any> {
-    return this.apollo.mutate({
-      mutation: PRE_AUTH_CARD,
-      variables: {
-        transactionId: id,
-        instrument: paymentInstrument,
-        paymentProvider,
-        cardNumber: card.cardNumber,
-        expiredMonth: card.monthExpired,
-        expiredYear: card.yearExpired,
-        cvv: card.cvv,
-        holder: card.holderName
-      }
-    });
-  }
+	preAuthCard(id: string, paymentInstrument: string, paymentProvider: string, card: CardView): Observable<any> {
+		return this.apollo.mutate({
+			mutation: PRE_AUTH_CARD,
+			variables: {
+				transactionId: id,
+				instrument: paymentInstrument,
+				paymentProvider,
+				cardNumber: card.cardNumber,
+				expiredMonth: card.monthExpired,
+				expiredYear: card.yearExpired,
+				cvv: card.cvv,
+				holder: card.holderName
+			}
+		});
+	}
 
-  preAuth(id: string, paymentInstrument: string, paymentProvider: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: PRE_AUTH,
-      variables: {
-        transactionId: id,
-        instrument: paymentInstrument,
-        paymentProvider
-      }
-    });
-  }
+	preAuth(id: string, paymentInstrument: string, paymentProvider: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: PRE_AUTH,
+			variables: {
+				transactionId: id,
+				instrument: paymentInstrument,
+				paymentProvider
+			}
+		});
+	}
 
-  sendInvoice(transactionId: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: SEND_INVOICE,
-      variables: {
-        transactionId
-      }
-    });
-  }
+	sendInvoice(transactionId: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: SEND_INVOICE,
+			variables: {
+				transactionId
+			}
+		});
+	}
 
-  createInvoice(widgetId: string, currency: string, amount: number): Observable<any> {
-    return this.apollo.mutate({
-      mutation: CREATE_INVOICE,
-      variables: {
-        currencyToSend: currency,
-        widgetId: widgetId,
-        amountToSend: amount
-      }
-    });
-  }
+	createInvoice(widgetId: string, currency: string, amount: number): Observable<any> {
+		return this.apollo.mutate({
+			mutation: CREATE_INVOICE,
+			variables: {
+				currencyToSend: currency,
+				widgetId: widgetId,
+				amountToSend: amount
+			}
+		});
+	}
 
 
-  calculateInvoice(id: string): Observable<any> {
-    return this.apollo.mutate({
-      mutation: CALCULATE_INVOICE,
-      variables: {
-        invoiceId: id
-      }
-    });
-  }
+	calculateInvoice(id: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: CALCULATE_INVOICE,
+			variables: {
+				invoiceId: id
+			}
+		});
+	}
 
-  abandonTransaction(id: string): Observable<any> {
-    const vars = {
-      transactionId: id
-    };
-    return this.apollo.mutate({
-      mutation: ABANDON_TRANSACTION,
-      variables: vars
-    });
-  }
+	abandonTransaction(id: string): Observable<any> {
+		const vars = {
+			transactionId: id
+		};
+		return this.apollo.mutate({
+			mutation: ABANDON_TRANSACTION,
+			variables: vars
+		});
+	}
   
-  abandonCryptoInvoice(id: string): Observable<any> {
-    const vars = {
-      cryptoInvoiceId: id
-    };
-    return this.apollo.mutate({
-      mutation: ABANDON_CRYPTO_INVOICE,
-      variables: vars
-    });
-  }
+	abandonCryptoInvoice(id: string): Observable<any> {
+		const vars = {
+			cryptoInvoiceId: id
+		};
+		return this.apollo.mutate({
+			mutation: ABANDON_CRYPTO_INVOICE,
+			variables: vars
+		});
+	}
   
-  getProviders(fiatCurrency: string, widgetId: string | undefined, source: TransactionSource, transactionType: TransactionType, amount?: Number): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: GET_PROVIDERS,
-      variables: {
-        fiatCurrency,
-        widgetId,
-        source,
-        amount: parseFloat(<any>amount),
-        transactionType
-      },
-      fetchPolicy: 'network-only'
-    });
-  }
+	getProviders(fiatCurrency: string, widgetId: string | undefined, source: TransactionSource, transactionType: TransactionType, amount?: Number): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_PROVIDERS,
+			variables: {
+				fiatCurrency,
+				widgetId,
+				source,
+				amount: parseFloat(<any>amount),
+				transactionType
+			},
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  mySettingsCost(transactionType: TransactionType, instrument: PaymentInstrument, currency: string): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
-      query: MY_SETTINGS_COST,
-      variables: {
-        transactionType,
-        instrument,
-        currency
-      },
-      fetchPolicy: 'network-only'
-    });
-  }
+	mySettingsCost(transactionType: TransactionType, instrument: PaymentInstrument, currency: string): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: MY_SETTINGS_COST,
+			variables: {
+				transactionType,
+				instrument,
+				currency
+			},
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  mySettingsFee(
-    transactionType: TransactionType,
-    source: TransactionSource,
-    instrument: PaymentInstrument,
-    paymentProvider: string,
-    currencyTo: string,
-    currencyFrom: string,
-    widgetId: string): QueryRef<any, EmptyObject> {
-    const vars = {
-      transactionType,
-      transactionSource: source,
-      instrument,
-      paymentProvider: (paymentProvider === '') ? undefined : paymentProvider,
-      currencyTo,
-      currencyFrom,
-      widgetId
-    };
-    return this.apollo.watchQuery<any>({
-      query: MY_SETTINGS_FEE,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    });
-  }
+	mySettingsFee(
+		transactionType: TransactionType,
+		source: TransactionSource,
+		instrument: PaymentInstrument,
+		paymentProvider: string,
+		currencyTo: string,
+		currencyFrom: string,
+		widgetId: string): QueryRef<any, EmptyObject> {
+		const vars = {
+			transactionType,
+			transactionSource: source,
+			instrument,
+			paymentProvider: (paymentProvider === '') ? undefined : paymentProvider,
+			currencyTo,
+			currencyFrom,
+			widgetId
+		};
+		return this.apollo.watchQuery<any>({
+			query: MY_SETTINGS_FEE,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		});
+	}
 
-  getWidget(paramsId: string): QueryRef<any, EmptyObject> {
-    const vars = {
-      id: paramsId,
-    };
-    return this.apollo.watchQuery<any>({
-      query: GET_WIDGET,
-      variables: vars,
-      fetchPolicy: 'network-only'
-    });
-  }
+	getWidget(paramsId: string): QueryRef<any, EmptyObject> {
+		const vars = {
+			id: paramsId,
+		};
+		return this.apollo.watchQuery<any>({
+			query: GET_WIDGET,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		});
+	}
 }

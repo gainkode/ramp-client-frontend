@@ -3,14 +3,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { InstantpayDetails } from 'model/payment-base.model';
 
 @Component({
-  selector: 'app-widget-processing-instantpay',
-  templateUrl: 'processing-instantpay.component.html',
-  styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
+	selector: 'app-widget-processing-instantpay',
+	templateUrl: 'processing-instantpay.component.html',
+	styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss', '../../../assets/text-control.scss']
 })
 export class WidgetProcessingInstantpayComponent {
   @Input() errorMessage = '';
   @Input() set details(val: string) {
-    this.data = JSON.parse(val);
+  	this.data = JSON.parse(val);
   }
   @Output() onComplete = new EventEmitter();
 
@@ -19,14 +19,14 @@ export class WidgetProcessingInstantpayComponent {
   constructor(private clipboard: Clipboard) {}
   
   copyReference() {
-    if (this.data) {
-      this.clipboard.copy(`${this.data.uniqueReference}`);
-    }
+  	if (this.data) {
+  		this.clipboard.copy(`${this.data.uniqueReference}`);
+  	}
   }
 
   copyPayId() {
-    if (this.data) {
-      this.clipboard.copy(this.data.payId);
-    }
+  	if (this.data) {
+  		this.clipboard.copy(this.data.payId);
+  	}
   }
 }

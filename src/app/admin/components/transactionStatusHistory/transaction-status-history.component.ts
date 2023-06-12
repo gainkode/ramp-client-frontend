@@ -14,21 +14,21 @@ import { CommonDataService } from 'services/common-data.service';
 import { ProfileDataService } from 'services/profile.service';
 
 @Component({
-  selector: 'app-admin-transaction-status-history',
-  templateUrl: 'transaction-status-history.component.html',
-  styleUrls: ['transaction-status-history.component.scss']
+	selector: 'app-admin-transaction-status-history',
+	templateUrl: 'transaction-status-history.component.html',
+	styleUrls: ['transaction-status-history.component.scss']
 })
 export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
-    'createdDate',
-    'transactionIds',
-    'transactionStatus',
-    'users'
+  	'createdDate',
+  	'transactionIds',
+  	'transactionStatus',
+  	'users'
   ];
   displayedColumns: string[] = [
-    'transactionCode', 'created', 'userEmail', 'changedBy', 'newStatus', 'oldStatus', 'newStatusReason', 'transactionId'
+  	'transactionCode', 'created', 'userEmail', 'changedBy', 'newStatus', 'oldStatus', 'newStatusReason', 'transactionId'
   ];
   inProgress = false;
   permission = 0;
@@ -50,177 +50,177 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   private detailsDialog: NgbModalRef | undefined = undefined;
 
   constructor(
-    private modalService: NgbModal,
-    private auth: AuthService,
-    private commonDataService: CommonDataService,
-    private adminService: AdminDataService,
-    private profileService: ProfileDataService,
-    public activeRoute: ActivatedRoute,
-    private router: Router
+  	private modalService: NgbModal,
+  	private auth: AuthService,
+  	private commonDataService: CommonDataService,
+  	private adminService: AdminDataService,
+  	private profileService: ProfileDataService,
+  	public activeRoute: ActivatedRoute,
+  	private router: Router
   ) {
-    const filterUserId = activeRoute.snapshot.params['userid'];
-    if (filterUserId) {
-      this.filter.users = [filterUserId as string];
-    }
-    this.permission = this.auth.isPermittedObjectCode('TRANSACTIONS');
+  	const filterUserId = activeRoute.snapshot.params['userid'];
+  	if (filterUserId) {
+  		this.filter.users = [filterUserId as string];
+  	}
+  	this.permission = this.auth.isPermittedObjectCode('TRANSACTIONS');
   }
 
   ngOnInit(): void {
-    this.loadCommonSettings();
-    this.loadList();
+  	this.loadCommonSettings();
+  	this.loadList();
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  	this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit() {
-    this.subscriptions.add(
-      this.sort.sortChange.subscribe(() => {
-        this.sortedDesc = (this.sort.direction === 'desc');
-        this.sortedField = this.sort.active;
-        this.loadList();
-      })
-    );
+  	this.subscriptions.add(
+  		this.sort.sortChange.subscribe(() => {
+  			this.sortedDesc = (this.sort.direction === 'desc');
+  			this.sortedField = this.sort.active;
+  			this.loadList();
+  		})
+  	);
   }
 
   onTransactionSelected(item: TransactionStatusHistoryItem): void {
-    item.selected = !item.selected;
-    console.log(item)
+  	item.selected = !item.selected;
+  	console.log(item);
   }
 
   selectAll(): void {
-    this.transactionStatusHistory.forEach(x => x.selected = true);
-    this.selectedForUnbenchmark = (this.transactionStatusHistory.length > 0);
+  	this.transactionStatusHistory.forEach(x => x.selected = true);
+  	this.selectedForUnbenchmark = (this.transactionStatusHistory.length > 0);
   }
 
   onSaveTransaction(): void {
-    this.selectedTransaction = undefined;
-    if (this.detailsDialog) {
-      this.detailsDialog.close();
-      this.loadList();
-    }
+  	this.selectedTransaction = undefined;
+  	if (this.detailsDialog) {
+  		this.detailsDialog.close();
+  		this.loadList();
+  	}
   }
 
   onCloseDetails(): void {
-    if (this.detailsDialog) {
-      this.detailsDialog.dismiss();
-    }
+  	if (this.detailsDialog) {
+  		this.detailsDialog.dismiss();
+  	}
   }
 
   handleFilterApplied(filter: Filter): void {
-    this.filter = filter;
-    console.log(this.filter)
-    this.loadList();
+  	this.filter = filter;
+  	console.log(this.filter);
+  	this.loadList();
   }
 
   handlePage(index: number): void {
-    this.pageIndex = index - 1;
-    this.loadList();
+  	this.pageIndex = index - 1;
+  	this.loadList();
   }
 
   toggleDetails(transaction: TransactionStatusHistoryItem): void {
-    if (this.isSelectedTransaction(transaction.id)) {
-      this.selectedTransaction = undefined;
-    } else {
-      this.selectedTransaction = transaction;
-    }
+  	if (this.isSelectedTransaction(transaction.id)) {
+  		this.selectedTransaction = undefined;
+  	} else {
+  		this.selectedTransaction = transaction;
+  	}
   }
 
   showDetails(transaction: TransactionStatusHistoryItem, content: any) {
-    this.selectedTransaction = transaction;
-    this.detailsDialog = this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
+  	this.selectedTransaction = transaction;
+  	this.detailsDialog = this.modalService.open(content, {
+  		backdrop: 'static',
+  		windowClass: 'modalCusSty',
+  	});
   }
 
   private isSelectedTransaction(transactionId: string): boolean {
-    return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
+  	return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
   }
 
   private loadCommonSettings(){
-    let settingsCommon = this.auth.getLocalSettingsCommon();
-    if(settingsCommon){
-      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-      if(this.adminAdditionalSettings?.tabs?.transactionStatusHistory?.filterFields){
-        this.filterFields = this.adminAdditionalSettings.tabs.transactionStatusHistory.filterFields;
-      }
-    }
+  	const settingsCommon = this.auth.getLocalSettingsCommon();
+  	if(settingsCommon){
+  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+  		if(this.adminAdditionalSettings?.tabs?.transactionStatusHistory?.filterFields){
+  			this.filterFields = this.adminAdditionalSettings.tabs.transactionStatusHistory.filterFields;
+  		}
+  	}
   }
 
   private loadList(): void {
-    if (this.userStatuses.length === 0) {
-      this.loadTransactionStatuses();
-    } else {
-      this.loadTransactions();
-    }
+  	if (this.userStatuses.length === 0) {
+  		this.loadTransactionStatuses();
+  	} else {
+  		this.loadTransactions();
+  	}
   }
 
   private loadTransactions(): void {
-    this.inProgress = true;
-    const listData$ = this.adminService.getTransactionStatusHistory(
-      this.pageIndex,
-      this.pageSize,
-      this.sortedField,
-      this.sortedDesc,
-      this.filter).pipe(take(1));
-    this.selectedForUnbenchmark = false;
-    this.subscriptions.add(
-      listData$.subscribe(({ list, count }) => {
-        this.transactionStatusHistory = list;
-        console.log(this.transactionStatusHistory )
-        this.transactionCount = count;
-        this.inProgress = false;
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  	this.inProgress = true;
+  	const listData$ = this.adminService.getTransactionStatusHistory(
+  		this.pageIndex,
+  		this.pageSize,
+  		this.sortedField,
+  		this.sortedDesc,
+  		this.filter).pipe(take(1));
+  	this.selectedForUnbenchmark = false;
+  	this.subscriptions.add(
+  		listData$.subscribe(({ list, count }) => {
+  			this.transactionStatusHistory = list;
+  			console.log(this.transactionStatusHistory );
+  			this.transactionCount = count;
+  			this.inProgress = false;
+  		}, (error) => {
+  			this.inProgress = false;
+  			if (this.auth.token === '') {
+  				this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 
   private loadTransactionStatuses(): void {
-    this.inProgress = true;
-    this.userStatuses = [];
-    const statusListData$ = this.profileService.getTransactionStatuses();
-    this.subscriptions.add(
-      statusListData$.valueChanges.subscribe(({ data }) => {
-        this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
-        this.loadCurrencies();
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  	this.inProgress = true;
+  	this.userStatuses = [];
+  	const statusListData$ = this.profileService.getTransactionStatuses();
+  	this.subscriptions.add(
+  		statusListData$.valueChanges.subscribe(({ data }) => {
+  			this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
+  			this.loadCurrencies();
+  		}, (error) => {
+  			this.inProgress = false;
+  			if (this.auth.token === '') {
+  				this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 
   private loadCurrencies(): void {
-    this.inProgress = true;
-    this.currencyOptions = [];
-    this.subscriptions.add(
-      this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-          this.currencyOptions = currencySettings.settingsCurrency.list
-            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
-        } else {
-          this.currencyOptions = [];
-        }
-        this.loadTransactions();
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  	this.inProgress = true;
+  	this.currencyOptions = [];
+  	this.subscriptions.add(
+  		this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+  			const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+  			if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+  				this.currencyOptions = currencySettings.settingsCurrency.list
+  					?.map((val) => new CurrencyView(val)) as CurrencyView[];
+  			} else {
+  				this.currencyOptions = [];
+  			}
+  			this.loadTransactions();
+  		}, (error) => {
+  			this.inProgress = false;
+  			if (this.auth.token === '') {
+  				this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 
   refresh(): void {
-    this.loadList();
+  	this.loadList();
   }
 }

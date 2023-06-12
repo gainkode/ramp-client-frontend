@@ -2,23 +2,23 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class SwitcherService {
-  constructor() { }
+	constructor() { }
 
-  private emitChangeSource = new Subject<any>();
-  changeEmitted = this.emitChangeSource.asObservable();
+	private emitChangeSource = new Subject<any>();
+	changeEmitted = this.emitChangeSource.asObservable();
   
-  emitChange(change: any){
-    this.emitChangeSource.next(change);
-  }
+	emitChange(change: any){
+		this.emitChangeSource.next(change);
+	}
 
-  private emitHoverChangeSource = new Subject<any>();
+	private emitHoverChangeSource = new Subject<any>();
   
-  changeHoverEmitted = this.emitHoverChangeSource.asObservable();
+	changeHoverEmitted = this.emitHoverChangeSource.asObservable();
   
-  emitHoverChange(change: any){
-    this.emitHoverChangeSource.next(change);
-  }
+	emitHoverChange(change: any){
+		this.emitHoverChangeSource.next(change);
+	}
 }

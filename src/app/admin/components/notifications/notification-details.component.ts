@@ -6,9 +6,9 @@ import { NotificationItem } from 'model/notification.model';
 import { AuthService } from 'services/auth.service';
 
 @Component({
-  selector: 'app-admin-notification-details',
-  templateUrl: 'notification-details.component.html',
-  styleUrls: ['notification-details.component.scss', '../../assets/scss/_validation.scss']
+	selector: 'app-admin-notification-details',
+	templateUrl: 'notification-details.component.html',
+	styleUrls: ['notification-details.component.scss', '../../assets/scss/_validation.scss']
 })
 export class AdminNotificationDetailsComponent implements OnDestroy {
   @Input() permission = 0;
@@ -21,27 +21,27 @@ export class AdminNotificationDetailsComponent implements OnDestroy {
   errorMessage = '';
 
   constructor(
-    private router: Router,
-    private auth: AuthService,
-    private adminService: AdminDataService) { }
+  	private router: Router,
+  	private auth: AuthService,
+  	private adminService: AdminDataService) { }
 
-    ngOnDestroy(): void {
-      this.subscriptions.unsubscribe();
-    }
+  ngOnDestroy(): void {
+  	this.subscriptions.unsubscribe();
+  }
 
   resend(): void {
-    this.resendInProgress = true;
-    const requestData$ = this.adminService.resendAdminNotification(this.message?.id ?? '');
-    this.subscriptions.add(
-      requestData$.subscribe(({ data }) => {
-        this.resendInProgress = false;
-      }, (error) => {
-        this.resendInProgress = false;
-        this.errorMessage = error;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  	this.resendInProgress = true;
+  	const requestData$ = this.adminService.resendAdminNotification(this.message?.id ?? '');
+  	this.subscriptions.add(
+  		requestData$.subscribe(({ data }) => {
+  			this.resendInProgress = false;
+  		}, (error) => {
+  			this.resendInProgress = false;
+  			this.errorMessage = error;
+  			if (this.auth.token === '') {
+  				this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 }

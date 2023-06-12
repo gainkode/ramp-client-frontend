@@ -10,26 +10,26 @@ import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 
 @Component({
-  selector: 'app-admin-risks',
-  templateUrl: 'risks.component.html',
-  styleUrls: ['risks.component.scss']
+	selector: 'app-admin-risks',
+	templateUrl: 'risks.component.html',
+	styleUrls: ['risks.component.scss']
 })
 export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
-    'user',
-    'riskAlertCode',
-    'search'
+  	'user',
+  	'riskAlertCode',
+  	'search'
   ];
   displayedColumns: string[] = [
-    'details',
-    'riskAlertId',
-    'user',
-    'email',
-    'created',
-    'riskAlertTypeCode',
-    'entity'
+  	'details',
+  	'riskAlertId',
+  	'user',
+  	'email',
+  	'created',
+  	'riskAlertTypeCode',
+  	'entity'
   ];
   inProgress = false;
   permission = 0;
@@ -46,78 +46,78 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   private subscriptions: Subscription = new Subscription();
 
   constructor(
-    private modalService: NgbModal,
-    private auth: AuthService,
-    private adminService: AdminDataService,
-    private router: Router
+  	private modalService: NgbModal,
+  	private auth: AuthService,
+  	private adminService: AdminDataService,
+  	private router: Router
   ) {
-    this.permission = this.auth.isPermittedObjectCode('RISKS');
+  	this.permission = this.auth.isPermittedObjectCode('RISKS');
   }
 
   ngOnInit(): void {
-    this.loadCommonSettings();
-    this.loadAlerts();
+  	this.loadCommonSettings();
+  	this.loadAlerts();
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  	this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit() {
-    this.subscriptions.add(
-      this.sort.sortChange.subscribe(() => {
-        this.sortedDesc = (this.sort.direction === 'desc');
-        this.sortedField = this.sort.active;
-        this.loadAlerts();
-      })
-    );
+  	this.subscriptions.add(
+  		this.sort.sortChange.subscribe(() => {
+  			this.sortedDesc = (this.sort.direction === 'desc');
+  			this.sortedField = this.sort.active;
+  			this.loadAlerts();
+  		})
+  	);
   }
 
   handleFilterApplied(filter: Filter): void {
-    this.filter = filter;
-    this.loadAlerts();
+  	this.filter = filter;
+  	this.loadAlerts();
   }
 
   handlePage(index: number): void {
-    this.pageIndex = index - 1;
-    this.loadAlerts();
+  	this.pageIndex = index - 1;
+  	this.loadAlerts();
   }
 
   showDetails(alert: RiskAlertItem, content: any) {
-    this.selectedAlert = alert;
-    this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
+  	this.selectedAlert = alert;
+  	this.modalService.open(content, {
+  		backdrop: 'static',
+  		windowClass: 'modalCusSty',
+  	});
   }
   private loadCommonSettings(){
-    let settingsCommon = this.auth.getLocalSettingsCommon();
-    if(settingsCommon){
-      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-      if(this.adminAdditionalSettings?.tabs?.risk?.filterFields){
-        this.filterFields = this.adminAdditionalSettings.tabs.risk.filterFields;
-      }
-    }
+  	const settingsCommon = this.auth.getLocalSettingsCommon();
+  	if(settingsCommon){
+  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+  		if(this.adminAdditionalSettings?.tabs?.risk?.filterFields){
+  			this.filterFields = this.adminAdditionalSettings.tabs.risk.filterFields;
+  		}
+  	}
   }
   private loadAlerts(): void {
-    this.inProgress = true;
-    const listData$ = this.adminService.getRiskAlerts(
-      this.pageIndex,
-      this.pageSize,
-      this.sortedField,
-      this.sortedDesc,
-      this.filter).pipe(take(1));
-    this.subscriptions.add(
-      listData$.subscribe(({ list, count }) => {
-        this.alerts = list;
-        this.alertCount = count;
-        this.inProgress = false;
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  	this.inProgress = true;
+  	const listData$ = this.adminService.getRiskAlerts(
+  		this.pageIndex,
+  		this.pageSize,
+  		this.sortedField,
+  		this.sortedDesc,
+  		this.filter).pipe(take(1));
+  	this.subscriptions.add(
+  		listData$.subscribe(({ list, count }) => {
+  			this.alerts = list;
+  			this.alertCount = count;
+  			this.inProgress = false;
+  		}, (error) => {
+  			this.inProgress = false;
+  			if (this.auth.token === '') {
+  				this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 }

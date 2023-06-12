@@ -5,44 +5,44 @@ import { UserType } from 'model/generated-models';
 import { AuthService } from 'services/auth.service';
 
 @Component({
-    selector: 'app-settings-bar',
-    templateUrl: './settings-bar.component.html',
-    styleUrls: ['../../../../assets/menu.scss']
+	selector: 'app-settings-bar',
+	templateUrl: './settings-bar.component.html',
+	styleUrls: ['../../../../assets/menu.scss']
 })
 export class SettingsMenuBarComponent {
     @Input() selectedTab = 'info';
     @Output() select = new EventEmitter<string>();
 
     tabs: MenuItem[] = [
-        {
-            id: 'info',
-            name: 'Personal info'
-        } as MenuItem,
-        {
-            id: 'verification',
-            name: 'Account verification'
-        } as MenuItem,
-        {
-            id: 'security',
-            name: 'Security'
-        } as MenuItem,
-        {
-            id: 'iplist',
-            name: 'White List'
-        } as MenuItem
+    	{
+    		id: 'info',
+    		name: 'Personal info'
+    	} as MenuItem,
+    	{
+    		id: 'verification',
+    		name: 'Account verification'
+    	} as MenuItem,
+    	{
+    		id: 'security',
+    		name: 'Security'
+    	} as MenuItem,
+    	{
+    		id: 'iplist',
+    		name: 'White List'
+    	} as MenuItem
     ];
 
     constructor(private router: Router, private auth: AuthService) {
-        if (auth.user?.type === UserType.Merchant && auth.isMerchantApproved()) {
-            this.tabs.push({
-                id: 'apikeys',
-                name: 'API Keys'
-            } as MenuItem);
-        }
+    	if (auth.user?.type === UserType.Merchant && auth.isMerchantApproved()) {
+    		this.tabs.push({
+    			id: 'apikeys',
+    			name: 'API Keys'
+    		} as MenuItem);
+    	}
     }
 
     onSelect(itemId: string): void {
-        this.select.emit(itemId);
-        this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/${itemId}`);
+    	this.select.emit(itemId);
+    	this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/${itemId}`);
     }
 }

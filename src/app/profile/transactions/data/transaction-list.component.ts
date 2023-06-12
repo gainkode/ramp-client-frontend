@@ -13,14 +13,14 @@ import { ErrorService } from 'services/error.service';
 import { ProfileDataService } from 'services/profile.service';
 
 @Component({
-    selector: 'app-profile-transaction-list',
-    templateUrl: './transaction-list.component.html',
-    styleUrls: [
-        '../../../../assets/menu.scss',
-        '../../../../assets/button.scss',
-        '../../../../assets/profile.scss',
-        './transaction-list.component.scss'
-    ]
+	selector: 'app-profile-transaction-list',
+	templateUrl: './transaction-list.component.html',
+	styleUrls: [
+		'../../../../assets/menu.scss',
+		'../../../../assets/button.scss',
+		'../../../../assets/profile.scss',
+		'./transaction-list.component.scss'
+	]
 })
 export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit {
     @Input() recent = false;
@@ -44,179 +44,179 @@ export class ProfileTransactionListComponent implements OnDestroy, AfterViewInit
     sortedField = 'dt';
     sortedDesc = true;
     displayedColumns: string[] = [
-        'details_mobile', 'transaction', 'dt', 'sender', 'recipient', 'sent', 'received', 'sys_fees', 'net_fees', 'status', 'details'
+    	'details_mobile', 'transaction', 'dt', 'sender', 'recipient', 'sent', 'received', 'sys_fees', 'net_fees', 'status', 'details'
     ];
 
     constructor(
-        private auth: AuthService,
-        private errorHandler: ErrorService,
-        private profileService: ProfileDataService,
-        private router: Router) {
+    	private auth: AuthService,
+    	private errorHandler: ErrorService,
+    	private profileService: ProfileDataService,
+    	private router: Router) {
     }
 
     load(val: TransactionsFilter): void {
-        this.filter = val;
-        if (this.recent) {
-            this.pageSize = 10;
-            this.sortedField = 'dt';
-        }
-        if (this.userStatuses.length === 0) {
-            this.loadTransactionStatuses();
-        } else {
-            this.loadTransactions();
-        }
+    	this.filter = val;
+    	if (this.recent) {
+    		this.pageSize = 10;
+    		this.sortedField = 'dt';
+    	}
+    	if (this.userStatuses.length === 0) {
+    		this.loadTransactionStatuses();
+    	} else {
+    		this.loadTransactions();
+    	}
     }
 
     updateTransactionStatus(transactionId: string): void {
-        const transactionData = this.transactions.find(x => x.id === transactionId);
-        if (transactionData) {
-            let itemCount = 0;
-            const transactionData$ = this.profileService.getMyTransactionStatus(transactionId).valueChanges.pipe(take(1));
-            this.onProgress.emit(true);
-            this.pTransactionSubscription = transactionData$.subscribe(({ data }) => {
-                const dataList = data.myTransactions as TransactionShortListResult;
-                if (dataList !== null) {
-                    itemCount = dataList?.count as number;
-                    if (itemCount > 0 && dataList?.list) {
-                        const transaction = dataList?.list[0];
-                        const status = this.userStatuses.find(x => x.key === transaction.status);
-                        if (status) {
-                            transactionData.status = status;
-                        }
-                    }
-                }
-                this.onProgress.emit(false);
-            }, (error) => {
-                this.onProgress.emit(false);
-                if (this.auth.token !== '') {
-                    this.onError.emit(this.errorHandler.getError(error.message, 'Unable to update transaction'));
-                } else {
-                    this.router.navigateByUrl('/');
-                }
-            });
-        }
+    	const transactionData = this.transactions.find(x => x.id === transactionId);
+    	if (transactionData) {
+    		let itemCount = 0;
+    		const transactionData$ = this.profileService.getMyTransactionStatus(transactionId).valueChanges.pipe(take(1));
+    		this.onProgress.emit(true);
+    		this.pTransactionSubscription = transactionData$.subscribe(({ data }) => {
+    			const dataList = data.myTransactions as TransactionShortListResult;
+    			if (dataList !== null) {
+    				itemCount = dataList?.count as number;
+    				if (itemCount > 0 && dataList?.list) {
+    					const transaction = dataList?.list[0];
+    					const status = this.userStatuses.find(x => x.key === transaction.status);
+    					if (status) {
+    						transactionData.status = status;
+    					}
+    				}
+    			}
+    			this.onProgress.emit(false);
+    		}, (error) => {
+    			this.onProgress.emit(false);
+    			if (this.auth.token !== '') {
+    				this.onError.emit(this.errorHandler.getError(error.message, 'Unable to update transaction'));
+    			} else {
+    				this.router.navigateByUrl('/');
+    			}
+    		});
+    	}
     }
 
     ngOnDestroy(): void {
-        if (this.pTransactionsSubscription !== undefined) {
-            this.pTransactionsSubscription.unsubscribe();
-            this.pTransactionsSubscription = undefined;
-        }
-        if (this.pTransactionSubscription !== undefined) {
-            this.pTransactionSubscription.unsubscribe();
-            this.pTransactionSubscription = undefined;
-        }
-        if (this.pStatusSubscription !== undefined) {
-            this.pStatusSubscription.unsubscribe();
-            this.pStatusSubscription = undefined;
-        }
-        if (this.pSortSubscription !== undefined) {
-            this.pSortSubscription.unsubscribe();
-            this.pSortSubscription = undefined;
-        }
+    	if (this.pTransactionsSubscription !== undefined) {
+    		this.pTransactionsSubscription.unsubscribe();
+    		this.pTransactionsSubscription = undefined;
+    	}
+    	if (this.pTransactionSubscription !== undefined) {
+    		this.pTransactionSubscription.unsubscribe();
+    		this.pTransactionSubscription = undefined;
+    	}
+    	if (this.pStatusSubscription !== undefined) {
+    		this.pStatusSubscription.unsubscribe();
+    		this.pStatusSubscription = undefined;
+    	}
+    	if (this.pSortSubscription !== undefined) {
+    		this.pSortSubscription.unsubscribe();
+    		this.pSortSubscription = undefined;
+    	}
     }
 
     ngAfterViewInit(): void {
-        if (this.sort) {
-            this.pSortSubscription = this.sort.sortChange.subscribe(() => {
-                this.sortedDesc = (this.sort.direction === 'desc');
-                this.sortedField = this.sort.active;
-                this.loadTransactions();
-            });
-        }
+    	if (this.sort) {
+    		this.pSortSubscription = this.sort.sortChange.subscribe(() => {
+    			this.sortedDesc = (this.sort.direction === 'desc');
+    			this.sortedField = this.sort.active;
+    			this.loadTransactions();
+    		});
+    	}
     }
 
     private getSortedField(): string {
-        let result = this.sortedField;
-        if (this.sortedField === 'dt') {
-            result = 'created';
-        } else if (this.sortedField === 'transaction') {
-            result = 'type';
-        } else if (this.sortedField === 'sys_fees') {
-            result = 'feeFiat';
-        } else if (this.sortedField === 'sender') {
-            result = '';
-        } else if (this.sortedField === 'recipient') {
-            result = '';
-        } else if (this.sortedField === 'sent') {
-            result = 'amountToSpend';
-        } else if (this.sortedField === 'received') {
-            result = 'amountToReceive';
-        }
-        return result;
+    	let result = this.sortedField;
+    	if (this.sortedField === 'dt') {
+    		result = 'created';
+    	} else if (this.sortedField === 'transaction') {
+    		result = 'type';
+    	} else if (this.sortedField === 'sys_fees') {
+    		result = 'feeFiat';
+    	} else if (this.sortedField === 'sender') {
+    		result = '';
+    	} else if (this.sortedField === 'recipient') {
+    		result = '';
+    	} else if (this.sortedField === 'sent') {
+    		result = 'amountToSpend';
+    	} else if (this.sortedField === 'received') {
+    		result = 'amountToReceive';
+    	}
+    	return result;
     }
 
     private loadTransactions(): void {
-        this.transactionCount = 0;
-        const transactionsData$ = this.profileService.getMyTransactions(
-            this.pageIndex,
-            this.pageSize,
-            this.filter.walletTypes,
-            this.filter.transactionDate,
-            this.filter.transactionTypes,
-            this.filter.sender,
-            this.filter.walletAddress,
-            this.getSortedField(),
-            this.sortedDesc).valueChanges.pipe(take(1));
-        this.onProgress.emit(true);
-        this.pTransactionsSubscription = transactionsData$.subscribe(({ data }) => {
-            const dataList = data.myTransactions as TransactionShortListResult;
-            if (dataList !== null) {
-                this.transactionCount = dataList?.count as number;
-                if (this.transactionCount > 0) {
-                    this.transactions = dataList?.list?.map((val) => {
-                        const status = this.userStatuses.find(x => x.key === val.status);
-                        return new TransactionItem(val, status);
-                    }) as TransactionItem[];
-                }
-            }
-            this.onProgress.emit(false);
-        }, (error) => {
-            this.onProgress.emit(false);
-            if (this.auth.token !== '') {
-                this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load transactions'));
-            } else {
-                this.router.navigateByUrl('/');
-            }
-        });
+    	this.transactionCount = 0;
+    	const transactionsData$ = this.profileService.getMyTransactions(
+    		this.pageIndex,
+    		this.pageSize,
+    		this.filter.walletTypes,
+    		this.filter.transactionDate,
+    		this.filter.transactionTypes,
+    		this.filter.sender,
+    		this.filter.walletAddress,
+    		this.getSortedField(),
+    		this.sortedDesc).valueChanges.pipe(take(1));
+    	this.onProgress.emit(true);
+    	this.pTransactionsSubscription = transactionsData$.subscribe(({ data }) => {
+    		const dataList = data.myTransactions as TransactionShortListResult;
+    		if (dataList !== null) {
+    			this.transactionCount = dataList?.count as number;
+    			if (this.transactionCount > 0) {
+    				this.transactions = dataList?.list?.map((val) => {
+    					const status = this.userStatuses.find(x => x.key === val.status);
+    					return new TransactionItem(val, status);
+    				}) as TransactionItem[];
+    			}
+    		}
+    		this.onProgress.emit(false);
+    	}, (error) => {
+    		this.onProgress.emit(false);
+    		if (this.auth.token !== '') {
+    			this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load transactions'));
+    		} else {
+    			this.router.navigateByUrl('/');
+    		}
+    	});
     }
 
     private refresh(): void {
-        if (this.pTransactionsSubscription !== undefined) {
-            this.pTransactionsSubscription.unsubscribe();
-            this.pTransactionsSubscription = undefined;
-        }
-        this.loadTransactions();
+    	if (this.pTransactionsSubscription !== undefined) {
+    		this.pTransactionsSubscription.unsubscribe();
+    		this.pTransactionsSubscription = undefined;
+    	}
+    	this.loadTransactions();
     }
 
     private loadTransactionStatuses(): void {
-        const statusListData$ = this.profileService.getTransactionStatuses().valueChanges.pipe(take(1));
-        this.onProgress.emit(true);
-        this.pStatusSubscription = statusListData$.subscribe(({ data }) => {
-            this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
-            this.onProgress.emit(false);
-            this.loadTransactions();
-        }, (error) => {
-            this.onProgress.emit(false);
-            if (this.auth.token !== '') {
-                this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load transactions statuses'));
-            } else {
-                this.router.navigateByUrl('/');
-            }
-        });
+    	const statusListData$ = this.profileService.getTransactionStatuses().valueChanges.pipe(take(1));
+    	this.onProgress.emit(true);
+    	this.pStatusSubscription = statusListData$.subscribe(({ data }) => {
+    		this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
+    		this.onProgress.emit(false);
+    		this.loadTransactions();
+    	}, (error) => {
+    		this.onProgress.emit(false);
+    		if (this.auth.token !== '') {
+    			this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load transactions statuses'));
+    		} else {
+    			this.router.navigateByUrl('/');
+    		}
+    	});
     }
 
     handlePage(event: PageEvent): PageEvent {
-        this.pageSize = event.pageSize;
-        this.pageIndex = event.pageIndex;
-        this.refresh();
-        return event;
+    	this.pageSize = event.pageSize;
+    	this.pageIndex = event.pageIndex;
+    	this.refresh();
+    	return event;
     }
 
     showDetailsPanel(item: TransactionItem): void {
-        const c = new ProfileItemContainer();
-        c.container = ProfileItemContainerType.Transaction;
-        c.transaction = item;
-        this.onShowDetails.emit(c);
+    	const c = new ProfileItemContainer();
+    	c.container = ProfileItemContainerType.Transaction;
+    	c.transaction = item;
+    	this.onShowDetails.emit(c);
     }
 }

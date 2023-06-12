@@ -7,9 +7,9 @@ import { Countries, Country, getCountryByCode3 } from 'model/country-code.model'
 import { AuthService } from 'services/auth.service';
 
 @Component({
-  selector: 'app-admin-black-list-details',
-  templateUrl: 'blacklist-details.component.html',
-  styleUrls: ['blacklist-details.component.scss', '../../../assets/scss/_validation.scss']
+	selector: 'app-admin-black-list-details',
+	templateUrl: 'blacklist-details.component.html',
+	styleUrls: ['blacklist-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminCountryBlackListDetailsComponent implements OnDestroy {
   @Output() save = new EventEmitter();
@@ -23,51 +23,51 @@ export class AdminCountryBlackListDetailsComponent implements OnDestroy {
   countryOptions = Countries;
 
   form = this.formBuilder.group({
-    country: [null, { validators: [Validators.required], updateOn: 'change' }]
+  	country: [null, { validators: [Validators.required], updateOn: 'change' }]
   });
 
   constructor(
-    private formBuilder: UntypedFormBuilder,
-    private router: Router,
-    private auth: AuthService,
-    private adminService: AdminDataService) {
+  	private formBuilder: UntypedFormBuilder,
+  	private router: Router,
+  	private auth: AuthService,
+  	private adminService: AdminDataService) {
 
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  	this.subscriptions.unsubscribe();
   }
 
   getCountryFlag(code: string): string {
-    return `${code.toLowerCase()}.svg`;
+  	return `${code.toLowerCase()}.svg`;
   }
 
   onSubmit(): void {
-    this.submitted = true;
-    if (this.form.valid) {
-      const c = this.form.controls.country.value as Country;
-      this.addCountry(c.code3);
-    }
+  	this.submitted = true;
+  	if (this.form.valid) {
+  		const c = this.form.controls.country.value as Country;
+  		this.addCountry(c.code3);
+  	}
   }
 
   private addCountry(code3: string): void {
-    this.errorMessage = '';
-    const c = getCountryByCode3(code3);
-    if (c) {
-      this.saveInProgress = true;
-      const requestData$ = this.adminService.addBlackCountry(c.code2);
-      this.subscriptions.add(
-        requestData$.subscribe(({ data }) => {
-          this.saveInProgress = false;
-          this.save.emit();
-        }, (error) => {
-          this.saveInProgress = false;
-          this.errorMessage = error;
-          if (this.auth.token === '') {
-            this.router.navigateByUrl('/');
-          }
-        })
-      );
-    }
+  	this.errorMessage = '';
+  	const c = getCountryByCode3(code3);
+  	if (c) {
+  		this.saveInProgress = true;
+  		const requestData$ = this.adminService.addBlackCountry(c.code2);
+  		this.subscriptions.add(
+  			requestData$.subscribe(({ data }) => {
+  				this.saveInProgress = false;
+  				this.save.emit();
+  			}, (error) => {
+  				this.saveInProgress = false;
+  				this.errorMessage = error;
+  				if (this.auth.token === '') {
+  					this.router.navigateByUrl('/');
+  				}
+  			})
+  		);
+  	}
   }
 }

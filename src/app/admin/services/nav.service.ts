@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 
 // Menu
 export interface Menu {
-	headTitle?: string,
-	headTitle2?: string,
+	headTitle?: string;
+	headTitle2?: string;
 	path?: string;
 	title?: string;
 	icon?: string;
@@ -30,14 +30,14 @@ export class NavService implements OnDestroy {
 	public screenWidth: BehaviorSubject<number> = new BehaviorSubject(window.innerWidth);
 
 	// Search Box
-	public search: boolean = false;
+	public search = false;
 
 	// Language
-	public language: boolean = false;
+	public language = false;
 
 	// Mega Menu
-	public megaMenu: boolean = false;
-	public levelMenu: boolean = false;
+	public megaMenu = false;
+	public levelMenu = false;
 	public megaMenuColapse: boolean = window.innerWidth < 1199 ? true : false;
 
 	// Collapse Sidebar
@@ -47,7 +47,7 @@ export class NavService implements OnDestroy {
 	public horizontal: boolean = window.innerWidth < 991 ? false : true;
 
 	// Full screen
-	public fullScreen: boolean = false;
+	public fullScreen = false;
 
 	constructor(private router: Router) {
 		this.setScreenWidth(window.innerWidth);

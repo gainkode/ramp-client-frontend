@@ -6,9 +6,9 @@ import { EnvService } from '../../../app/services/env.service';
 
 
 @Component({
-    selector: 'recaptcha',
-    templateUrl: 'recaptcha.component.html',
-    styleUrls: ['../../../assets/button.scss']
+	selector: 'recaptcha',
+	templateUrl: 'recaptcha.component.html',
+	styleUrls: ['../../../assets/button.scss']
 })
 export class RecaptchaComponent implements OnInit, OnDestroy {
     @Output() completed = new EventEmitter();
@@ -20,8 +20,8 @@ export class RecaptchaComponent implements OnInit, OnDestroy {
     siteKey = EnvService.recaptchaSiteKey;
     provider = EnvService.recaptchaProvider;
     constructor(
-        public dialog: MatDialog,
-        private auth: AuthService) {
+    	public dialog: MatDialog,
+    	private auth: AuthService) {
     }
 
     ngOnInit(): void {}
@@ -30,7 +30,7 @@ export class RecaptchaComponent implements OnInit, OnDestroy {
     }
 
     capchaResult(event){
-        localStorage.setItem('recaptchaId', event);
-        this.completed.emit(event);
+    	localStorage.setItem('recaptchaId', event);
+    	this.completed.emit(event);
     }
 }

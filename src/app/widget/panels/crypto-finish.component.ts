@@ -5,15 +5,15 @@ import { InvoiceView } from 'model/payment.model';
 import { EnvService } from 'services/env.service';
 
 @Component({
-  selector: 'app-widget-crypto-finish',
-  templateUrl: 'crypto-finish.component.html',
-  styleUrls: [
-    '../../../assets/payment.scss',
-    '../../../assets/button.scss',
-    '../../../assets/text-control.scss',
-    '../../../assets/profile.scss',
-    '../../../assets/details.scss'
-  ]
+	selector: 'app-widget-crypto-finish',
+	templateUrl: 'crypto-finish.component.html',
+	styleUrls: [
+		'../../../assets/payment.scss',
+		'../../../assets/button.scss',
+		'../../../assets/text-control.scss',
+		'../../../assets/profile.scss',
+		'../../../assets/details.scss'
+	]
 })
 export class WidgetCryptoFinishComponent {
   @Input() title = '';
@@ -29,16 +29,16 @@ export class WidgetCryptoFinishComponent {
   finishLink = EnvService.crypto_widget_finish_link;
 
   constructor(
-    private router: Router,
-    private clipboard: Clipboard) { }
+  	private router: Router,
+  	private clipboard: Clipboard) { }
 
   copyAddress(): void {
-    this.clipboard.copy(this.data?.walletAddress ?? '');
+  	this.clipboard.copy(this.data?.walletAddress ?? '');
   }
 
   goHome(): void {
-    this.router.navigateByUrl(this.finishLink).then(() => {
-      window.location.reload();
-    });
+  	this.router.navigateByUrl(this.finishLink).then(() => {
+  		window.location.reload();
+  	});
   }
 }

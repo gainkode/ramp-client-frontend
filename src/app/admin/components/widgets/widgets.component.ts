@@ -10,33 +10,33 @@ import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 
 @Component({
-  selector: 'app-admin-widgets',
-  templateUrl: 'widgets.component.html',
-  styleUrls: ['widgets.component.scss']
+	selector: 'app-admin-widgets',
+	templateUrl: 'widgets.component.html',
+	styleUrls: ['widgets.component.scss']
 })
 export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
-    'search'
+  	'search'
   ];
   displayedColumns: string[] = [
-    'details',
-    'name',
-    'code',
-    'link',
-    'created',
-    'createdBy',
-    'transactionType',
-    'currenciesCrypto',
-    'currenciesFiat',
-    'destinationAddress',
-    'userNotificationId',
-    'countries',
-    'instruments',
-    'paymentProviders',
-    'liquidityProvider',
-    'id'
+  	'details',
+  	'name',
+  	'code',
+  	'link',
+  	'created',
+  	'createdBy',
+  	'transactionType',
+  	'currenciesCrypto',
+  	'currenciesFiat',
+  	'destinationAddress',
+  	'userNotificationId',
+  	'countries',
+  	'instruments',
+  	'paymentProviders',
+  	'liquidityProvider',
+  	'id'
   ];
   inProgress = false;
   errorMessage = '';
@@ -58,131 +58,131 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   private detailsDialog: NgbModalRef | undefined = undefined;
 
   constructor(
-    private modalService: NgbModal,
-    private auth: AuthService,
-    private adminService: AdminDataService,
-    private route: ActivatedRoute,
-    private router: Router
+  	private modalService: NgbModal,
+  	private auth: AuthService,
+  	private adminService: AdminDataService,
+  	private route: ActivatedRoute,
+  	private router: Router
   ) {
-    this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
-    this.permission = this.auth.isPermittedObjectCode('AFFILIATES');
+  	this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
+  	this.permission = this.auth.isPermittedObjectCode('AFFILIATES');
   }
 
   ngOnInit(): void {
-    this.loadCommonSettings();
-    if (this.userIdFilter !== '') {
-      this.filter = new Filter({
-        users: [this.userIdFilter]
-      });
-    }
-    this.loadWidgets();
+  	this.loadCommonSettings();
+  	if (this.userIdFilter !== '') {
+  		this.filter = new Filter({
+  			users: [this.userIdFilter]
+  		});
+  	}
+  	this.loadWidgets();
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  	this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit() {
-    this.subscriptions.add(
-      this.sort.sortChange.subscribe(() => {
-        this.sortedDesc = (this.sort.direction === 'desc');
-        this.sortedField = this.sort.active;
-        this.loadWidgets();
-      })
-    );
+  	this.subscriptions.add(
+  		this.sort.sortChange.subscribe(() => {
+  			this.sortedDesc = (this.sort.direction === 'desc');
+  			this.sortedField = this.sort.active;
+  			this.loadWidgets();
+  		})
+  	);
   }
 
   onWidgetSelected(item: WidgetItem): void {
-    item.selected = !item.selected;
-    this.selected = this.widgets.some(x => x.selected === true);
+  	item.selected = !item.selected;
+  	this.selected = this.widgets.some(x => x.selected === true);
   }
 
   handleFilterApplied(filter: Filter): void {
-    this.filter = filter;
-    this.loadWidgets();
+  	this.filter = filter;
+  	this.loadWidgets();
   }
 
   handlePage(index: number): void {
-    this.pageIndex = index - 1;
-    this.loadWidgets();
+  	this.pageIndex = index - 1;
+  	this.loadWidgets();
   }
 
   addWidget(content: any): void {
-    this.widgetDetailsTitle = 'Create a new Widget';
-    this.selectedWidget = undefined;
-    this.detailsDialog = this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
+  	this.widgetDetailsTitle = 'Create a new Widget';
+  	this.selectedWidget = undefined;
+  	this.detailsDialog = this.modalService.open(content, {
+  		backdrop: 'static',
+  		windowClass: 'modalCusSty',
+  	});
   }
 
   private loadCommonSettings(){
-    let settingsCommon = this.auth.getLocalSettingsCommon();
-    if(settingsCommon){
-      this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-      if(this.adminAdditionalSettings?.tabs?.widget?.filterFields){
-        this.filterFields = this.adminAdditionalSettings.tabs.widget.filterFields;
-      }
-    }
+  	const settingsCommon = this.auth.getLocalSettingsCommon();
+  	if(settingsCommon){
+  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+  		if(this.adminAdditionalSettings?.tabs?.widget?.filterFields){
+  			this.filterFields = this.adminAdditionalSettings.tabs.widget.filterFields;
+  		}
+  	}
   }
 
   private loadWidgets(): void {
-    this.inProgress = true;
-    const listData$ = this.adminService.getWidgets(
-      this.pageIndex,
-      this.pageSize,
-      this.sortedField,
-      this.sortedDesc,
-      this.filter).pipe(take(1));
-    this.subscriptions.add(
-      listData$.subscribe(({ list, count }) => {
-        this.widgets = list;
-        this.widgetCount = count;
-        this.inProgress = false;
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  	this.inProgress = true;
+  	const listData$ = this.adminService.getWidgets(
+  		this.pageIndex,
+  		this.pageSize,
+  		this.sortedField,
+  		this.sortedDesc,
+  		this.filter).pipe(take(1));
+  	this.subscriptions.add(
+  		listData$.subscribe(({ list, count }) => {
+  			this.widgets = list;
+  			this.widgetCount = count;
+  			this.inProgress = false;
+  		}, (error) => {
+  			this.inProgress = false;
+  			if (this.auth.token === '') {
+  				this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 
   onSaveWidget(): void {
-    this.selectedWidget = undefined;
-    if (this.detailsDialog) {
-      this.detailsDialog.close();
-      this.loadWidgets();
-    }
+  	this.selectedWidget = undefined;
+  	if (this.detailsDialog) {
+  		this.detailsDialog.close();
+  		this.loadWidgets();
+  	}
   }
 
   export(content: any): void {
-    const ids = this.widgets.filter(x => x.selected === true).map(val => val.id);
-    const exportData$ = this.adminService.exportWidgetsToCsv(
-      ids,
-      this.sortedField,
-      this.sortedDesc,
-      this.filter);
-    this.subscriptions.add(
-      exportData$.subscribe(({ data }) => {
-        this.modalService.open(content, {
-          backdrop: 'static',
-          windowClass: 'modalCusSty',
-        });
-      }, (error) => {
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  	const ids = this.widgets.filter(x => x.selected === true).map(val => val.id);
+  	const exportData$ = this.adminService.exportWidgetsToCsv(
+  		ids,
+  		this.sortedField,
+  		this.sortedDesc,
+  		this.filter);
+  	this.subscriptions.add(
+  		exportData$.subscribe(({ data }) => {
+  			this.modalService.open(content, {
+  				backdrop: 'static',
+  				windowClass: 'modalCusSty',
+  			});
+  		}, (error) => {
+  			if (this.auth.token === '') {
+  				this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 
   showDetails(widget: WidgetItem, content: any) {
-    this.widgetDetailsTitle = 'Widget Details';
-    this.selectedWidget = widget;
-    this.detailsDialog = this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
+  	this.widgetDetailsTitle = 'Widget Details';
+  	this.selectedWidget = widget;
+  	this.detailsDialog = this.modalService.open(content, {
+  		backdrop: 'static',
+  		windowClass: 'modalCusSty',
+  	});
   }
 }

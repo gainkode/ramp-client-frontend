@@ -9,13 +9,13 @@ import { take } from 'rxjs/operators';
 import { getFormattedUtcDate } from 'utils/utils';
 
 @Component({
-    selector: 'app-signup-info-panel',
-    templateUrl: 'signup-info.component.html',
-    styleUrls: [
-        '../../../assets/button.scss',
-        '../../../assets/text-control.scss',
-        '../../../assets/auth.scss'
-    ]
+	selector: 'app-signup-info-panel',
+	templateUrl: 'signup-info.component.html',
+	styleUrls: [
+		'../../../assets/button.scss',
+		'../../../assets/text-control.scss',
+		'../../../assets/auth.scss'
+	]
 })
 export class SignupInfoPanelComponent implements OnDestroy {
     @Input() buttonTitle = 'OK';
@@ -50,265 +50,265 @@ export class SignupInfoPanelComponent implements OnDestroy {
     private subscriptions: Subscription = new Subscription();
 
     infoForm = this.formBuilder.group({
-        firstName: ['', { validators: [], updateOn: 'change' }],
-        lastName: ['', { validators: [], updateOn: 'change' }],
-        phoneCode: ['', { validators: [], updateOn: 'change' }],
-        phoneNumber: ['', { validators: [], updateOn: 'change' }],
-        birthday: [undefined, { validators: [], updateOn: 'change' }],
-        postCode: ['', { validators: [], updateOn: 'change' }],
-        town: ['', { validators: [], updateOn: 'change' }],
-        street: ['', { validators: [], updateOn: 'change' }],
-        subStreet: ['', { validators: [], updateOn: 'change' }],
-        stateName: ['', { validators: [], updateOn: 'change' }],
-        buildingName: ['', { validators: [], updateOn: 'change' }],
-        buildingNumber: ['', { validators: [], updateOn: 'change' }],
-        flatNumber: ['', { validators: [], updateOn: 'change' }],
-        companyName: ['', { validators: [], updateOn: 'change' }]
+    	firstName: ['', { validators: [], updateOn: 'change' }],
+    	lastName: ['', { validators: [], updateOn: 'change' }],
+    	phoneCode: ['', { validators: [], updateOn: 'change' }],
+    	phoneNumber: ['', { validators: [], updateOn: 'change' }],
+    	birthday: [undefined, { validators: [], updateOn: 'change' }],
+    	postCode: ['', { validators: [], updateOn: 'change' }],
+    	town: ['', { validators: [], updateOn: 'change' }],
+    	street: ['', { validators: [], updateOn: 'change' }],
+    	subStreet: ['', { validators: [], updateOn: 'change' }],
+    	stateName: ['', { validators: [], updateOn: 'change' }],
+    	buildingName: ['', { validators: [], updateOn: 'change' }],
+    	buildingNumber: ['', { validators: [], updateOn: 'change' }],
+    	flatNumber: ['', { validators: [], updateOn: 'change' }],
+    	companyName: ['', { validators: [], updateOn: 'change' }]
     });
 
     firstNameErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Please specify your first name'
+    	['required']: 'Please specify your first name'
     };
     lastNameErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Please specify your last name'
+    	['required']: 'Please specify your last name'
     };
     companyNameErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Please specify your company name'
+    	['required']: 'Please specify your company name'
     };
     birthdayErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Please specify your birthday'
+    	['required']: 'Please specify your birthday'
     };
     phoneCodeErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Required',
-        ['pattern']: 'Bad code'
+    	['required']: 'Required',
+    	['pattern']: 'Bad code'
     };
     phoneNumberErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Please specify your phone number',
-        ['pattern']: 'Bad phone format'
+    	['required']: 'Please specify your phone number',
+    	['pattern']: 'Bad phone format'
     };
     postCodeErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Please specify the post code'
+    	['required']: 'Please specify the post code'
     };
     townErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Please specify the city name'
+    	['required']: 'Please specify the city name'
     };
     streetErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Please specify the street'
+    	['required']: 'Please specify the street'
     };
     flatNumberErrorMessages: { [key: string]: string; } = {
-        ['required']: 'Please specify the flat number'
+    	['required']: 'Please specify the flat number'
     };
 
     constructor(
-        private auth: AuthService,
-        private errorHandler: ErrorService,
-        private formBuilder: UntypedFormBuilder) {
-        this.firstNameControl = this.infoForm.get('firstName');
-        this.companyNameControl = this.infoForm.get('companyName');
-        this.lastNameControl = this.infoForm.get('lastName');
-        this.phoneCodeControl = this.infoForm.get('phoneCode');
-        this.phoneNumberControl = this.infoForm.get('phoneNumber');
-        this.birthdayControl = this.infoForm.get('birthday');
-        this.postCodeControl = this.infoForm.get('postCode');
-        this.townControl = this.infoForm.get('town');
-        this.streetControl = this.infoForm.get('street');
-        this.subStreetControl = this.infoForm.get('subStreet');
-        this.stateNameControl = this.infoForm.get('stateName');
-        this.buildingNameControl = this.infoForm.get('buildingName');
-        this.buildingNumberControl = this.infoForm.get('buildingNumber');
-        this.flatNumberControl = this.infoForm.get('flatNumber');
+    	private auth: AuthService,
+    	private errorHandler: ErrorService,
+    	private formBuilder: UntypedFormBuilder) {
+    	this.firstNameControl = this.infoForm.get('firstName');
+    	this.companyNameControl = this.infoForm.get('companyName');
+    	this.lastNameControl = this.infoForm.get('lastName');
+    	this.phoneCodeControl = this.infoForm.get('phoneCode');
+    	this.phoneNumberControl = this.infoForm.get('phoneNumber');
+    	this.birthdayControl = this.infoForm.get('birthday');
+    	this.postCodeControl = this.infoForm.get('postCode');
+    	this.townControl = this.infoForm.get('town');
+    	this.streetControl = this.infoForm.get('street');
+    	this.subStreetControl = this.infoForm.get('subStreet');
+    	this.stateNameControl = this.infoForm.get('stateName');
+    	this.buildingNameControl = this.infoForm.get('buildingName');
+    	this.buildingNumberControl = this.infoForm.get('buildingNumber');
+    	this.flatNumberControl = this.infoForm.get('flatNumber');
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
+    	this.subscriptions.unsubscribe();
     }
 
     init(): void {
-        const fieldsData = this.auth.getSignupRequiredFields().valueChanges.pipe(take(1));
-        this.progressChange.emit(true);
-        this.subscriptions.add(
-            fieldsData.subscribe(({ data }) => {
-                const fields: SettingsKyc = data.mySettingsKyc;
-                this.requireUserFullName = fields.requireUserFullName as boolean;
-                this.requireUserPhone = fields.requireUserPhone as boolean;
-                this.requireUserBirthday = fields.requireUserBirthday as boolean;
-                this.requireUserAddress = fields.requireUserAddress as boolean;
-                this.requireUserFlatNumber = fields.requireUserFlatNumber as boolean;
-                this.setFields();
-                this.progressChange.emit(false);
-            }, (error) => {
-                this.error.emit(this.errorHandler.getError('error', 'Unable to specify required data'));
-                this.progressChange.emit(false);
-            })
-        );
+    	const fieldsData = this.auth.getSignupRequiredFields().valueChanges.pipe(take(1));
+    	this.progressChange.emit(true);
+    	this.subscriptions.add(
+    		fieldsData.subscribe(({ data }) => {
+    			const fields: SettingsKyc = data.mySettingsKyc;
+    			this.requireUserFullName = fields.requireUserFullName as boolean;
+    			this.requireUserPhone = fields.requireUserPhone as boolean;
+    			this.requireUserBirthday = fields.requireUserBirthday as boolean;
+    			this.requireUserAddress = fields.requireUserAddress as boolean;
+    			this.requireUserFlatNumber = fields.requireUserFlatNumber as boolean;
+    			this.setFields();
+    			this.progressChange.emit(false);
+    		}, (error) => {
+    			this.error.emit(this.errorHandler.getError('error', 'Unable to specify required data'));
+    			this.progressChange.emit(false);
+    		})
+    	);
     }
 
     private setFields(): void {
-        const user = this.auth.user;
-        this.isMerchant = (user?.type === UserType.Merchant);
-        if (this.requireUserFullName && user) {
-            this.firstNameControl?.setValue(user.firstName);
-            this.lastNameControl?.setValue(user.lastName);
-            if (this.isMerchant) {
-                this.companyNameControl?.setValue(user.companyName);
-                this.lastNameControl?.setValidators([]);
-                this.firstNameControl?.setValidators([]);
-                this.companyNameControl?.setValidators([Validators.required]);
-            } else {
-                this.lastNameControl?.setValidators([Validators.required]);
-                this.firstNameControl?.setValidators([Validators.required]);
-            }
-        } else {
-            if(this.isMerchant){
-                this.companyNameControl?.setValue('');
-            }
-            this.firstNameControl?.setValue('');
-            this.lastNameControl?.setValue('');
-            this.firstNameControl?.setValidators([]);
-            this.lastNameControl?.setValidators([]);
-        }
-        if (this.requireUserPhone && user) {
-            let phoneCode = '';
-            let phoneNumber = '';
-            let phone = user.phone ?? '';
-            if (phone === '') {
-                if (user.countryCode3) {
-                    const c = getCountryByCode3(user.countryCode3);
-                    if (c) {
-                        phone = c.dial_code;
-                    }
-                }
-            }
-            const phoneData = phone.split(' ');
-            if (phoneData.length > 0) {
-                phoneCode = phoneData[0];
-            }
-            if (phoneData.length > 1) {
-                phoneNumber = phoneData[1];
-            }
-            this.phoneCodeControl?.setValue(phoneCode);
-            this.phoneNumberControl?.setValue(phoneNumber);
-            this.phoneCodeControl?.setValidators([
-                Validators.required,
-                Validators.pattern('^[\+](?:[0-9]?){0,3}[0-9]$')
-            ]);
-            this.phoneNumberControl?.setValidators([
-                Validators.required,
-                Validators.pattern('^(?:[0-9]?){6,9}[0-9]$')
-            ]);
-        } else {
-            this.phoneCodeControl?.setValue('');
-            this.phoneNumberControl?.setValue('');
-            this.phoneCodeControl?.setValidators([]);
-            this.phoneNumberControl?.setValidators([]);
-        }
-        if (this.requireUserAddress && user) {
-            this.postCodeControl?.setValue(user.postCode);
-            this.townControl?.setValue(user.town);
-            this.streetControl?.setValue(user.street);
-            this.subStreetControl?.setValue(user.subStreet);
-            this.stateNameControl?.setValue(user.stateName);
-            this.buildingNameControl?.setValue(user.buildingName);
-            this.buildingNumberControl?.setValue(user.buildingNumber);
-            this.postCodeControl?.setValidators([Validators.required]);
-            this.townControl?.setValidators([Validators.required]);
-            this.streetControl?.setValidators([Validators.required]);
-            this.flatNumberControl?.setValue(user.flatNumber);
-        } else {
-            this.postCodeControl?.setValue('');
-            this.townControl?.setValue('');
-            this.streetControl?.setValue('');
-            this.subStreetControl?.setValue('');
-            this.stateNameControl?.setValue('');
-            this.buildingNameControl?.setValue('');
-            this.buildingNumberControl?.setValue('');
-            this.flatNumberControl?.setValue('');
-            this.postCodeControl?.setValidators([]);
-            this.townControl?.setValidators([]);
-            this.streetControl?.setValidators([]);
-            this.flatNumberControl?.setValidators([]);
-        }
-        if (this.requireUserFlatNumber && user) {
-            this.flatNumberControl?.setValue(user.flatNumber);
-            this.flatNumberControl?.setValidators([Validators.required]);
-        } else {
-            this.flatNumberControl?.setValue('');
-            this.flatNumberControl?.setValidators([]);
-        }
-        if (this.requireUserBirthday && user) {
-            const birthday = user.birthday as Date;
-            if (birthday && birthday !== null) {
-                const d = `${birthday.getDate()}/${birthday.getMonth() + 1}/${birthday.getFullYear()}`;
-                this.birthdayControl?.setValue(d);
-            }
-            this.birthdayControl?.setValidators([Validators.required]);
-        } else {
-            this.birthdayControl?.setValue('');
-            this.birthdayControl?.setValidators([]);
-        }
+    	const user = this.auth.user;
+    	this.isMerchant = (user?.type === UserType.Merchant);
+    	if (this.requireUserFullName && user) {
+    		this.firstNameControl?.setValue(user.firstName);
+    		this.lastNameControl?.setValue(user.lastName);
+    		if (this.isMerchant) {
+    			this.companyNameControl?.setValue(user.companyName);
+    			this.lastNameControl?.setValidators([]);
+    			this.firstNameControl?.setValidators([]);
+    			this.companyNameControl?.setValidators([Validators.required]);
+    		} else {
+    			this.lastNameControl?.setValidators([Validators.required]);
+    			this.firstNameControl?.setValidators([Validators.required]);
+    		}
+    	} else {
+    		if(this.isMerchant){
+    			this.companyNameControl?.setValue('');
+    		}
+    		this.firstNameControl?.setValue('');
+    		this.lastNameControl?.setValue('');
+    		this.firstNameControl?.setValidators([]);
+    		this.lastNameControl?.setValidators([]);
+    	}
+    	if (this.requireUserPhone && user) {
+    		let phoneCode = '';
+    		let phoneNumber = '';
+    		let phone = user.phone ?? '';
+    		if (phone === '') {
+    			if (user.countryCode3) {
+    				const c = getCountryByCode3(user.countryCode3);
+    				if (c) {
+    					phone = c.dial_code;
+    				}
+    			}
+    		}
+    		const phoneData = phone.split(' ');
+    		if (phoneData.length > 0) {
+    			phoneCode = phoneData[0];
+    		}
+    		if (phoneData.length > 1) {
+    			phoneNumber = phoneData[1];
+    		}
+    		this.phoneCodeControl?.setValue(phoneCode);
+    		this.phoneNumberControl?.setValue(phoneNumber);
+    		this.phoneCodeControl?.setValidators([
+    			Validators.required,
+    			Validators.pattern('^[\+](?:[0-9]?){0,3}[0-9]$')
+    		]);
+    		this.phoneNumberControl?.setValidators([
+    			Validators.required,
+    			Validators.pattern('^(?:[0-9]?){6,9}[0-9]$')
+    		]);
+    	} else {
+    		this.phoneCodeControl?.setValue('');
+    		this.phoneNumberControl?.setValue('');
+    		this.phoneCodeControl?.setValidators([]);
+    		this.phoneNumberControl?.setValidators([]);
+    	}
+    	if (this.requireUserAddress && user) {
+    		this.postCodeControl?.setValue(user.postCode);
+    		this.townControl?.setValue(user.town);
+    		this.streetControl?.setValue(user.street);
+    		this.subStreetControl?.setValue(user.subStreet);
+    		this.stateNameControl?.setValue(user.stateName);
+    		this.buildingNameControl?.setValue(user.buildingName);
+    		this.buildingNumberControl?.setValue(user.buildingNumber);
+    		this.postCodeControl?.setValidators([Validators.required]);
+    		this.townControl?.setValidators([Validators.required]);
+    		this.streetControl?.setValidators([Validators.required]);
+    		this.flatNumberControl?.setValue(user.flatNumber);
+    	} else {
+    		this.postCodeControl?.setValue('');
+    		this.townControl?.setValue('');
+    		this.streetControl?.setValue('');
+    		this.subStreetControl?.setValue('');
+    		this.stateNameControl?.setValue('');
+    		this.buildingNameControl?.setValue('');
+    		this.buildingNumberControl?.setValue('');
+    		this.flatNumberControl?.setValue('');
+    		this.postCodeControl?.setValidators([]);
+    		this.townControl?.setValidators([]);
+    		this.streetControl?.setValidators([]);
+    		this.flatNumberControl?.setValidators([]);
+    	}
+    	if (this.requireUserFlatNumber && user) {
+    		this.flatNumberControl?.setValue(user.flatNumber);
+    		this.flatNumberControl?.setValidators([Validators.required]);
+    	} else {
+    		this.flatNumberControl?.setValue('');
+    		this.flatNumberControl?.setValidators([]);
+    	}
+    	if (this.requireUserBirthday && user) {
+    		const birthday = user.birthday as Date;
+    		if (birthday && birthday !== null) {
+    			const d = `${birthday.getDate()}/${birthday.getMonth() + 1}/${birthday.getFullYear()}`;
+    			this.birthdayControl?.setValue(d);
+    		}
+    		this.birthdayControl?.setValidators([Validators.required]);
+    	} else {
+    		this.birthdayControl?.setValue('');
+    		this.birthdayControl?.setValidators([]);
+    	}
 
-        if(this.isMerchant){
-            this.companyNameControl?.updateValueAndValidity();
-        }
+    	if(this.isMerchant){
+    		this.companyNameControl?.updateValueAndValidity();
+    	}
 
-        this.firstNameControl?.updateValueAndValidity();
-        this.lastNameControl?.updateValueAndValidity();
-        this.phoneCodeControl?.updateValueAndValidity();
-        this.phoneNumberControl?.updateValueAndValidity();
-        this.birthdayControl?.updateValueAndValidity();
-        this.postCodeControl?.updateValueAndValidity();
-        this.townControl?.updateValueAndValidity();
-        this.streetControl?.updateValueAndValidity();
-        this.subStreetControl?.updateValueAndValidity();
-        this.stateNameControl?.updateValueAndValidity();
-        this.buildingNameControl?.updateValueAndValidity();
-        this.buildingNumberControl?.updateValueAndValidity();
-        this.flatNumberControl?.updateValueAndValidity();
+    	this.firstNameControl?.updateValueAndValidity();
+    	this.lastNameControl?.updateValueAndValidity();
+    	this.phoneCodeControl?.updateValueAndValidity();
+    	this.phoneNumberControl?.updateValueAndValidity();
+    	this.birthdayControl?.updateValueAndValidity();
+    	this.postCodeControl?.updateValueAndValidity();
+    	this.townControl?.updateValueAndValidity();
+    	this.streetControl?.updateValueAndValidity();
+    	this.subStreetControl?.updateValueAndValidity();
+    	this.stateNameControl?.updateValueAndValidity();
+    	this.buildingNameControl?.updateValueAndValidity();
+    	this.buildingNumberControl?.updateValueAndValidity();
+    	this.flatNumberControl?.updateValueAndValidity();
     }
 
     onSubmit(): void {
-        this.error.emit('');
-        if (this.infoForm.valid) {
-            this.progressChange.emit(true);
-            let address: PostAddress | undefined;
-            let phone = '';
-            if (this.requireUserPhone) {
-                phone = `${this.phoneCodeControl?.value} ${this.phoneNumberControl?.value}`;
-            }
+    	this.error.emit('');
+    	if (this.infoForm.valid) {
+    		this.progressChange.emit(true);
+    		let address: PostAddress | undefined;
+    		let phone = '';
+    		if (this.requireUserPhone) {
+    			phone = `${this.phoneCodeControl?.value} ${this.phoneNumberControl?.value}`;
+    		}
 
-            const birthday = getFormattedUtcDate(this.birthdayControl?.value ?? '');
-            if (this.requireUserAddress || this.requireUserFlatNumber) {
-                address = {} as PostAddress;
-                if (this.requireUserAddress) {
-                    address.postCode = this.postCodeControl?.value;
-                    address.town = this.townControl?.value;
-                    address.street = this.streetControl?.value;
-                    address.subStreet = this.subStreetControl?.value;
-                    address.stateName = this.stateNameControl?.value;
-                    address.buildingName = this.buildingNameControl?.value;
-                    address.buildingNumber = this.buildingNumberControl?.value;
-                    address.flatNumber = this.flatNumberControl?.value;
-                }
-                if (this.requireUserFlatNumber) {
-                    address.flatNumber = this.flatNumberControl?.value;
-                }
-            }
-            this.subscriptions.add(
-                this.auth.setMyInfo(
-                    this.firstNameControl?.value as string,
-                    this.lastNameControl?.value as string,
-                    this.companyNameControl?.value as string,
-                    phone,
-                    address,
-                    birthday
-                ).subscribe(({ data }) => {
-                    this.progressChange.emit(false);
-                    this.done.emit(data.setMyInfo as LoginResult);
-                }, (error) => {
-                    this.progressChange.emit(false);
-                    this.error.emit(this.errorHandler.getError(error.message, 'Incorrect personal data'));
-                })
-            );
-        }
+    		const birthday = getFormattedUtcDate(this.birthdayControl?.value ?? '');
+    		if (this.requireUserAddress || this.requireUserFlatNumber) {
+    			address = {} as PostAddress;
+    			if (this.requireUserAddress) {
+    				address.postCode = this.postCodeControl?.value;
+    				address.town = this.townControl?.value;
+    				address.street = this.streetControl?.value;
+    				address.subStreet = this.subStreetControl?.value;
+    				address.stateName = this.stateNameControl?.value;
+    				address.buildingName = this.buildingNameControl?.value;
+    				address.buildingNumber = this.buildingNumberControl?.value;
+    				address.flatNumber = this.flatNumberControl?.value;
+    			}
+    			if (this.requireUserFlatNumber) {
+    				address.flatNumber = this.flatNumberControl?.value;
+    			}
+    		}
+    		this.subscriptions.add(
+    			this.auth.setMyInfo(
+    				this.firstNameControl?.value as string,
+    				this.lastNameControl?.value as string,
+    				this.companyNameControl?.value as string,
+    				phone,
+    				address,
+    				birthday
+    			).subscribe(({ data }) => {
+    				this.progressChange.emit(false);
+    				this.done.emit(data.setMyInfo as LoginResult);
+    			}, (error) => {
+    				this.progressChange.emit(false);
+    				this.error.emit(this.errorHandler.getError(error.message, 'Incorrect personal data'));
+    			})
+    		);
+    	}
     }
 }

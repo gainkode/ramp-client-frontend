@@ -3,19 +3,19 @@ import { CustomTextList, CustomTextType } from 'model/custom-text.model';
 import { EnvService } from 'services/env.service';
 
 @Component({
-  selector: 'app-widget-disclaimer',
-  templateUrl: 'disclaimer.component.html',
-  styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss']
+	selector: 'app-widget-disclaimer',
+	templateUrl: 'disclaimer.component.html',
+	styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss']
 })
 export class WidgetDisclaimerComponent {
   @Input() agreementChecked = false;
   @Input() backButton = true;
   @Input() set textContent(data: string[]) {
-    if (data.length > 0) {
-      this.textData = new CustomTextList(data);
-    }
+  	if (data.length > 0) {
+  		this.textData = new CustomTextList(data);
+  	}
   }
-  @Input() errorMessageData: string = ''
+  @Input() errorMessageData = '';
   @Output() onBack = new EventEmitter();
   @Output() onNext = new EventEmitter();
 
@@ -28,6 +28,6 @@ export class WidgetDisclaimerComponent {
   constructor() {
   }
   checkAgreement(): void {
-    this.agreementChecked = !this.agreementChecked;
+  	this.agreementChecked = !this.agreementChecked;
   }
 }

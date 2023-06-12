@@ -12,19 +12,19 @@ import { ErrorService } from 'services/error.service';
 import { ProfileContactListComponent } from './data/contact-list.component';
 
 @Component({
-    selector: 'app-profile-contacts',
-    templateUrl: './contacts.component.html',
-    styleUrls: ['../../../assets/profile.scss']
+	selector: 'app-profile-contacts',
+	templateUrl: './contacts.component.html',
+	styleUrls: ['../../../assets/profile.scss']
 })
 export class ProfileContactsComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
     @Output() onShowError = new EventEmitter<string>();
     private dataListPanel!: ProfileContactListComponent;
     @ViewChild('datalist') set dataList(panel: ProfileContactListComponent) {
-        if (panel) {
-            this.dataListPanel = panel;
-            this.dataListPanel.load(this.filter);
-        }
+    	if (panel) {
+    		this.dataListPanel = panel;
+    		this.dataListPanel.load(this.filter);
+    	}
     }
 
     inProgress = false;
@@ -37,98 +37,98 @@ export class ProfileContactsComponent implements OnInit, OnDestroy {
     private subscriptions: Subscription = new Subscription();
 
     constructor(
-        private changeDetector: ChangeDetectorRef,
-        private activeRoute: ActivatedRoute,
-        private auth: AuthService,
-        private commonService: CommonDataService,
-        private errorHandler: ErrorService,
-        private router: Router) {
-        this.filter.setData({
-            currencies: this.activeRoute.snapshot.params['currencies'],
-            balance: this.activeRoute.snapshot.params['balance'],
-            email: this.activeRoute.snapshot.params['email'],
-            user: this.activeRoute.snapshot.params['user']
-        });
+    	private changeDetector: ChangeDetectorRef,
+    	private activeRoute: ActivatedRoute,
+    	private auth: AuthService,
+    	private commonService: CommonDataService,
+    	private errorHandler: ErrorService,
+    	private router: Router) {
+    	this.filter.setData({
+    		currencies: this.activeRoute.snapshot.params['currencies'],
+    		balance: this.activeRoute.snapshot.params['balance'],
+    		email: this.activeRoute.snapshot.params['email'],
+    		user: this.activeRoute.snapshot.params['user']
+    	});
     }
 
     ngOnInit(): void {
-        this.loadCurrencyData();
+    	this.loadCurrencyData();
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
+    	this.subscriptions.unsubscribe();
     }
 
     contactsLoaded(loadedList: boolean): void {
-        this.dataListEmpty = !loadedList;
+    	this.dataListEmpty = !loadedList;
     }
 
     update(): void {
-        const dataListEmptyState = this.dataListEmpty;
-        this.dataListEmpty = false;
-        if (this.dataListPanel && !dataListEmptyState) {
-            this.dataListPanel.load(this.filter);
-        }
+    	const dataListEmptyState = this.dataListEmpty;
+    	this.dataListEmpty = false;
+    	if (this.dataListPanel && !dataListEmptyState) {
+    		this.dataListPanel.load(this.filter);
+    	}
     }
 
     newContact(): void {
-        const item = new ProfileItemContainer();
-        item.container = ProfileItemContainerType.Contact;
-        item.contact = undefined;
-        this.showDetails(item);
+    	const item = new ProfileItemContainer();
+    	item.container = ProfileItemContainerType.Contact;
+    	item.contact = undefined;
+    	this.showDetails(item);
     }
 
     private loadCurrencyData(): void {
-        this.cryptoList = [];
-        this.inProgressFilter = true;
-        const currencyData$ = this.commonService.getSettingsCurrency().valueChanges.pipe(take(1));
-        this.subscriptions.add(
-            currencyData$.subscribe(({ data }) => {
-                this.inProgressFilter = false;
-                const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-                if (currencySettings.settingsCurrency) {
-                    if (currencySettings.settingsCurrency.count ?? 0 > 0) {
-                        this.cryptoList = currencySettings.settingsCurrency.list?.
-                            filter(x => x.fiat === false).
-                            map((val) => new CurrencyView(val)) as CurrencyView[];
-                    }
-                }
-            }, (error) => {
-                this.inProgressFilter = false;
-                if (this.auth.token !== '') {
-                    this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currency data');
-                    this.onShowError.emit(this.errorMessage);
-                } else {
-                    this.router.navigateByUrl('/');
-                }
-            })
-        );
+    	this.cryptoList = [];
+    	this.inProgressFilter = true;
+    	const currencyData$ = this.commonService.getSettingsCurrency().valueChanges.pipe(take(1));
+    	this.subscriptions.add(
+    		currencyData$.subscribe(({ data }) => {
+    			this.inProgressFilter = false;
+    			const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+    			if (currencySettings.settingsCurrency) {
+    				if (currencySettings.settingsCurrency.count ?? 0 > 0) {
+    					this.cryptoList = currencySettings.settingsCurrency.list?.
+    						filter(x => x.fiat === false).
+    						map((val) => new CurrencyView(val)) as CurrencyView[];
+    				}
+    			}
+    		}, (error) => {
+    			this.inProgressFilter = false;
+    			if (this.auth.token !== '') {
+    				this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currency data');
+    				this.onShowError.emit(this.errorMessage);
+    			} else {
+    				this.router.navigateByUrl('/');
+    			}
+    		})
+    	);
     }
 
     onFilterUpdate(filter: ProfileBaseFilter): void {
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
-            this.router.navigate([
-                `${this.auth.getUserMainPage()}/contactlist`,
-                filter.getParameters()
-            ])
-        );
+    	this.router.navigateByUrl('/', { skipLocationChange: true }).then(() =>
+    		this.router.navigate([
+    			`${this.auth.getUserMainPage()}/contactlist`,
+    			filter.getParameters()
+    		])
+    	);
     }
 
     handleError(val: string): void {
-        this.errorMessage = val;
-        this.onShowError.emit(this.errorMessage);
-        this.changeDetector.detectChanges();
+    	this.errorMessage = val;
+    	this.onShowError.emit(this.errorMessage);
+    	this.changeDetector.detectChanges();
     }
 
     progressChanged(visible: boolean): void {
-        this.inProgress = visible;
-        this.changeDetector.detectChanges();
+    	this.inProgress = visible;
+    	this.changeDetector.detectChanges();
     }
 
     showDetails(details: ProfileItemContainer): void {
-        if (!details.contact) {
-            details.meta = this.cryptoList;
-        }
-        this.onShowDetails.emit(details);
+    	if (!details.contact) {
+    		details.meta = this.cryptoList;
+    	}
+    	this.onShowDetails.emit(details);
     }
 }

@@ -40,83 +40,83 @@ import { ProfileSettingsComponent } from '../profile/settings/settings.component
 import { WidgetModule } from '../widget/widget.module';
 
 const routing = RouterModule.forChild([
-    // Auth pages
-    { path: 'auth/login', component: PersonalLoginComponent },
-    { path: 'auth/register', component: PersonalRegisterComponent },
-    { path: 'auth/restore', component: PersonalRestoreComponent },
-    { path: 'auth/confirm-email/:token', component: PersonalConfirmEmailComponent },
-    { path: 'auth/confirm-device/:token', component: PersonalConfirmDeviceComponent },
-    { path: 'auth/success/:type', component: PersonalSuccessComponent },
-    { path: 'auth/new-password/:token', component: PersonalResetComponent },
-    // Authenticated main profile
-    {
-        path: 'main',
-        component: PersonalComponent,
-        children: [
-            { path: 'home', component: ProfileHomeComponent },
-            { path: 'wallets', component: ProfileWalletsComponent },
-            { path: 'contactlist', component: ProfileContactsComponent },
-            { path: 'transactions/:wallet', component: ProfileTransactionsComponent },
-            { path: 'transactions', component: ProfileTransactionsComponent },
-            { path: 'pricelist', component: ProfilePriceListComponent },
-            { path: '**', redirectTo: 'home' }
-        ],
-        canActivate: [PersonalGuard]
-    },
-    // Authenticated account profile
-    {
-        path: 'account',
-        component: PersonalComponent,
-        children: [
-            { path: 'notifications', component: ProfileNotificationsComponent },
-            { path: 'settings/:page', component: ProfileSettingsComponent },
-            { path: 'settings', component: ProfileSettingsComponent },
-            { path: '**', redirectTo: 'settings' }
-        ],
-        canActivate: [PersonalGuard]
-    },
-    { path: '**', redirectTo: 'main' }
+	// Auth pages
+	{ path: 'auth/login', component: PersonalLoginComponent },
+	{ path: 'auth/register', component: PersonalRegisterComponent },
+	{ path: 'auth/restore', component: PersonalRestoreComponent },
+	{ path: 'auth/confirm-email/:token', component: PersonalConfirmEmailComponent },
+	{ path: 'auth/confirm-device/:token', component: PersonalConfirmDeviceComponent },
+	{ path: 'auth/success/:type', component: PersonalSuccessComponent },
+	{ path: 'auth/new-password/:token', component: PersonalResetComponent },
+	// Authenticated main profile
+	{
+		path: 'main',
+		component: PersonalComponent,
+		children: [
+			{ path: 'home', component: ProfileHomeComponent },
+			{ path: 'wallets', component: ProfileWalletsComponent },
+			{ path: 'contactlist', component: ProfileContactsComponent },
+			{ path: 'transactions/:wallet', component: ProfileTransactionsComponent },
+			{ path: 'transactions', component: ProfileTransactionsComponent },
+			{ path: 'pricelist', component: ProfilePriceListComponent },
+			{ path: '**', redirectTo: 'home' }
+		],
+		canActivate: [PersonalGuard]
+	},
+	// Authenticated account profile
+	{
+		path: 'account',
+		component: PersonalComponent,
+		children: [
+			{ path: 'notifications', component: ProfileNotificationsComponent },
+			{ path: 'settings/:page', component: ProfileSettingsComponent },
+			{ path: 'settings', component: ProfileSettingsComponent },
+			{ path: '**', redirectTo: 'settings' }
+		],
+		canActivate: [PersonalGuard]
+	},
+	{ path: '**', redirectTo: 'main' }
 ]);
 
 const modules = [
-    MatTabsModule,
-    MatCardModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTooltipModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatIconModule,
-    MatListModule,
-    MatProgressBarModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatSortModule,
-    ComponentsModule,
-    WidgetModule,
-    ProfileModule
+	MatTabsModule,
+	MatCardModule,
+	MatDialogModule,
+	MatButtonModule,
+	MatFormFieldModule,
+	MatInputModule,
+	MatTooltipModule,
+	MatSelectModule,
+	MatCheckboxModule,
+	MatRadioModule,
+	MatIconModule,
+	MatListModule,
+	MatProgressBarModule,
+	MatPaginatorModule,
+	MatTableModule,
+	MatSortModule,
+	ComponentsModule,
+	WidgetModule,
+	ProfileModule
 ];
 
 @NgModule({
-    imports: [...modules],
-    exports: [...modules]
+	imports: [...modules],
+	exports: [...modules]
 })
 export class MaterialModule { }
 
 @NgModule({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
-    declarations: [
-        // Auth
-        PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent, PersonalResetComponent,
-        PersonalConfirmEmailComponent, PersonalConfirmDeviceComponent, PersonalSuccessComponent,
-        // Profile main
-        PersonalComponent],
-    providers: [PersonalGuard],
-    schemas: [
-        CUSTOM_ELEMENTS_SCHEMA
-    ]
+	imports: [CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
+	declarations: [
+		// Auth
+		PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent, PersonalResetComponent,
+		PersonalConfirmEmailComponent, PersonalConfirmDeviceComponent, PersonalSuccessComponent,
+		// Profile main
+		PersonalComponent],
+	providers: [PersonalGuard],
+	schemas: [
+		CUSTOM_ELEMENTS_SCHEMA
+	]
 })
 export class PersonalModule { }

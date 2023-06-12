@@ -10,20 +10,20 @@ import { getMinSec } from 'utils/utils';
 const interval = 600000;  // 10 minutes
 
 @Component({
-  selector: 'app-widget-crypto-complete',
-  templateUrl: 'crypto-complete.component.html',
-  styleUrls: [
-    '../../../assets/payment.scss',
-    '../../../assets/button.scss',
-    '../../../assets/text-control.scss',
-    '../../../assets/profile.scss',
-    '../../../assets/details.scss'
-  ]
+	selector: 'app-widget-crypto-complete',
+	templateUrl: 'crypto-complete.component.html',
+	styleUrls: [
+		'../../../assets/payment.scss',
+		'../../../assets/button.scss',
+		'../../../assets/text-control.scss',
+		'../../../assets/profile.scss',
+		'../../../assets/details.scss'
+	]
 })
 export class WidgetCryptoCompleteComponent implements OnInit, OnDestroy {
   @Input() data: InvoiceView | undefined = undefined;
   @Input() set counter(val: number) {
-    this.counterTime = getMinSec(val);
+  	this.counterTime = getMinSec(val);
   }
 
   qrCodeBackground = EnvService.color_white;
@@ -34,46 +34,46 @@ export class WidgetCryptoCompleteComponent implements OnInit, OnDestroy {
   private updateTimer = timer(interval, interval);
 
   constructor(
-    private clipboard: Clipboard,
-    private dataService: PaymentDataService) { }
+  	private clipboard: Clipboard,
+  	private dataService: PaymentDataService) { }
 
   ngOnInit(): void {
     
-    this.pSubscriptions.add(
-      this.updateTimer.subscribe(val => {
-        if (this.data) {
-          if (this.data.invoiceId !== '') {
-            this.reloadTransactionData();
-          }
-        }
-      })
-    );
+  	this.pSubscriptions.add(
+  		this.updateTimer.subscribe(val => {
+  			if (this.data) {
+  				if (this.data.invoiceId !== '') {
+  					this.reloadTransactionData();
+  				}
+  			}
+  		})
+  	);
   }
 
   ngOnDestroy(): void {
-    this.pSubscriptions.unsubscribe();
+  	this.pSubscriptions.unsubscribe();
   }
 
   copyAddress(): void {
-    this.clipboard.copy(this.data?.walletAddress ?? '');
+  	this.clipboard.copy(this.data?.walletAddress ?? '');
   }
 
   copySourceAmount(): void {
-    this.clipboard.copy(this.data?.amountSourceValue ?? '');
+  	this.clipboard.copy(this.data?.amountSourceValue ?? '');
   }
 
   copyConvertedAmount(): void {
-    this.clipboard.copy(this.data?.amountConvertedValue ?? '');
+  	this.clipboard.copy(this.data?.amountConvertedValue ?? '');
   }
 
   private reloadTransactionData(): void {
-    this.pSubscriptions.add(
-      this.dataService.calculateInvoice(this.data?.invoiceId ?? '').subscribe(
-        ({ data }) => {
-          this.data = new InvoiceView(data.calculateInvoice as CryptoInvoiceCreationResult);
-        }, (error) => {
-        }
-      )
-    );
+  	this.pSubscriptions.add(
+  		this.dataService.calculateInvoice(this.data?.invoiceId ?? '').subscribe(
+  			({ data }) => {
+  				this.data = new InvoiceView(data.calculateInvoice as CryptoInvoiceCreationResult);
+  			}, (error) => {
+  			}
+  		)
+  	);
   }
 }

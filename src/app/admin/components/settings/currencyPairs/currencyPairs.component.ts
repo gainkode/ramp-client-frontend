@@ -13,21 +13,21 @@ import { CommonDataService } from 'services/common-data.service';
 import { SettingsCurrencyWithDefaults } from 'model/generated-models';
 
 @Component({
-  selector: 'app-admin-currencypairs',
-  templateUrl: 'currencyPairs.component.html',
-  styleUrls: ['currencyPairs.component.scss']
+	selector: 'app-admin-currencypairs',
+	templateUrl: 'currencyPairs.component.html',
+	styleUrls: ['currencyPairs.component.scss']
 })
 export class AdminCurrencyPairsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   displayedColumns: string[] = [
-    'lock',
-    'id',
-    'currencyFrom',
-    'currencyTo',
-    'fixedRate',
-    'liquidityProviderName',
-    'delete'
+  	'lock',
+  	'id',
+  	'currencyFrom',
+  	'currencyTo',
+  	'fixedRate',
+  	'liquidityProviderName',
+  	'delete'
   ];
   inProgress = false;
   errorMessage = '';
@@ -47,116 +47,116 @@ export class AdminCurrencyPairsComponent implements OnInit, OnDestroy, AfterView
   private createDialog: NgbModalRef | undefined = undefined;
 
   constructor(
-    private modalService: NgbModal,
-    private auth: AuthService,
-    private adminService: AdminDataService,
-    private commonService: CommonDataService,
-    private clipboard: Clipboard,
-    private router: Router
+  	private modalService: NgbModal,
+  	private auth: AuthService,
+  	private adminService: AdminDataService,
+  	private commonService: CommonDataService,
+  	private clipboard: Clipboard,
+  	private router: Router
   ) {
-    this.permission = this.auth.isPermittedObjectCode('SETTINGS');
+  	this.permission = this.auth.isPermittedObjectCode('SETTINGS');
   }
 
   ngOnInit(): void {
-    this.loadPairs();
+  	this.loadPairs();
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  	this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit() {
-    this.subscriptions.add(
-      this.sort.sortChange.subscribe(() => {
-        this.sortedDesc = (this.sort.direction === 'desc');
-        this.sortedField = this.sort.active;
-        this.loadPairs();
-      })
-    );
+  	this.subscriptions.add(
+  		this.sort.sortChange.subscribe(() => {
+  			this.sortedDesc = (this.sort.direction === 'desc');
+  			this.sortedField = this.sort.active;
+  			this.loadPairs();
+  		})
+  	);
   }
 
   handlePage(index: number): void {
-    this.pageIndex = index - 1;
-    this.loadPairs();
+  	this.pageIndex = index - 1;
+  	this.loadPairs();
   }
 
   addCurrencyPair(content: any, pairId?: string): void {
-    if(pairId){
-      this.selectedPair = this.currencyPairs.find(item => item.currencyPairLiquidityProviderId == pairId);
-    }
+  	if(pairId){
+  		this.selectedPair = this.currencyPairs.find(item => item.currencyPairLiquidityProviderId == pairId);
+  	}
     
-    this.detailsDialog = this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
+  	this.detailsDialog = this.modalService.open(content, {
+  		backdrop: 'static',
+  		windowClass: 'modalCusSty',
+  	});
   }
 
   deleteCurrencyPair(key: CurrencyPairItem, content: any): void {
-    this.selectedPair = key;
-    this.createDialog = this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
-    this.subscriptions.add(
-      this.createDialog.closed.subscribe(val => {
-        this.removeCurrencyPairConfirmed(key.currencyPairLiquidityProviderId);
-      })
-    );
+  	this.selectedPair = key;
+  	this.createDialog = this.modalService.open(content, {
+  		backdrop: 'static',
+  		windowClass: 'modalCusSty',
+  	});
+  	this.subscriptions.add(
+  		this.createDialog.closed.subscribe(val => {
+  			this.removeCurrencyPairConfirmed(key.currencyPairLiquidityProviderId);
+  		})
+  	);
   }
 
   private removeCurrencyPairConfirmed(currencyPairLiquidityProviderId: string): void {
-    this.errorMessage = '';
-    const deleteKeyData$ = this.adminService.deleteCurrencyPair(currencyPairLiquidityProviderId);
-    this.subscriptions.add(
-      deleteKeyData$.subscribe(({ data }) => {
-        this.loadPairs();
-      }, (error) => {
-        this.errorMessage = error;
-      })
-    );
+  	this.errorMessage = '';
+  	const deleteKeyData$ = this.adminService.deleteCurrencyPair(currencyPairLiquidityProviderId);
+  	this.subscriptions.add(
+  		deleteKeyData$.subscribe(({ data }) => {
+  			this.loadPairs();
+  		}, (error) => {
+  			this.errorMessage = error;
+  		})
+  	);
   }
 
   private loadPairs(): void {
-    let sf = this.sortedField;
-    if (sf === '') {
-      sf = 'created';
-    } else if (sf === 'title') {
-      sf = 'apiKeyId';
-    }
-    this.currencyPairs = [];
-    this.inProgress = true;
-    const listData$ = this.adminService.getCurrencyPairLiquidityProviders().pipe(take(1));
-    this.subscriptions.add(
-      listData$.subscribe(({ list, count }) => {
-        this.currencyPairs = list;
-        console.log(list)
-        this.keyCount = count;
-        this.inProgress = false;
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  	let sf = this.sortedField;
+  	if (sf === '') {
+  		sf = 'created';
+  	} else if (sf === 'title') {
+  		sf = 'apiKeyId';
+  	}
+  	this.currencyPairs = [];
+  	this.inProgress = true;
+  	const listData$ = this.adminService.getCurrencyPairLiquidityProviders().pipe(take(1));
+  	this.subscriptions.add(
+  		listData$.subscribe(({ list, count }) => {
+  			this.currencyPairs = list;
+  			console.log(list);
+  			this.keyCount = count;
+  			this.inProgress = false;
+  		}, (error) => {
+  			this.inProgress = false;
+  			if (this.auth.token === '') {
+  				this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 
   onSaveKey(): void {
-    if (this.detailsDialog) {
-      this.detailsDialog.close();
-      this.loadPairs();
-      this.selectedPair = undefined;
-    }
+  	if (this.detailsDialog) {
+  		this.detailsDialog.close();
+  		this.loadPairs();
+  		this.selectedPair = undefined;
+  	}
   }
 
   onClose(): void {
-    if (this.detailsDialog) {
-      this.detailsDialog.dismiss('Close');
-      this.selectedPair = undefined;
-    }
+  	if (this.detailsDialog) {
+  		this.detailsDialog.dismiss('Close');
+  		this.selectedPair = undefined;
+  	}
   }
 
   copySecret(secret: string): void {
-    this.clipboard.copy(secret);
+  	this.clipboard.copy(secret);
   }
 }

@@ -1,7 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatListModule } from '@angular/material/list';
@@ -56,57 +56,57 @@ import { SafeUrlPipe } from '../utils/safe-url.pipe';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const modules = [
-    MatTabsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTooltipModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatListModule,
-    MatProgressBarModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatSortModule,
-    ComponentsModule,
-    NgApexchartsModule
+	MatTabsModule,
+	MatDialogModule,
+	MatButtonModule,
+	MatFormFieldModule,
+	MatInputModule,
+	MatTooltipModule,
+	MatSelectModule,
+	MatCheckboxModule,
+	MatIconModule,
+	MatListModule,
+	MatProgressBarModule,
+	MatPaginatorModule,
+	MatTableModule,
+	MatSortModule,
+	ComponentsModule,
+	NgApexchartsModule
 ];
 
 @NgModule({
-    imports: [...modules],
-    exports: [...modules]
+	imports: [...modules],
+	exports: [...modules]
 })
 export class MaterialModule { }
 
 @NgModule({
-    imports: [
-        NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
-    declarations: [
-        ProfileHomeComponent, ProfileBalanceChartComponent, ProfileBalanceListComponent,
-        ProfileTransactionsComponent, ProfileTransactionListComponent, ProfileTransactionDetailsComponent,
-        ProfileContactsComponent, ProfileContactListComponent, ProfileContactCreateComponent, ProfileContactDetailsComponent,
-        ProfileWalletsComponent, ProfileWalletListComponent, ProfileWalletCreateComponent, ProfileWalletDetailsComponent,
-        ProfilePriceListComponent,
-        ProfilePaymentCompleteComponent, ProfilePaymentErrorComponent,
-        ProfileNotificationsComponent, ProfileNotificationListComponent,
-        ProfileSettingsComponent, ProfileInfoSettingsComponent, ProfileVerificationSettingsComponent,
-        ProfileSecuriySettingsComponent, ProfileApiKeysSettingsComponent, ProfileIpListSettingsComponent,
-        ProfileChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDateboxComponent, ProfileInfoDropboxComponent,
-        SettingsMenuBarComponent
-    ],
-    exports: [
-        ProfileHomeComponent,
-        ProfileTransactionsComponent, ProfileTransactionDetailsComponent,
-        ProfileContactsComponent, ProfileContactCreateComponent, ProfileContactDetailsComponent,
-        ProfileWalletsComponent, ProfileWalletCreateComponent, ProfileWalletDetailsComponent,
-        ProfilePriceListComponent,
-        ProfilePaymentCompleteComponent, ProfilePaymentErrorComponent,
-        ProfileNotificationsComponent,
-        ProfileSettingsComponent
-    ],
-    providers: [],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+	imports: [
+		NgxMaskModule.forRoot(), CommonModule, ClipboardModule, FormsModule, ReactiveFormsModule, RouterModule, MaterialModule, QRCodeModule],
+	declarations: [
+		ProfileHomeComponent, ProfileBalanceChartComponent, ProfileBalanceListComponent,
+		ProfileTransactionsComponent, ProfileTransactionListComponent, ProfileTransactionDetailsComponent,
+		ProfileContactsComponent, ProfileContactListComponent, ProfileContactCreateComponent, ProfileContactDetailsComponent,
+		ProfileWalletsComponent, ProfileWalletListComponent, ProfileWalletCreateComponent, ProfileWalletDetailsComponent,
+		ProfilePriceListComponent,
+		ProfilePaymentCompleteComponent, ProfilePaymentErrorComponent,
+		ProfileNotificationsComponent, ProfileNotificationListComponent,
+		ProfileSettingsComponent, ProfileInfoSettingsComponent, ProfileVerificationSettingsComponent,
+		ProfileSecuriySettingsComponent, ProfileApiKeysSettingsComponent, ProfileIpListSettingsComponent,
+		ProfileChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDateboxComponent, ProfileInfoDropboxComponent,
+		SettingsMenuBarComponent
+	],
+	exports: [
+		ProfileHomeComponent,
+		ProfileTransactionsComponent, ProfileTransactionDetailsComponent,
+		ProfileContactsComponent, ProfileContactCreateComponent, ProfileContactDetailsComponent,
+		ProfileWalletsComponent, ProfileWalletCreateComponent, ProfileWalletDetailsComponent,
+		ProfilePriceListComponent,
+		ProfilePaymentCompleteComponent, ProfilePaymentErrorComponent,
+		ProfileNotificationsComponent,
+		ProfileSettingsComponent
+	],
+	providers: [],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ProfileModule { }

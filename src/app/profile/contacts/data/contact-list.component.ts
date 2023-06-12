@@ -13,14 +13,14 @@ import { ErrorService } from 'services/error.service';
 import { ProfileDataService } from 'services/profile.service';
 
 @Component({
-    selector: 'app-profile-contact-list',
-    templateUrl: './contact-list.component.html',
-    styleUrls: [
-        '../../../../assets/menu.scss',
-        '../../../../assets/button.scss',
-        '../../../../assets/profile.scss',
-        './contact-list.component.scss'
-    ]
+	selector: 'app-profile-contact-list',
+	templateUrl: './contact-list.component.html',
+	styleUrls: [
+		'../../../../assets/menu.scss',
+		'../../../../assets/button.scss',
+		'../../../../assets/profile.scss',
+		'./contact-list.component.scss'
+	]
 })
 export class ProfileContactListComponent implements OnDestroy, AfterViewInit {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();
@@ -45,113 +45,113 @@ export class ProfileContactListComponent implements OnDestroy, AfterViewInit {
     displayedColumns: string[] = ['icon', 'userName', 'email', 'coin', 'added', 'details'];
 
     constructor(
-        private auth: AuthService,
-        private errorHandler: ErrorService,
-        private profileService: ProfileDataService,
-        private router: Router) {
+    	private auth: AuthService,
+    	private errorHandler: ErrorService,
+    	private profileService: ProfileDataService,
+    	private router: Router) {
     }
 
     load(val: ContactsFilter): void {
-        this.filter = val;
-        this.loadContacts();
+    	this.filter = val;
+    	this.loadContacts();
     }
 
     ngAfterViewInit(): void {
-        if (this.sort) {
-            this.pSortSubscription = this.sort.sortChange.subscribe(() => {
-                this.sortedDesc = (this.sort.direction === 'desc');
-                this.sortedField = this.sort.active;
-                this.loadContacts();
-            });
-        }
+    	if (this.sort) {
+    		this.pSortSubscription = this.sort.sortChange.subscribe(() => {
+    			this.sortedDesc = (this.sort.direction === 'desc');
+    			this.sortedField = this.sort.active;
+    			this.loadContacts();
+    		});
+    	}
     }
 
     ngOnDestroy(): void {
-        if (this.pContactsSubscription !== undefined) {
-            this.pContactsSubscription.unsubscribe();
-            this.pContactsSubscription = undefined;
-        }
-        if (this.pSortSubscription !== undefined) {
-            this.pSortSubscription.unsubscribe();
-            this.pSortSubscription = undefined;
-        }
-        this.subscriptions.unsubscribe();
+    	if (this.pContactsSubscription !== undefined) {
+    		this.pContactsSubscription.unsubscribe();
+    		this.pContactsSubscription = undefined;
+    	}
+    	if (this.pSortSubscription !== undefined) {
+    		this.pSortSubscription.unsubscribe();
+    		this.pSortSubscription = undefined;
+    	}
+    	this.subscriptions.unsubscribe();
     }
 
     private getSortedField(): string {
-        let result = this.sortedField;
-        if (this.sortedField === 'userName') {
-            result = 'displayName';
-        } else if (this.sortedField === 'email') {
-            result = 'contactEmail';
-        } else if (this.sortedField === 'coin') {
-            result = 'assetId';
-        } else if (this.sortedField === 'added') {
-            result = 'created';
-        }
-        return result;
+    	let result = this.sortedField;
+    	if (this.sortedField === 'userName') {
+    		result = 'displayName';
+    	} else if (this.sortedField === 'email') {
+    		result = 'contactEmail';
+    	} else if (this.sortedField === 'coin') {
+    		result = 'assetId';
+    	} else if (this.sortedField === 'added') {
+    		result = 'created';
+    	}
+    	return result;
     }
 
     private loadContacts(): void {
-        this.onError.emit('');
-        this.contactCount = 0;
-        const contactsData$ = this.profileService.getMyContacts(
-            this.filter.currencies,
-            (this.filter.email === '') ? [] : [this.filter.email],
-            (this.filter.userName === '') ? [] : [this.filter.userName],
-            this.pageIndex,
-            this.pageSize,
-            this.getSortedField(),
-            this.sortedDesc).valueChanges.pipe(take(1));
-        this.loading = true;
-        this.onProgress.emit(true);
-        const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
-        this.pContactsSubscription = contactsData$.subscribe(({ data }) => {
-            const contactsItems = data.myContacts as UserContactListResult;
-            if (contactsItems) {
-                this.contactCount = contactsItems?.count as number;
-                if (this.contactCount > 0) {
-                    // this.contacts = contactsItems?.list?.filter(x => {
-                    //     return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
-                    // }).map((val) => new ContactItem(val)) as ContactItem[];
-                    this.contacts = contactsItems?.list?.map((val) => new ContactItem(val)) as ContactItem[];
-                    this.contactCount = this.contacts.length;
-                }
-            }
-            this.loading = false;
-            this.onProgress.emit(false);
-            this.onDataLoaded.emit(this.contactCount > 0);
-        }, (error) => {
-            this.onProgress.emit(false);
-            this.loading = false;
-            if (this.auth.token !== '') {
-                this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load wallets'));
-            } else {
-                this.router.navigateByUrl('/');
-            }
-            this.onDataLoaded.emit(false);
-        });
+    	this.onError.emit('');
+    	this.contactCount = 0;
+    	const contactsData$ = this.profileService.getMyContacts(
+    		this.filter.currencies,
+    		(this.filter.email === '') ? [] : [this.filter.email],
+    		(this.filter.userName === '') ? [] : [this.filter.userName],
+    		this.pageIndex,
+    		this.pageSize,
+    		this.getSortedField(),
+    		this.sortedDesc).valueChanges.pipe(take(1));
+    	this.loading = true;
+    	this.onProgress.emit(true);
+    	const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
+    	this.pContactsSubscription = contactsData$.subscribe(({ data }) => {
+    		const contactsItems = data.myContacts as UserContactListResult;
+    		if (contactsItems) {
+    			this.contactCount = contactsItems?.count as number;
+    			if (this.contactCount > 0) {
+    				// this.contacts = contactsItems?.list?.filter(x => {
+    				//     return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
+    				// }).map((val) => new ContactItem(val)) as ContactItem[];
+    				this.contacts = contactsItems?.list?.map((val) => new ContactItem(val)) as ContactItem[];
+    				this.contactCount = this.contacts.length;
+    			}
+    		}
+    		this.loading = false;
+    		this.onProgress.emit(false);
+    		this.onDataLoaded.emit(this.contactCount > 0);
+    	}, (error) => {
+    		this.onProgress.emit(false);
+    		this.loading = false;
+    		if (this.auth.token !== '') {
+    			this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load wallets'));
+    		} else {
+    			this.router.navigateByUrl('/');
+    		}
+    		this.onDataLoaded.emit(false);
+    	});
     }
 
     private refresh(): void {
-        if (this.pContactsSubscription !== undefined) {
-            this.pContactsSubscription.unsubscribe();
-            this.pContactsSubscription = undefined;
-        }
-        this.loadContacts();
+    	if (this.pContactsSubscription !== undefined) {
+    		this.pContactsSubscription.unsubscribe();
+    		this.pContactsSubscription = undefined;
+    	}
+    	this.loadContacts();
     }
 
     handlePage(event: PageEvent): PageEvent {
-        this.pageSize = event.pageSize;
-        this.pageIndex = event.pageIndex;
-        this.refresh();
-        return event;
+    	this.pageSize = event.pageSize;
+    	this.pageIndex = event.pageIndex;
+    	this.refresh();
+    	return event;
     }
 
     showDetailsPanel(item: ContactItem | undefined): void {
-        const c = new ProfileItemContainer();
-        c.container = ProfileItemContainerType.Contact;
-        c.contact = item;
-        this.onShowDetails.emit(c);
+    	const c = new ProfileItemContainer();
+    	c.container = ProfileItemContainerType.Contact;
+    	c.contact = item;
+    	this.onShowDetails.emit(c);
     }
 }
