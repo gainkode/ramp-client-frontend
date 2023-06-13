@@ -1,12 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
 import { UserNotificationLevel } from 'model/generated-models';
-import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { UserItem } from 'model/user.model';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { Observable, Subject, concat, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
-import { Filter } from 'admin/model/filter.model';
 
 export class UserMessageData {
 	level: UserNotificationLevel = UserNotificationLevel.Info;
@@ -19,7 +19,7 @@ export class UserMessageData {
 	templateUrl: 'send-message.component.html',
 	styleUrls: ['send-message.component.scss', '../../../assets/scss/_validation.scss']
 })
-export class AdminMessageDialogComponent {
+export class AdminMessageDialogComponent implements OnInit {
   @Input() errorMessage = '';
   @Input() inProgress = false;
   @Input() set users(val: UserItem[] | undefined) {

@@ -101,7 +101,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   	this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
   	this.subscriptions.add(
   		this.sort.sortChange.subscribe(() => {
   			this.sortedDesc = (this.sort.direction === 'desc');
@@ -149,7 +149,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   	this.users.forEach(x => x.selected = true);
   	this.selected = (this.users.length > 0);
   }
-  private loadCommonSettings(){
+  private loadCommonSettings(): void{
   	const settingsCommon = this.auth.getLocalSettingsCommon();
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
@@ -175,7 +175,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   			}, (error) => {
   				this.inProgress = false;
   				if (this.auth.token === '') {
-  					this.router.navigateByUrl('/');
+  					void this.router.navigateByUrl('/');
   				}
   			})
   		);
@@ -200,13 +200,13 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
   }
 
-  private initUserSearch() {
+  private initUserSearch(): void {
   	this.usersOptions$ = concat(
   		of([]),
   		this.usersSearchInput$.pipe(
@@ -273,7 +273,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   					this.roleInProgress = false;
   					this.errorMessage = error;
   					if (this.auth.token === '') {
-  						this.router.navigateByUrl('/');
+  						void this.router.navigateByUrl('/');
   					}
   				})
   			);
@@ -295,7 +295,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   			this.roleInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -333,7 +333,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   			this.sendMessageInProgress = false;
   			this.sendMessageError = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -355,13 +355,13 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   			});
   		}, (error) => {
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
   }
 
-  showDetails(user: UserItem, content: any) {
+  showDetails(user: UserItem, content: any): void {
   	this.userDetailsTitle = 'User Details';
   	this.selectedUser = user;
   	this.detailsDialog = this.modalService.open(content, {
@@ -370,7 +370,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   	});
   }
 
-  confirmEmail(user: UserItem, content: any) {
+  confirmEmail(user: UserItem, content: any): void {
   	this.errorMessage = '';
   	const requestData$ = this.adminService.confirmEmail(user.id);
   	this.subscriptions.add(
@@ -382,13 +382,13 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   		}, (error) => {
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
   }
 
   showWhiteList(userId: string): void {
-  	this.router.navigateByUrl(`/admin/white-device-list/${userId}`);
+  	void this.router.navigateByUrl(`/admin/white-device-list/${userId}`);
   }
 }

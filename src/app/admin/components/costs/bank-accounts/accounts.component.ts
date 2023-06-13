@@ -67,7 +67,7 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
 			}, (error) => {
 				this.inProgress = false;
 				if (this.auth.token === '') {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);

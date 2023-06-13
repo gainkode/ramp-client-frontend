@@ -126,7 +126,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	this.subscriptions.unsubscribe();
   }
 
-  private loadCommonSettings(){
+  private loadCommonSettings(): void{
   	const settingsCommon = this.auth.getLocalSettingsCommon();
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
@@ -136,7 +136,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   		this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings.userType[item.id] == true);
   	}
   }
-  private initUserSearch() {
+  private initUserSearch(): void {
   	this.usersOptions$ = concat(
   		of([]),
   		this.usersSearchInput$.pipe(
@@ -401,12 +401,12 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
-  addWidgetDestinationAddress(){
+  addWidgetDestinationAddress(): void{
   	this.currenciesTable._data._value.push({ currency: '', destination: '', selected: true });
   	this.currenciesTable = new MatTableDataSource(this.currenciesTable._data._value);
   }
 
-  delWidgetDestinationAddress(element: any){
+  delWidgetDestinationAddress(element: any): void{
   	const currenciesTableDel: Record<string, any>[] = [];
   	for(const item of this.currenciesTable._data._value){
   		if(item.currency != element.currency){
@@ -429,7 +429,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   				this.saveInProgress = false;
   				this.errorMessage = error;
   				if (this.auth.token === '') {
-  					this.router.navigateByUrl('/');
+  					void this.router.navigateByUrl('/');
   				}
   			})
   		);
@@ -450,7 +450,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   			this.deleteInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

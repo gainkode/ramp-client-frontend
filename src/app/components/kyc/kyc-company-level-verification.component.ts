@@ -1,12 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { LoginResult } from '../../model/generated-models';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
-import { Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms';
-import { LoginResult, PostAddress, SettingsKyc, UserType } from '../../model/generated-models';
-import { Subscription } from 'rxjs';
-import { getCountryByCode3 } from '../../model/country-code.model';
-import { take } from 'rxjs/operators';
-import { getFormattedUtcDate } from 'utils/utils';
 
 @Component({
 	selector: 'kyc-company-level-verification',
@@ -18,7 +15,7 @@ import { getFormattedUtcDate } from 'utils/utils';
 		'../../../assets/auth.scss'
 	]
 })
-export class KycCompanyLevelVerificationComponent implements OnDestroy{
+export class KycCompanyLevelVerificationComponent implements OnInit, OnDestroy{
     @Input() buttonTitle = 'SEND';
     @Input() levelName = '';
     @Input() errorMessage = '';
@@ -81,7 +78,7 @@ export class KycCompanyLevelVerificationComponent implements OnDestroy{
     			}, (error) => {
     				this.inProgress = false;
     				this.progressChange.emit(false);
-    				this.error.emit(this.errorHandler.getError(error.message, 'Incorrect сщьзфтн data'));
+    				this.error.emit(this.errorHandler.getError(error.message, 'Incorrect data'));
     			})
     		);
     	}

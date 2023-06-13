@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { UserItem } from 'model/user.model';
-import { AssetAddress, FiatVault, FiatVaultUser } from '../../model/generated-models';
+import { AssetAddress, FiatVaultUser } from '../../model/generated-models';
 
 export class WalletItem {
 	address = '';

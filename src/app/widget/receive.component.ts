@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsCurrencyWithDefaults } from 'model/generated-models';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { CommonDataService } from '../services/common-data.service';
 	templateUrl: 'receive.component.html',
 	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
-export class ReceiveWidgetComponent implements OnInit {
+export class ReceiveWidgetComponent implements OnInit, OnDestroy {
   @Input() presetWalletId = '';
   @Input() presetCurrency = '';
 
@@ -76,7 +76,7 @@ export class ReceiveWidgetComponent implements OnInit {
   		}, (error) => {
   			this.inProgress = false;
   			if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			} else {
   				this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currencies');
   			}

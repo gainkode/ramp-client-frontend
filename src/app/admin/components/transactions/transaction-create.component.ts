@@ -1,24 +1,22 @@
-import { Component, ErrorHandler, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { AdminDataService } from 'services/admin-data.service';
-import { AccountStatus, KycStatus, PaymentInstrument, PaymentProvider, Rate, SettingsCommon, SettingsCurrencyWithDefaults, Transaction, TransactionInput, TransactionKycStatus, TransactionSource, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'model/generated-models';
-import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'model/payment.model';
+import { Filter } from 'admin/model/filter.model';
+import { CommonTargetValue } from 'model/common.model';
+import { CostScheme } from 'model/cost-scheme.model';
+import { PaymentInstrument, PaymentProvider, Rate, SettingsCommon, SettingsCurrencyWithDefaults, TransactionInput, TransactionSource, TransactionType } from 'model/generated-models';
+import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
 import { TransactionItemFull } from 'model/transaction.model';
+import { UserItem } from 'model/user.model';
+import { Observable, Subject, Subscription, concat, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
 import { ExchangeRateService } from 'services/rate.service';
-import { getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
-import { CostTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { CommonTargetValue } from 'model/common.model';
-import { Filter } from 'admin/model/filter.model';
-import { CommonDataService } from 'services/common-data.service';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
-import { CostScheme } from 'model/cost-scheme.model';
-import { UserItem } from 'model/user.model';
 
 @Component({
 	selector: 'app-admin-transaction-create',
@@ -439,7 +437,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   					this.errorMessage = error;
   					this.saveInProgress = false;
   					if (this.auth.token === '') {
-  						this.router.navigateByUrl('/');
+  						void this.router.navigateByUrl('/');
   					}
   				})
   			);

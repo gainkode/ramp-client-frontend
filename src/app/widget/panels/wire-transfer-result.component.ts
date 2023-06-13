@@ -63,7 +63,7 @@ export class WidgetWireTransferResultComponent {
     	this.clipboard.copy(dataString);
     }
     
-    private loadData(val: WireTransferPaymentCategoryItem) {
+    private loadData(val: WireTransferPaymentCategoryItem): void {
     	const data = JSON.parse(val.data);
     	if (val.id === WireTransferPaymentCategory.AU) {
     		const dataAu = data as WireTransferBankAccountAu;
@@ -165,7 +165,5 @@ export class WidgetWireTransferResultComponent {
     		this.field6Value = dataPrimeTrust.reference;
             
     	}
-
-        
     }
 }

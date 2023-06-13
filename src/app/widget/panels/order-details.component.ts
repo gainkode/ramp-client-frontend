@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Outpu
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { AssetAddressShort, Rate, SettingsCurrencyWithDefaults, TransactionType, UserState } from 'model/generated-models';
 import { WidgetSettings } from 'model/payment-base.model';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'model/payment.model';

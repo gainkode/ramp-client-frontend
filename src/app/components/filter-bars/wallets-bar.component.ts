@@ -79,7 +79,7 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
     	} else {
     		this.currenciesField?.setValue(this.cryptoList.map(x => x.symbol));
     	}
-    	if (this.data && this.data.zeroBalance) {
+    	if (this.data?.zeroBalance) {
     		this.zeroBalanceField?.setValue(this.data.zeroBalance);
     	}
     	this.updateChips(FilterChipType.Currency);

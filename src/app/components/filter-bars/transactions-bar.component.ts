@@ -66,11 +66,11 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
     	} else {
     		this.walletTypesField?.setValue(this.walletTypes.map(x => x.id));
     	}
-    	if (this.data && this.data.transactionDate) {
+    	if (this.data?.transactionDate) {
     		const d = `${this.data.transactionDate.getDate()}/${this.data.transactionDate.getMonth() + 1}/${this.data.transactionDate.getFullYear()}`;
     		this.transactionDateField?.setValue(d);
     	}
-    	if (this.data && this.data.sender) {
+    	if (this.data?.sender) {
     		this.senderField?.setValue(this.data.sender);
     	}
     	this.updateChips(FilterChipType.Transaction);

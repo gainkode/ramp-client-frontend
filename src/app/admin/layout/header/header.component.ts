@@ -20,7 +20,7 @@ export class AdminHeaderComponent implements OnInit {
 
 	constructor(
 		private layoutService: LayoutService,
-		public SwitcherService: SwitcherService,
+		public switcherService: SwitcherService,
 		public navServices: NavService,
 		private auth: AuthService,
 		public router: Router
@@ -30,24 +30,24 @@ export class AdminHeaderComponent implements OnInit {
     
 	}
 
-	toggleSwitcher() {
-		this.SwitcherService.emitChange(true);
+	toggleSwitcher(): void {
+		this.switcherService.emitChange(true);
 	}
   
-	toggleSidebarNotification() {
+	toggleSidebarNotification(): void {
 		this.layoutService.emitSidebarNotifyChange(true);
 	}
 
-	goToMainPage() {
-		this.router.navigate([this.auth.getUserMainPage()]);
+	goToMainPage(): void {
+		void this.router.navigate([this.auth.getUserMainPage()]);
 	}
 
-	signout() {
+	signout(): void {
 		this.auth.logout();
-		this.router.navigate(['/auth/login']);
+		void this.router.navigate(['/auth/login']);
 	}
 
-	searchToggle() {
+	searchToggle(): void {
 		if(this.body.classList.contains('search-open')){
 			this.activated = false;
 			this.body.classList.remove('search-open');
@@ -57,7 +57,7 @@ export class AdminHeaderComponent implements OnInit {
 			this.body.classList.add('search-open');
 		}
 	}
-	closeToggle() { 
+	closeToggle(): void { 
 		this.activated = false;
 		this.body.classList.remove('search-open');
 	}

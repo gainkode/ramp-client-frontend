@@ -37,7 +37,7 @@ export class WidgetCryptoFinishComponent {
   }
 
   goHome(): void {
-  	this.router.navigateByUrl(this.finishLink).then(() => {
+  	void this.router.navigateByUrl(this.finishLink).then(() => {
   		window.location.reload();
   	});
   }

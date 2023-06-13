@@ -64,7 +64,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   	this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
   	this.subscriptions.add(
   		this.sort.sortChange.subscribe(() => {
   			this.sortedDesc = (this.sort.direction === 'desc');
@@ -84,7 +84,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   	this.loadUserActions();
   }
 
-  showDetails(notification: UserActionItem, content: any) {
+  showDetails(notification: UserActionItem, content: any): void {
   	this.selectedAction = notification;
   	this.modalService.open(content, {
   		backdrop: 'static',
@@ -92,7 +92,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   	});
   }
 
-  private loadCommonSettings(){
+  private loadCommonSettings(): void {
   	const settingsCommon = this.auth.getLocalSettingsCommon();
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
@@ -113,13 +113,12 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   	this.subscriptions.add(
   		listData$.subscribe(({ list, count }) => {
   			this.actions = list;
-  			console.log(this.actions);
   			this.actionCount = count;
   			this.inProgress = false;
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
 
   			this.actions = [

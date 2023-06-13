@@ -322,14 +322,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			this.flagInProgress = false;
   			this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
   }
 
   filterByUserId(): void {
-  	this.router.navigateByUrl(`/admin/customers/${this.data?.user?.id}`).then(() => {
+  	void this.router.navigateByUrl(`/admin/customers/${this.data?.user?.id}`).then(() => {
   		window.location.reload();
   	});
   }
@@ -356,7 +356,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			this.flagInProgress = false;
   			this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -424,7 +424,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			this.errorMessage = error;
   			this.cancelInProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

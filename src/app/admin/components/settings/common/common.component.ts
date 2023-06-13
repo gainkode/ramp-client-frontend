@@ -180,7 +180,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	private loadCommonSettings(){
+	private loadCommonSettings(): void{
 		const settingsCommon = this.auth.getLocalSettingsCommon();
 		console.log(settingsCommon);
 		if(settingsCommon){
@@ -210,7 +210,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				(error) => {
 					this.inProgress = false;
 					if (error.message === 'Access denied' || this.errorHandler.getCurrentError() === 'auth.token_invalid') {
-						this.router.navigateByUrl('/');
+						void this.router.navigateByUrl('/');
 					} else {
 						this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load available list of currency types');
 					}
@@ -567,7 +567,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 			cryptoWidget: cryptoWidgetData,
 			core: coreData
 		};
-		console.log(coreData);
+
 		return {
 			settingsCommonId: this.form.get('id')?.value,
 			liquidityProvider: this.form.get('liquidityProvider')?.value,
@@ -635,7 +635,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				this.paymentProviderPayoutInProgress = false;
 				this.errorMessage = error;
 				if (this.auth.token === '') {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);
@@ -656,7 +656,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				this.paymentProviderRefundInProgress = false;
 				this.errorMessage = error;
 				if (this.auth.token === '') {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);
@@ -678,7 +678,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				this.saveInProgress = false;
 				this.errorMessage = error;
 				if (this.auth.token === '') {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);

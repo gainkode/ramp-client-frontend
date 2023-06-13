@@ -31,10 +31,10 @@ export class NotificationsFilterBarComponent implements OnInit, OnDestroy {
     constructor(private formBuilder: UntypedFormBuilder) { }
 
     ngOnInit(): void {
-    	if (this.data && this.data.unreadOnly) {
+    	if (this.data?.unreadOnly) {
     		this.unreadOnlyField?.setValue(this.data.unreadOnly);
     	}
-    	if (this.data && this.data.search) {
+    	if (this.data?.search) {
     		this.searchText = this.data.search;
     		this.searchField?.setValue(this.data.search);
     	}

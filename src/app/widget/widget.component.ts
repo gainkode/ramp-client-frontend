@@ -1,6 +1,7 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { environment } from '@environments/environment';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
@@ -11,7 +12,6 @@ import { ErrorService } from 'services/error.service';
 import { NotificationService } from 'services/notification.service';
 import { PaymentDataService } from 'services/payment.service';
 import { ExchangeRateService } from 'services/rate.service';
-import { environment } from '@environments/environment';
 import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
 import { completeDataDefault, disclaimerDataDefault } from '../model/custom-data.model';
@@ -28,7 +28,7 @@ import { WidgetService } from '../services/widget.service';
 	templateUrl: 'widget.component.html',
 	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
-export class WidgetComponent implements OnInit, AfterViewInit {
+export class WidgetComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';
   @Input() quickCheckout = false;
   @Input() settings: WidgetSettings | undefined = undefined;
@@ -117,9 +117,6 @@ export class WidgetComponent implements OnInit, AfterViewInit {
   	private errorHandler: ErrorService) { }
   private shuftiSubscriptionFlag = false;
   private companyLevelVerificationFlag = false;
-  
-  ngAfterViewInit() {
-  }
 
   ngOnInit(): void {
   	this.widgetService.register(
@@ -473,7 +470,7 @@ export class WidgetComponent implements OnInit, AfterViewInit {
     
   }
 
-  capchaResult(event){
+  capchaResult(event): void{
   	console.log(localStorage.getItem('recaptchaId'));
   	this.recaptchaDialog?.close();
   }
@@ -500,7 +497,7 @@ export class WidgetComponent implements OnInit, AfterViewInit {
   }
   handleAuthError(): void {
   	if (this.widget.embedded) {
-  		this.router.navigateByUrl('/');
+  		void this.router.navigateByUrl('/');
   	} else {
   		if (this.widget.orderDefault) {
   			this.nextStage('login_auth', 'Authorization', 3, true);
@@ -541,7 +538,7 @@ export class WidgetComponent implements OnInit, AfterViewInit {
   	}, 50);
   }
 
-  removeStage(stage: string) {
+  removeStage(stage: string): void {
   	this.pager.removeStage(stage);
   }
 
@@ -864,8 +861,8 @@ export class WidgetComponent implements OnInit, AfterViewInit {
   	this.stageBack();
   }
 
-  selectProvider(provider: PaymentProviderInstrumentView) {
-  	if(this.summary.transactionType == TransactionType.Buy){
+  selectProvider(provider: PaymentProviderInstrumentView): void {
+  	if(this.summary.transactionType === TransactionType.Buy){
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
   			this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   			this.startPayment();
@@ -955,7 +952,7 @@ export class WidgetComponent implements OnInit, AfterViewInit {
 
   onLoginRequired(email: string): void {
   	if (this.widget.embedded) {
-  		this.router.navigateByUrl('/');
+  		void this.router.navigateByUrl('/');
   	} else {
   		const currentEmail = this.auth.user?.email ?? '';
   		if (currentEmail !== email) {
@@ -1045,7 +1042,7 @@ export class WidgetComponent implements OnInit, AfterViewInit {
   }
   // ====================
 
-  private checkLoginResult(data: LoginResult) {
+  private checkLoginResult(data: LoginResult): void {
   	this.stopNotificationListener();
   	if (data.user) {
   		this.summary.email = data.user?.email;

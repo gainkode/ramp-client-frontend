@@ -66,7 +66,7 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
   		if (this.auth.token !== '') {
   			this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load transactions statuses');
   		} else {
-  			this.router.navigateByUrl('/');
+  			void this.router.navigateByUrl('/');
   		}
   	});
   }
@@ -101,7 +101,7 @@ export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
   		if (this.auth.token !== '') {
   			this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load transactions');
   		} else {
-  			this.router.navigateByUrl('/');
+  			void this.router.navigateByUrl('/');
   		}
   	});
   }

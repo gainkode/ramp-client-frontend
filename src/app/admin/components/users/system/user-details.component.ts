@@ -262,7 +262,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   			this.saveInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -279,7 +279,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   			this.disableInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -296,7 +296,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   			this.disableInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

@@ -18,13 +18,13 @@ export class WidgetProcessingInstantpayComponent {
 
   constructor(private clipboard: Clipboard) {}
   
-  copyReference() {
+  copyReference(): void {
   	if (this.data) {
   		this.clipboard.copy(`${this.data.uniqueReference}`);
   	}
   }
 
-  copyPayId() {
+  copyPayId(): void {
   	if (this.data) {
   		this.clipboard.copy(this.data.payId);
   	}

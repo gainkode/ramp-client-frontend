@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
@@ -52,7 +52,7 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	showDetails(device: DeviceItem, content: any) {
+	showDetails(device: DeviceItem, content: any): void {
 		this.selectedDevice = device;
 		this.modalService.open(content, {
 			backdrop: 'static',
@@ -60,7 +60,7 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	confirmDevice(device: DeviceItem, content: any) {
+	confirmDevice(device: DeviceItem, content: any): void {
 		const requestData$ = this.adminService.confirmDevice(device.id);
 		this.subscriptions.add(
 			requestData$.subscribe(({ result }) => {
@@ -75,7 +75,7 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
 				);
 			}, (error) => {
 				if (this.auth.token === '') {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);
@@ -92,7 +92,7 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
 			}, (error) => {
 				this.inProgress = false;
 				if (this.auth.token === '') {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);
@@ -104,7 +104,7 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
 				this.user = user;
 			}, (error) => {
 				if (this.auth.token === '') {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);

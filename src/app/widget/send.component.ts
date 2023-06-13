@@ -92,7 +92,7 @@ export class SendWidgetComponent implements OnInit {
   }
 
   handleAuthError(): void {
-  	this.router.navigateByUrl('/');
+  	void this.router.navigateByUrl('/');
   }
 
   progressChanged(visible: boolean): void {
@@ -107,7 +107,7 @@ export class SendWidgetComponent implements OnInit {
   	}, 50);
   }
 
-  removeStage(stage: string) {
+  removeStage(stage: string): void {
   	this.pager.removeStage(stage);
   }
 
@@ -130,7 +130,7 @@ export class SendWidgetComponent implements OnInit {
   		}, (error) => {
   			this.inProgress = false;
   			if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			} else {
   				this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currencies');
   			}

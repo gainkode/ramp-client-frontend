@@ -29,7 +29,7 @@ export class MerchantConfirmEmailComponent implements OnDestroy, AfterViewInit {
     	public activeRoute: ActivatedRoute,
     	public router: Router) {}
 
-    capchaResult(event){
+    capchaResult(event): void{
     	this.recaptchaDialog?.close();
     	localStorage.setItem('recaptchaId', event);
     	this.token = this.activeRoute.snapshot.params['token'];
@@ -46,7 +46,7 @@ export class MerchantConfirmEmailComponent implements OnDestroy, AfterViewInit {
     	}
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
     	this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
     		backdrop: 'static',
     		windowClass: 'modalCusSty',

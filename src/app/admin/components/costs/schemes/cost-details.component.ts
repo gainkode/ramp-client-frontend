@@ -103,9 +103,9 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.subscriptions.unsubscribe();
   }
 
-  private loadCommonSettings(){
+  private loadCommonSettings(): void{
   	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	console.log(settingsCommon);
+
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
   		this.transactionTypes = this.transactionTypes.filter(item => this.adminAdditionalSettings.transactionType[item.id] == true);
@@ -223,7 +223,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private initTargetSearch() {
+  private initTargetSearch(): void {
   	this.targetsOptions$ = concat(
   		of([]),
   		this.targetsSearchInput$.pipe(
@@ -351,7 +351,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   			this.saveInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -369,7 +369,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   			this.saveInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

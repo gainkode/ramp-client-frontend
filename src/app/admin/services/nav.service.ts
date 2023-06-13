@@ -74,7 +74,7 @@ export class NavService implements OnDestroy {
 		}
 	}
 
-	ngOnDestroy() {
+	ngOnDestroy(): void {
 		this.unsubscriber.next;
 		this.unsubscriber.complete();
 	}

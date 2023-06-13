@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { TransactionType, SettingsKycShort, TransactionSource, KycProvider, SettingsKycTierShortExListResult } from 'model/generated-models';
 import { KycLevelShort } from 'model/identification.model';
 import { CheckoutSummary } from 'model/payment.model';
@@ -13,7 +13,7 @@ import { PaymentDataService } from 'services/payment.service';
 	templateUrl: 'kyc.component.html',
 	styleUrls: ['../../../assets/payment.scss', '../../../assets/button.scss']
 })
-export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit {
+export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @Input() errorMessage = '';
   @Input() levelName = '';
   @Input() completedWhenVerified = false;

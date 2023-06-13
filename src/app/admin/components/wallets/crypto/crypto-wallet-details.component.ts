@@ -87,7 +87,7 @@ export class AdminCryptoWalletDetailsComponent implements OnInit, OnDestroy {
   					this.inProgress = false;
   					this.errorMessage = error;
   					if (this.auth.token === '') {
-  						this.router.navigateByUrl('/');
+  						void this.router.navigateByUrl('/');
   					}
   				})
   			);

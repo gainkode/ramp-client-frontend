@@ -51,7 +51,7 @@ export class AdminApiKeyDetailsComponent implements OnInit, OnDestroy {
   	this.subscriptions.unsubscribe();
   }
 
-  private initUserSearch() {
+  private initUserSearch(): void {
   	this.usersOptions$ = concat(
   		of([]),
   		this.usersSearchInput$.pipe(
@@ -106,7 +106,7 @@ export class AdminApiKeyDetailsComponent implements OnInit, OnDestroy {
   			this.saveInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

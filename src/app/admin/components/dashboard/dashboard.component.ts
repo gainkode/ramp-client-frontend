@@ -47,7 +47,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 		} as Filter;
 	}
 
-	private loadCommonSettings(){
+	private loadCommonSettings(): void{
 		const settingsCommon = this.auth.getLocalSettingsCommon();
 		if(settingsCommon){
 			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;

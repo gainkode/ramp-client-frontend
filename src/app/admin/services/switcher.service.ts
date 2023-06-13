@@ -10,7 +10,7 @@ export class SwitcherService {
 	private emitChangeSource = new Subject<any>();
 	changeEmitted = this.emitChangeSource.asObservable();
   
-	emitChange(change: any){
+	emitChange(change: any): void{
 		this.emitChangeSource.next(change);
 	}
 
@@ -18,7 +18,7 @@ export class SwitcherService {
   
 	changeHoverEmitted = this.emitHoverChangeSource.asObservable();
   
-	emitHoverChange(change: any){
+	emitHoverChange(change: any): void{
 		this.emitHoverChangeSource.next(change);
 	}
 }

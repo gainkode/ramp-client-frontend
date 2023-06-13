@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
-import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionStatusHistory, TransactionType } from 'model/generated-models';
+import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
 import { TransactionStatusHistoryItem } from 'model/transaction.model';
 import { AuthService } from 'services/auth.service';
@@ -74,7 +74,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   	this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
   	this.subscriptions.add(
   		this.sort.sortChange.subscribe(() => {
   			this.sortedDesc = (this.sort.direction === 'desc');
@@ -86,7 +86,6 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
 
   onTransactionSelected(item: TransactionStatusHistoryItem): void {
   	item.selected = !item.selected;
-  	console.log(item);
   }
 
   selectAll(): void {
@@ -110,7 +109,6 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
 
   handleFilterApplied(filter: Filter): void {
   	this.filter = filter;
-  	console.log(this.filter);
   	this.loadList();
   }
 
@@ -127,7 +125,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   	}
   }
 
-  showDetails(transaction: TransactionStatusHistoryItem, content: any) {
+  showDetails(transaction: TransactionStatusHistoryItem, content: any): void {
   	this.selectedTransaction = transaction;
   	this.detailsDialog = this.modalService.open(content, {
   		backdrop: 'static',
@@ -139,7 +137,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   	return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
   }
 
-  private loadCommonSettings(){
+  private loadCommonSettings(): void {
   	const settingsCommon = this.auth.getLocalSettingsCommon();
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
@@ -175,7 +173,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -192,7 +190,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -214,7 +212,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

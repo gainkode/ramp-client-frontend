@@ -166,7 +166,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     	}
     }
 
-    capchaResult(event){
+    capchaResult(event): void {
     	this.recaptcha = event;
     	localStorage.setItem('recaptchaId', event);
     }

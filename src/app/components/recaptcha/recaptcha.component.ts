@@ -29,7 +29,7 @@ export class RecaptchaComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
-    capchaResult(event){
+    capchaResult(event): void {
     	localStorage.setItem('recaptchaId', event);
     	this.completed.emit(event);
     }

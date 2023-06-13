@@ -82,7 +82,7 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   	this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
   	this.subscriptions.add(
   		this.sort.sortChange.subscribe(() => {
   			this.sortedDesc = (this.sort.direction === 'desc');
@@ -116,7 +116,7 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   	});
   }
 
-  private loadCommonSettings(){
+  private loadCommonSettings(): void{
   	const settingsCommon = this.auth.getLocalSettingsCommon();
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
@@ -142,7 +142,7 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -171,13 +171,13 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   			});
   		}, (error) => {
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
   }
 
-  showDetails(widget: WidgetItem, content: any) {
+  showDetails(widget: WidgetItem, content: any): void {
   	this.widgetDetailsTitle = 'Widget Details';
   	this.selectedWidget = widget;
   	this.detailsDialog = this.modalService.open(content, {

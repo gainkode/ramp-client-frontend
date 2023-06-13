@@ -132,7 +132,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private loadCurrencyList(currencySettings: SettingsCurrencyWithDefaults) {
+  private loadCurrencyList(currencySettings: SettingsCurrencyWithDefaults): void {
   	let itemCount = 0;
   	this.pCurrencies = [];
   	if (currencySettings !== null) {
@@ -247,7 +247,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   	this.updateCurrentAmounts();
   }
 
-  private onAmountSpendUpdated(val: any) {
+  private onAmountSpendUpdated(val: any): void {
   	if (val && !this.pSpendAutoUpdated) {
   		this.pSpendAutoUpdated = false;
   		if (this.hasValidators(this.amountSpendField as AbstractControl) === false && this.currentCurrencySpend) {
@@ -259,7 +259,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   	this.pSpendAutoUpdated = false;
   }
 
-  private onAmountReceiveUpdated(val: any) {
+  private onAmountReceiveUpdated(val: any): void {
   	if (val && !this.pReceiveAutoUpdated) {
   		this.pReceiveAutoUpdated = false;
   		if (this.hasValidators(this.amountReceiveField as AbstractControl) === false && this.currentCurrencyReceive) {
@@ -271,13 +271,13 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   	this.pReceiveAutoUpdated = false;
   }
 
-  private hasValidators(control: AbstractControl) {
+  private hasValidators(control: AbstractControl): boolean {
   	if (!control) {
   		return false;
   	}
   	if (control.validator) {
   		const validator = control.validator({} as AbstractControl);
-  		if (validator && validator.required) {
+  		if (validator?.required) {
   			return true;
   		}
   	}

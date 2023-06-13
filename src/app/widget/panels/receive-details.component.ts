@@ -110,7 +110,7 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
   			this.inProgress = false;
   			this.onProgress.emit(this.inProgress);
   			if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			} else {
   				this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
   			}
@@ -137,7 +137,7 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private showQrCode(currency: any, address: any) {
+  private showQrCode(currency: any, address: any): void {
   	this.qrCode = address;
   }
 

@@ -39,7 +39,7 @@ export class AdminNotificationDetailsComponent implements OnDestroy {
   			this.resendInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

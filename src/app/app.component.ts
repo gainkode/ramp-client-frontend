@@ -80,7 +80,7 @@ export class AppComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private loadFont() {
+	private loadFont(): void {
 		// get head
 		const head = this.document.getElementsByTagName('head')[0];
 		const themeLink = this.document.getElementById('main-font') as HTMLLinkElement;

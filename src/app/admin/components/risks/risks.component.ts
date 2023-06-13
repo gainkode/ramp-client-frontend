@@ -63,7 +63,7 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   	this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
   	this.subscriptions.add(
   		this.sort.sortChange.subscribe(() => {
   			this.sortedDesc = (this.sort.direction === 'desc');
@@ -83,14 +83,14 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   	this.loadAlerts();
   }
 
-  showDetails(alert: RiskAlertItem, content: any) {
+  showDetails(alert: RiskAlertItem, content: any): void {
   	this.selectedAlert = alert;
   	this.modalService.open(content, {
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
   	});
   }
-  private loadCommonSettings(){
+  private loadCommonSettings(): void {
   	const settingsCommon = this.auth.getLocalSettingsCommon();
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
@@ -115,7 +115,7 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

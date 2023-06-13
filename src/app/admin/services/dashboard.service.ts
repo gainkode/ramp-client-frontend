@@ -48,7 +48,7 @@ export class DashboardService implements OnDestroy {
 
 	load(): void {
 		this.loading = true;
-		console.log(this.filter);
+		
 		const dashboardData$ = this.adminDataService.getDashboardStats(this.filter).pipe(take(1));
 		this.subscriptions.add(dashboardData$.subscribe(rawData => {
 			// region Total
@@ -717,14 +717,6 @@ export class DashboardService implements OnDestroy {
 						};
 					}) : []
 			};
-
-			//  endregion
-
-
-			const testData = [
-				{ currency: 'BTC', balance: 0.0145 },
-				{ currency: 'EUR', balance: 123.545 }
-			];
 
 			// region Balances
 			const liquidityProviderBalancesData: DashboardCardData = {

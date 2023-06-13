@@ -25,11 +25,11 @@ export class AdminComponent {
 		}
 	}
 
-	toggleSwitcherBody() {
+	toggleSwitcherBody(): void {
 		this.switcherService.emitChange(false);
 	}
 
-	private loadFont(){
+	private loadFont(): void {
 		const head = this.document.getElementsByTagName('head')[0];
 		const themeLink = this.document.getElementById('admin-font') as HTMLLinkElement;
 		// Set the font link

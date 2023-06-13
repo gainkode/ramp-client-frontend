@@ -114,7 +114,7 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
-  private loadCurrencyList(currencySettings: SettingsCurrencyWithDefaults) {
+  private loadCurrencyList(currencySettings: SettingsCurrencyWithDefaults): void {
   	let itemCount = 0;
   	this.currencies = [];
   	let currencyFiat = false;

@@ -3,8 +3,10 @@ export class EnvService {
 	public static productFull = 'Horns';
 	public static cookieDomain = 'localhost';
 	public static client_host = 'http://localhost:4000';
-	public static api_server = 'http://localhost:4001';
-	public static ws_server = 'ws://localhost:4001';
+	// public static api_server = 'http://localhost:4001';
+	// public static ws_server = 'ws://localhost:4001';
+	public static api_server = 'https://testnet.getcoins.com.au';
+	public static ws_server = 'wss://https://testnet.getcoins.com.au';
 	public static image_host = 'http://localhost';
 	public static api_timeout = 60000;
 	public static test_wallets = true;

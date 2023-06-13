@@ -1,19 +1,17 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { Filter } from 'admin/model/filter.model';
-import { AdminDataService } from 'services/admin-data.service';
-import { ApiKeyItem } from 'model/apikey.model';
-import { ApiKeySecret, SettingsCurrencyWithDefaults, UserType } from 'model/generated-models';
-import { UserItem } from 'model/user.model';
-import { AuthService } from 'services/auth.service';
-import { CurrencyView } from 'model/payment.model';
-import { CommonDataService } from 'services/common-data.service';
-import { LiquidityProviderList, LiquidityProviderItem } from 'admin/model/lists.model';
-import { LiquidityProviderEntityItem } from 'model/liquidity-provider.model';
+import { LiquidityProviderItem, LiquidityProviderList } from 'admin/model/lists.model';
 import { CurrencyPairItem } from 'model/currencyPairs.model';
+import { SettingsCurrencyWithDefaults } from 'model/generated-models';
+import { LiquidityProviderEntityItem } from 'model/liquidity-provider.model';
+import { CurrencyView } from 'model/payment.model';
+import { UserItem } from 'model/user.model';
+import { Observable, Subject, Subscription, of } from 'rxjs';
+import { take } from 'rxjs/operators';
+import { AdminDataService } from 'services/admin-data.service';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
 
 @Component({
 	selector: 'app-admin-currencypairs-details',
@@ -109,7 +107,7 @@ export class AdminCurrencyPairDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private getLuqidityProviders(){
+  private getLuqidityProviders(): void {
   	this.saveInProgress = true;
   	const listData$ = this.adminService.getLiquidityProviders().pipe(take(1));
   	this.subscriptions.add(
@@ -118,7 +116,7 @@ export class AdminCurrencyPairDetailsComponent implements OnInit, OnDestroy {
   			this.onSave();
   		}, (error) => {
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -140,7 +138,7 @@ export class AdminCurrencyPairDetailsComponent implements OnInit, OnDestroy {
   			this.saveInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

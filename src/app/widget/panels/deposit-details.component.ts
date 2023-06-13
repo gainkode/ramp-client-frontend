@@ -142,7 +142,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   }
 
   showPersonalVerification(): void {
-  	this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/verification`).then(() => {
+  	void this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/verification`).then(() => {
   		window.location.reload();
   	});
   }
@@ -169,7 +169,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   private updateQuote(): void {
   	if (this.currentQuoteEur !== 0) {
   		const c = this.currencies.find(x => x.symbol === this.selectedCurrency?.symbol);
-  		console.log(c);
+
   		if (c) {
   			const quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) * c.rateFactor;
   			if(quoteLimit <= 0){

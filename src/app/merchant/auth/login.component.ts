@@ -42,7 +42,7 @@ export class MerchantLoginComponent implements OnDestroy {
 		});
 		this.subscriptions.add(
 			dialogRef.afterClosed().subscribe(result => {
-				this.router.navigateByUrl('/personal/auth/login');
+				void this.router.navigateByUrl('/personal/auth/login');
 			})
 		);
 	}
@@ -70,7 +70,7 @@ export class MerchantLoginComponent implements OnDestroy {
 				const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
 				this.auth.setLocalSettingsCommon(settingsCommon);
 				this.inProgress = false;
-				this.router.navigateByUrl(this.auth.getUserMainPage());
+				void this.router.navigateByUrl(this.auth.getUserMainPage());
 			}, (error) => {
 				this.inProgress = false;
 				if (this.auth.token !== '') {

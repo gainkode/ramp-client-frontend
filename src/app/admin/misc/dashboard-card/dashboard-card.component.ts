@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { DashboardCardData } from '../../model/dashboard-data.model';
 import { DashboardService } from '../../services/dashboard.service';
 

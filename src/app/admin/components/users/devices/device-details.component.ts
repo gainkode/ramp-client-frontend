@@ -56,7 +56,7 @@ export class AdminDeviceDetailsComponent implements OnDestroy {
   			this.errorMessage = error;
   			this.deleteInProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

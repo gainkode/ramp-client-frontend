@@ -27,7 +27,7 @@ export class WidgetCompleteComponent {
   constructor(private router: Router) { }
 
   goHome(): void {
-  	this.router.navigateByUrl(this.finishLink).then(() => {
+  	void this.router.navigateByUrl(this.finishLink).then(() => {
   		window.location.reload();
   	});
   }

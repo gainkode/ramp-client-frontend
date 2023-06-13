@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ContactsFilter, FilterChip, FilterChipType, ProfileBaseFilter, TransactionsFilter } from 'model/filter.model';
+import { ContactsFilter, FilterChip, FilterChipType, ProfileBaseFilter } from 'model/filter.model';
 import { CurrencyView } from 'model/payment.model';
 import { ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
 
@@ -104,10 +104,10 @@ export class ContactsFilterBarComponent implements OnInit, OnDestroy {
 
     private initData(): void {
     	this.internalLoading = true;
-    	if (this.data && this.data.email) {
+    	if (this.data?.email) {
     		this.emailField?.setValue(this.data.email);
     	}
-    	if (this.data && this.data.userName) {
+    	if (this.data?.userName) {
     		this.userNameField?.setValue(this.data.userName);
     	}
     	if (this.data && this.data.currencies.length > 0) {
@@ -115,7 +115,7 @@ export class ContactsFilterBarComponent implements OnInit, OnDestroy {
     	} else {
     		this.currenciesField?.setValue(this.cryptoList.map(x => x.symbol));
     	}
-    	if (this.data && this.data.zeroBalance) {
+    	if (this.data?.zeroBalance) {
     		this.zeroBalanceField?.setValue(this.data.zeroBalance);
     	}
     	this.updateChips(FilterChipType.Email);

@@ -89,7 +89,7 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy {
 			}, (error) => {
 				this.inProgress = false;
 				if (this.auth.token === '') {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);
@@ -126,7 +126,7 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy {
 				}, (error) => {
 					this.inProgress = false;
 					if (this.auth.token === '') {
-						this.router.navigateByUrl('/');
+						void this.router.navigateByUrl('/');
 					}
 				})
 			);

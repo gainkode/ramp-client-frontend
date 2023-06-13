@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -24,7 +24,7 @@ import { WidgetService } from '../services/widget.service';
 	templateUrl: 'transfer.component.html',
 	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
-export class TransferWidgetComponent implements OnInit {
+export class TransferWidgetComponent implements OnInit, OnDestroy {
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
 
@@ -200,7 +200,7 @@ export class TransferWidgetComponent implements OnInit {
 
   handleAuthError(): void {
   	if (this.widget.embedded) {
-  		this.router.navigateByUrl('/');
+  		void this.router.navigateByUrl('/');
   	} else {
   		this.nextStage('order_details', 'Order details', 1, false);
   	}
@@ -227,7 +227,7 @@ export class TransferWidgetComponent implements OnInit {
   	}, 50);
   }
 
-  removeStage(stage: string) {
+  removeStage(stage: string): void {
   	this.pager.removeStage(stage);
   }
 
@@ -341,7 +341,7 @@ export class TransferWidgetComponent implements OnInit {
   }
   // =====================
 
-  private checkLoginResult(data: any) {
+  private checkLoginResult(data: any): void {
   }
 
   // == Payment info ==
@@ -349,8 +349,8 @@ export class TransferWidgetComponent implements OnInit {
   	this.stageBack();
   }
 
-  selectProvider(provider: PaymentProviderInstrumentView) {
-  	console.log(provider);
+  selectProvider(provider: PaymentProviderInstrumentView): void {
+
   	if (provider.instrument === PaymentInstrument.WireTransfer) {
   		this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   		this.startPayment();
@@ -409,7 +409,7 @@ export class TransferWidgetComponent implements OnInit {
 
   // == Auth ========
   onLoginRequired(email: string): void {
-  	this.router.navigateByUrl('/');
+  	void this.router.navigateByUrl('/');
   }
   // ====================
 

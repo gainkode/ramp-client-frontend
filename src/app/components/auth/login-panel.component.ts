@@ -11,7 +11,6 @@ import { CommonDialogBox } from '../dialogs/common-box.dialog';
 import { NotificationService } from '../../services/notification.service';
 import { ProfileDataService } from '../../services/profile.service';
 import { take } from 'rxjs/operators';
-import { EnvService } from '../../services/env.service';
 
 @Component({
 	selector: 'app-login-panel',
@@ -191,12 +190,13 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     		})
     	);
     }
-    capchaResult(event){
+    capchaResult(event): void{
     	this.recaptcha = event;
     	localStorage.setItem('recaptchaId', event);
     }
+
     private loadAccountData(): void {
-    	console.log('loadAccountData');
+    
     	const meQuery$ = this.profileService.getProfileData().valueChanges.pipe(take(1));
     	this.subscriptions.add(
     		meQuery$.subscribe(({ data }) => {

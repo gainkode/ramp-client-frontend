@@ -104,7 +104,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
   	this.subscriptions.add(
   		this.sort.sortChange.subscribe(() => {
   			this.sortedDesc = (this.sort.direction === 'desc');
@@ -121,11 +121,11 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   showTransactions(id: string): void {
-  	this.router.navigateByUrl(`/admin/transactions/users/${id}`);
+  	void this.router.navigateByUrl(`/admin/transactions/users/${id}`);
   }
 
   showWallets(id: string): void {
-  	this.router.navigateByUrl(`/admin/crypto-wallets/users/${id}`);
+  	void this.router.navigateByUrl(`/admin/crypto-wallets/users/${id}`);
   }
 
   selectAll(): void {
@@ -140,14 +140,13 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	});
   }
   
-  private loadCommonSettings(){
+  private loadCommonSettings(): void{
   	const settingsCommon = this.auth.getLocalSettingsCommon();
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
   		if(this.adminAdditionalSettings?.tabs?.customers?.filterFields){
   			this.filterFields = this.adminAdditionalSettings.tabs.customers.filterFields;
-  		}
-      
+  		} 
   	}
   }
 
@@ -169,7 +168,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   			}, (error) => {
   				this.inProgress = false;
   				if (this.auth.token === '') {
-  					this.router.navigateByUrl('/');
+  					void this.router.navigateByUrl('/');
   				}
   			})
   		);
@@ -193,7 +192,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   			}, (error) => {
   				this.inProgress = false;
   				if (this.auth.token === '') {
-  					this.router.navigateByUrl('/');
+  					void this.router.navigateByUrl('/');
   				}
   			})
   		);
@@ -218,7 +217,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -256,7 +255,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   			this.sendMessageInProgress = false;
   			this.sendMessageError = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -278,7 +277,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   			});
   		}, (error) => {
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -294,7 +293,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	this.loadCustomers();
   }
 
-  showDetails(customer: UserItem, content: any) {
+  showDetails(customer: UserItem, content: any): void {
   	this.selectedCustomer = customer;
   	this.detailsDialog = this.modalService.open(content, {
   		backdrop: 'static',
@@ -302,7 +301,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	});
   }
 
-  confirmEmail(user: UserItem, content: any) {
+  confirmEmail(user: UserItem, content: any): void {
   	const requestData$ = this.adminService.confirmEmail(user.id);
   	this.subscriptions.add(
   		requestData$.subscribe(({ result }) => {
@@ -312,13 +311,13 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   			});
   		}, (error) => {
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
   }
 
   showWhiteList(userId: string): void {
-  	this.router.navigateByUrl(`/admin/white-device-list/${userId}`);
+  	void this.router.navigateByUrl(`/admin/white-device-list/${userId}`);
   }
 }

@@ -22,7 +22,7 @@ export class KycVerificationDialogBox implements OnDestroy {
 		private auth: AuthService,
 		public dialogRef: MatDialogRef<KycVerificationDialogBox>,
 		@Inject(MAT_DIALOG_DATA) public data: DialogData) {
-		console.log(data);
+
 	}
 
 	ngOnDestroy(): void {
@@ -36,7 +36,7 @@ export class KycVerificationDialogBox implements OnDestroy {
 					this.auth.setLoginUser(data.generateDefaultTokenWhenKycSent);
 					this.complete = true;
 					this.dialogRef.close();
-					this.router.navigateByUrl(this.auth.getUserMainPage()).then(() => {
+					void this.router.navigateByUrl(this.auth.getUserMainPage()).then(() => {
 						window.location.reload();
 					});
 				}, (error) => {
@@ -51,7 +51,6 @@ export class KycVerificationDialogBox implements OnDestroy {
 	}
 
 	handleError(message: string): void {
-		console.log(message);
 		this.setError(message);
 	}
 

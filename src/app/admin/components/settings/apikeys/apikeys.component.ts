@@ -59,7 +59,7 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
   	this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
   	this.subscriptions.add(
   		this.sort.sortChange.subscribe(() => {
   			this.sortedDesc = (this.sort.direction === 'desc');
@@ -128,7 +128,7 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

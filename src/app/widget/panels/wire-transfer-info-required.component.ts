@@ -1,12 +1,10 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { getFormattedUtcDate } from 'utils/utils';
+import { LoginResult, PostAddress, UserType } from '../../model/generated-models';
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
-import { Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms';
-import { LoginResult, PostAddress, SettingsKyc, UserType } from '../../model/generated-models';
-import { Subscription } from 'rxjs';
-import { getCountryByCode3 } from '../../model/country-code.model';
-import { take } from 'rxjs/operators';
-import { getFormattedUtcDate } from 'utils/utils';
 
 @Component({
 	selector: 'app-widget-wire-transfer-info-required',
@@ -17,7 +15,7 @@ import { getFormattedUtcDate } from 'utils/utils';
 		'../../../assets/auth.scss'
 	]
 })
-export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
+export class WidgetWireTransferInfoRequiredComponent implements OnInit, OnDestroy{
     @Input() buttonTitle = 'OK';
     @Input() requiredFields: string[] = [];
     @Output() error = new EventEmitter<string>();
@@ -167,7 +165,7 @@ export class WidgetWireTransferInfoRequiredComponent implements OnDestroy{
     	}
     	if (this.requireUserBirthday && user) {
     		const birthday = new Date(user.birthday);
-    		console.log(birthday);
+   
     		if (birthday && birthday !== null) {
     			const d = `${birthday.getDate()}/${birthday.getMonth() + 1}/${birthday.getFullYear()}`;
     			this.birthdayControl?.setValue(d);

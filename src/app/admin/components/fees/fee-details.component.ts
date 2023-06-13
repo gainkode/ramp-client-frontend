@@ -117,9 +117,9 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.subscriptions.unsubscribe();
   }
 
-  private loadCommonSettings(){
+  private loadCommonSettings(): void{
   	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	console.log(settingsCommon);
+
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
   		this.userModes = this.userModes.filter(item => this.adminAdditionalSettings.userMode[item.id] == true);
@@ -333,7 +333,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private initTargetSearch() {
+  private initTargetSearch(): void {
   	this.targetsOptions$ = concat(
   		of([]),
   		this.targetsSearchInput$.pipe(
@@ -503,7 +503,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			this.saveInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

@@ -42,9 +42,9 @@ export class FormTextBoxComponent implements ControlValueAccessor, OnInit, OnDes
     get control(): UntypedFormControl {
     	this.requiredFlag = false;
     	const c = this.formControl || this.controlContainer.control?.get(this.formControlName);
-    	if (c && c.validator) {
+    	if (c?.validator) {
     		const validator = c.validator({} as AbstractControl);
-    		if (validator && validator.required) {
+    		if (validator?.required) {
     			this.requiredFlag = true;
     		}
     	}

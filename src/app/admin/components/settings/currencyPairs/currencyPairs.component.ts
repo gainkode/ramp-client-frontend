@@ -1,16 +1,14 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { CurrencyPairItem } from 'model/currencyPairs.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { Clipboard } from '@angular/cdk/clipboard';
 import { AdminDataService } from 'services/admin-data.service';
-import { CurrencyPairItem } from 'model/currencyPairs.model';
 import { AuthService } from 'services/auth.service';
-import { CurrencyView } from 'model/payment.model';
 import { CommonDataService } from 'services/common-data.service';
-import { SettingsCurrencyWithDefaults } from 'model/generated-models';
 
 @Component({
 	selector: 'app-admin-currencypairs',
@@ -65,7 +63,7 @@ export class AdminCurrencyPairsComponent implements OnInit, OnDestroy, AfterView
   	this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
   	this.subscriptions.add(
   		this.sort.sortChange.subscribe(() => {
   			this.sortedDesc = (this.sort.direction === 'desc');
@@ -135,7 +133,7 @@ export class AdminCurrencyPairsComponent implements OnInit, OnDestroy, AfterView
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

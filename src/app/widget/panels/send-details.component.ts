@@ -161,7 +161,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   				this.inProgress = false;
   				this.onProgress.emit(this.inProgress);
   				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-  					this.router.navigateByUrl('/');
+  					void this.router.navigateByUrl('/');
   				} else {
   					this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load wallets');
   				}
@@ -293,7 +293,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private onAmountUpdated(val: any) {
+  private onAmountUpdated(val: any): void {
   	if (this.amountField?.valid) {
   		this.zeroAmount = (this.amountField.value === '0');
   	} else {

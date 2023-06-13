@@ -10,7 +10,7 @@ import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
 import { Countries, getCountryByCode3 } from 'model/country-code.model';
 import { AccountStatus, KycProvider, RiskLevel, UserInput, UserType } from 'model/generated-models';
-import { CurrencyView, KycProviderList, RiskLevelViewList, UserModeView, UserStatusList } from 'model/payment.model';
+import { CurrencyView, KycProviderList, RiskLevelViewList, UserStatusList } from 'model/payment.model';
 import { GenderList, UserItem } from 'model/user.model';
 import { AuthService } from 'services/auth.service';
 import { getFormattedUtcDate } from 'utils/utils';
@@ -127,7 +127,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   	}
   }
 
-  private loadCommonSettings(){
+  private loadCommonSettings(): void {
   	const settingsCommon = this.auth.getLocalSettingsCommon();
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
@@ -299,7 +299,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   				this.saveInProgress = false;
   				this.errorMessage = error;
   				if (this.auth.token === '') {
-  					this.router.navigateByUrl('/');
+  					void this.router.navigateByUrl('/');
   				}
   			})
   		);
@@ -317,7 +317,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   			this.kycProviderLinkInProgress = false;
   			if (data) {
   				if (data.getVerificationLink) {
-  					this.router.navigate([]).then((result) => {
+  					void this.router.navigate([]).then((result) => {
   						window.open(data.getVerificationLink, '_blank');
   					});
   				}
@@ -330,7 +330,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   				this.errorMessage = this.errorHandler.getCurrentErrorMessage();
   			}
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -410,7 +410,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   			this.disableInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -427,7 +427,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   			this.disableInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

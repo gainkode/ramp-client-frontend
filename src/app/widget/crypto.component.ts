@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Widget, TransactionServiceNotificationType, LoginResult, CryptoInvoiceCreationResult } from 'model/generated-models';
@@ -20,7 +20,7 @@ import { WidgetService } from '../services/widget.service';
 	templateUrl: 'crypto.component.html',
 	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
-export class CryptoWidgetComponent implements OnInit {
+export class CryptoWidgetComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';
   @Input() settings: WidgetSettings | undefined = undefined;
 
@@ -273,7 +273,7 @@ export class CryptoWidgetComponent implements OnInit {
   	}, 50);
   }
 
-  removeStage(stage: string) {
+  removeStage(stage: string): void {
   	this.pager.removeStage(stage);
   }
 
@@ -355,7 +355,7 @@ export class CryptoWidgetComponent implements OnInit {
 
   onLoginRequired(email: string): void {
   	if (this.widget.embedded) {
-  		this.router.navigateByUrl('/');
+  		void this.router.navigateByUrl('/');
   	} else {
   		const currentEmail = this.auth.user?.email ?? '';
   		if (currentEmail !== email) {
@@ -412,7 +412,7 @@ export class CryptoWidgetComponent implements OnInit {
   }
   // ====================
 
-  private checkLoginResult(data: LoginResult) {
+  private checkLoginResult(data: LoginResult): void {
   	this.stopNotificationListener();
   	if (data.user) {
   		this.summary.email = data.user?.email;
@@ -439,7 +439,6 @@ export class CryptoWidgetComponent implements OnInit {
   			({ data }) => {
   				this.inProgress = false;
   				this.invoice = new InvoiceView(data.createInvoice as CryptoInvoiceCreationResult);
-  				console.log(data);
   				setTimeout(() => {
   					//this.startNotificationListener();
   					this.startAbandonTimer();
@@ -486,7 +485,6 @@ export class CryptoWidgetComponent implements OnInit {
   }
 
   private startConfirmedAbandonTimer(interval: number): void {
-  	console.log(interval);
   	this.abandonCounter = interval / 1000;
   	this.pSubscriptions.add(
   		this.abandonTimer.pipe(takeUntil(this.timerSubject$)).subscribe(val => {

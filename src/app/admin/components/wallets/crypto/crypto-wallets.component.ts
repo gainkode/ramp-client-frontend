@@ -69,7 +69,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   	this.subscriptions.unsubscribe();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
   	this.subscriptions.add(
   		this.sort.sortChange.subscribe(() => {
   			this.sortedDesc = (this.sort.direction === 'desc');
@@ -111,7 +111,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   	}
   }
 
-  showDetails(wallet: WalletItem, content: any) {
+  showDetails(wallet: WalletItem, content: any): void {
   	this.selectedWallet = wallet;
   	this.detailsDialog = this.modalService.open(content, {
   		backdrop: 'static',
@@ -119,7 +119,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   	});
   }
 
-  private loadCommonSettings(){
+  private loadCommonSettings(): void{
   	const settingsCommon = this.auth.getLocalSettingsCommon();
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
@@ -149,7 +149,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   		}, (error) => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);

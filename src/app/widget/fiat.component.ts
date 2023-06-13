@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TransactionType, PaymentInstrument, SettingsCurrencyWithDefaults, TransactionSource, TransactionShort } from 'model/generated-models';
@@ -17,7 +17,7 @@ import { WidgetService } from '../services/widget.service';
 	templateUrl: 'fiat.component.html',
 	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
 })
-export class FiatWidgetComponent implements OnInit {
+export class FiatWidgetComponent implements OnInit, OnDestroy {
 	@Input() set settings(val: WidgetSettings | undefined) {
 		if (val) {
 			this.widgetSettings = val;
@@ -170,11 +170,11 @@ export class FiatWidgetComponent implements OnInit {
   }
 
   private onAuthRequired(email: string): void {
-  	this.router.navigateByUrl('/');
+  	void this.router.navigateByUrl('/');
   }
 
   private onIdRequired(): void {
-  	this.router.navigateByUrl('/');
+  	void this.router.navigateByUrl('/');
   }
 
   private userInfoRequired(requiredFields: string[]): void {
@@ -203,7 +203,7 @@ export class FiatWidgetComponent implements OnInit {
   		}, (error) => {
   			this.inProgress = false;
   			if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			} else {
   				this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load currencies');
   			}
@@ -272,7 +272,7 @@ export class FiatWidgetComponent implements OnInit {
   		}, (error) => {
   			this.inProgress = false;
   			if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			} else {
   				this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
   				this.onError.emit({
