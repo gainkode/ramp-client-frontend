@@ -338,27 +338,21 @@ export class UserItem {
 
   private getKycStatusColor(): string {
     let color = 'grey';
-    switch (this.kycStatusValue) {
-      case KycStatus.Unknown:
-        color = 'white';
-        break;
-      case KycStatus.Canceled:
-      case KycStatus.Timeout:
-        color = 'yellow';
-        break;
-      case KycStatus.Init:
-      case KycStatus.NotFound:
-      case KycStatus.Deleted:
-      case KycStatus.Invalid:
-      case KycStatus.Timeout:
-        color = 'red';
-        break;
-      case KycStatus.Completed:
-        color = (this.kycValid) ? 'green' : 'red';
-        break;
-      default:
-        color = 'grey';
+    if(this.deleted){
+      color = 'yellow';
+    }else{
+      switch (this.kycStatusValue) {
+        case KycStatus.Init:
+          color = 'blue';
+          break;
+        case KycStatus.Completed:
+          color = (this.kycValid) ? 'green' : 'red';
+          break;
+        default:
+          color = 'grey';
+      }
     }
+    
     return color;
   }
 
