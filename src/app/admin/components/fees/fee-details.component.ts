@@ -3,7 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, take, tap } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
@@ -52,7 +52,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   instruments = PaymentInstrumentList;
   providers: PaymentProviderView[] = [];
   filteredProviders: PaymentProviderView[] = [];
-  showPaymentProvider = false;
+  showPaymentProvider = true;
   costSchemes: CostScheme[] = [];
   currency = '';
   targetEntity = ['', ''];
@@ -164,6 +164,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		if (scheme.instrument && scheme.instrument.length > 0) {
   			const instrument = scheme.instrument[0];
   			this.form.get('instrument')?.setValue(instrument);
+
   			if (instrument === PaymentInstrument.WireTransfer) {
   				this.form.get('provider')?.setValue(scheme?.provider[0]);
   			} else {
@@ -226,7 +227,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	data.trxType = this.form.get('trxType')?.value as TransactionType[];
   	data.currenciesFrom = this.form.get('currenciesFrom')?.value as Array<string>;
   	data.currenciesTo = this.form.get('currenciesTo')?.value as Array<string>;
-    
+	
   	const instrument = this.form.get('instrument')?.value;
   	if (instrument === undefined || instrument === null) {
   		data.instrument = [];
@@ -353,25 +354,25 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   }
 
   private filterPaymentProviders(instruments: PaymentInstrument[]): void {
-  	if (instruments) {
-  		if (instruments.length > 0) {
-  			if (!instruments.includes(PaymentInstrument.WireTransfer)) {
-  				this.filteredProviders = getProviderList(instruments, this.providers);
-  				this.showPaymentProvider = this.filteredProviders.length > 0;
-  				if (this.providers.length > 0) {
-  					this.form.get('provider')?.setValue(getCheckedProviderList(
-  						this.form.get('provider')?.value ?? [],
-  						this.filteredProviders));
-  				} else {
-  					this.form.get('provider')?.setValue([]);
-  				}
-  			}
+  	if (!instruments || instruments.length === 0) {
+  		this.form.get('instrument')?.setValue(undefined);
+  		this.form.get('provider')?.setValue([]);
+  		this.showPaymentProvider = false;
+  		return;
+  	}
+
+  	if (!instruments.includes(PaymentInstrument.WireTransfer)) {
+  		this.filteredProviders = getProviderList(instruments, this.providers);
+  		this.showPaymentProvider = this.filteredProviders.length > 0;
+	
+  		if (this.providers.length > 0) {
+  			this.form.get('provider')?.setValue(getCheckedProviderList(
+  				this.form.get('provider')?.value ?? [],
+  				this.filteredProviders
+  			));
   		} else {
-  			this.form.get('instrument')?.setValue(undefined);
   			this.form.get('provider')?.setValue([]);
   		}
-  	} else {
-  		this.form.get('provider')?.setValue([]);
   	}
   }
 
@@ -408,15 +409,12 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   }
 
   private getFilteredWidgets(filter: Filter): Observable<CommonTargetValue[]> {
-  	return this.adminService.getWidgets(0, 100, 'widgetId', false, filter)
-  		.pipe(map(result => {
-  			return result.list.map(widget => {
-  				return {
-  					id: widget.id,
-  					title: widget.name
-  				} as CommonTargetValue;
-  			});
-  		}));
+  	return this.adminService.getWidgets(0, 100, 'widgetId', false, filter).pipe(
+  		map(result => result.list.map(widget => ({
+  			id: widget.id,
+  			title: widget.name
+  		} as CommonTargetValue)))
+  	);
   }
 
   private updateTarget(): void {
@@ -433,12 +431,13 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   private setTargetValidator(): void {
   	const val = this.form.get('target')?.value;
   	this.targetType = val ?? SettingsFeeTargetFilterType.None as SettingsFeeTargetFilterType;
+  	const targetValuesControl = this.form.get('targetValues');
   	if (val === SettingsFeeTargetFilterType.None) {
-  		this.form.get('targetValues')?.clearValidators();
+  		targetValuesControl?.clearValidators();
   	} else {
-  		this.form.get('targetValues')?.setValidators([Validators.required]);
+  		targetValuesControl?.setValidators([Validators.required]);
   	}
-  	this.form.get('targetValues')?.updateValueAndValidity();
+  	targetValuesControl?.updateValueAndValidity();
   }
 
   private getPaymentProviders(): void {
@@ -495,16 +494,16 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.errorMessage = '';
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.saveFeeSettings(scheme);
-  	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
-  			this.saveInProgress = false;
-  			this.save.emit();
-  		}, (error) => {
-  			this.saveInProgress = false;
-  			this.errorMessage = error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
+  	
+	  this.subscriptions.add(
+  		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
+  			next: () => this.save.emit(),
+  			error: (errorMessage) => {
+  				this.errorMessage = errorMessage;
+  				if (this.auth.token === '') {
+  					void this.router.navigateByUrl('/');
+  				}
+  			},
   		})
   	);
   }
@@ -513,16 +512,16 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.errorMessage = '';
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.deleteFeeSettings(id);
+
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
-  			this.saveInProgress = false;
-  			this.save.emit();
-  		}, (error) => {
-  			this.saveInProgress = false;
-  			this.errorMessage = error;
-  			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
-  			}
+  		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
+  			next: () => this.save.emit(),
+  			error: (errorMessage) => {
+  				this.errorMessage = errorMessage;
+  				if (this.auth.token === '') {
+  					void this.router.navigateByUrl('/');
+  				}
+  			},
   		})
   	);
   }

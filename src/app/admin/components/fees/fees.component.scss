@@ -122,22 +122,22 @@
       .dataTable-sorter::before {
         border-top: 4px solid #fff;
       }
-      .mat-table {
+      .mat-mdc-table {
         background: $dark-theme !important;
       }
-      .mat-header-cell {
+      .mat-mdc-header-cell {
         color: #fff !important;
       }
-      .mat-cell,
-      .mat-footer-cell {
+      .mat-mdc-cell,
+      .mat-mdc-footer-cell {
         color: #eee !important;
       }
       mat-row,
       mat-header-row,
       mat-footer-row,
-      th.mat-header-cell,
-      td.mat-cell,
-      td.mat-footer-cell {
+      th.mat-mdc-header-cell,
+      td.mat-mdc-cell,
+      td.mat-mdc-footer-cell {
         border-bottom-color: rgba(255, 255, 255, 0.12) !important;
       }
       .mat-checkbox-frame {
@@ -251,22 +251,22 @@
       .dataTable-sorter::before {
         border-top: 4px solid #fff;
       }
-      .mat-table {
+      .mat-mdc-table {
         background: #2da28f !important;
       }
-      .mat-header-cell {
+      .mat-mdc-header-cell {
         color: #fff !important;
       }
-      .mat-cell,
-      .mat-footer-cell {
+      .mat-mdc-cell,
+      .mat-mdc-footer-cell {
         color: #eee !important;
       }
       mat-row,
       mat-header-row,
       mat-footer-row,
-      th.mat-header-cell,
-      td.mat-cell,
-      td.mat-footer-cell {
+      th.mat-mdc-header-cell,
+      td.mat-mdc-cell,
+      td.mat-mdc-footer-cell {
         border-bottom-color: rgba(255, 255, 255, 0.12) !important;
       }
       .mat-checkbox-frame {
@@ -322,7 +322,7 @@
   flex: 1 1 0;
   overflow: auto;
 
-  .mat-table {
+  mat-table {
     display: table;
     min-width: 100%;
 
@@ -330,13 +330,13 @@
       height: 32px;
       line-height: 32px;
 
-      &.mat-header-row {
+      &.mat-mdc-header-row {
         height: 40px;
         line-height: 40px;
       }
     }
 
-    th.mat-header-cell {
+    th.mat-mdc-header-cell {
       padding: 0 4px 0 4px;
       white-space: nowrap;
       font-size: 16px;
@@ -354,7 +354,7 @@
       }
     }
 
-    td.mat-cell {
+    td.mat-mdc-cell {
       padding: 1px 4px 0 4px;
       line-height: 29px;
       white-space: nowrap;
@@ -383,9 +383,10 @@
     height: 24px;
     line-height: 0;
     position: relative;
-    top: -1px;
+    top: 5px;
+    padding: 1px;
 
-    .mat-icon {
+    .material-icons {
       font-size: 16px;
       height: 16px;
       width: 16px;

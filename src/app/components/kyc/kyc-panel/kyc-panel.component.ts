@@ -1,15 +1,15 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { KycProvider } from 'model/generated-models';
 import { Subscription } from 'rxjs';
-import { KycProvider } from '../../model/generated-models';
-import { AuthService } from '../../services/auth.service';
-import { ErrorService } from '../../services/error.service';
-import { CommonDialogBox } from './../dialogs/common-box.dialog';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
 
 @Component({
 	selector: 'app-kyc-panel',
-	styleUrls: ['kyc-panel.component.scss'],
-	templateUrl: 'kyc-panel.component.html'
+	templateUrl: 'kyc-panel.component.html',
+	styleUrls: ['kyc-panel.component.scss']
 })
 export class KycPanelComponent implements OnInit, OnDestroy {
     @Input() flow = '';
@@ -26,6 +26,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
 
     showSumsub = false;
     showShufti = false;
+	showAutentix = false;
     token = '';
     url = '';
 
@@ -64,7 +65,11 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     		} else if (this.auth.user?.kycProvider === KycProvider.Shufti) {
     			this.showShufti = true;
     			this.url = data.generateWebApiToken;
-    		}
+    		} 
+			// else if (this.auth.user?.kycProvider === KycProvider.Shufti) {
+    		// 	this.showAutentix = true;
+    		// 	this.url = data.generateWebApiToken;
+    		// }
     	}, (error) => {
     		this.onProgress.emit(false);
     		if (this.auth.token !== '') {

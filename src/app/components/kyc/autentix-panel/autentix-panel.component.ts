@@ -1,17 +1,18 @@
-import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { KycProvider } from 'model/generated-models';
 import { Subscription } from 'rxjs';
-import { KycProvider } from '../../model/generated-models';
-import { AuthService } from '../../services/auth.service';
-import { NotificationService } from '../../services/notification.service';
+import { AuthService } from 'services/auth.service';
+import { NotificationService } from 'services/notification.service';
 
 @Component({
-	selector: 'app-shufti-panel',
-	styleUrls: ['kyc-panel.component.scss'],
-	templateUrl: 'shufti-panel.component.html'
+	selector: 'app-autentix-panel',
+	templateUrl: './autentix-panel.component.html',
+	styleUrls: ['./autentix-panel.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ShuftiPanelComponent implements OnInit, OnDestroy {
-    @Input() url = '';
+export class AutentixPanelComponent implements OnInit, OnDestroy {
+	@Input() url = '';
     @Input() completedWhenVerified = false;
     @Output() completed = new EventEmitter();
     @Output() onReject = new EventEmitter();

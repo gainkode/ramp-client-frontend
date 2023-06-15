@@ -159,16 +159,14 @@ export function getTransactionAmountHash(rate: number, amount: number, fee: numb
 }
 
 export function getProviderList(instruments: string[], providers: PaymentProviderView[]): PaymentProviderView[] {
-	if (instruments.length < 1) {
-		return providers;
-	} else {
-		return providers.filter(x => {
-			return x.instruments.filter(i => instruments.includes(i)).length > 0;
-		});
-	}
+	return instruments.length < 1 ? providers : providers.filter(x => x.instruments.some(i => instruments.includes(i)));
 }
 
-export function getCheckedProviderList(checkedproviders: string[], providerList: PaymentProviderView[]): string[] {
+export function getCheckedProviderList(checkedproviders: string | string[], providerList: PaymentProviderView[]): string[] {
+	if (!Array.isArray(checkedproviders)) {
+		return [];
+	}
+	
 	return checkedproviders.filter(x => providerList.some(p => p.id === x));
 }
 

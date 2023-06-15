@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { EnvService } from '../../../app/services/env.service';
 
-
 @Component({
 	selector: 'recaptcha',
 	templateUrl: 'recaptcha.component.html',

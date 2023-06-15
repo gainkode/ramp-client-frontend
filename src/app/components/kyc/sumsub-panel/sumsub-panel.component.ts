@@ -1,16 +1,16 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
-import { EnvService } from '../../services/env.service';
-import { isSumsubVerificationComplete } from '../../utils/utils';
+import { AuthService } from 'services/auth.service';
+import { EnvService } from 'services/env.service';
+import { isSumsubVerificationComplete } from 'utils/utils';
 
 const snsWebSdk = require('@sumsub/websdk');
 
 @Component({
 	selector: 'app-sumsub-panel',
 	templateUrl: 'sumsub-panel.component.html',
-	styleUrls: ['../../../assets/button.scss']
+	styleUrls: ['./sumsub-panel.component.scss'],
 })
 export class SumsubPanelComponent implements OnInit, OnDestroy {
     @Input() flow = '';

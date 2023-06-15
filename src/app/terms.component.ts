@@ -34,7 +34,7 @@ export class TermsComponent {
 	}
 
 	routeTo(link: string): void {
-		this.router.navigateByUrl(link).then(() => {
+		void this.router.navigateByUrl(link).then(() => {
 			window.location.reload();
 		});
 	}

@@ -51,7 +51,6 @@ import { ProfileInfoDropboxComponent } from './settings/components/info-dropbox.
 import { ProfilePaymentErrorComponent } from './details/payment-error.component';
 import { ProfileApiKeysSettingsComponent } from './settings/panels/apikeys.component';
 import { ProfileIpListSettingsComponent } from './settings/panels/ip-list.component';
-import { SafeUrlPipe } from '../utils/safe-url.pipe';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 

@@ -1,14 +1,15 @@
+<!-- eslint-disable @angular-eslint/template/no-inline-styles -->
 <div class="row">
   <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
-    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+    <form novalidate [formGroup]="form">
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <div *ngIf="defaultSchemeName===''" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Scheme name
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <input class="form-control" [ngClass]="{'has-error': !form.controls.name.valid}" type="text"
-            formControlName="name" required>
+          <input class="form-control" type="text" formControlName="name"
+            required [ngClass]="{'has-error': !form.controls.name.valid}">
           <div *ngIf="(form.controls.name.touched || submitted) && (form.controls.name.errors?.['required'])"
             class="tx-danger">
             <small>
@@ -37,8 +38,8 @@
               Target
               <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
-            <ng-select [items]="targets" [clearable]=false [clearOnBackspace]=false bindLabel="name" bindValue="id"
-              formControlName="target" required>
+            <ng-select bindLabel="name" bindValue="id" formControlName="target" required [items]="targets"
+              [clearable]=false [clearOnBackspace]=false>
             </ng-select>
             <div *ngIf="(form.controls.target.touched || submitted) && (form.controls.target.errors?.['required'])"
               class="tx-danger">
@@ -54,18 +55,18 @@
               {{targetsTitle}}
               <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
-            <ng-select *ngIf="targetType!==TARGET_TYPE.InitiateFrom" [minTermLength]="minTargetsLengthTerm"
+            <ng-select *ngIf="targetType!==TARGET_TYPE.InitiateFrom" formControlName="targetValues"
+              bindLabel="title" required [minTermLength]="minTargetsLengthTerm"
               notFoundText="No {{targetEntity[1]}} found" [loading]="isTargetsLoading" [multiple]="true"
-              formControlName="targetValues" [typeToSearchText]="targetSearchText" bindLabel="title"
-              placeholder="Start typing to search a {{targetEntity[0]}}" [typeahead]="targetsSearchInput$" required>
+              [typeToSearchText]="targetSearchText" placeholder="Start typing to search a {{targetEntity[0]}}" [typeahead]="targetsSearchInput$">
               <ng-option *ngFor="let item of targetsOptions$ | async" [value]="item">
                 <app-dropdown-item [itemValue]="item.title" [imageClass]="item.imgClass" [imageSource]="item.imgSource">
                 </app-dropdown-item>
               </ng-option>
             </ng-select>
-            <ng-select *ngIf="targetType===TARGET_TYPE.InitiateFrom" [items]="sourceTargetsOptions" bindLabel="title"
-              [multiple]="true" formControlName="targetValues" placeholder="Select one or more {{targetEntity[1]}}"
-              required>
+            <ng-select *ngIf="targetType===TARGET_TYPE.InitiateFrom" bindLabel="title" formControlName="targetValues"
+              required [items]="sourceTargetsOptions" [multiple]="true"
+              placeholder="Select one or more {{targetEntity[1]}}">
             </ng-select>
             <div
               *ngIf="(form.controls.targetValues.touched || submitted) && (form.controls.targetValues.errors?.['required'])"
@@ -80,8 +81,8 @@
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Transaction types
             </label>
-            <ng-select [items]="transactionTypes" bindLabel="name" bindValue="id" [multiple]="true"
-              [closeOnSelect]="false" formControlName="trxType" placeholder="Select one or more types">
+            <ng-select bindLabel="name" bindValue="id" formControlName="trxType" placeholder="Select one or more types"
+              [items]="transactionTypes" [multiple]="true" [closeOnSelect]="false">
             </ng-select>
           </div>
 
@@ -89,8 +90,8 @@
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Payment Methods
             </label>
-            <ng-select [items]="instruments" bindLabel="name" bindValue="id" 
-              formControlName="instrument" placeholder="Select payment method">
+            <ng-select bindLabel="name" bindValue="id" formControlName="instrument" 
+              placeholder="Select payment method" [items]="instruments">
             </ng-select>
           </div>
 
@@ -98,8 +99,8 @@
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Currencies From
             </label>
-            <ng-select [items]="currencyOptions" bindLabel="display" bindValue="symbol"
-              formControlName="currenciesFrom" [clearable]=true [clearOnBackspace]=true [multiple]="true"
+            <ng-select bindLabel="display" bindValue="symbol" formControlName="currenciesFrom"
+              [items]="currencyOptions" [clearable]=true [clearOnBackspace]=true [multiple]="true"
               [closeOnSelect]="false">
             </ng-select>
           </div>
@@ -108,26 +109,25 @@
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Currencies To
             </label>
-            <ng-select [items]="currencyOptions" bindLabel="display" bindValue="symbol"
-              formControlName="currenciesTo" [clearable]=true [clearOnBackspace]=true [multiple]="true"
+            <ng-select bindLabel="display" bindValue="symbol" formControlName="currenciesTo"
+              [items]="currencyOptions" [clearable]=true [clearOnBackspace]=true [multiple]="true"
               [closeOnSelect]="false">
             </ng-select>
           </div>
 
-          <div *ngIf="showPaymentProvider===true && form.controls.instrument?.value!==PAYMENT_INSTRUMENT.WireTransfer" class="form-group">
+          <div *ngIf="showPaymentProvider" class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Payment providers
             </label>
-            <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id" [multiple]="true"
-              [closeOnSelect]="false" formControlName="provider" placeholder="Select one or more providers">
-            </ng-select>
-          </div>
-          <div *ngIf="form.controls.instrument?.value===PAYMENT_INSTRUMENT.WireTransfer" class="form-group">
-            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-              Payment providers
-            </label>
-            <ng-select [items]="costSchemes" bindLabel="name" bindValue="id" 
-              formControlName="provider" placeholder="Select cost scheme">
+            <ng-select 
+              bindLabel="name"
+              bindValue="id"
+              formControlName="provider"
+              [items]="(form.controls.instrument?.value !== PAYMENT_INSTRUMENT.WireTransfer) ? filteredProviders : costSchemes"
+              [multiple]="(form.controls.instrument?.value !== PAYMENT_INSTRUMENT.WireTransfer)" 
+              [placeholder]="(form.controls.instrument?.value !== PAYMENT_INSTRUMENT.WireTransfer) ? 'Select one or more providers' : 'Select cost scheme'" 
+              [closeOnSelect]="form.controls.instrument?.value === PAYMENT_INSTRUMENT.WireTransfer"
+              >
             </ng-select>
           </div>
 
@@ -135,7 +135,7 @@
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               User types
             </label>
-            <ng-select [items]="userTypeOptions" bindLabel="name" bindValue="id" formControlName="userType"
+            <ng-select bindLabel="name" bindValue="id" formControlName="userType" [items]="userTypeOptions"
               [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
             </ng-select>
           </div>
@@ -144,7 +144,7 @@
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               User modes
             </label>
-            <ng-select [items]="userModes" bindLabel="name" bindValue="id" formControlName="userMode" [clearable]=true
+            <ng-select bindLabel="name" bindValue="id" formControlName="userMode" [items]="userModes" [clearable]=true
               [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
             </ng-select>
           </div>
@@ -159,8 +159,8 @@
               Transaction fees, %
               <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
-            <input class="form-control" [ngClass]="{'has-error': !form.controls.transactionFees.valid}" type="text"
-              formControlName="transactionFees" maxlength="7" placeholder="2%" required>
+            <input class="form-control" type="text" formControlName="transactionFees"
+              maxlength="7" placeholder="2%" required [ngClass]="{'has-error': !form.controls.transactionFees.valid}">
             <div *ngIf="(form.controls.transactionFees.touched || submitted) && (form.controls.transactionFees.errors?.['required'])"
               class="tx-danger">
               <small>
@@ -180,8 +180,8 @@
               Minimal transaction fee, {{currency}}
               <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
-            <input class="form-control" [ngClass]="{'has-error': !form.controls.minTransactionFee.valid}" type="text"
-              formControlName="minTransactionFee" maxlength="10" placeholder="&#8364;5" required>
+            <input class="form-control" type="text" formControlName="minTransactionFee"
+              maxlength="10" placeholder="&#8364;5" required [ngClass]="{'has-error': !form.controls.minTransactionFee.valid}">
             <div
               *ngIf="(form.controls.minTransactionFee.touched || submitted) && (form.controls.minTransactionFee.errors?.['required'])"
               class="tx-danger">
@@ -323,7 +323,7 @@
         </h4>
       </div>
       <div style="display: flex; justify-content: flex-end;">
-        <button class="btn btn-primary pd-x-30 me-2 mg-t-5">
+        <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit()">
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Save
         </button>
@@ -349,14 +349,14 @@
     </button>
   </div>
   <div class="modal-body">
-    <h4 style="text-align: center;">
+    <h4 class="text-center">
       You are going to delete selected fee scheme. Confirm operation.
     </h4>
     <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
         Confirm
       </button>
     </div>

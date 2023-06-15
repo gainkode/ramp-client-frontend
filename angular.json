@@ -60,6 +60,9 @@
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/bootstrap/scss/bootstrap.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/assets"]
+           },
             "scripts": [
               "./node_modules/cookieconsent/build/cookieconsent.min.js",
               "./node_modules/multicoin-address-validator/dist/wallet-address-validator.min.js",

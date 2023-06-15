@@ -5,4 +5,7 @@
 <app-shufti-panel *ngIf="showShufti" [url]="url" [completedWhenVerified]="completedWhenVerified"
     (completed)="completeVerification()" (onError)="onError.emit($event)" (onReject)="onReject.emit()"></app-shufti-panel>
 
+<app-autentix-panel *ngIf="showAutentix" [url]="url" [completedWhenVerified]="completedWhenVerified"
+    (completed)="completeVerification()" (onError)="onError.emit($event)" (onReject)="onReject.emit()"></app-autentix-panel>
+
 <!-- <button type="button" (click)="testButton()">Test</button> -->

@@ -12,14 +12,14 @@ export class PersonalGuard {
 		//const authValid = (authAction === '' || authAction === 'Default' || authAction === 'KycRequired');
 		//if (!this.auth.isAuthenticatedUserType('Personal') || !authValid) {
 		if (!this.auth.isAuthenticatedUserType(UserType.Personal)) {
-			this.router.navigateByUrl('/personal/auth/login');
+			void this.router.navigateByUrl('/personal/auth/login');
 			return false;
 		} else {
 			// If merchant KYC is not approved, they must be redirected to the KYC page
 			if (!this.auth.isPersonalApproved()) {
 				const verificationUrl = '/personal/account/settings/verification';
 				if (state.url !== verificationUrl) {
-					this.router.navigateByUrl(verificationUrl);
+					void this.router.navigateByUrl(verificationUrl);
 					return false;
 				}
 			}

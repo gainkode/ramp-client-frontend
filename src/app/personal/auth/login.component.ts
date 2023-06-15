@@ -43,7 +43,7 @@ export class PersonalLoginComponent implements OnDestroy {
 		});
 		this.subscriptions.add(
 			dialogRef.afterClosed().subscribe(result => {
-				this.router.navigateByUrl('/merchant/auth/login');
+				void this.router.navigateByUrl('/merchant/auth/login');
 			})
 		);
 	}
@@ -74,22 +74,22 @@ export class PersonalLoginComponent implements OnDestroy {
 				const adminRole = (userData.user) ? this.auth.isUserRole(userData.user, ['MERCHANT', 'MANAGER', 'SUPPORT', 'ADMIN', 'DEMO']) : false;
 				const userRole = (userData.user) ? this.auth.isUserRole(userData.user, ['USER']) : false;
 				if (adminRole && !userRole) {
-					this.router.navigateByUrl('/admin');
+					void this.router.navigateByUrl('/admin');
 				} else {
-					this.router.navigateByUrl(this.auth.getUserMainPage());
+					void this.router.navigateByUrl(this.auth.getUserMainPage());
 				}
 			}, (error) => {
 				this.inProgress = false;
 				if (this.auth.token !== '') {
 					this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
 				} else {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);
 	}
 
-	onError(error: string) {
+	onError(error: string): void {
 		this.errorMessage = error;
 	}
 
@@ -98,7 +98,7 @@ export class PersonalLoginComponent implements OnDestroy {
 	}
 
 	onAuthenticated(userData: LoginResult): void {
-		if(userData.user?.mode == UserMode.OneTimeWallet){
+		if(userData.user?.mode === UserMode.OneTimeWallet){
 			this.showWrongUserModeRedirectDialog();
 		}else if (userData.user?.type === UserType.Personal) {
 			if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {
@@ -123,7 +123,7 @@ export class PersonalLoginComponent implements OnDestroy {
 				this.handleSuccessLogin(userData);
 			} else if (userData.authTokenAction === 'ConfirmName') {
 				this.auth.logout();
-				this.router.navigateByUrl(`/personal/auth/signup/${userData.authToken}`);
+				void this.router.navigateByUrl(`/personal/auth/signup/${userData.authToken}`);
 			} else {
 				this.auth.logout();
 				this.errorMessage = `Invalid authentication via social media`;

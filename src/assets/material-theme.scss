@@ -1,3 +1,4 @@
+@use '@angular/material' as mat;
 @import '@angular/material/theming';
 @import "./colors.scss";
 
@@ -105,6 +106,14 @@ $bc-warn-palette: (
 $primary: mat-palette($bc-primary-palette);
 $accent: mat-palette($bc-accent-palette);
 $warn: mat-palette($bc-warn-palette);
-$theme: mat-light-theme($primary, $accent, $warn);
+$theme: mat-light-theme((
+  color: (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 0,
+));
 
 @include angular-material-theme($theme);

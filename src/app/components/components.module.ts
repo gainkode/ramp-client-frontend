@@ -33,8 +33,6 @@ import { NumberFillPipe } from '../utils/number-fill.pipe';
 
 import { DropdownItemComponent } from './common/dropdown-item.component';
 import { TabLabelComponent } from './common/tablabel.component';
-import { KycPanelComponent } from './kyc/kyc-panel.component';
-import { KycCompanyLevelVerificationComponent } from './kyc/kyc-company-level-verification.component';
 import { LoginPanelComponent } from './auth/login-panel.component';
 import { RestorePanelComponent } from './auth/restore-panel.component';
 import { NavPopupComponent } from './common/nav-popup/nav-popup.component';
@@ -42,20 +40,12 @@ import { SideExpanderComponent } from './common/side-expander.component';
 import { SideMenuComponent } from './common/side-menu.component';
 import { SignUpPanelComponent } from './auth/signup-panel.component';
 import { SignupInfoPanelComponent } from './auth/signup-info.component';
-
 import { TransactionsFilterBarComponent } from './filter-bars/transactions-bar.component';
-import { FormTextBoxComponent } from './common/controls/form-textbox.component';
-import { FormFinanceComboComponent } from './common/controls/form-finance-combo.component';
-import { FormPasswordBoxComponent } from './common/controls/form-password.component';
-import { FormCardBoxComponent } from './common/controls/form-cardbox.component';
 import { NotificationsFilterBarComponent } from './filter-bars/notifications-bar.component';
-import { FormSearchBoxComponent } from './common/controls/form-searchbox.component';
 import { DeleteDialogBox } from './dialogs/delete-box.dialog';
 import { WalletsFilterBarComponent } from './filter-bars/wallets-bar.component';
-import { FormEditBoxComponent } from './common/controls/form-editbox.component';
 import { ContactsFilterBarComponent } from './filter-bars/contacts-bar.component';
 import { RiskWarningComponent } from './common/risk-warning.component';
-import { SettingsPasswordBoxComponent } from './common/controls/settings-password.component';
 import { CommonDialogBox } from './dialogs/common-box.dialog';
 import { TwoFaDialogBox } from './dialogs/two-fa-box.dialog';
 import { TwoFaDialogWizard } from './dialogs/two-fa-wizard.dialog';
@@ -65,11 +55,25 @@ import { ContactFormComponent } from './contact-form.component';
 import { YesNoDialogBox } from './dialogs/yesno-box.dialog';
 import { ApiSecretDialogBox } from './dialogs/api-secret-box.dialog';
 import { SafeUrlPipe } from '../utils/safe-url.pipe';
-import { SumsubPanelComponent } from './kyc/sumsub-panel.component';
 import { RecaptchaComponent } from './recaptcha/recaptcha.component';
-import { ShuftiPanelComponent } from './kyc/shufti-panel.component';
 import { NgxTurnstileModule } from 'ngx-turnstile';
 import { RecaptchaModule } from 'ng-recaptcha';
+import { 
+	ShuftiPanelComponent, 
+	SumsubPanelComponent, 
+	AutentixPanelComponent,
+	KycCompanyLevelVerificationComponent, 
+	KycPanelComponent 
+} from './kyc';
+import { 
+	FormTextBoxComponent, 
+	SettingsPasswordBoxComponent,
+	FormFinanceComboComponent,
+	FormPasswordBoxComponent,
+	FormCardBoxComponent,
+	FormSearchBoxComponent,
+	FormEditBoxComponent
+} from './common/controls';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -97,40 +101,105 @@ const materialModules = [
 	MatPaginatorModule,
 	MatSortModule,
 	NgxTurnstileModule,
-	RecaptchaModule
+	RecaptchaModule,
 ];
 
 @NgModule({
 	imports: [...materialModules],
-	exports: [...materialModules]
+	exports: [...materialModules],
 })
-export class MaterialModule { }
+export class MaterialModule {}
+
+const kycComponents = [
+	ShuftiPanelComponent, 
+	SumsubPanelComponent, 
+	AutentixPanelComponent,
+	KycCompanyLevelVerificationComponent, 
+	KycPanelComponent 
+];
+
+const formControlComponents = [
+	FormTextBoxComponent, 
+	SettingsPasswordBoxComponent,
+	FormFinanceComboComponent,
+	FormPasswordBoxComponent,
+	FormCardBoxComponent,
+	FormSearchBoxComponent,
+	FormEditBoxComponent
+];
 
 @NgModule({
-	imports: [NgxMaskModule.forRoot(), CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, DirectiveModule, QRCodeModule],
+	imports: [
+		NgxMaskModule.forRoot(),
+		CommonModule,
+		FormsModule,
+		ReactiveFormsModule,
+		MaterialModule,
+		DirectiveModule,
+		QRCodeModule,
+	],
 	declarations: [
-		DropdownItemComponent, TabLabelComponent, ContactFormComponent,
-		KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent, KycCompanyLevelVerificationComponent, RecaptchaComponent,
-		FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
-		FormEditBoxComponent, SettingsPasswordBoxComponent,
-		DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,
-		YesNoDialogBox, ApiSecretDialogBox,
-		LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
-		NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
-		LineBreakPipe, NumberFillPipe, SafeUrlPipe,
-		TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
+		[...kycComponents],
+		[...formControlComponents],
+		DropdownItemComponent,
+		TabLabelComponent,
+		ContactFormComponent,
+		RecaptchaComponent,
+		DeleteDialogBox,
+		CommonDialogBox,
+		TwoFaDialogBox,
+		TwoFaDialogWizard,
+		SendNotificationDialogBox,
+		KycVerificationDialogBox,
+		YesNoDialogBox,
+		ApiSecretDialogBox,
+		LoginPanelComponent,
+		SignUpPanelComponent,
+		SignupInfoPanelComponent,
+		RestorePanelComponent,
+		NavPopupComponent,
+		SideMenuComponent,
+		SideExpanderComponent,
+		RiskWarningComponent,
+		LineBreakPipe,
+		NumberFillPipe,
+		SafeUrlPipe,
+		TransactionsFilterBarComponent,
+		WalletsFilterBarComponent,
+		ContactsFilterBarComponent,
+		NotificationsFilterBarComponent,
+	],
 	exports: [
-		DropdownItemComponent, TabLabelComponent, ContactFormComponent,
-		KycPanelComponent, SumsubPanelComponent, ShuftiPanelComponent, RecaptchaComponent,
-		FormTextBoxComponent, FormPasswordBoxComponent, FormFinanceComboComponent, FormCardBoxComponent, FormSearchBoxComponent,
-		FormEditBoxComponent, SettingsPasswordBoxComponent,
-		DeleteDialogBox, CommonDialogBox, TwoFaDialogBox, TwoFaDialogWizard, SendNotificationDialogBox, KycVerificationDialogBox,
-		YesNoDialogBox, ApiSecretDialogBox,
-		LoginPanelComponent, SignUpPanelComponent, SignupInfoPanelComponent, RestorePanelComponent,
-		NavPopupComponent, SideMenuComponent, SideExpanderComponent, RiskWarningComponent,
-		LineBreakPipe, NumberFillPipe, SafeUrlPipe,
-		TransactionsFilterBarComponent, WalletsFilterBarComponent, ContactsFilterBarComponent, NotificationsFilterBarComponent],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA]
+		[...kycComponents],
+		[...formControlComponents],
+		DropdownItemComponent,
+		TabLabelComponent,
+		ContactFormComponent,
+		RecaptchaComponent,
+		DeleteDialogBox,
+		CommonDialogBox,
+		TwoFaDialogBox,
+		TwoFaDialogWizard,
+		SendNotificationDialogBox,
+		KycVerificationDialogBox,
+		YesNoDialogBox,
+		ApiSecretDialogBox,
+		LoginPanelComponent,
+		SignUpPanelComponent,
+		SignupInfoPanelComponent,
+		RestorePanelComponent,
+		NavPopupComponent,
+		SideMenuComponent,
+		SideExpanderComponent,
+		RiskWarningComponent,
+		LineBreakPipe,
+		NumberFillPipe,
+		SafeUrlPipe,
+		TransactionsFilterBarComponent,
+		WalletsFilterBarComponent,
+		ContactsFilterBarComponent,
+		NotificationsFilterBarComponent,
+	],
+	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-
-export class ComponentsModule { }
+export class ComponentsModule {}

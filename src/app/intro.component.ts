@@ -23,18 +23,18 @@ export class IntroComponent implements OnInit {
 	ngOnInit(): void {
 		if (this.auth.authenticated) {
 			if (this.auth.user?.mode === UserMode.InternalWallet) {
-				this.router.navigateByUrl(this.auth.getUserMainPage());
+				void this.router.navigateByUrl(this.auth.getUserMainPage());
 			}
 		}
 	}
 
 	routeTo(link: string): void {
-		this.router.navigateByUrl(link);
+		void this.router.navigateByUrl(link);
 	}
 
 	onWidgetComplete(data: CheckoutSummary): void {
 		const url = `payment/quickcheckout-express/${data.currencyFrom}/${data.currencyTo}/${data.amountFrom}`;
-		this.router.navigateByUrl(url);
+		void this.router.navigateByUrl(url);
 	}
 
 	onWidgetError(error: string): void {

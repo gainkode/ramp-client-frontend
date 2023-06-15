@@ -37,7 +37,9 @@ export class KycVerificationDialogBox implements OnDestroy {
 					this.complete = true;
 					this.dialogRef.close();
 					void this.router.navigateByUrl(this.auth.getUserMainPage()).then(() => {
-						window.location.reload();
+						setTimeout(() => {
+							window.location.reload();
+						  }, 0);
 					});
 				}, (error) => {
 					this.complete = true;

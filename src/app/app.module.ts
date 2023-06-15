@@ -28,7 +28,7 @@ import { WidgetPagerService } from './services/widget-pager.service';
 import { WidgetService } from './services/widget.service';
 import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/env.service';
 
-function socialConfigFactory() {
+function socialConfigFactory(): SocialAuthServiceConfig {
 	EnvServiceFactory.call(undefined);
 	return {
 		autoLogin: false,

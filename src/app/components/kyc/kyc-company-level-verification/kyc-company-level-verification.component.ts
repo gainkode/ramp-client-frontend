@@ -1,19 +1,14 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder } from '@angular/forms';
+import { LoginResult } from 'model/generated-models';
 import { Subscription } from 'rxjs';
-import { LoginResult } from '../../model/generated-models';
-import { AuthService } from '../../services/auth.service';
-import { ErrorService } from '../../services/error.service';
+import { AuthService } from 'services/auth.service';
+import { ErrorService } from 'services/error.service';
 
 @Component({
 	selector: 'kyc-company-level-verification',
 	templateUrl: 'kyc-company-level-verification.component.html',
-	styleUrls: [
-		'../../../assets/payment.scss',
-		'../../../assets/button.scss',
-		'../../../assets/text-control.scss',
-		'../../../assets/auth.scss'
-	]
+	styleUrls: ['kyc-company-level-verification.component.scss']
 })
 export class KycCompanyLevelVerificationComponent implements OnInit, OnDestroy{
     @Input() buttonTitle = 'SEND';
@@ -55,11 +50,7 @@ export class KycCompanyLevelVerificationComponent implements OnInit, OnDestroy{
 
     private setFields(): void {
     	const user = this.auth.user;
-    	if (user) {
-    		this.companyNameControl?.setValue(user.companyName);
-    	} else {
-    		this.companyNameControl?.setValue('');
-    	}
+    	this.companyNameControl?.setValue(user ? user.companyName : '' );
     	this.companyNameControl?.updateValueAndValidity();
     }
 
