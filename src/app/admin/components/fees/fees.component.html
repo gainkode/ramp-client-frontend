@@ -7,8 +7,8 @@
       <div class="card-body">
         <div class="table-responsive">
           <div class="table-button-container">
-            <button *ngIf="permission>1" (click)="showDetails(undefined, details_content)" type="button"
-              class="btn btn-primary me-2">
+            <button *ngIf="permission > 1" type="button" class="btn btn-primary me-2"
+              (click)="showDetails(undefined, details_content)">
               Add scheme
             </button>
           </div>
@@ -19,80 +19,81 @@
             <mat-table [dataSource]="schemes">
               <!-- Details Column -->
               <ng-container matColumnDef="details">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-details">
+                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-details">
                 </th>
-                <td mat-cell *matCellDef="let element">
-                  <button mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
-                    [attr.aria-label]="'Scheme details'" [attr.aria-pressed]="!!selectedScheme"
-                    matTooltip="Scheme details" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">wysiwyg</i>
+                <td *matCellDef="let element" mat-cell>
+                  <button type="button" mat-icon-button class="row-button" 
+                    matTooltip="Scheme details"
+                    matTooltipClass="info-tooltip" [attr.aria-label]="'Scheme details'"
+                    [attr.aria-pressed]="!!selectedScheme" (click)="showDetails(element, details_content)">
+                    <i class="material-icons tx-20">wysiwyg</i>
                   </button>
                 </td>
               </ng-container>
 
               <!-- Default Column -->
               <ng-container matColumnDef="default">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-details">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-details">
                 </th>
-                <td mat-cell *matCellDef="let element">
+                <td *matCellDef="let element" mat-cell>
                   <div *ngIf="element.isDefault" class="row-icon">
-                    <i class="material-icons" style="font-size: 20px;">offline_bolt</i>
+                    <i class="material-icons tx-20">offline_bolt</i>
                   </div>
                 </td>
               </ng-container>
 
               <!-- Name Column -->
               <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-name">
+                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-name">
                   Name
                 </th>
-                <td mat-cell *matCellDef="let element">
+                <td *matCellDef="let element" mat-cell>
                   {{element.name}}
                 </td>
               </ng-container>
 
               <!-- Target Column -->
               <ng-container matColumnDef="target">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-target">
+                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-target">
                   Target
                 </th>
-                <td mat-cell *matCellDef="let element">
+                <td *matCellDef="let element" mat-cell>
                   {{element.targetName}}
                 </td>
               </ng-container>
 
               <!-- Transaction type Column -->
               <ng-container matColumnDef="trxType">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-trx-type">
+                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-trx-type">
                   Transaction type
                 </th>
-                <td mat-cell *matCellDef="let element">
+                <td *matCellDef="let element" mat-cell>
                   {{element.transactionTypeList}}
                 </td>
               </ng-container>
 
               <!-- Payment Method Column -->
               <ng-container matColumnDef="instrument">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-instrument">
+                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-instrument">
                   Payment Method
                 </th>
-                <td mat-cell *matCellDef="let element">
+                <td *matCellDef="let element" mat-cell>
                   {{element.instrumentList}}
                 </td>
               </ng-container>
 
               <!-- Provider Column -->
               <ng-container matColumnDef="provider">
-                <th mat-header-cell *matHeaderCellDef class="mat-column-fee-table mat-column-fee-table-provider">
+                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-provider">
                   Provider
                 </th>
-                <td mat-cell *matCellDef="let element">
+                <td *matCellDef="let element" mat-cell>
                   {{element.providerList}}
                 </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns;"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <tr *matHeaderRowDef="displayedColumns;" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
             </mat-table>
           </div>
 

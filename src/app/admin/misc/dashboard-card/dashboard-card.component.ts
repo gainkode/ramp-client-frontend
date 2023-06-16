@@ -22,10 +22,10 @@ export class AdminDashboardCardComponent implements OnInit, OnDestroy {
   	this.subscriptions.add(
   		this.dashboardService.data.subscribe(data => {
   			this.data = data[this.source];
-  			if(this.source == 'fees'){
+  			if(this.source === 'fees'){
   				if(this.data?.rows){
   					for(const row of this.data?.rows){
-  						row.volume = `€${parseFloat((<string>row.volume).split('€')[1]).toFixed(2)}`;
+  						row.volume = `€${parseFloat((<string>row.volume)?.split('€')[1]).toFixed(2)}`;
   					}
   				}
   			}

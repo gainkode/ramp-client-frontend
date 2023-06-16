@@ -2,7 +2,7 @@
 @import '@angular/material/theming';
 @import "./colors.scss";
 
-@include mat-core();
+@include mat.core();
 
 $bc-primary-palette: (
   50: $color_purple_50,
@@ -43,7 +43,7 @@ $bc-accent-palette: (
   200: $color_main_blue_200,
   300: $color_main_blue_300,
   400: $color_main_blue_400,
-  500: $color_main_blue_500,
+  500: #00a2f8,
   600: $color_main_blue_600,
   700: $color_main_blue_700,
   800: $color_main_blue_800,
@@ -103,10 +103,10 @@ $bc-warn-palette: (
   )
 );
 
-$primary: mat-palette($bc-primary-palette);
-$accent: mat-palette($bc-accent-palette);
-$warn: mat-palette($bc-warn-palette);
-$theme: mat-light-theme((
+$primary: mat.define-palette($bc-primary-palette);
+$accent: mat.define-palette($bc-accent-palette);
+$warn: mat.define-palette($bc-warn-palette);
+$theme: mat.define-light-theme((
   color: (
     primary: $primary,
     accent: $accent,
@@ -116,4 +116,4 @@ $theme: mat-light-theme((
   density: 0,
 ));
 
-@include angular-material-theme($theme);
+@include mat.all-component-themes($theme);
