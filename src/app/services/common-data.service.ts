@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 import { EnvService } from './env.service';
 
 const GET_SETTINGS_CURRENCY = gql`
-  query GetSettingsCurrency($recaptcha: String!) {
-    getSettingsCurrency(recaptcha: $recaptcha) {
+  query GetSettingsCurrency {
+    getSettingsCurrency {
       settingsCurrency {
         count
         list {
@@ -236,7 +236,6 @@ export class CommonDataService {
 		return this.apollo.watchQuery<any>({
 			query: GET_SETTINGS_CURRENCY,
 			variables: {
-        recaptcha: "6Ldi8YUgAAAAAP7aQ0pBN9LiHS1LehoXlwYCDyct"
 			},
 			fetchPolicy: 'network-only'
 		});
