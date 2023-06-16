@@ -1,11 +1,13 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { WidgetItem } from 'admin/model/widget.model';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 
@@ -62,6 +64,8 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   	private auth: AuthService,
   	private adminService: AdminDataService,
   	private route: ActivatedRoute,
+  	private _snackBar: MatSnackBar,
+  	private clipboard: Clipboard,
   	private router: Router
   ) {
   	this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
@@ -184,5 +188,10 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
   	});
+  }
+
+  copyParameter(value: string): void {
+  	this.clipboard.copy(value);
+  	this._snackBar.open('Destination copied!');
   }
 }

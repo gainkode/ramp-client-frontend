@@ -24,3 +24,14 @@
   align-items: center;
   margin-top: 12px;
 }
+
+.widget-chips-align {
+  .mat-mdc-chip {
+    display: block;
+    margin: 5px 0;
+    width: max-content;
+  }
+  .mat-mdc-chip-action-label {
+    font-size: 14px;
+  }
+}

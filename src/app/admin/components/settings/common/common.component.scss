@@ -27,8 +27,11 @@
     align-items: center;
 }
 
-.example-headers-align .mat-expansion-panel-header-title {
+.accordion-headers-align .mat-expansion-panel-header-title {
     color: var(--color_main_blue_700);
     font-size: 14px;
     font-weight: 400;
+    .material-icons {
+        font-size: 20px;
+    }
 }
