@@ -3,5 +3,6 @@ node_modules
 node_modules_12
 node_modules_14
 
+node_modules_*
 environment.global.ts
 .idea
