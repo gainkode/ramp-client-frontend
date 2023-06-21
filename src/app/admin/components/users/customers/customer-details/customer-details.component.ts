@@ -1,16 +1,39 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output,
+} from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbDateAdapter, NgbDateParserFormatter, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+	NgbDateAdapter,
+	NgbDateParserFormatter,
+	NgbDateStruct,
+	NgbModal,
+} from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 import { DateFormatAdapter } from 'admin/misc/date-range/date-format.adapter';
 import { DateParserFormatter } from 'admin/misc/date-range/date.formatter';
 import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
 import { Countries, getCountryByCode3 } from 'model/country-code.model';
-import { AccountStatus, KycProvider, RiskLevel, UserInput, UserType } from 'model/generated-models';
-import { CurrencyView, KycProviderList, RiskLevelViewList, UserStatusList } from 'model/payment.model';
+import {
+	AccountStatus,
+	KycProvider,
+	RiskLevel,
+	UserInput,
+	UserType,
+} from 'model/generated-models';
+import {
+	CurrencyView,
+	KycProviderList,
+	RiskLevelViewList,
+	UserStatusList,
+} from 'model/payment.model';
 import { GenderList, UserItem } from 'model/user.model';
 import { AuthService } from 'services/auth.service';
 import { getFormattedUtcDate } from 'utils/utils';
@@ -18,14 +41,17 @@ import { ErrorService } from 'services/error.service';
 
 @Component({
 	selector: 'app-admin-customer-details',
-	templateUrl: 'customer-details.component.html',
-	styleUrls: ['customer-details.component.scss', '../../../assets/scss/_validation.scss'],
+	templateUrl: './customer-details.component.html',
+	styleUrls: [
+		'customer-details.component.scss',
+		'../../../../assets/scss/_validation.scss',
+	],
 	providers: [
 		{ provide: NgbDateAdapter, useClass: DateFormatAdapter },
-		{ provide: NgbDateParserFormatter, useClass: DateParserFormatter }
-	]
+		{ provide: NgbDateParserFormatter, useClass: DateParserFormatter },
+	],
 })
-export class AdminCustomerDetailsComponent implements OnDestroy {
+export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
   @Input() set customer(val: UserItem | null | undefined) {
   	this.setFormData(val);
@@ -65,12 +91,12 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   minBirthdayDate: NgbDateStruct = {
   	year: 1900,
   	month: 1,
-  	day: 1
+  	day: 1,
   };
   maxBirthdayDate: NgbDateStruct = {
   	year: new Date().getFullYear() - 17,
   	month: 1,
-  	day: 1
+  	day: 1,
   };
   disableButtonTitle = 'Disable';
   removable = false;
@@ -93,9 +119,18 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   	buildingNumber: ['', { validators: [], updateOn: 'change' }],
   	flatNumber: ['', { validators: [], updateOn: 'change' }],
   	phone: ['', { validators: [], updateOn: 'change' }],
-  	accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
-  	risk: [RiskLevel.Medium, { validators: [Validators.required], updateOn: 'change' }],
-  	kycProvider: [KycProvider.Local, { validators: [Validators.required], updateOn: 'change' }],
+  	accountStatus: [
+  		AccountStatus.Closed,
+  		{ validators: [Validators.required], updateOn: 'change' },
+  	],
+  	risk: [
+  		RiskLevel.Medium,
+  		{ validators: [Validators.required], updateOn: 'change' },
+  	],
+  	kycProvider: [
+  		KycProvider.Local,
+  		{ validators: [Validators.required], updateOn: 'change' },
+  	],
   	tier: ['', { validators: [Validators.required], updateOn: 'change' }],
   	fiat: ['', { validators: [Validators.required], updateOn: 'change' }],
   	crypto: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -109,29 +144,36 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   	private auth: AuthService,
   	private errorHandler: ErrorService,
   	private modalService: NgbModal,
-  	private adminService: AdminDataService) { }
-  
+  	private adminService: AdminDataService
+  ) {}
+
   ngOnInit(): void {
   	this.loadCommonSettings();
   }
+
   ngOnDestroy(): void {
   	this.subscriptions.unsubscribe();
   }
 
   private setCurrencies(list: CurrencyView[]): void {
   	if (this.userData) {
-  		this.fiatCurrencies = list.filter(x => x.fiat === true);
+  		this.fiatCurrencies = list.filter((x) => x.fiat === true);
   		this.dataForm.get('fiat')?.setValue(this.userData?.fiatCurrency ?? '');
-  		this.cryptoCurrencies = list.filter(x => x.fiat === false);
+  		this.cryptoCurrencies = list.filter((x) => x.fiat === false);
   		this.dataForm.get('crypto')?.setValue(this.userData.cryptoCurrency ?? '');
   	}
   }
 
   private loadCommonSettings(): void {
   	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		this.kycProviders = this.kycProviders.filter(item => this.adminAdditionalSettings.kycProviders[item.id] == true);
+  	if (settingsCommon) {
+  		this.adminAdditionalSettings =
+        typeof settingsCommon.adminAdditionalSettings == 'string'
+        	? JSON.parse(settingsCommon.adminAdditionalSettings)
+        	: settingsCommon.adminAdditionalSettings;
+  		this.kycProviders = this.kycProviders.filter(
+  			(item) => this.adminAdditionalSettings.kycProviders[item.id] === true
+  		);
   	}
   }
   private setFormData(data: UserItem | null | undefined): void {
@@ -139,8 +181,8 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   	this.errorMessage = '';
   	this.dataForm.reset();
   	if (data) {
-  		this.flag = data.flag == true;
-  		this.disableButtonTitle = (data.deleted) ? 'Enable' : 'Disable';
+  		this.flag = data.flag === true;
+  		this.disableButtonTitle = data.deleted ? 'Enable' : 'Disable';
   		this.dataForm.get('id')?.setValue(data?.id);
   		this.dataForm.get('email')?.setValue(data?.email);
   		this.dataForm.get('comment')?.setValue(data.comment);
@@ -155,15 +197,21 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   			this.dataForm.get('lastName')?.setValue(data?.lastName);
   			this.dataForm.get('gender')?.setValue(data?.gender);
   			if (data?.birthday) {
-  				const b = `${data.birthday.getDate()}-${data.birthday.getMonth() + 1}-${data.birthday.getFullYear()}`;
+  				const b = `${data.birthday.getDate()}-${
+  					data.birthday.getMonth() + 1
+  				}-${data.birthday.getFullYear()}`;
   				this.dataForm.get('birthday')?.setValue(b);
   			} else {
   				this.dataForm.get('birthday')?.setValue(null);
   			}
   		}
   		this.dataForm.get('risk')?.setValue(data?.risk ?? RiskLevel.Medium);
-  		this.dataForm.get('accountStatus')?.setValue(data?.accountStatus ?? AccountStatus.Closed);
-  		this.dataForm.get('kycProvider')?.setValue(data?.kycProvider ?? KycProvider.Local);
+  		this.dataForm
+  			.get('accountStatus')
+  			?.setValue(data?.accountStatus ?? AccountStatus.Closed);
+  		this.dataForm
+  			.get('kycProvider')
+  			?.setValue(data?.kycProvider ?? KycProvider.Local);
   		this.dataForm.get('tier')?.setValue(data?.kycLevel);
   		this.dataForm.get('country')?.setValue(data?.country?.id);
   		this.dataForm.get('postCode')?.setValue(data?.postCode);
@@ -202,7 +250,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   		this.dataForm.get('crypto')?.setValue('');
   	}
   	const settingsId = data?.id ?? '';
-  	this.removable = (this.auth.user?.userId !== settingsId);
+  	this.removable = this.auth.user?.userId !== settingsId;
   	if (data) {
   		this.getUserKycInfo(settingsId);
   		this.getUserState(settingsId);
@@ -212,49 +260,64 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
 
   private getUserKycInfo(id: string): void {
   	this.subscriptions.add(
-  		this.adminService.getUserKycInfo(id).pipe(take(1)).subscribe(kyc => {
-  			this.kycDocs = kyc?.appliedDocuments?.map(doc => doc.code) ?? [];
-  		}));
+  		this.adminService
+  			.getUserKycInfo(id)
+  			.pipe(take(1))
+  			.subscribe((kyc) => {
+  				this.kycDocs = kyc?.appliedDocuments?.map((doc) => doc.code) ?? [];
+  			})
+  	);
   }
 
   private getUserKycTiers(id: string): void {
   	this.tiers = [];
   	this.subscriptions.add(
-  		this.adminService.getSettingsKycTiers(id).pipe(take(1)).subscribe(data => {
-  			this.tiers = data?.list?.map(tier => {
-  				return {
-  					id: tier.settingsKycTierId,
-  					title: tier.name
-  				} as CommonTargetValue;
-  			}) ?? [];
-  		}));
+  		this.adminService
+  			.getSettingsKycTiers(id)
+  			.pipe(take(1))
+  			.subscribe((data) => {
+  				this.tiers = data?.list?.map((tier) => {
+  					return {
+  						id: tier.settingsKycTierId,
+  						title: tier.name,
+  					} as CommonTargetValue;
+  				}) ?? [];
+  			})
+  	);
   }
 
   private getUserState(id: string): void {
   	this.subscriptions.add(
-  		this.adminService.getUserState(id).pipe(take(1)).subscribe(state => {
-  			this.kycProviderLink = state?.kycProviderLink ?? '';
-  			let balance = 0;
-  			state?.vaults?.forEach(x => {
-  				balance += x.totalBalanceEur ?? 0;
-  			});
-  			this.totalBalance = `${balance} EUR`;
-  		}));
+  		this.adminService
+  			.getUserState(id)
+  			.pipe(take(1))
+  			.subscribe((state) => {
+  				this.kycProviderLink = state?.kycProviderLink ?? '';
+  				let balance = 0;
+  				state?.vaults?.forEach((x) => {
+  					balance += x.totalBalanceEur ?? 0;
+  				});
+  				this.totalBalance = `${balance} EUR`;
+  			})
+  	);
   }
 
   private setCustomerData(): UserInput {
   	const code3 = this.dataForm.get('country')?.value;
   	const country = getCountryByCode3(code3);
-  	const code2 = (country) ? country.code2 : '';
+  	const code2 = country ? country.code2 : '';
   	const tierName = this.dataForm.get('tier')?.value;
-  	const tierId = this.tiers.find(x => x.title === tierName)?.id;
+  	const tierId = this.tiers.find((x) => x.title === tierName)?.id;
   	const genderId = this.dataForm.get('gender')?.value ?? undefined;
   	const data = {
   		email: this.dataForm.get('email')?.value,
   		firstName: this.dataForm.get('firstName')?.value,
   		lastName: this.dataForm.get('lastName')?.value,
-  		birthday: getFormattedUtcDate(this.dataForm.get('birthday')?.value ?? '', '-'),
-  		gender: (genderId !== '') ? genderId : undefined,
+  		birthday: getFormattedUtcDate(
+  			this.dataForm.get('birthday')?.value ?? '',
+  			'-'
+  		),
+  		gender: genderId !== '' ? genderId : undefined,
   		countryCode2: code2,
   		countryCode3: code3,
   		postCode: this.dataForm.get('postCode')?.value,
@@ -274,33 +337,34 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   		kycProvider: this.dataForm.get('kycProvider')?.value,
   		comment: this.dataForm.get('comment')?.value,
   		companyName: this.dataForm.get('company')?.value,
-  		flag: this.flag
+  		flag: this.flag,
   	} as UserInput;
   	return data;
   }
 
   flagText(): String {
-  	return this.flag == true ? 'Unflag' : 'Flag';
+  	return this.flag ? 'Unflag' : 'Flag';
   }
 
   flagValue(): void {
   	this.flagInProgress = true;
-  	this.flag = this.flag != true;
+  	this.flag = this.flag !== true;
   	this.saveInProgress = true;
-  	if(this.userData?.id){
-  		const requestData$ = this.adminService.updateUserFlag(this.flag, this.userData.id);
+  	if (this.userData?.id) {
+  		const requestData$ = this.adminService.updateUserFlag(
+  			this.flag,
+  			this.userData.id
+  		);
   		this.subscriptions.add(
-  			requestData$.subscribe(({ data }) => {
+  			requestData$.pipe(finalize(() => {
   				this.saveInProgress = false;
   				this.flagInProgress = false;
-  				this.save.emit();
-  			}, (error) => {
-  				this.flagInProgress = false;
-  				this.saveInProgress = false;
-  				this.errorMessage = error;
-  				if (this.auth.token === '') {
-  					void this.router.navigateByUrl('/');
-  				}
+  			})).subscribe({
+  				next: () => this.save.emit(),
+  				error: (errorMessage) => {
+  					this.errorMessage = errorMessage;
+  					this.nagivateToHome();
+  				} 
   			})
   		);
   	}
@@ -312,27 +376,20 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
 
   onKycProviderLink(): void {
   	this.kycProviderLinkInProgress = true;
-  	this.subscriptions.add(
-  		this.adminService.getVerificationLink(this.userData?.id ?? '').valueChanges.subscribe(({ data }) => {
-  			this.kycProviderLinkInProgress = false;
-  			if (data) {
-  				if (data.getVerificationLink) {
-  					void this.router.navigate([]).then((result) => {
-  						window.open(data.getVerificationLink, '_blank');
-  					});
-  				}
-  			}
-  		}, (error) => {
-  			this.kycProviderLinkInProgress = false;
-  			if (error) {
-  				this.errorMessage = error;
-  			} else {
-  				this.errorMessage = this.errorHandler.getCurrentErrorMessage();
-  			}
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
+	  this.subscriptions.add(
+  		this.adminService.getVerificationLink(this.userData?.id ?? '').valueChanges.
+  			pipe(finalize(() => this.kycProviderLinkInProgress = false))
+  			.subscribe({
+  				next: (data: any) => {
+  					if (data?.getVerificationLink) {
+  						void this.router.navigate([]).then(() => window.open(data?.getVerificationLink, '_blank'));
+  					}
+  				},
+  				error: (errorMessage) => {
+  					this.errorMessage = errorMessage ?? this.errorHandler.getCurrentErrorMessage();
+  					this.nagivateToHome();
+  				} 
+  			})
   	);
   }
 
@@ -344,11 +401,14 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   }
 
   onResetPassword(content: any): void {
-  	this.onSave(this.userData?.id ?? '', {
-  		email: this.userData?.email ?? '',
-  		changePasswordRequired: true
-  	} as UserInput,
-  	content);
+  	this.onSave(
+  		this.userData?.id ?? '',
+  		{
+  			email: this.userData?.email ?? '',
+  			changePasswordRequired: true,
+  		} as UserInput,
+  		content
+  	);
   }
 
   onDeleteCustomer(content: any): void {
@@ -357,7 +417,7 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		dialog.closed.subscribe(data => {
+  		dialog.closed.subscribe(() => {
   			if (this.userData?.deleted ?? false) {
   				this.onRestore(this.userData?.id ?? '');
   			} else {
@@ -370,67 +430,76 @@ export class AdminCustomerDetailsComponent implements OnDestroy {
   private onSave(id: string, customer: UserInput, content: any): void {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.saveCustomer(id, customer);
+  	
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.pipe(finalize(() => {
   			this.saveInProgress = false;
   			this.flagInProgress = false;
-  			if (customer.changePasswordRequired === true) {
-  				this.modalService.open(content, {
-  					backdrop: 'static',
-  					windowClass: 'modalCusSty',
-  				});
-  			} else {
-  				if (this.auth.user?.userId === id) {
-  					this.auth.setUserName(customer.firstName ?? '', customer.lastName ?? '');
-  					this.auth.setUserCurrencies(
-  						customer.defaultCryptoCurrency ?? 'BTC',
-  						customer.defaultFiatCurrency ?? 'EUR');
-  				}
-  			}
-  			this.save.emit();
-  		}, (error) => {
-  			this.flagInProgress = false;
-  			this.saveInProgress = false;
-  			this.errorMessage = error;
-  			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
-  			}
-  		})
+  		})).subscribe({
+  				next: () => {
+  					if (customer.changePasswordRequired) {
+  						this.modalService.open(content, {
+  							backdrop: 'static',
+  							windowClass: 'modalCusSty',
+  						});
+  					} else {
+  						if (this.auth.user?.userId === id) {
+  							this.auth.setUserName(
+  								customer.firstName ?? '',
+  								customer.lastName ?? ''
+  							);
+  							this.auth.setUserCurrencies(
+  								customer.defaultCryptoCurrency ?? 'BTC',
+  								customer.defaultFiatCurrency ?? 'EUR'
+  							);
+  						}
+  					}
+  					this.save.emit();
+  				},
+  				error: (errorMessage) => {
+  					this.errorMessage = errorMessage;
+  					this.nagivateToHome();
+  				} 
+  			})
   	);
   }
 
   private onDelete(id: string): void {
   	this.disableInProgress = true;
   	const requestData$ = this.adminService.deleteCustomer(id);
+	
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
-  			this.disableInProgress = false;
-  			this.save.emit();
-  		}, (error) => {
-  			this.disableInProgress = false;
-  			this.errorMessage = error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
+  		requestData$.pipe(finalize(() => this.disableInProgress = false))
+  			.subscribe({
+  				next: () => this.save.emit(),
+  				error: (errorMessage) => {
+  					this.errorMessage = errorMessage;
+  					this.nagivateToHome();
+  				} 
+  			})
   	);
   }
 
   private onRestore(id: string): void {
   	this.disableInProgress = true;
   	const requestData$ = this.adminService.restoreCustomer(id);
+
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
-  			this.disableInProgress = false;
-  			this.save.emit();
-  		}, (error) => {
-  			this.disableInProgress = false;
-  			this.errorMessage = error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
+  		requestData$.pipe(finalize(() => this.disableInProgress = false))
+  			.subscribe({
+  				next: () => this.save.emit(),
+  				error: (errorMessage) => {
+  					this.errorMessage = errorMessage;
+  					this.nagivateToHome();
+  				} 
+  			})
   	);
+  }
+
+  private nagivateToHome(): void {
+  	if (this.auth.token === '') {
+  		void this.router.navigateByUrl('/');
+  	}
   }
 
   onClose(): void {

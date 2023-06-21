@@ -1,0 +1,61 @@
+<div *ngIf="isEditDocument; else docsTable">
+  <div [formGroup]="form" class="inputs-wrap" [@fade]="isEditDocument">
+    <mat-form-field class="size-full" appearance="outline">
+      <mat-label>Document Type</mat-label>
+      <mat-select appendTo="body" formControlName="type">
+        <mat-option *ngFor="let type of documentTypes" [value]="type">
+          {{ type }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  
+    <mat-form-field style="font-size: 12px" class="size-full" appearance="outline">
+      <mat-label>Name</mat-label>
+      <input matInput type="text" formControlName="name" />
+    </mat-form-field>
+  
+    <mat-form-field class="size-full" appearance="outline">
+      <mat-label>Description</mat-label>
+      <input matInput type="text" formControlName="description" />
+    </mat-form-field>
+  
+    <br />
+    <app-file-upload></app-file-upload>
+  </div>
+
+  <button type="button" mat-button color="accent" (click)="onCancelEditDocument()">Cancel</button>
+</div>
+
+<ng-template #docsTable >
+  <button type="button" mat-button color="accent" (click)="onAddDocument()">Accent</button>
+  
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table" [@fade]="isEditDocument === false">
+    <!-- Position Column -->
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef>No.</th>
+      <td mat-cell *matCellDef="let element">{{element.position}}</td>
+    </ng-container>
+  
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{element.name}}</td>
+    </ng-container>
+  
+    <!-- Weight Column -->
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef>Weight</th>
+      <td mat-cell *matCellDef="let element">{{element.weight}}</td>
+    </ng-container>
+  
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef>Symbol</th>
+      <td mat-cell *matCellDef="let element">{{element.symbol}}</td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</ng-template>
+

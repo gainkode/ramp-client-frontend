@@ -328,11 +328,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
-  filterByUserId(): void {
-  	void this.router.navigateByUrl(`/admin/customers/${this.data?.user?.id}`).then(() => {
-  		window.location.reload();
-  	});
-  }
+//   filterByUserId(): void {
+//   	void this.router.navigateByUrl(`/admin/customers/${this.data?.user?.id}`).then(() => {
+//   		window.location.reload();
+//   	});
+//   }
 
   updateRate(): void {
   	if (this.currentRate) {

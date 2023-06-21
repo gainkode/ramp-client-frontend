@@ -184,9 +184,6 @@
         "@angular-eslint/template/accessibility-valid-aria": [
           "warn"
         ],
-        "@angular-eslint/template/attributes-order": [
-          "warn"
-        ],
         "@angular-eslint/template/banana-in-box": [
           "error"
         ],

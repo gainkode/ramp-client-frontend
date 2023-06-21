@@ -1,0 +1,14 @@
+@use '@angular/material' as mat;
+
+.inputs-wrap {
+    margin-top: 10px;
+}
+  
+mat-form-field {
+    margin: 0 16px;
+    width: calc(33.33% - 32px);
+
+    &.size-full {
+        width: calc(100% - 32px);
+    }
+}

@@ -20,16 +20,16 @@
           </div> -->
           <div style="overflow: hidden;">
             <div class="table-button-container">
-              <button (click)="refresh()" class="btn btn-primary me-2">
+              <button type="button" (click)="refresh()" class="btn btn-primary me-2">
                 Refresh
               </button>
-              <button *ngIf="this.adminAdditionalSettings?.tabs?.transactions?.createTransaction === true" (click)="createUserTransactionShow(create_content)" class="btn btn-outline-secondary me-2">
+              <button type="button" *ngIf="this.adminAdditionalSettings?.tabs?.transactions?.createTransaction === true" (click)="createUserTransactionShow(create_content)" class="btn btn-outline-secondary me-2">
                 Create transaction
               </button>
-              <button (click)="export(export_content)" class="btn btn-outline-secondary me-2">
+              <button type="button" (click)="export(export_content)" class="btn btn-outline-secondary me-2">
                 Export
               </button>
-              <button (click)="unbenchmark(settle_content)" class="btn btn-danger me-2"
+              <button type="button" (click)="unbenchmark(settle_content)" class="btn btn-danger me-2"
                 [disabled]="!selectedForUnbenchmark">
                 Settle
               </button>
@@ -73,13 +73,13 @@
                   <button *ngIf="element.vaultIds.length>0" mat-icon-button class="row-button"
                     (click)="showWallets(element.id)" [attr.aria-label]="'Transaction wallet'"
                     [matTooltip]="'Transaction wallet'" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">
+                    <i class="material-icons tx-20">
                       account_balance_wallet
                     </i>
                   </button>
                   <button *ngIf="element.paymentOrderPreauth == true" mat-icon-button class="row-button" [attr.aria-label]="'PreAuth'" 
                   [matTooltip]="'PreAuth'" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">
+                    <i class="material-icons tx-20">
                       update
                     </i>
                   </button>

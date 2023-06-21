@@ -7,18 +7,17 @@
       <div class="card-body">
         <div class="table-responsive">
           <div class="table-button-container">
-            <button (click)="sendMessage(message_content)" class="btn btn-outline-secondary me-2"
-              [disabled]="!selected">
+            <button type="button" class="btn btn-outline-secondary me-2" [disabled]="!selected"
+              (click)="sendMessage(message_content)">
               Send message
             </button>
-            <button *ngIf="this.adminAdditionalSettings?.tabs?.customers?.createTransaction === true" (click)="createUserTransactionShow(create_content)" class="btn btn-outline-secondary me-2">
+            <button *ngIf="this.adminAdditionalSettings?.tabs?.customers?.createTransaction === true" type="button" class="btn btn-outline-secondary me-2" (click)="createUserTransactionShow(create_content)">
               Create transaction
             </button>
             
-            <button (click)="export(export_content)" class="btn btn-outline-secondary">
+            <button type="button" class="btn btn-outline-secondary" (click)="export(export_content)">
               Export
             </button>
-            
           </div>
 
           <app-admin-filter [fields]="filterFields" [filterData]="filter" (filter)="handleFilterApplied($event)">
@@ -27,9 +26,9 @@
           <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
 
           <div class="table-button-container m-2">
-            <button (click)="selectAll()" class="btn btn-secondary btn-sm mt-2">
-              <div style="display: flex; flex-direction: row;justify-content: center;align-items: center;">
-                <i class="material-icons" style="font-size: 20px;margin-right: 4px;">
+            <button type="button" class="btn btn-secondary btn-sm mt-2" (click)="selectAll()">
+              <div class="flex-center">
+                <i class="material-icons">
                   library_add_check
                 </i>
                 Select all on the page
@@ -38,123 +37,125 @@
           </div>
           
           <div class="data-table">
-            <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
+            <mat-table matSort matSortDirection="desc" matSortDisableClear [matSortActive]="sortedField"
               [dataSource]="customers">
               <!-- Details Column -->
               <ng-container matColumnDef="details" sticky>
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListSelectorColumnStyle">
-                  <input style="margin-right: 4px;" [checked]="element.selected" type="checkbox"
-                    (change)="onCustomerSelected(element)">
-                  <button mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
-                    [attr.aria-label]="'Customer details'" [attr.aria-pressed]="!!selectedCustomer"
-                    matTooltip="Customer details" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">
-                      wysiwyg
-                    </i>
-                  </button>
-                  <button mat-icon-button class="row-button" (click)="showTransactions(element.id)"
-                    [attr.aria-label]="'Customer transactions'" matTooltip="Customer's transactions"
-                    matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">
-                      compare_arrows
-                    </i>
-                  </button>
-                  <button mat-icon-button class="row-button" (click)="showWallets(element.id)"
-                    [attr.aria-label]="'Customer wallets'" matTooltip="Customer's wallets"
-                    matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">
-                      account_balance_wallet
-                    </i>
-                  </button>
-                  <button mat-icon-button class="row-button" (click)="showWhiteList(element.id)"
-                    [attr.aria-label]="'User roles'" matTooltip="White List" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">
-                      playlist_add_check
-                    </i>
-                  </button>
-                  <button *ngIf="element.emailConfirmed===false && permission>1" mat-icon-button class="row-button"
-                    (click)="confirmEmail(element, confirmed_content)" [attr.aria-label]="'Confirm email'"
-                    matTooltip="Confirm email" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">
-                      approval
-                    </i>
-                  </button>
-                  <button *ngIf="element.flag == true" mat-icon-button class="row-button" [attr.aria-label]="'Flaged Customer'" 
-                  [matTooltip]="'Flaged Customer'" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="color:#c90000; font-size: 20px;">
-                      flag
-                    </i>
-                  </button>
+                <th *matHeaderCellDef mat-header-cell></th>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListSelectorColumnStyle">
+                    <div class="details-wrapper">
+                      <input type="checkbox" [checked]="element.selected"
+                        (change)="onCustomerSelected(element)">
+                      <button type="button" mat-icon-button class="row-button" matTooltip="Customer details"
+                        matTooltipClass="info-tooltip" [attr.aria-label]="'Customer details'"
+                        [attr.aria-pressed]="!!selectedCustomer" (click)="showDetails(element, details_content)">
+                        <i class="material-icons tx-20">
+                          wysiwyg
+                        </i>
+                      </button>
+                      <button type="button" mat-icon-button class="row-button" matTooltip="Customer's transactions"
+                        matTooltipClass="info-tooltip" [attr.aria-label]="'Customer transactions'"
+                        (click)="showTransactions(element.id)">
+                        <i class="material-icons tx-20">
+                          compare_arrows
+                        </i>
+                      </button>
+                      <button type="button" mat-icon-button class="row-button" matTooltip="Customer's wallets"
+                        matTooltipClass="info-tooltip" [attr.aria-label]="'Customer wallets'"
+                        (click)="showWallets(element.id)">
+                        <i class="material-icons tx-20">
+                          account_balance_wallet
+                        </i>
+                      </button>
+                      <button type="button" mat-icon-button class="row-button" matTooltip="White List"
+                        matTooltipClass="info-tooltip" [attr.aria-label]="'User roles'" (click)="showWhiteList(element.id)">
+                        <i class="material-icons tx-20">
+                          playlist_add_check
+                        </i>
+                      </button>
+                      <button *ngIf="!element.emailConfirmed && permission > 1" type="button" mat-icon-button class="row-button"
+                        matTooltip="Confirm email" matTooltipClass="info-tooltip"
+                        [attr.aria-label]="'Confirm email'" (click)="confirmEmail(element, confirmed_content)">
+                        <i class="material-icons">
+                          approval
+                        </i>
+                      </button>
+                      <button *ngIf="element.flag" type="button" mat-icon-button class="row-button" matTooltipClass="info-tooltip" 
+                      [attr.aria-label]="'Flaged Customer'" [matTooltip]="'Flaged Customer'">
+                        <i class="material-icons tx-20 color_brown">
+                          flag
+                        </i>
+                      </button>
+                    </div>
                 </td>
               </ng-container>
 
               <!-- ID Column -->
               <ng-container matColumnDef="referralCode">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   Customer ID
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.referralCode}}
                 </td>
               </ng-container>
 
               <!-- First Name Column -->
               <ng-container matColumnDef="firstName">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>
                   First name
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.fullFirstName}}
                 </td>
               </ng-container>
 
               <!-- Last name Column -->
               <ng-container matColumnDef="lastName">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>
                   Last name
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.lastName}}
                 </td>
               </ng-container>
 
               <!-- Email Column -->
               <ng-container matColumnDef="email">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>
                   Email
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.email}}
                 </td>
               </ng-container>
 
               <!-- Status Column -->
               <ng-container matColumnDef="accountStatus">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>
                   Status
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.accountStatus}}
                 </td>
               </ng-container>
 
               <!-- KYC Column -->
               <ng-container matColumnDef="kycStatus">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   DocsCheck
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.kycStatus}}
                 </td>
               </ng-container>
 
               <!-- widgetName Column-->
               <ng-container matColumnDef="widgetName">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   Widget Name
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.widgetName}}
                 </td>
               </ng-container>
@@ -162,109 +163,109 @@
 
               <!-- totalBought Column -->
               <ng-container matColumnDef="totalBought">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   Total Buy
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.totalBought}}
                 </td>
               </ng-container>
 
               <!-- totalSold Column -->
               <ng-container matColumnDef="totalSold">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   Total Sell
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.totalSold}}
                 </td>
               </ng-container>
 
               <!-- totalSent Column -->
               <ng-container matColumnDef="totalSent">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   Total Send
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.totalSent}}
                 </td>
               </ng-container>
 
               <!-- totalReceived Column -->
               <ng-container matColumnDef="totalReceived">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   Total Receive
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.totalReceived}}
                 </td>
               </ng-container>
 
               <!-- Registered Column -->
               <ng-container matColumnDef="created">
-                <th mat-header-cell mat-sort-header *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>
                   Registered
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.created}}
                 </td>
               </ng-container>
 
               <!-- Country Column -->
               <ng-container matColumnDef="country">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   Country
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.country?.title}}
                 </td>
               </ng-container>
 
               <!-- Phone Column -->
               <ng-container matColumnDef="phone">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   Phone
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.phone}}
                 </td>
               </ng-container>
 
               <!-- Risk Column -->
               <ng-container matColumnDef="risk">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   Risk Level
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.risk}}
                 </td>
               </ng-container>
 
               <!-- User ID Column -->
               <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef>ID</th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle"> {{element.id}}
+                <th *matHeaderCellDef mat-header-cell>ID</th>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle"> {{element.id}}
                 </td>
               </ng-container>
 
               <!-- widgetId Column -->
               <ng-container matColumnDef="widgetId">
-                <th mat-header-cell *matHeaderCellDef>
+                <th *matHeaderCellDef mat-header-cell>
                   Widget ID
                 </th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.customerListDataColumnStyle">
+                <td *matCellDef="let element" mat-cell [ngClass]="element.customerListDataColumnStyle">
                   {{element.widgetId}}
                 </td>
               </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+              <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
             </mat-table>
           </div>
 
           <div *ngIf="customerCount > pageSize" class="card card-body border shadow-none">
-            <ngb-pagination class="d-flex justify-content-center" [collectionSize]="customerCount" [pageSize]="pageSize"
-              [boundaryLinks]="true" [maxSize]="10" aria-label="Table pagination" (pageChange)="handlePage($event)">
+            <ngb-pagination class="d-flex justify-content-center" aria-label="Table pagination" [collectionSize]="customerCount"
+              [pageSize]="pageSize" [boundaryLinks]="true" [maxSize]="10" (pageChange)="handlePage($event)">
               <ng-template ngbPaginationFirst>
                 <div class="ng-pagination-nav-icons">
                   <i class="material-icons">first_page</i>
@@ -302,16 +303,21 @@
           </ng-template>
 
           <ng-template #details_content let-modal>
-            <div class="modal-header">
-              <h5 class="modal-title">Customer details</h5>
+            <div class="modal-body">
+              <mat-tab-group>
+                <mat-tab label="Customer details">
+                  <app-admin-customer-details [permission]="permission" [customer]="selectedCustomer" [currencies]="currencyList"
+                    (save)="onSaveCustomer()" (close)="modal.dismiss('Close')">
+                  </app-admin-customer-details>
+                </mat-tab>
+                <mat-tab label="Customer Docs">
+                  <app-admin-customer-docs (close)="modal.dismiss('Close')">
+                  </app-admin-customer-docs>
+                </mat-tab>
+              </mat-tab-group>
               <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
               </button>
-            </div>
-            <div class="modal-body">
-              <app-admin-customer-details [permission]="permission" [customer]="selectedCustomer" [currencies]="currencyList"
-                (save)="onSaveCustomer()" (close)="modal.dismiss('Close')">
-              </app-admin-customer-details>
             </div>
           </ng-template>
 
@@ -337,11 +343,11 @@
               </button>
             </div>
             <div class="modal-body">
-              <h4 style="text-align: center;">
+              <h4 class="text-center">
                 Exported list of customers has been sent to your email.
               </h4>
-              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-                <button class="btn btn-primary pd-x-50 mg-t-5" (click)="modal.dismiss('OK')">
+              <div class="flex-center">
+                <button type="button" class="btn btn-primary pd-x-50 mg-t-5" (click)="modal.dismiss('OK')">
                   OK
                 </button>
               </div>
@@ -356,10 +362,10 @@
               </button>
             </div>
             <div class="modal-body">
-              <h4 style="text-align: center;">
+              <h4 class="text-center">
                 Customer email has been confirmed successfully.
               </h4>
-              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+              <div class="flex-center">
                 <button class="btn btn-primary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.close('OK')">
                   OK
                 </button>
