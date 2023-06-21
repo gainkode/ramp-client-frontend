@@ -92,6 +92,9 @@ export class TransactionItemFull {
   declineReasonExtra = '';
   vaultIds: string[] = [];
   flag: boolean = false;
+  canBeCancelled: boolean = false;
+  hasToBeRefunded: boolean = false;
+  canBeReviewed: boolean = false;
 
   constructor(data: Transaction | TransactionShort | null) {
     if (data !== null) {
@@ -106,6 +109,16 @@ export class TransactionItemFull {
       this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
       this.flag = data.flag ?? false;
       const transactionData = data as Transaction;
+
+      if(data.canBeCancelled){
+        this.canBeCancelled = true;
+      }
+      if(data.hasToBeRefunded){
+        this.hasToBeRefunded = true;
+      }
+      if(data.canBeReviewed){
+        this.canBeReviewed = true;
+      }
       if (transactionData.user) {
         this.user = new UserItem(transactionData.user as User);
         this.accountName = this.user.fullName;
@@ -326,6 +339,7 @@ export class TransactionItemFull {
       case AdminTransactionStatus.Chargeback:
       case AdminTransactionStatus.PaymentDeclined:
       case AdminTransactionStatus.KycDeclined:
+      case AdminTransactionStatus.Refund:
         color = 'red';
         break;
       case AdminTransactionStatus.AddressDeclined:

@@ -35,6 +35,7 @@ export enum AdminTransactionStatus {
   Abandoned = 'Abandoned',
   Canceled = 'Canceled',
   Chargeback = 'Chargeback',
+  Refund = 'Refund',
   PaymentDeclined = 'PaymentDeclined',
   AddressDeclined = 'AddressDeclined',
   ExchangeDeclined = 'ExchangeDeclined',
@@ -179,6 +180,7 @@ export type BaseStat = {
   declined?: Maybe<TransactionStatsVolume>;
   failed?: Maybe<TransactionStatsVolume>;
   chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -208,6 +210,7 @@ export type BuyOrSellStats = BaseStat & {
   declined?: Maybe<TransactionStatsVolume>;
   failed?: Maybe<TransactionStatsVolume>;
   chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -404,6 +407,7 @@ export type DepositOrWithdrawalStats = BaseStat & {
   declined?: Maybe<TransactionStatsVolume>;
   failed?: Maybe<TransactionStatsVolume>;
   chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -434,6 +438,7 @@ export type ExchangeStats = BaseStat & {
   declined?: Maybe<TransactionStatsVolume>;
   failed?: Maybe<TransactionStatsVolume>;
   chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -603,6 +608,7 @@ export type InstrumentStats = BaseStat & {
   declined?: Maybe<TransactionStatsVolume>;
   failed?: Maybe<TransactionStatsVolume>;
   chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -856,6 +862,7 @@ export type MerchantOrCustomerStats = BaseStat & {
   declined?: Maybe<TransactionStatsVolume>;
   failed?: Maybe<TransactionStatsVolume>;
   chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -3511,6 +3518,9 @@ export type Transaction = {
   screeningRiskscore?: Maybe<Scalars['Float']>;
   screeningStatus?: Maybe<Scalars['String']>;
   screeningData?: Maybe<Scalars['String']>;
+  canBeCancelled?: Maybe<Scalars['Boolean']>;
+  hasToBeRefunded?: Maybe<Scalars['Boolean']>;
+  canBeReviewed?: Maybe<Scalars['Boolean']>;
 };
 
 export enum TransactionConfirmationMode {
@@ -3665,6 +3675,9 @@ export type TransactionShort = {
   screeningRiskscore?: Maybe<Scalars['Float']>;
   screeningStatus?: Maybe<Scalars['String']>;
   screeningData?: Maybe<Scalars['String']>;
+  canBeCancelled?: Maybe<Scalars['Boolean']>;
+  hasToBeRefunded?: Maybe<Scalars['Boolean']>;
+  canBeReviewed?: Maybe<Scalars['Boolean']>;
 };
 
 export type TransactionShortListResult = {
@@ -3717,13 +3730,15 @@ export enum TransactionStatus {
   Abandoned = 'Abandoned',
   Canceled = 'Canceled',
   Chargeback = 'Chargeback',
-  KycDeclined = 'KycDeclined'
+  KycDeclined = 'KycDeclined',
+  Refund = 'Refund'
 }
 
 export type TransactionStatusDescriptor = {
   __typename?: 'TransactionStatusDescriptor';
   notifyUser: Scalars['Boolean'];
   canBeCancelled: Scalars['Boolean'];
+  hasToBeRefunded: Scalars['Boolean'];
   description: Scalars['String'];
   userStatus: UserTransactionStatus;
   adminStatus: AdminTransactionStatus;
@@ -3864,6 +3879,7 @@ export type TransferStats = BaseStat & {
   declined?: Maybe<TransactionStatsVolume>;
   failed?: Maybe<TransactionStatsVolume>;
   chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
   abandoned?: Maybe<TransactionStatsVolume>;
   inProcess?: Maybe<TransactionStatsVolume>;
   byStatus?: Maybe<Array<TransactionStatsByStatus>>;
@@ -4535,7 +4551,8 @@ export enum UserTransactionStatus {
   Canceled = 'Canceled',
   UnderReview = 'UnderReview',
   Declined = 'Declined',
-  SendingError = 'SendingError'
+  SendingError = 'SendingError',
+  Refund = 'Refund'
 }
 
 export type UserTransactionSummary = {
