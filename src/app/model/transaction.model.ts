@@ -565,12 +565,8 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 	result.currencyToSpend = data.currencyToSpend ?? '';
 	result.currencyToReceive = data.currencyToReceive ?? '';
 	result.amountToSpend = data.amountToSpend ?? 0;
-	result.amountToReceive = data.amountToReceiveWithoutFee ?? 0;
-	if (data.amountToReceive !== undefined && data.amountToReceive !== null) {
-		result.amountToReceive = data.amountToReceiveWithoutFee ?? 0;
-	} else {
-		result.amountToReceive = data.initialAmountToReceiveWithoutFee ?? 0;
-	}
+	result.amountToReceive = data.amountToReceiveWithoutFee ?? data.initialAmountToReceiveWithoutFee ?? 0;
+
 	if (data.type === TransactionType.Buy) {
 		result.currencyFiat = result.currencyToSpend;
 		result.currencyCrypto = result.currencyToReceive;
@@ -583,7 +579,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 		if (data.destination) {
 			recipientName = data.destination;
 		}
-		if (destVaultData && destVaultData.name) {
+		if (destVaultData?.name) {
 			recipientName = destVaultData.name;
 		}
 		result.recipient = {
@@ -654,7 +650,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			sourceVaultData = JSON.parse(sourceVaultData);
 		}
 		let senderName = '';
-		if (sourceVaultData && sourceVaultData.name) {
+		if (sourceVaultData?.name) {
 			senderName = sourceVaultData.name;
 		}
 		if (senderName === '') {
@@ -676,7 +672,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 		const cryptoImg = (c !== '') ? `../../../assets/svg-crypto/${c}.svg` : '';
 		const destVaultData = JSON.parse(data.destVault ?? '{}');
 		let recipientName = data.destination ?? '';
-		if (destVaultData && destVaultData.name) {
+		if (destVaultData?.name) {
 			recipientName = destVaultData.name;
 		}
 		result.recipient = {
@@ -732,7 +728,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 		}
 		const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
 		let senderName = '';
-		if (sourceVaultData && sourceVaultData.name) {
+		if (sourceVaultData?.name) {
 			senderName = sourceVaultData.name;
 		}
 		if (senderName === '') {
@@ -750,10 +746,10 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 	} else if (data.type === TransactionType.Deposit) {
 		result.currencyFiat = result.currencyToReceive;
 		result.currencyCrypto = '';
-		result.amountToReceive = result.amountToSpend;
+		
 		const destVaultData = JSON.parse(data.destVault ?? '{}');
 		let recipientName = data.destination ?? `${result.currencyFiat} Wallet`;
-		if (destVaultData && destVaultData.name) {
+		if (destVaultData?.name) {
 			recipientName = destVaultData.name;
 		}
 		result.recipient = {
@@ -791,7 +787,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 	} else if (data.type === TransactionType.Withdrawal) {
 		result.currencyFiat = result.currencyToReceive;
 		result.currencyCrypto = '';
-		result.amountToReceive = result.amountToSpend;
+
 		const recipientName = 'Wire Transfer';
 		result.recipient = {
 			id: '',
