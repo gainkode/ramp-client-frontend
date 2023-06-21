@@ -456,6 +456,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   onDeclined(content: any): void {
     this.fastStatusChange(TransactionStatus.PaymentDeclined, content);
   }
+
+  onRefunded(content: any): void {
+    this.fastStatusChange(TransactionStatus.Refund, content);
+  }
   
   fastStatusChange(newStatus: TransactionStatus, content: any): void {
     this.transactionToUpdate = {

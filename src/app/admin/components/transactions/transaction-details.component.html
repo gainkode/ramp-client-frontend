@@ -308,7 +308,7 @@
       </div>
       <div style="display: flex; justify-content: space-between;">
         <div style="display: flex; justify-content: flex-start;">
-          <button *ngIf="permission>1 && removable" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
+          <button *ngIf="permission>1 && removable && data?.canBeCancelled == true" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
             (click)="onDelete(delete_confirm_content)">
             <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
               aria-hidden="true"></span>
@@ -321,12 +321,20 @@
               aria-hidden="true"></span>
             Paid
           </button>
-          <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && notDeclinedStatus"
+          <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && notDeclinedStatus && data?.canBeReviewed == true"
             class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
             (click)="onDeclined(update_confirm_content)">
             <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
               aria-hidden="true"></span>
             Decline Payment
+          </button>
+
+          <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && notDeclinedStatus && data?.hasToBeRefunded == true"
+            class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
+            (click)="onRefunded(update_confirm_content)">
+            <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            Refund
           </button>
         </div>
         <div style="display: flex; justify-content: flex-end;">

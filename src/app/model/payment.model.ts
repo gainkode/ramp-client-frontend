@@ -377,7 +377,8 @@ export const TransactionStatusList: Array<TransactionStatusView> = [
     { id: TransactionStatus.Abandoned, name: 'Abandoned' },
     { id: TransactionStatus.Canceled, name: 'Cancelled' },
     { id: TransactionStatus.Chargeback, name: 'Chargeback' },
-    { id: TransactionStatus.KycDeclined, name: 'KycDeclined' }
+    { id: TransactionStatus.KycDeclined, name: 'KycDeclined' },
+    { id: TransactionStatus.Refund, name: 'Refund' }
 ];
 
 export const UserTransactionStatusList: Array<UserTransactionStatusView> = [
