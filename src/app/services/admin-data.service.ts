@@ -773,6 +773,9 @@ const GET_TRANSACTIONS = gql`
         screeningRiskscore
         screeningStatus
         screeningData
+        canBeCancelled
+        hasToBeRefunded
+        canBeReviewed
       }
     }
   }

@@ -26,21 +26,22 @@ export enum AccountStatus {
 }
 
 export enum AdminTransactionStatus {
-	New = 'New',
-	Pending = 'Pending',
-	Paid = 'Paid',
-	Exchanging = 'Exchanging',
-	Confirming = 'Confirming',
-	Completed = 'Completed',
-	Abandoned = 'Abandoned',
-	Canceled = 'Canceled',
-	Chargeback = 'Chargeback',
-	PaymentDeclined = 'PaymentDeclined',
-	AddressDeclined = 'AddressDeclined',
-	ExchangeDeclined = 'ExchangeDeclined',
-	TransferDeclined = 'TransferDeclined',
-	BenchmarkTransferDeclined = 'BenchmarkTransferDeclined',
-	KycDeclined = 'KycDeclined'
+  New = 'New',
+  Pending = 'Pending',
+  Paid = 'Paid',
+  Exchanging = 'Exchanging',
+  Confirming = 'Confirming',
+  Completed = 'Completed',
+  Abandoned = 'Abandoned',
+  Canceled = 'Canceled',
+  Chargeback = 'Chargeback',
+  Refund = 'Refund',
+  PaymentDeclined = 'PaymentDeclined',
+  AddressDeclined = 'AddressDeclined',
+  ExchangeDeclined = 'ExchangeDeclined',
+  TransferDeclined = 'TransferDeclined',
+  BenchmarkTransferDeclined = 'BenchmarkTransferDeclined',
+  KycDeclined = 'KycDeclined'
 }
 
 export type ApiKey = {
@@ -174,14 +175,15 @@ export type BalanceStats = {
 };
 
 export type BaseStat = {
-	ratio?: Maybe<Scalars['Float']>;
-	approved?: Maybe<TransactionStatsVolume>;
-	declined?: Maybe<TransactionStatsVolume>;
-	failed?: Maybe<TransactionStatsVolume>;
-	chargedBack?: Maybe<TransactionStatsVolume>;
-	abandoned?: Maybe<TransactionStatsVolume>;
-	inProcess?: Maybe<TransactionStatsVolume>;
-	byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
 };
 
 export enum BitcoinAddressFormats {
@@ -202,17 +204,18 @@ export type BlackCountryListResult = {
 };
 
 export type BuyOrSellStats = BaseStat & {
-	__typename?: 'BuyOrSellStats';
-	ratio?: Maybe<Scalars['Float']>;
-	approved?: Maybe<TransactionStatsVolume>;
-	declined?: Maybe<TransactionStatsVolume>;
-	failed?: Maybe<TransactionStatsVolume>;
-	chargedBack?: Maybe<TransactionStatsVolume>;
-	abandoned?: Maybe<TransactionStatsVolume>;
-	inProcess?: Maybe<TransactionStatsVolume>;
-	byStatus?: Maybe<Array<TransactionStatsByStatus>>;
-	fee?: Maybe<TransactionStatsVolume>;
-	byInstruments?: Maybe<Array<InstrumentStats>>;
+  __typename?: 'BuyOrSellStats';
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  fee?: Maybe<TransactionStatsVolume>;
+  byInstruments?: Maybe<Array<InstrumentStats>>;
 };
 
 
@@ -398,17 +401,18 @@ export type DepositAddress = {
 };
 
 export type DepositOrWithdrawalStats = BaseStat & {
-	__typename?: 'DepositOrWithdrawalStats';
-	ratio?: Maybe<Scalars['Float']>;
-	approved?: Maybe<TransactionStatsVolume>;
-	declined?: Maybe<TransactionStatsVolume>;
-	failed?: Maybe<TransactionStatsVolume>;
-	chargedBack?: Maybe<TransactionStatsVolume>;
-	abandoned?: Maybe<TransactionStatsVolume>;
-	inProcess?: Maybe<TransactionStatsVolume>;
-	byStatus?: Maybe<Array<TransactionStatsByStatus>>;
-	fee?: Maybe<TransactionStatsVolume>;
-	byInstruments?: Maybe<Array<InstrumentStats>>;
+  __typename?: 'DepositOrWithdrawalStats';
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  fee?: Maybe<TransactionStatsVolume>;
+  byInstruments?: Maybe<Array<InstrumentStats>>;
 };
 
 export enum EntityType {
@@ -428,18 +432,19 @@ export type Error = {
 };
 
 export type ExchangeStats = BaseStat & {
-	__typename?: 'ExchangeStats';
-	ratio?: Maybe<Scalars['Float']>;
-	approved?: Maybe<TransactionStatsVolume>;
-	declined?: Maybe<TransactionStatsVolume>;
-	failed?: Maybe<TransactionStatsVolume>;
-	chargedBack?: Maybe<TransactionStatsVolume>;
-	abandoned?: Maybe<TransactionStatsVolume>;
-	inProcess?: Maybe<TransactionStatsVolume>;
-	byStatus?: Maybe<Array<TransactionStatsByStatus>>;
-	toMerchant?: Maybe<MerchantOrCustomerStats>;
-	toCustomer?: Maybe<MerchantOrCustomerStats>;
-	fee?: Maybe<TransactionStatsVolume>;
+  __typename?: 'ExchangeStats';
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  toMerchant?: Maybe<MerchantOrCustomerStats>;
+  toCustomer?: Maybe<MerchantOrCustomerStats>;
+  fee?: Maybe<TransactionStatsVolume>;
 };
 
 export type ExternalWallet = {
@@ -596,17 +601,18 @@ export type GetRates = {
 };
 
 export type InstrumentStats = BaseStat & {
-	__typename?: 'InstrumentStats';
-	instrument?: Maybe<PaymentInstrument>;
-	ratio?: Maybe<Scalars['Float']>;
-	approved?: Maybe<TransactionStatsVolume>;
-	declined?: Maybe<TransactionStatsVolume>;
-	failed?: Maybe<TransactionStatsVolume>;
-	chargedBack?: Maybe<TransactionStatsVolume>;
-	abandoned?: Maybe<TransactionStatsVolume>;
-	inProcess?: Maybe<TransactionStatsVolume>;
-	byStatus?: Maybe<Array<TransactionStatsByStatus>>;
-	fee?: Maybe<TransactionStatsVolume>;
+  __typename?: 'InstrumentStats';
+  instrument?: Maybe<PaymentInstrument>;
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  fee?: Maybe<TransactionStatsVolume>;
 };
 
 export type InternalWallet = {
@@ -849,17 +855,18 @@ export type LoginResult = {
 };
 
 export type MerchantOrCustomerStats = BaseStat & {
-	__typename?: 'MerchantOrCustomerStats';
-	instrument?: Maybe<PaymentInstrument>;
-	ratio?: Maybe<Scalars['Float']>;
-	approved?: Maybe<TransactionStatsVolume>;
-	declined?: Maybe<TransactionStatsVolume>;
-	failed?: Maybe<TransactionStatsVolume>;
-	chargedBack?: Maybe<TransactionStatsVolume>;
-	abandoned?: Maybe<TransactionStatsVolume>;
-	inProcess?: Maybe<TransactionStatsVolume>;
-	byStatus?: Maybe<Array<TransactionStatsByStatus>>;
-	fee?: Maybe<TransactionStatsVolume>;
+  __typename?: 'MerchantOrCustomerStats';
+  instrument?: Maybe<PaymentInstrument>;
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  fee?: Maybe<TransactionStatsVolume>;
 };
 
 export type MonoovaObject = {
@@ -3413,104 +3420,107 @@ export enum TokenAction {
 }
 
 export type Transaction = {
-	__typename?: 'Transaction';
-	transactionId: Scalars['ID'];
-	code?: Maybe<Scalars['String']>;
-	userId: Scalars['String'];
-	userReferralCode: Scalars['Int'];
-	userIp?: Maybe<Scalars['String']>;
-	userTierId?: Maybe<Scalars['String']>;
-	userTier?: Maybe<SettingsKycTierShortEx>;
-	requiredUserTierId?: Maybe<Scalars['String']>;
-	requiredUserTier?: Maybe<SettingsKycTierShortEx>;
-	sourceVaultId?: Maybe<Scalars['String']>;
-	sourceVault?: Maybe<Scalars['String']>;
-	user?: Maybe<User>;
-	created?: Maybe<Scalars['DateTime']>;
-	createdBy?: Maybe<Scalars['String']>;
-	updated?: Maybe<Scalars['DateTime']>;
-	executed?: Maybe<Scalars['DateTime']>;
-	type: TransactionType;
-	status: TransactionStatus;
-	subStatus?: Maybe<Scalars['String']>;
-	kycStatus?: Maybe<TransactionKycStatus>;
-	accountStatus?: Maybe<AccountStatus>;
-	feeFiat?: Maybe<Scalars['Float']>;
-	feePercent?: Maybe<Scalars['Float']>;
-	feeMinFiat?: Maybe<Scalars['Float']>;
-	feeDetails?: Maybe<Scalars['String']>;
-	approxNetworkFee?: Maybe<Scalars['Float']>;
-	approxNetworkFeeFiat?: Maybe<Scalars['Float']>;
-	userDefaultFiatCurrency: Scalars['String'];
-	userDefaultCryptoCurrency: Scalars['String'];
-	currencyToSpend?: Maybe<Scalars['String']>;
-	amountToSpend?: Maybe<Scalars['Float']>;
-	amountToSpendWithoutFee?: Maybe<Scalars['Float']>;
-	currencyToReceive: Scalars['String'];
-	initialAmountToReceive?: Maybe<Scalars['Float']>;
-	initialAmountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
-	amountToReceive?: Maybe<Scalars['Float']>;
-	amountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
-	amountInEur?: Maybe<Scalars['Float']>;
-	initialRate?: Maybe<Scalars['Float']>;
-	rate?: Maybe<Scalars['Float']>;
-	rateFiatToEur?: Maybe<Scalars['Float']>;
-	destVaultId?: Maybe<Scalars['String']>;
-	destVault?: Maybe<Scalars['String']>;
-	destination?: Maybe<Scalars['String']>;
-	countryCode2?: Maybe<Scalars['String']>;
-	countryCode3?: Maybe<Scalars['String']>;
-	accountType?: Maybe<Scalars['String']>;
-	source?: Maybe<TransactionSource>;
-	instrument?: Maybe<PaymentInstrument>;
-	instrumentDetails?: Maybe<Scalars['String']>;
-	custodyProvider?: Maybe<CustodyProvider>;
-	custodyFiatProvider?: Maybe<Scalars['String']>;
-	custodyDetails?: Maybe<Scalars['String']>;
-	paymentProvider?: Maybe<Scalars['String']>;
-	paymentOrderId?: Maybe<Scalars['String']>;
-	paymentOrder?: Maybe<PaymentOrder>;
-	liquidityProvider?: Maybe<LiquidityProvider>;
-	liquidityOrderId?: Maybe<Scalars['String']>;
-	liquidityOrder?: Maybe<LiquidityExchangeOrder>;
-	transferOrderId?: Maybe<Scalars['String']>;
-	transferOrder?: Maybe<TransferOrder>;
-	transferOrderBlockchainLink?: Maybe<Scalars['String']>;
-	benchmarkTransferOrderId?: Maybe<Scalars['String']>;
-	benchmarkTransferOrder?: Maybe<TransferOrder>;
-	benchmarkTransferOrderBlockchainLink?: Maybe<Scalars['String']>;
-	userBalanceTotalBefore?: Maybe<Scalars['Float']>;
-	userBalanceAvailableBefore?: Maybe<Scalars['Float']>;
-	userBalanceTotalAfter?: Maybe<Scalars['Float']>;
-	userBalanceAvailableAfter?: Maybe<Scalars['Float']>;
-	totalUserAmountBeforeTransactionInEur?: Maybe<Scalars['Float']>;
-	hasBeenBenchmarked?: Maybe<Scalars['Boolean']>;
-	widgetId?: Maybe<Scalars['String']>;
-	widgetCode?: Maybe<Scalars['String']>;
-	widgetUserParamsId?: Maybe<Scalars['String']>;
-	widgetUserParams?: Maybe<Scalars['String']>;
-	widget?: Maybe<Scalars['String']>;
-	destinationUserId?: Maybe<Scalars['String']>;
-	manuallyEditedAmounts?: Maybe<Scalars['Boolean']>;
-	manuallyEditedFee?: Maybe<Scalars['Boolean']>;
-	manuallyEditedStatus?: Maybe<Scalars['Boolean']>;
-	manuallyEditedKycStatus?: Maybe<Scalars['Boolean']>;
-	manuallyEditedAccountStatus?: Maybe<Scalars['Boolean']>;
-	risk: RiskLevel;
-	riskCodes?: Maybe<Array<Scalars['String']>>;
-	backups?: Maybe<Array<Scalars['String']>>;
-	comment?: Maybe<Scalars['String']>;
-	data?: Maybe<Scalars['String']>;
-	verifyWhenPaid?: Maybe<Scalars['Boolean']>;
-	requestParams?: Maybe<Scalars['String']>;
-	cryptoInvoiceName?: Maybe<Scalars['String']>;
-	sourceAddress?: Maybe<Scalars['String']>;
-	flag?: Maybe<Scalars['Boolean']>;
-	costDetails?: Maybe<Scalars['String']>;
-	screeningAnswer?: Maybe<Scalars['String']>;
-	screeningRiskscore?: Maybe<Scalars['Float']>;
-	screeningStatus?: Maybe<Scalars['String']>;
-	screeningData?: Maybe<Scalars['String']>;
+  __typename?: 'Transaction';
+  transactionId: Scalars['ID'];
+  code?: Maybe<Scalars['String']>;
+  userId: Scalars['String'];
+  userReferralCode: Scalars['Int'];
+  userIp?: Maybe<Scalars['String']>;
+  userTierId?: Maybe<Scalars['String']>;
+  userTier?: Maybe<SettingsKycTierShortEx>;
+  requiredUserTierId?: Maybe<Scalars['String']>;
+  requiredUserTier?: Maybe<SettingsKycTierShortEx>;
+  sourceVaultId?: Maybe<Scalars['String']>;
+  sourceVault?: Maybe<Scalars['String']>;
+  user?: Maybe<User>;
+  created?: Maybe<Scalars['DateTime']>;
+  createdBy?: Maybe<Scalars['String']>;
+  updated?: Maybe<Scalars['DateTime']>;
+  executed?: Maybe<Scalars['DateTime']>;
+  type: TransactionType;
+  status: TransactionStatus;
+  subStatus?: Maybe<Scalars['String']>;
+  kycStatus?: Maybe<TransactionKycStatus>;
+  accountStatus?: Maybe<AccountStatus>;
+  feeFiat?: Maybe<Scalars['Float']>;
+  feePercent?: Maybe<Scalars['Float']>;
+  feeMinFiat?: Maybe<Scalars['Float']>;
+  feeDetails?: Maybe<Scalars['String']>;
+  approxNetworkFee?: Maybe<Scalars['Float']>;
+  approxNetworkFeeFiat?: Maybe<Scalars['Float']>;
+  userDefaultFiatCurrency: Scalars['String'];
+  userDefaultCryptoCurrency: Scalars['String'];
+  currencyToSpend?: Maybe<Scalars['String']>;
+  amountToSpend?: Maybe<Scalars['Float']>;
+  amountToSpendWithoutFee?: Maybe<Scalars['Float']>;
+  currencyToReceive: Scalars['String'];
+  initialAmountToReceive?: Maybe<Scalars['Float']>;
+  initialAmountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
+  amountToReceive?: Maybe<Scalars['Float']>;
+  amountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
+  amountInEur?: Maybe<Scalars['Float']>;
+  initialRate?: Maybe<Scalars['Float']>;
+  rate?: Maybe<Scalars['Float']>;
+  rateFiatToEur?: Maybe<Scalars['Float']>;
+  destVaultId?: Maybe<Scalars['String']>;
+  destVault?: Maybe<Scalars['String']>;
+  destination?: Maybe<Scalars['String']>;
+  countryCode2?: Maybe<Scalars['String']>;
+  countryCode3?: Maybe<Scalars['String']>;
+  accountType?: Maybe<Scalars['String']>;
+  source?: Maybe<TransactionSource>;
+  instrument?: Maybe<PaymentInstrument>;
+  instrumentDetails?: Maybe<Scalars['String']>;
+  custodyProvider?: Maybe<CustodyProvider>;
+  custodyFiatProvider?: Maybe<Scalars['String']>;
+  custodyDetails?: Maybe<Scalars['String']>;
+  paymentProvider?: Maybe<Scalars['String']>;
+  paymentOrderId?: Maybe<Scalars['String']>;
+  paymentOrder?: Maybe<PaymentOrder>;
+  liquidityProvider?: Maybe<LiquidityProvider>;
+  liquidityOrderId?: Maybe<Scalars['String']>;
+  liquidityOrder?: Maybe<LiquidityExchangeOrder>;
+  transferOrderId?: Maybe<Scalars['String']>;
+  transferOrder?: Maybe<TransferOrder>;
+  transferOrderBlockchainLink?: Maybe<Scalars['String']>;
+  benchmarkTransferOrderId?: Maybe<Scalars['String']>;
+  benchmarkTransferOrder?: Maybe<TransferOrder>;
+  benchmarkTransferOrderBlockchainLink?: Maybe<Scalars['String']>;
+  userBalanceTotalBefore?: Maybe<Scalars['Float']>;
+  userBalanceAvailableBefore?: Maybe<Scalars['Float']>;
+  userBalanceTotalAfter?: Maybe<Scalars['Float']>;
+  userBalanceAvailableAfter?: Maybe<Scalars['Float']>;
+  totalUserAmountBeforeTransactionInEur?: Maybe<Scalars['Float']>;
+  hasBeenBenchmarked?: Maybe<Scalars['Boolean']>;
+  widgetId?: Maybe<Scalars['String']>;
+  widgetCode?: Maybe<Scalars['String']>;
+  widgetUserParamsId?: Maybe<Scalars['String']>;
+  widgetUserParams?: Maybe<Scalars['String']>;
+  widget?: Maybe<Scalars['String']>;
+  destinationUserId?: Maybe<Scalars['String']>;
+  manuallyEditedAmounts?: Maybe<Scalars['Boolean']>;
+  manuallyEditedFee?: Maybe<Scalars['Boolean']>;
+  manuallyEditedStatus?: Maybe<Scalars['Boolean']>;
+  manuallyEditedKycStatus?: Maybe<Scalars['Boolean']>;
+  manuallyEditedAccountStatus?: Maybe<Scalars['Boolean']>;
+  risk: RiskLevel;
+  riskCodes?: Maybe<Array<Scalars['String']>>;
+  backups?: Maybe<Array<Scalars['String']>>;
+  comment?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['String']>;
+  verifyWhenPaid?: Maybe<Scalars['Boolean']>;
+  requestParams?: Maybe<Scalars['String']>;
+  cryptoInvoiceName?: Maybe<Scalars['String']>;
+  sourceAddress?: Maybe<Scalars['String']>;
+  flag?: Maybe<Scalars['Boolean']>;
+  costDetails?: Maybe<Scalars['String']>;
+  screeningAnswer?: Maybe<Scalars['String']>;
+  screeningRiskscore?: Maybe<Scalars['Float']>;
+  screeningStatus?: Maybe<Scalars['String']>;
+  screeningData?: Maybe<Scalars['String']>;
+  canBeCancelled?: Maybe<Scalars['Boolean']>;
+  hasToBeRefunded?: Maybe<Scalars['Boolean']>;
+  canBeReviewed?: Maybe<Scalars['Boolean']>;
 };
 
 export enum TransactionConfirmationMode {
@@ -3592,79 +3602,82 @@ export enum TransactionServiceNotificationType {
 }
 
 export type TransactionShort = {
-	__typename?: 'TransactionShort';
-	transactionId: Scalars['ID'];
-	code?: Maybe<Scalars['String']>;
-	userId?: Maybe<Scalars['String']>;
-	userReferralCode: Scalars['Int'];
-	sourceVaultId?: Maybe<Scalars['String']>;
-	sourceVault?: Maybe<Scalars['String']>;
-	userIp?: Maybe<Scalars['String']>;
-	userTierId?: Maybe<Scalars['String']>;
-	userTier?: Maybe<SettingsKycTierShortEx>;
-	requiredUserTierId?: Maybe<Scalars['String']>;
-	requiredUserTier?: Maybe<SettingsKycTierShortEx>;
-	created?: Maybe<Scalars['DateTime']>;
-	createdBy?: Maybe<Scalars['String']>;
-	updated?: Maybe<Scalars['DateTime']>;
-	executed?: Maybe<Scalars['DateTime']>;
-	type: TransactionType;
-	status: TransactionStatus;
-	subStatus?: Maybe<Scalars['String']>;
-	kycStatus?: Maybe<TransactionKycStatus>;
-	accountStatus?: Maybe<AccountStatus>;
-	feeFiat?: Maybe<Scalars['Float']>;
-	feePercent?: Maybe<Scalars['Float']>;
-	feeMinFiat?: Maybe<Scalars['Float']>;
-	feeDetails?: Maybe<Scalars['String']>;
-	approxNetworkFee?: Maybe<Scalars['Float']>;
-	approxNetworkFeeFiat?: Maybe<Scalars['Float']>;
-	currencyToSpend?: Maybe<Scalars['String']>;
-	amountToSpend?: Maybe<Scalars['Float']>;
-	amountToSpendWithoutFee?: Maybe<Scalars['Float']>;
-	currencyToReceive?: Maybe<Scalars['String']>;
-	initialAmountToReceive?: Maybe<Scalars['Float']>;
-	initialAmountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
-	amountToReceive?: Maybe<Scalars['Float']>;
-	amountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
-	amountInEur?: Maybe<Scalars['Float']>;
-	initialRate?: Maybe<Scalars['Float']>;
-	rate?: Maybe<Scalars['Float']>;
-	rateFiatToEur?: Maybe<Scalars['Float']>;
-	destVaultId?: Maybe<Scalars['String']>;
-	destVault?: Maybe<Scalars['String']>;
-	destination?: Maybe<Scalars['String']>;
-	countryCode2?: Maybe<Scalars['String']>;
-	countryCode3?: Maybe<Scalars['String']>;
-	accountType?: Maybe<Scalars['String']>;
-	source?: Maybe<TransactionSource>;
-	instrument?: Maybe<PaymentInstrument>;
-	instrumentDetails?: Maybe<Scalars['String']>;
-	custodyProvider?: Maybe<CustodyProvider>;
-	custodyDetails?: Maybe<Scalars['String']>;
-	paymentProvider?: Maybe<Scalars['String']>;
-	custodyFiatProvider?: Maybe<Scalars['String']>;
-	liquidityProvider?: Maybe<LiquidityProvider>;
-	paymentOrder?: Maybe<PaymentOrder>;
-	liquidityOrder?: Maybe<LiquidityExchangeOrder>;
-	transferOrder?: Maybe<TransferOrder>;
-	widgetId?: Maybe<Scalars['String']>;
-	widgetCode?: Maybe<Scalars['String']>;
-	widgetUserParamsId?: Maybe<Scalars['String']>;
-	widgetUserParams?: Maybe<Scalars['String']>;
-	widget?: Maybe<Scalars['String']>;
-	destinationUserId?: Maybe<Scalars['String']>;
-	risk: RiskLevel;
-	riskCodes?: Maybe<Array<Scalars['String']>>;
-	cryptoInvoiceName?: Maybe<Scalars['String']>;
-	data?: Maybe<Scalars['String']>;
-	sourceAddress?: Maybe<Scalars['String']>;
-	flag?: Maybe<Scalars['Boolean']>;
-	costDetails?: Maybe<Scalars['String']>;
-	screeningAnswer?: Maybe<Scalars['String']>;
-	screeningRiskscore?: Maybe<Scalars['Float']>;
-	screeningStatus?: Maybe<Scalars['String']>;
-	screeningData?: Maybe<Scalars['String']>;
+  __typename?: 'TransactionShort';
+  transactionId: Scalars['ID'];
+  code?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['String']>;
+  userReferralCode: Scalars['Int'];
+  sourceVaultId?: Maybe<Scalars['String']>;
+  sourceVault?: Maybe<Scalars['String']>;
+  userIp?: Maybe<Scalars['String']>;
+  userTierId?: Maybe<Scalars['String']>;
+  userTier?: Maybe<SettingsKycTierShortEx>;
+  requiredUserTierId?: Maybe<Scalars['String']>;
+  requiredUserTier?: Maybe<SettingsKycTierShortEx>;
+  created?: Maybe<Scalars['DateTime']>;
+  createdBy?: Maybe<Scalars['String']>;
+  updated?: Maybe<Scalars['DateTime']>;
+  executed?: Maybe<Scalars['DateTime']>;
+  type: TransactionType;
+  status: TransactionStatus;
+  subStatus?: Maybe<Scalars['String']>;
+  kycStatus?: Maybe<TransactionKycStatus>;
+  accountStatus?: Maybe<AccountStatus>;
+  feeFiat?: Maybe<Scalars['Float']>;
+  feePercent?: Maybe<Scalars['Float']>;
+  feeMinFiat?: Maybe<Scalars['Float']>;
+  feeDetails?: Maybe<Scalars['String']>;
+  approxNetworkFee?: Maybe<Scalars['Float']>;
+  approxNetworkFeeFiat?: Maybe<Scalars['Float']>;
+  currencyToSpend?: Maybe<Scalars['String']>;
+  amountToSpend?: Maybe<Scalars['Float']>;
+  amountToSpendWithoutFee?: Maybe<Scalars['Float']>;
+  currencyToReceive?: Maybe<Scalars['String']>;
+  initialAmountToReceive?: Maybe<Scalars['Float']>;
+  initialAmountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
+  amountToReceive?: Maybe<Scalars['Float']>;
+  amountToReceiveWithoutFee?: Maybe<Scalars['Float']>;
+  amountInEur?: Maybe<Scalars['Float']>;
+  initialRate?: Maybe<Scalars['Float']>;
+  rate?: Maybe<Scalars['Float']>;
+  rateFiatToEur?: Maybe<Scalars['Float']>;
+  destVaultId?: Maybe<Scalars['String']>;
+  destVault?: Maybe<Scalars['String']>;
+  destination?: Maybe<Scalars['String']>;
+  countryCode2?: Maybe<Scalars['String']>;
+  countryCode3?: Maybe<Scalars['String']>;
+  accountType?: Maybe<Scalars['String']>;
+  source?: Maybe<TransactionSource>;
+  instrument?: Maybe<PaymentInstrument>;
+  instrumentDetails?: Maybe<Scalars['String']>;
+  custodyProvider?: Maybe<CustodyProvider>;
+  custodyDetails?: Maybe<Scalars['String']>;
+  paymentProvider?: Maybe<Scalars['String']>;
+  custodyFiatProvider?: Maybe<Scalars['String']>;
+  liquidityProvider?: Maybe<LiquidityProvider>;
+  paymentOrder?: Maybe<PaymentOrder>;
+  liquidityOrder?: Maybe<LiquidityExchangeOrder>;
+  transferOrder?: Maybe<TransferOrder>;
+  widgetId?: Maybe<Scalars['String']>;
+  widgetCode?: Maybe<Scalars['String']>;
+  widgetUserParamsId?: Maybe<Scalars['String']>;
+  widgetUserParams?: Maybe<Scalars['String']>;
+  widget?: Maybe<Scalars['String']>;
+  destinationUserId?: Maybe<Scalars['String']>;
+  risk: RiskLevel;
+  riskCodes?: Maybe<Array<Scalars['String']>>;
+  cryptoInvoiceName?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['String']>;
+  sourceAddress?: Maybe<Scalars['String']>;
+  flag?: Maybe<Scalars['Boolean']>;
+  costDetails?: Maybe<Scalars['String']>;
+  screeningAnswer?: Maybe<Scalars['String']>;
+  screeningRiskscore?: Maybe<Scalars['Float']>;
+  screeningStatus?: Maybe<Scalars['String']>;
+  screeningData?: Maybe<Scalars['String']>;
+  canBeCancelled?: Maybe<Scalars['Boolean']>;
+  hasToBeRefunded?: Maybe<Scalars['Boolean']>;
+  canBeReviewed?: Maybe<Scalars['Boolean']>;
 };
 
 export type TransactionShortListResult = {
@@ -3692,44 +3705,46 @@ export type TransactionStatsVolume = {
 };
 
 export enum TransactionStatus {
-	New = 'New',
-	Pending = 'Pending',
-	Processing = 'Processing',
-	Paid = 'Paid',
-	AddressDeclined = 'AddressDeclined',
-	PaymentDeclined = 'PaymentDeclined',
-	ExchangeDeclined = 'ExchangeDeclined',
-	TransferDeclined = 'TransferDeclined',
-	TransferBlocked = 'TransferBlocked',
-	Exchanging = 'Exchanging',
-	Exchanged = 'Exchanged',
-	TransferBenchmarkWaiting = 'TransferBenchmarkWaiting',
-	BenchmarkTransfering = 'BenchmarkTransfering',
-	BenchmarkTransfered = 'BenchmarkTransfered',
-	BenchmarkTransferDeclined = 'BenchmarkTransferDeclined',
-	Sending = 'Sending',
-	SendingWaiting = 'SendingWaiting',
-	Sent = 'Sent',
-	Distributing = 'Distributing',
-	DistributingWaiting = 'DistributingWaiting',
-	Distributed = 'Distributed',
-	Completed = 'Completed',
-	Abandoned = 'Abandoned',
-	Canceled = 'Canceled',
-	Chargeback = 'Chargeback',
-	KycDeclined = 'KycDeclined'
+  New = 'New',
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Paid = 'Paid',
+  AddressDeclined = 'AddressDeclined',
+  PaymentDeclined = 'PaymentDeclined',
+  ExchangeDeclined = 'ExchangeDeclined',
+  TransferDeclined = 'TransferDeclined',
+  TransferBlocked = 'TransferBlocked',
+  Exchanging = 'Exchanging',
+  Exchanged = 'Exchanged',
+  TransferBenchmarkWaiting = 'TransferBenchmarkWaiting',
+  BenchmarkTransfering = 'BenchmarkTransfering',
+  BenchmarkTransfered = 'BenchmarkTransfered',
+  BenchmarkTransferDeclined = 'BenchmarkTransferDeclined',
+  Sending = 'Sending',
+  SendingWaiting = 'SendingWaiting',
+  Sent = 'Sent',
+  Distributing = 'Distributing',
+  DistributingWaiting = 'DistributingWaiting',
+  Distributed = 'Distributed',
+  Completed = 'Completed',
+  Abandoned = 'Abandoned',
+  Canceled = 'Canceled',
+  Chargeback = 'Chargeback',
+  KycDeclined = 'KycDeclined',
+  Refund = 'Refund'
 }
 
 export type TransactionStatusDescriptor = {
-	__typename?: 'TransactionStatusDescriptor';
-	notifyUser: Scalars['Boolean'];
-	canBeCancelled: Scalars['Boolean'];
-	description: Scalars['String'];
-	userStatus: UserTransactionStatus;
-	adminStatus: AdminTransactionStatus;
-	level: TransactionStatusLevel;
-	repeatFromStatus?: Maybe<TransactionStatus>;
-	updateWhenOwnLiquidityProvider?: Maybe<Scalars['Boolean']>;
+  __typename?: 'TransactionStatusDescriptor';
+  notifyUser: Scalars['Boolean'];
+  canBeCancelled: Scalars['Boolean'];
+  hasToBeRefunded: Scalars['Boolean'];
+  description: Scalars['String'];
+  userStatus: UserTransactionStatus;
+  adminStatus: AdminTransactionStatus;
+  level: TransactionStatusLevel;
+  repeatFromStatus?: Maybe<TransactionStatus>;
+  updateWhenOwnLiquidityProvider?: Maybe<Scalars['Boolean']>;
 };
 
 export type TransactionStatusDescriptorMap = {
@@ -3858,18 +3873,19 @@ export type TransferResult = {
 };
 
 export type TransferStats = BaseStat & {
-	__typename?: 'TransferStats';
-	ratio?: Maybe<Scalars['Float']>;
-	approved?: Maybe<TransactionStatsVolume>;
-	declined?: Maybe<TransactionStatsVolume>;
-	failed?: Maybe<TransactionStatsVolume>;
-	chargedBack?: Maybe<TransactionStatsVolume>;
-	abandoned?: Maybe<TransactionStatsVolume>;
-	inProcess?: Maybe<TransactionStatsVolume>;
-	byStatus?: Maybe<Array<TransactionStatsByStatus>>;
-	toMerchant?: Maybe<MerchantOrCustomerStats>;
-	toCustomer?: Maybe<MerchantOrCustomerStats>;
-	fee?: Maybe<TransactionStatsVolume>;
+  __typename?: 'TransferStats';
+  ratio?: Maybe<Scalars['Float']>;
+  approved?: Maybe<TransactionStatsVolume>;
+  declined?: Maybe<TransactionStatsVolume>;
+  failed?: Maybe<TransactionStatsVolume>;
+  chargedBack?: Maybe<TransactionStatsVolume>;
+  refund?: Maybe<TransactionStatsVolume>;
+  abandoned?: Maybe<TransactionStatsVolume>;
+  inProcess?: Maybe<TransactionStatsVolume>;
+  byStatus?: Maybe<Array<TransactionStatsByStatus>>;
+  toMerchant?: Maybe<MerchantOrCustomerStats>;
+  toCustomer?: Maybe<MerchantOrCustomerStats>;
+  fee?: Maybe<TransactionStatsVolume>;
 };
 
 export enum TransferType {
@@ -4528,14 +4544,15 @@ export type UserTransactionStats = {
 };
 
 export enum UserTransactionStatus {
-	New = 'New',
-	Processing = 'Processing',
-	Confirming = 'Confirming',
-	Completed = 'Completed',
-	Canceled = 'Canceled',
-	UnderReview = 'UnderReview',
-	Declined = 'Declined',
-	SendingError = 'SendingError'
+  New = 'New',
+  Processing = 'Processing',
+  Confirming = 'Confirming',
+  Completed = 'Completed',
+  Canceled = 'Canceled',
+  UnderReview = 'UnderReview',
+  Declined = 'Declined',
+  SendingError = 'SendingError',
+  Refund = 'Refund'
 }
 
 export type UserTransactionSummary = {

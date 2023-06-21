@@ -1,7 +1,17 @@
 import { DatePipe } from '@angular/common';
-import { getCryptoSymbol, getCurrencySign, getTransactionAmountHash, getTransactionStatusHash, shortenString } from '../utils/utils';
+import {
+	getCryptoSymbol,
+	getCurrencySign,
+	getTransactionAmountHash,
+	getTransactionStatusHash,
+	shortenString,
+} from '../utils/utils';
 import { CommonTargetValue } from './common.model';
-import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk } from './cost-scheme.model';
+import {
+	WireTransferBankAccountAu,
+	WireTransferBankAccountEu,
+	WireTransferBankAccountUk,
+} from './cost-scheme.model';
 import {
 	AccountStatus,
 	AdminTransactionStatus,
@@ -16,7 +26,7 @@ import {
 	TransactionStatusHistory,
 	TransactionType,
 	User,
-	UserMode
+	UserMode,
 } from './generated-models';
 import {
 	TransactionTypeList,
@@ -28,7 +38,7 @@ import {
 	UserTypeList,
 	AdminTransactionStatusList,
 	TransactionStatusList,
-	UserTransactionStatusList
+	UserTransactionStatusList,
 } from './payment.model';
 import { UserItem } from './user.model';
 
@@ -91,32 +101,62 @@ export class TransactionItemFull {
 	declineReason = '';
 	declineReasonExtra = '';
 	vaultIds: string[] = [];
-	flag = false;
+	flag: boolean = false;
+	canBeCancelled: boolean = false;
+	hasToBeRefunded: boolean = false;
+	canBeReviewed: boolean = false;
 
 	constructor(data: Transaction | TransactionShort | null) {
 		if (data !== null) {
 			this.code = data.code ?? '';
 			this.id = data.transactionId;
 			const datepipe: DatePipe = new DatePipe('en-US');
-			this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
-			this.executed = datepipe.transform(data.executed, 'dd-MM-YYYY HH:mm:ss') as string;
-			this.updated = datepipe.transform(data.updated, 'dd-MM-YYYY HH:mm:ss') as string;
+			this.created = datepipe.transform(
+				data.created,
+				'dd-MM-YYYY HH:mm:ss'
+			) as string;
+			this.executed = datepipe.transform(
+				data.executed,
+				'dd-MM-YYYY HH:mm:ss'
+			) as string;
+			this.updated = datepipe.transform(
+				data.updated,
+				'dd-MM-YYYY HH:mm:ss'
+			) as string;
 			this.accountId = data.userId ?? '';
 			this.accountStatus = data.accountStatus ?? '';
 			this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
 			this.flag = data.flag ?? false;
 			const transactionData = data as Transaction;
+
+			if (data.canBeCancelled) {
+				this.canBeCancelled = true;
+			}
+			if (data.hasToBeRefunded) {
+				this.hasToBeRefunded = true;
+			}
+			if (data.canBeReviewed) {
+				this.canBeReviewed = true;
+			}
 			if (transactionData.user) {
 				this.user = new UserItem(transactionData.user as User);
 				this.accountName = this.user.fullName;
 				this.ip = transactionData.userIp as string;
 				this.userMode = transactionData.user?.mode as UserMode | undefined;
-				this.benchmarkTransferOrderId = transactionData.benchmarkTransferOrder?.orderId ?? '';
-				this.benchmarkTransferOriginalOrderId = transactionData.benchmarkTransferOrder?.originalOrderId ?? '';
-				this.benchmarkTransferOrderHash = transactionData.benchmarkTransferOrder?.transferHash ?? '';
+				this.benchmarkTransferOrderId =
+          transactionData.benchmarkTransferOrder?.orderId ?? '';
+				this.benchmarkTransferOriginalOrderId =
+          transactionData.benchmarkTransferOrder?.originalOrderId ?? '';
+				this.benchmarkTransferOrderHash =
+          transactionData.benchmarkTransferOrder?.transferHash ?? '';
 			}
-			if (data.type === TransactionType.Sell || data.type === TransactionType.Withdrawal) {
-				this.instrumentDetailsData = this.getInstrumentDetails(data.instrumentDetails ?? '{}');
+			if (
+				data.type === TransactionType.Sell ||
+        data.type === TransactionType.Withdrawal
+			) {
+				this.instrumentDetailsData = this.getInstrumentDetails(
+					data.instrumentDetails ?? '{}'
+				);
 			}
 
 			this.comment = transactionData.comment ?? '';
@@ -128,8 +168,10 @@ export class TransactionItemFull {
 			this.screeningStatus = data?.screeningStatus ?? '';
 			this.screeningData = JSON.parse(data?.screeningData ?? '{}');
 			this.transferFee = data.transferOrder?.feeCurrency?.toFixed(8) ?? '';
-			this.transferOrderBlockchainLink = transactionData.transferOrderBlockchainLink ?? '';
-			this.benchmarkTransferOrderBlockchainLink = transactionData.benchmarkTransferOrderBlockchainLink ?? '';
+			this.transferOrderBlockchainLink =
+        transactionData.transferOrderBlockchainLink ?? '';
+			this.benchmarkTransferOrderBlockchainLink =
+        transactionData.benchmarkTransferOrderBlockchainLink ?? '';
 			this.type = data.type;
 			this.instrument = data.instrument ?? undefined;
 			this.paymentProvider = data.paymentProvider ?? '';
@@ -149,16 +191,20 @@ export class TransactionItemFull {
 			} else {
 				this.rate = data.initialRate ?? 0;
 			}
-			if(data.type == TransactionType.Deposit){
+			if (data.type == TransactionType.Deposit) {
 				this.address = this.recipient ?? '-';
-			}else if(data.type == TransactionType.Withdrawal){
+			} else if (data.type == TransactionType.Withdrawal) {
 				this.address = this.sender ?? '-';
-			}else{
+			} else {
 				this.address = data.destination ?? '-';
 			}
-			const kycStatus = TransactionKycStatusList.find(x => x.id === (data as Transaction).kycStatus);
-			this.kycStatus = (kycStatus) ? kycStatus.name : '';
-			this.kycStatusValue = (kycStatus) ? kycStatus.id : TransactionKycStatus.KycWaiting;
+			const kycStatus = TransactionKycStatusList.find(
+				(x) => x.id === (data as Transaction).kycStatus
+			);
+			this.kycStatus = kycStatus ? kycStatus.name : '';
+			this.kycStatusValue = kycStatus
+				? kycStatus.id
+				: TransactionKycStatus.KycWaiting;
 			this.kycTier = data.userTier?.name ?? '';
 			this.status = data.status;
 			this.subStatus = data.subStatus ?? '';
@@ -176,21 +222,34 @@ export class TransactionItemFull {
 					break;
 				case TransactionStatus.TransferDeclined:
 					const transferOrderStatus = data.transferOrder?.status ?? '';
-					const transferOrderSubStatus = (data.transferOrder?.subStatus ?? '') === '' ? '' : ` (${data.transferOrder?.subStatus ?? ''})`;
+					const transferOrderSubStatus =
+            (data.transferOrder?.subStatus ?? '') === ''
+            	? ''
+            	: ` (${data.transferOrder?.subStatus ?? ''})`;
 					this.declineReason = `${transferOrderStatus} ${transferOrderSubStatus}`;
-					if (data.transferOrder?.executingResult && data.transferOrder?.executingResult !== null
-            && data.transferOrder?.executingResult !== 'null') {
+					if (
+						data.transferOrder?.executingResult &&
+            data.transferOrder?.executingResult !== null &&
+            data.transferOrder?.executingResult !== 'null'
+					) {
 						this.declineReasonExtra = data.transferOrder?.executingResult ?? '';
-					} else if (data.transferOrder?.publishingResult && data.transferOrder?.publishingResult !== null
-            && data.transferOrder?.publishingResult !== 'null') {
-						this.declineReasonExtra = data.transferOrder?.publishingResult ?? '';
+					} else if (
+						data.transferOrder?.publishingResult &&
+            data.transferOrder?.publishingResult !== null &&
+            data.transferOrder?.publishingResult !== 'null'
+					) {
+						this.declineReasonExtra =
+              data.transferOrder?.publishingResult ?? '';
 					}
 					if (this.declineReasonExtra !== '') {
 						let dataExtra = JSON.parse(this.declineReasonExtra);
 						try {
 							dataExtra = JSON.parse(dataExtra);
 							const extraStatus = dataExtra?.status ?? '';
-							const extraSubStatus = (dataExtra?.subStatus ?? '') === '' ? '' : ` (${dataExtra?.subStatus ?? ''})`;
+							const extraSubStatus =
+                (dataExtra?.subStatus ?? '') === ''
+                	? ''
+                	: ` (${dataExtra?.subStatus ?? ''})`;
 							this.declineReasonExtra = `${extraStatus} ${extraSubStatus}`;
 						} catch (e) {
 							this.declineReasonExtra = dataExtra;
@@ -198,8 +257,12 @@ export class TransactionItemFull {
 					}
 					break;
 				case TransactionStatus.BenchmarkTransferDeclined:
-					const benchmarkTransferOrderStatus = transactionData.benchmarkTransferOrder?.status ?? '';
-					const benchmarkTransferOrderSubStatus = (transactionData.benchmarkTransferOrder?.subStatus ?? '') === '' ? '' : ` (${transactionData.benchmarkTransferOrder?.subStatus ?? ''})`;
+					const benchmarkTransferOrderStatus =
+            transactionData.benchmarkTransferOrder?.status ?? '';
+					const benchmarkTransferOrderSubStatus =
+            (transactionData.benchmarkTransferOrder?.subStatus ?? '') === ''
+            	? ''
+            	: ` (${transactionData.benchmarkTransferOrder?.subStatus ?? ''})`;
 					this.declineReason = `${benchmarkTransferOrderStatus} ${benchmarkTransferOrderSubStatus}`;
 					break;
 				case TransactionStatus.ExchangeDeclined:
@@ -290,9 +353,7 @@ export class TransactionItemFull {
 					}
 				}
 			}
-		} catch (e) {
-
-		}
+		} catch (e) {}
 		return result;
 	}
 
@@ -326,6 +387,7 @@ export class TransactionItemFull {
 			case AdminTransactionStatus.Chargeback:
 			case AdminTransactionStatus.PaymentDeclined:
 			case AdminTransactionStatus.KycDeclined:
+			case AdminTransactionStatus.Refund:
 				color = 'red';
 				break;
 			case AdminTransactionStatus.AddressDeclined:
@@ -346,14 +408,14 @@ export class TransactionItemFull {
 	get transactionListSelectorColumnStyle(): string[] {
 		return [
 			'transaction-list-selector-column',
-			`transaction-list-column-${this.getTransactionStatusColor()}`
+			`transaction-list-column-${this.getTransactionStatusColor()}`,
 		];
 	}
 
 	get transactionListDataColumnStyle(): string[] {
 		return [
 			'transaction-list-data-column',
-			`transaction-list-column-${this.getTransactionStatusColor()}`
+			`transaction-list-column-${this.getTransactionStatusColor()}`,
 		];
 	}
 
@@ -366,31 +428,43 @@ export class TransactionItemFull {
 	}
 
 	get transactionStatusName(): string {
-		const adminStatus = AdminTransactionStatusList.find((t) => t.id === this.statusInfo?.value.adminStatus)?.name ?? 'Unknown';
-		const transactionStatus = TransactionStatusList.find((t) => t.id === this.statusInfo?.key)?.name ?? 'Unknown';
+		const adminStatus =
+      AdminTransactionStatusList.find(
+      	(t) => t.id === this.statusInfo?.value.adminStatus
+      )?.name ?? 'Unknown';
+		const transactionStatus =
+      TransactionStatusList.find((t) => t.id === this.statusInfo?.key)?.name ??
+      'Unknown';
 		return `${adminStatus} (${transactionStatus})`;
 	}
 
 	get instrumentName(): string {
-		return PaymentInstrumentList.find((i) => i.id === this.instrument)?.name as string;
+		return PaymentInstrumentList.find((i) => i.id === this.instrument)
+			?.name as string;
 	}
 
 	get userModeName(): string {
 		if (this.userMode) {
-			return UserModeShortList.find((p) => p.id === this.userMode)?.name as string;
+			return UserModeShortList.find((p) => p.id === this.userMode)
+				?.name as string;
 		}
 		return '';
 	}
 
 	get userTypeName(): string {
 		if (this.user) {
-			return UserTypeList.find((p) => p.id === this.user?.userType?.id)?.name as string;
+			return UserTypeList.find((p) => p.id === this.user?.userType?.id)
+				?.name as string;
 		}
 		return '';
 	}
 
 	get statusHash(): number {
-		return getTransactionStatusHash(this.status ?? '', this.kycStatusValue, this.accountStatusValue);
+		return getTransactionStatusHash(
+			this.status ?? '',
+			this.kycStatusValue,
+			this.accountStatusValue
+		);
 	}
 
 	get amountHash(): number {
@@ -406,13 +480,13 @@ export class TransactionItem {
 		id: '',
 		title: '',
 		imgClass: '',
-		imgSource: ''
+		imgSource: '',
 	};
 	recipient: CommonTargetValue = {
 		id: '',
 		title: '',
 		imgClass: '',
-		imgSource: ''
+		imgSource: '',
 	};
 	currencyToSpend = '';
 	currencyToReceive = '';
@@ -433,7 +507,8 @@ export class TransactionItem {
 
 	constructor(
 		data: Transaction | TransactionShort | null,
-		userStatus: TransactionStatusDescriptorMap | undefined = undefined) {
+		userStatus: TransactionStatusDescriptorMap | undefined = undefined
+	) {
 		if (data) {
 			this.id = data.transactionId;
 			this.code = data.code ?? '';
@@ -456,18 +531,24 @@ export class TransactionItem {
 			this.ip = data.userIp as string;
 			const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;
 			if (kycStatusValue !== TransactionKycStatus.KycApproved) {
-				this.kycStatus = TransactionKycStatusList.find(x => x.id === kycStatusValue)?.name ?? '';
+				this.kycStatus =
+          TransactionKycStatusList.find((x) => x.id === kycStatusValue)?.name ??
+          '';
 				this.kycRejected = kycStatusValue === TransactionKycStatus.KycRejected;
 			}
 		}
 	}
 
 	get dateShort(): string {
-		return (this.datepipe.transform(this.created, 'd MMM YYYY') as string).toUpperCase();
+		return (
+			this.datepipe.transform(this.created, 'd MMM YYYY') as string
+		).toUpperCase();
 	}
 
 	get dateLong(): string {
-		return (this.datepipe.transform(this.created, 'd MMM YYYY HH:mm:ss') as string).toUpperCase();
+		return (
+			this.datepipe.transform(this.created, 'd MMM YYYY HH:mm:ss') as string
+		).toUpperCase();
 	}
 
 	get typeName(): string {
@@ -479,18 +560,23 @@ export class TransactionItem {
 		if (this.status) {
 			const statusValue = this.status.value.userStatus;
 			if (statusValue) {
-				statusName = UserTransactionStatusList.find(x => x.id === statusValue)?.name ?? statusValue;
+				statusName =
+          UserTransactionStatusList.find((x) => x.id === statusValue)?.name ??
+          statusValue;
 			}
 		}
 		return statusName;
 	}
 
 	get statusLevel(): string {
-		return (this.status) ? this.status.value.level as string : '';
+		return this.status ? (this.status.value.level as string) : '';
 	}
 
 	get networkFees(): string {
-		if (this.type === TransactionType.Deposit || this.type === TransactionType.Withdrawal) {
+		if (
+			this.type === TransactionType.Deposit ||
+      this.type === TransactionType.Withdrawal
+		) {
 			return `${getCurrencySign(this.currencyFiat)}${this.networkFee}`;
 		} else {
 			return `${this.networkFee.toString()} ${this.currencyCrypto}`;
@@ -498,7 +584,10 @@ export class TransactionItem {
 	}
 
 	get systemFees(): string {
-		if (this.type === TransactionType.Transfer || this.type === TransactionType.Receive) {
+		if (
+			this.type === TransactionType.Transfer ||
+      this.type === TransactionType.Receive
+		) {
 			return '';
 		} else {
 			if (this.isFiatCurrency(this.currencyFiat)) {
@@ -506,7 +595,6 @@ export class TransactionItem {
 			} else {
 				return `${this.fees} ${this.currencyFiat}`;
 			}
-
 		}
 	}
 
@@ -520,9 +608,13 @@ export class TransactionItem {
 
 	get amountReceived(): string {
 		if (this.isFiatCurrency(this.currencyToReceive)) {
-			return `${getCurrencySign(this.currencyToReceive)}${this.amountToReceive}`;
+			return `${getCurrencySign(this.currencyToReceive)}${
+				this.amountToReceive
+			}`;
 		} else {
-			return `${this.amountToReceive} ${getCurrencySign(this.currencyToReceive)}`;
+			return `${this.amountToReceive} ${getCurrencySign(
+				this.currencyToReceive
+			)}`;
 		}
 	}
 
@@ -531,8 +623,15 @@ export class TransactionItem {
 	}
 
 	isFiatCurrency(currency: string): boolean {
-		return (currency === 'USD' || currency === 'EUR' || currency === 'GBP' || currency === 'JPY' ||
-      currency === 'CHF' || currency === 'AUD' || currency === 'CAD');
+		return (
+			currency === 'USD' ||
+      currency === 'EUR' ||
+      currency === 'GBP' ||
+      currency === 'JPY' ||
+      currency === 'CHF' ||
+      currency === 'AUD' ||
+      currency === 'CAD'
+		);
 	}
 }
 
@@ -550,30 +649,34 @@ class TransactionPayment {
 		id: '',
 		title: '',
 		imgClass: '',
-		imgSource: ''
+		imgSource: '',
 	};
 	recipient: CommonTargetValue = {
 		id: '',
 		title: '',
 		imgClass: '',
-		imgSource: ''
+		imgSource: '',
 	};
 }
 
-function getPaymentData(data: Transaction | TransactionShort): TransactionPayment {
+function getPaymentData(
+	data: Transaction | TransactionShort
+): TransactionPayment {
 	const result = new TransactionPayment();
 	result.currencyToSpend = data.currencyToSpend ?? '';
 	result.currencyToReceive = data.currencyToReceive ?? '';
 	result.amountToSpend = data.amountToSpend ?? 0;
-	result.amountToReceive = data.amountToReceiveWithoutFee ?? data.initialAmountToReceiveWithoutFee ?? 0;
+	result.amountToReceive =
+    data.amountToReceiveWithoutFee ??
+    data.initialAmountToReceiveWithoutFee ??
+    0;
 
 	if (data.type === TransactionType.Buy) {
 		result.currencyFiat = result.currencyToSpend;
 		result.currencyCrypto = result.currencyToReceive;
 		const c = getCryptoSymbol(result.currencyToReceive);
-		const cryptoImg = (c !== '') ?
-			`../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
-			'';
+		const cryptoImg =
+      c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
 		const destVaultData = JSON.parse(data.destVault ?? '{}');
 		let recipientName = `Default Vault ${c}`;
 		if (data.destination) {
@@ -586,16 +689,19 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			id: '',
 			title: recipientName,
 			imgClass: '',
-			imgSource: cryptoImg
+			imgSource: cryptoImg,
 		};
 		if (
 			data.instrument === PaymentInstrument.Apm ||
-      data.instrument === PaymentInstrument.WireTransfer) {
+      data.instrument === PaymentInstrument.WireTransfer
+		) {
 			result.sender = {
 				id: '',
-				title: PaymentInstrumentList.find(x => x.id === data.instrument)?.name ?? '',
+				title:
+          PaymentInstrumentList.find((x) => x.id === data.instrument)?.name ??
+          '',
 				imgSource: '',
-				imgClass: ''
+				imgClass: '',
 			} as CommonTargetValue;
 		} else if (data.instrument === PaymentInstrument.CreditCard) {
 			if (data.paymentOrder) {
@@ -616,15 +722,15 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 					}
 				}
 			}
-		}else if (data.instrument === PaymentInstrument.FiatVault) {
+		} else if (data.instrument === PaymentInstrument.FiatVault) {
 			result.sender = {
 				id: '',
 				title: `${data.currencyToSpend} Wallet`,
 				imgSource: '',
-				imgClass: ''
+				imgClass: '',
 			} as CommonTargetValue;
 		}
-		result.fees = data.feeFiat as number ?? 0;
+		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		if (result.networkFee < 0) {
 			result.networkFee = 0;
@@ -637,12 +743,11 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			id: '',
 			title: data.destination ?? '',
 			imgClass: '',
-			imgSource: ''
+			imgSource: '',
 		};
 		const c = getCryptoSymbol(result.currencyToSpend);
-		let cryptoImg = (c !== '') ?
-			`../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
-			'';
+		let cryptoImg =
+      c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
 		let sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
 		// sometimes it comes as a string with escape symbols.
 		//  In this case parse returns a stringified JSON, which has to be parsed again
@@ -660,16 +765,16 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			id: '',
 			title: senderName,
 			imgClass: '__profile-transactions-table-cell-sender-icon',
-			imgSource: cryptoImg
+			imgSource: cryptoImg,
 		};
-		result.fees = data.feeFiat as number ?? 0;
+		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'file_upload';
 	} else if (data.type === TransactionType.Receive) {
 		result.currencyFiat = result.currencyToSpend;
 		result.currencyCrypto = result.currencyToReceive;
 		const c = getCryptoSymbol(result.currencyToReceive).toLowerCase();
-		const cryptoImg = (c !== '') ? `../../../assets/svg-crypto/${c}.svg` : '';
+		const cryptoImg = c !== '' ? `../../../assets/svg-crypto/${c}.svg` : '';
 		const destVaultData = JSON.parse(data.destVault ?? '{}');
 		let recipientName = data.destination ?? '';
 		if (destVaultData?.name) {
@@ -679,9 +784,9 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			id: '',
 			title: recipientName,
 			imgClass: '',
-			imgSource: cryptoImg
+			imgSource: cryptoImg,
 		};
-		result.fees = data.feeFiat as number ?? 0;
+		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'file_download';
 		let senderName = 'External';
@@ -695,35 +800,39 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			}
 			if (transferDetailsData.data) {
 				const sourceData = JSON.parse(transferDetailsData.data);
-				senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? 'External'}`;
+				senderName = `${sourceData?.source?.name ?? ''} ${
+					sourceData?.sourceAddress ?? 'External'
+				}`;
 			}
 		}
 		result.sender = {
 			id: '',
-			title: data.sourceAddress && data.sourceAddress != '' ? data.sourceAddress : 'External',
+			title:
+        data.sourceAddress && data.sourceAddress != ''
+        	? data.sourceAddress
+        	: 'External',
 			imgSource: '',
-			imgClass: ''
+			imgClass: '',
 		} as CommonTargetValue;
 	} else if (data.type === TransactionType.Sell) {
 		result.currencyFiat = result.currencyToReceive;
 		result.currencyCrypto = result.currencyToSpend;
 		const c = getCryptoSymbol(result.currencyToSpend);
-		let cryptoImg = (c !== '') ?
-			`../../../assets/svg-crypto/${c.toLowerCase()}.svg` :
-			'';
-		if(data.instrument == PaymentInstrument.FiatVault){
+		let cryptoImg =
+      c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
+		if (data.instrument == PaymentInstrument.FiatVault) {
 			result.recipient = {
 				id: '',
 				title: `${data.currencyToReceive} Wallet`,
 				imgClass: '',
-				imgSource: ''
+				imgSource: '',
 			};
-		}else{
+		} else {
 			result.recipient = {
 				id: '',
 				title: 'Wire transfer',
 				imgClass: '',
-				imgSource: ''
+				imgSource: '',
 			};
 		}
 		const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
@@ -738,15 +847,15 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			id: '',
 			title: senderName,
 			imgClass: '__profile-transactions-table-cell-sender-icon',
-			imgSource: cryptoImg
+			imgSource: cryptoImg,
 		};
-		result.fees = data.feeFiat as number ?? 0;
+		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'account_balance';
 	} else if (data.type === TransactionType.Deposit) {
 		result.currencyFiat = result.currencyToReceive;
 		result.currencyCrypto = '';
-		
+
 		const destVaultData = JSON.parse(data.destVault ?? '{}');
 		let recipientName = data.destination ?? `${result.currencyFiat} Wallet`;
 		if (destVaultData?.name) {
@@ -756,9 +865,9 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			id: '',
 			title: recipientName,
 			imgClass: '',
-			imgSource: ''
+			imgSource: '',
 		};
-		result.fees = data.feeFiat as number ?? 0;
+		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'monetization_on';
 		let senderName = '';
@@ -772,7 +881,9 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			}
 			if (transferDetailsData.data) {
 				const sourceData = JSON.parse(transferDetailsData.data);
-				senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? ''}`;
+				senderName = `${sourceData?.source?.name ?? ''} ${
+					sourceData?.sourceAddress ?? ''
+				}`;
 			}
 		}
 		if (senderName === '') {
@@ -782,7 +893,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			id: '',
 			title: senderName,
 			imgSource: '',
-			imgClass: ''
+			imgClass: '',
 		} as CommonTargetValue;
 	} else if (data.type === TransactionType.Withdrawal) {
 		result.currencyFiat = result.currencyToReceive;
@@ -793,9 +904,9 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			id: '',
 			title: recipientName,
 			imgClass: '',
-			imgSource: ''
+			imgSource: '',
 		};
-		result.fees = data.feeFiat as number ?? 0;
+		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'monetization_on';
 		let senderName = '';
@@ -809,7 +920,9 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			}
 			if (transferDetailsData.data) {
 				const sourceData = JSON.parse(transferDetailsData.data);
-				senderName = `${sourceData?.source?.name ?? ''} ${sourceData?.sourceAddress ?? ''}`;
+				senderName = `${sourceData?.source?.name ?? ''} ${
+					sourceData?.sourceAddress ?? ''
+				}`;
 			}
 		}
 		if (senderName === '') {
@@ -819,7 +932,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			id: '',
 			title: senderName,
 			imgSource: '',
-			imgClass: ''
+			imgClass: '',
 		} as CommonTargetValue;
 	} else if (data.type === TransactionType.MerchantBuy) {
 		result.currencyFiat = result.currencyToReceive;
@@ -835,7 +948,7 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			}
 			const transactions: any[] = instrumentDetailsData.transactions;
 			if (transactions) {
-				const addresses = transactions.map(x => x.address as string);
+				const addresses = transactions.map((x) => x.address as string);
 				recipientName = addresses.join(', ');
 			}
 		}
@@ -843,16 +956,16 @@ function getPaymentData(data: Transaction | TransactionShort): TransactionPaymen
 			id: '',
 			title: recipientName,
 			imgClass: '',
-			imgSource: ''
+			imgSource: '',
 		};
-		result.fees = data.feeFiat as number ?? 0;
+		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'monetization_on';
 		result.sender = {
 			id: '',
 			title: `${data.sourceVaultId ?? ''}`,
 			imgSource: '',
-			imgClass: ''
+			imgClass: '',
 		} as CommonTargetValue;
 	}
 	return result;
@@ -875,13 +988,18 @@ export class TransactionStatusHistoryItem {
 			this.id = data.transactionStatusHistoryId;
 			this.transactionId = data.transactionId ? data.transactionId : '';
 			const datepipe: DatePipe = new DatePipe('en-US');
-			this.created = datepipe.transform(data.created, 'dd-MM-YYYY HH:mm:ss') as string;
+			this.created = datepipe.transform(
+				data.created,
+				'dd-MM-YYYY HH:mm:ss'
+			) as string;
 			this.oldStatus = data.oldStatus ? data.oldStatus : '';
 			this.newStatus = data.newStatus ? data.newStatus : '';
 			this.userId = data.userId ? data.userId : '';
-			this.transaction = data.transaction && data.transaction.length > 0 ? data.transaction[0] : null;
+			this.transaction =
+        data.transaction && data.transaction.length > 0
+        	? data.transaction[0]
+        	: null;
 			this.user_email = data.userEmail ? data.userEmail : '';
 		}
 	}
-
 }
