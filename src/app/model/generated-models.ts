@@ -1462,7 +1462,6 @@ export type MutationSetMyInfoArgs = {
   birthday?: Maybe<Scalars['DateTime']>;
   address?: Maybe<PostAddress>;
   phone?: Maybe<Scalars['String']>;
-  recaptcha: Scalars['String'];
 };
 
 
@@ -1483,7 +1482,6 @@ export type MutationGenerateDefaultTokenWhenKycSentArgs = {
 
 export type MutationForgotPasswordArgs = {
   email: Scalars['String'];
-  recaptcha: Scalars['String'];
 };
 
 
@@ -1524,7 +1522,6 @@ export type MutationDisable2faArgs = {
 
 
 export type MutationAddFeedbackArgs = {
-  recaptcha?: Maybe<Scalars['String']>;
   feedback: FeedbackInput;
 };
 
@@ -2278,7 +2275,6 @@ export type QueryGetSettingsCurrencyArgs = {
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<OrderBy>>;
-  recaptcha: Scalars['String'];
 };
 
 
@@ -2602,7 +2598,6 @@ export type QueryGetSupportTicketsArgs = {
 
 
 export type QueryGetFeedbacksArgs = {
-  recaptcha?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -2613,7 +2608,6 @@ export type QueryGetFeedbacksArgs = {
 export type QueryGetRatesArgs = {
   currenciesFrom: Array<Scalars['String']>;
   currencyTo: Scalars['String'];
-  recaptcha?: Maybe<Scalars['String']>;
 };
 
 
@@ -2760,7 +2754,6 @@ export type QueryGetWidgetsArgs = {
 
 export type QueryGetWidgetArgs = {
   id: Scalars['String'];
-  recaptcha: Scalars['String'];
 };
 
 
@@ -3070,6 +3063,7 @@ export type SettingsCurrency = {
   trxFlag?: Maybe<Scalars['Boolean']>;
   disabled?: Maybe<Scalars['String']>;
   displaySymbol?: Maybe<Scalars['String']>;
+  maskSymbol?: Maybe<Scalars['String']>;
 };
 
 export type SettingsCurrencyListResult = {
@@ -4376,6 +4370,8 @@ export type UserNotification = {
   linkedId?: Maybe<Scalars['String']>;
   linkedTable?: Maybe<Scalars['String']>;
   params?: Maybe<Scalars['String']>;
+  transactionId?: Maybe<Scalars['String']>;
+  transactionStatus?: Maybe<Scalars['String']>;
 };
 
 export enum UserNotificationCodes {
@@ -4687,6 +4683,7 @@ export type Widget = {
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
   fee?: Maybe<Scalars['Float']>;
   newVaultPerTransaction?: Maybe<Scalars['Boolean']>;
+  masked: Scalars['Boolean'];
 };
 
 export type WidgetDestination = {
@@ -4716,6 +4713,7 @@ export type WidgetInput = {
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
   newVaultPerTransaction?: Maybe<Scalars['Boolean']>;
   fee?: Maybe<Scalars['Float']>;
+  masked?: Maybe<Scalars['Boolean']>;
 };
 
 export type WidgetListResult = {
@@ -4740,6 +4738,7 @@ export type WidgetShort = {
   currentUserEmail?: Maybe<Scalars['String']>;
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
   newVaultPerTransaction?: Maybe<Scalars['Boolean']>;
+  masked: Scalars['Boolean'];
 };
 
 export type WidgetUpdateInput = {
@@ -4759,6 +4758,7 @@ export type WidgetUpdateInput = {
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']>;
   newVaultPerTransaction?: Maybe<Scalars['Boolean']>;
   fee?: Maybe<Scalars['Float']>;
+  masked?: Maybe<Scalars['Boolean']>;
 };
 
 export type WidgetUserParams = {

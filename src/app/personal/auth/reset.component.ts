@@ -18,6 +18,7 @@ export class PersonalResetComponent implements OnDestroy {
     hidePassword2 = true;
     logoSrc = `${EnvService.image_host}/images/logo-color.png`;
     logoAlt = EnvService.product;
+    recaptcha = undefined;
 
     passwordForm = this.formBuilder.group({
         password1: [,
@@ -64,6 +65,11 @@ export class PersonalResetComponent implements OnDestroy {
         const p1 = this.passwordForm.get('password1')?.value;
         const p2 = this.passwordForm.get('password2')?.value;
         return (p1 === p2);
+    }
+
+    capchaResult(event){
+        this.recaptcha = event;
+        localStorage.setItem('recaptchaId', event);
     }
 
     onSubmit(): void {
