@@ -9,11 +9,11 @@
     // Current client host address
     window.__env_data.client_host = 'http://localhost:4000';
     // API server address
-    window.__env_data.api_server = 'http://https://testnet.getcoins.com.au';
-    // window.__env_data.api_server = 'http://localhost:4001';
+    // window.__env_data.api_server = 'http://https://testnet.getcoins.com.au';
+    window.__env_data.api_server = 'http://localhost:4001';
     // API WebSocket address
-    window.__env_data.ws_server = 'wss://https://testnet.getcoins.com.au';
-    // window.__env_data.ws_server = 'ws://localhost:4001';
+    // window.__env_data.ws_server = 'wss://https://testnet.getcoins.com.au';
+    window.__env_data.ws_server = 'ws://localhost:4001';
     // Image hosting address
     window.__env_data.image_host = 'http://localhost';
     //window.__env_data.image_host = './assets/test',
