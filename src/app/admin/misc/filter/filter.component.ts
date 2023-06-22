@@ -22,6 +22,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   @Input() fields: Array<string> = [];
   @Input() filterData: Filter | undefined = undefined;
   @Input() currencies: Array<CurrencyView> = [];
+  @Input() fiatCurrencies: Array<CurrencyView> = [];
   @Output() get filter(): Observable<Filter> {
     return this.filterSubject.asObservable();
   }
@@ -254,6 +255,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     if (this.fields.includes('assets')) {
       controlsConfig.assets = [[]];
     }
+    if (this.fields.includes('fiatCurrency')) {
+      controlsConfig.fiatCurrency = [undefined];
+    }
     if (this.fields.includes('createdDate')) {
       controlsConfig.createdDateRangeStart = [undefined];
       controlsConfig.createdDateRangeEnd = [undefined];
@@ -375,6 +379,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
       }
       if (this.fields.includes('assets')) {
         this.filterForm.controls.assets.setValue([]);
+      }
+      if (this.fields.includes('fiatCurrency')) {
+        this.filterForm.controls.fiatCurrency.setValue(undefined);
       }
       if (this.fields.includes('createdDate')) {
         this.filterForm.controls.createdDateRangeStart.setValue(undefined);

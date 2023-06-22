@@ -7,6 +7,7 @@ export class Filter {
   public accountModes?: Array<UserMode>;
   public accountStatuses?: Array<AccountStatus>;
   public assets?: Array<string>;
+  public fiatCurrency?: string;
   public countries?: Array<string>; // code3
   public sources?: Array<TransactionSource>;
   public user?: string;
@@ -73,6 +74,10 @@ export class Filter {
 
     if (filterValues.assets) {
       this.assets = filterValues.assets;
+    }
+
+    if(filterValues.fiatCurrency) {
+      this.fiatCurrency = filterValues.fiatCurrency
     }
 
     if (filterValues.countries) {

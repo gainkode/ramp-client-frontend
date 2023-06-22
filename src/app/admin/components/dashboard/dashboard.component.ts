@@ -1,10 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Filter } from 'src/app/admin/model/filter.model';
-import { DateTimeInterval } from 'src/app/model/generated-models';
+import { DateTimeInterval, SettingsCurrencyWithDefaults } from 'src/app/model/generated-models';
 import { AuthService } from 'src/app/services/auth.service';
 import { EnvService } from 'src/app/services/env.service';
 import { DashboardService } from '../../services/dashboard.service';
+import { CommonDataService } from 'src/app/services/common-data.service';
+import { CurrencyView } from 'src/app/model/payment.model';
+import { take } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: 'dashboard.component.html',
@@ -19,18 +23,22 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     'country',
     'source',
     'user',
-    'widgetName'
+    'widgetName',
+    'fiatCurrency'
   ];
   liquidityProviderName = '';
   showDeposits = false;
   showWithdrawals = false;
   defaultFilter: Filter | undefined = undefined;
   adminAdditionalSettings: Record<string, any> = {};
+  fiatCurrencies: Array<CurrencyView> = [];
 
 
   private subscriptions: Subscription = new Subscription();
 
   constructor(
+    private commonDataService: CommonDataService,
+    private router: Router,
     public dashboardService: DashboardService,
     private auth: AuthService) {
     this.liquidityProviderName = 'Liquidity provider balances';
@@ -57,6 +65,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     }
   }
   ngOnInit(): void {
+    this.loadCurrencies();
     this.loadCommonSettings();
     this.subscriptions.add(
       this.dashboardService.data.subscribe(d => {
@@ -68,6 +77,25 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     } else {
       this.dashboardService.load();
     }
+  }
+
+  private loadCurrencies(): void {
+    this.subscriptions.add(
+      this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+          this.fiatCurrencies = currencySettings.settingsCurrency.list
+            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
+          this.fiatCurrencies = this.fiatCurrencies.filter(item => item.fiat == true);
+        } else {
+          this.fiatCurrencies = [];
+        }
+      }, (error) => {
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   ngOnDestroy(): void {

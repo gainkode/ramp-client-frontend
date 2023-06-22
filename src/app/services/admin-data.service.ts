@@ -88,6 +88,7 @@ const GET_DASHBOARD_STATS = gql`
     $countriesOnly: [String!]
     $countryCodeType: CountryCodeType
     $accountTypesOnly: [UserType!]
+    $fiatCurrency: String
   ) {
     getDashboardStats(
       createdDateInterval: $createdDateInterval
@@ -99,6 +100,7 @@ const GET_DASHBOARD_STATS = gql`
       countriesOnly: $countriesOnly
       countryCodeType: $countryCodeType
       accountTypesOnly: $accountTypesOnly
+      fiatCurrency: $fiatCurrency
     ) {
       buys {
         approved {count, volume},
@@ -628,6 +630,7 @@ const GET_TRANSACTIONS = gql`
     $orderBy: [OrderBy!]
     $flag: Boolean
     $preauth: Boolean
+    $fiatCurrency: String
   ) {
     getTransactions(
       transactionIdsOnly: $transactionIdsOnly
@@ -651,6 +654,7 @@ const GET_TRANSACTIONS = gql`
       filter: $filter
       flag: $flag
       preauth: $preauth
+      fiatCurrency: $fiatCurrency
       skip: $skip
       first: $first
       orderBy: $orderBy
@@ -2612,7 +2616,8 @@ export class AdminDataService {
       sourcesOnly: filter.sources,
       countriesOnly: filter.countries,
       countryCodeType: CountryCodeType.Code3,
-      accountTypesOnly: filter.accountTypes
+      accountTypesOnly: filter.accountTypes,
+      fiatCurrency: filter.fiatCurrency
     };
     return this.watchQuery<{ getDashboardStats: DashboardStats }, QueryGetDashboardStatsArgs>({
       query: GET_DASHBOARD_STATS,
@@ -2940,6 +2945,7 @@ export class AdminDataService {
       widgetIdsOnly: widgetIds,
       flag: filter?.transactionFlag,
       preauth: filter?.preauthFlag,
+      fiatCurrency: filter?.fiatCurrency,
       kycStatusesOnly: filter?.transactionKycStatuses,
       transactionTypesOnly: filter?.transactionTypes,
       transactionStatusesOnly: filter?.transactionStatuses,

@@ -38,6 +38,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
     'transactionType',
     'transactionStatus',
     'walletAddress',
+    'fiatCurrency',
     'verifyWhenPaid',
     'transactionFlag',
     'preauthFlag'
@@ -63,6 +64,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   filter = new Filter({});
   activeTab = 'info';
   adminAdditionalSettings: Record<string, any> = {};
+  fiatCurrencies: Array<CurrencyView> = [];
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -235,6 +237,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
         if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
           this.currencyOptions = currencySettings.settingsCurrency.list
             ?.map((val) => new CurrencyView(val)) as CurrencyView[];
+          this.fiatCurrencies = this.currencyOptions.filter(item => item.fiat == true);
         } else {
           this.currencyOptions = [];
         }

@@ -35,13 +35,13 @@ export enum AdminTransactionStatus {
   Abandoned = 'Abandoned',
   Canceled = 'Canceled',
   Chargeback = 'Chargeback',
-  Refund = 'Refund',
   PaymentDeclined = 'PaymentDeclined',
   AddressDeclined = 'AddressDeclined',
   ExchangeDeclined = 'ExchangeDeclined',
   TransferDeclined = 'TransferDeclined',
   BenchmarkTransferDeclined = 'BenchmarkTransferDeclined',
-  KycDeclined = 'KycDeclined'
+  KycDeclined = 'KycDeclined',
+  Refund = 'Refund'
 }
 
 export type ApiKey = {
@@ -287,6 +287,7 @@ export type CreateTransferOrderParams = {
   estimatingFee?: Maybe<Scalars['Float']>;
   treatAsGrossAmount?: Maybe<Scalars['Boolean']>;
   sourceAddress?: Maybe<Scalars['String']>;
+  providerName?: Maybe<Scalars['String']>;
 };
 
 export type CryptoInvoice = {
@@ -781,6 +782,7 @@ export type LiquidityExchangeOrder = {
   originalOrderId?: Maybe<Scalars['String']>;
   providerSpecificStates?: Maybe<Array<DateMap>>;
   providerSpecificParams?: Maybe<Array<StringMap>>;
+  error?: Maybe<Scalars['String']>;
 };
 
 export type LiquidityExchangeOrderInfo = {
@@ -2663,6 +2665,7 @@ export type QueryGetTransactionsArgs = {
   accountModesOnly?: Maybe<Array<Maybe<UserMode>>>;
   flag?: Maybe<Scalars['Boolean']>;
   preauth?: Maybe<Scalars['Boolean']>;
+  fiatCurrency?: Maybe<Scalars['String']>;
   filter?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
@@ -2723,6 +2726,7 @@ export type QueryGetDashboardStatsArgs = {
   countryCodeType?: Maybe<CountryCodeType>;
   completedDateInterval?: Maybe<DateTimeInterval>;
   accountTypesOnly?: Maybe<Array<UserType>>;
+  fiatCurrency?: Maybe<Scalars['String']>;
 };
 
 
@@ -2814,6 +2818,7 @@ export type QueryGetLiquidityExchangeOrderStatusArgs = {
 
 export type QueryGetLiquidityWithdrawalPotentialFeeInfoArgs = {
   params: CreateTransferOrderParams;
+  providerName?: Maybe<Scalars['String']>;
 };
 
 
@@ -3836,7 +3841,7 @@ export type TransferListResult = {
 export type TransferOrder = {
   __typename?: 'TransferOrder';
   orderId?: Maybe<Scalars['ID']>;
-  userId: Scalars['String'];
+  userId?: Maybe<Scalars['String']>;
   transactionId?: Maybe<Scalars['String']>;
   provider?: Maybe<Scalars['String']>;
   operation?: Maybe<Scalars['String']>;
