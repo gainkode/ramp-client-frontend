@@ -165,7 +165,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
       this.subscriptions.add(
         currencyData.valueChanges.subscribe(({ data }) => {
           this.userRoles = data.getRoles as UserRole[];
-          const filteredRoles = this.userRoles.filter(x => x.code !== 'USER');
+          const filteredRoles = this.userRoles;
           if (filteredRoles) {
             this.roleIds = filteredRoles.map(val => val.userRoleId ?? '');
           } else {

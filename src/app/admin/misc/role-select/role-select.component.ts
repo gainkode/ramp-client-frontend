@@ -13,7 +13,7 @@ export class RoleSelector {
 })
 export class AdminRoleSelectComponent {
   @Input() set roleList(vals: UserRole[]) {
-    this.roleListInternal = vals.filter(x => x.code !== 'USER');
+    this.roleListInternal = vals;
     this.updateState();
   }
   @Input() set userRoles(vals: string[]) {
@@ -46,8 +46,7 @@ export class AdminRoleSelectComponent {
       .filter(x => x.selected === true)
       .map(x => x.id);
     this.changed.emit(
-      [ ... selectedRoles,
-        'USER'
+      [ ... selectedRoles
       ]);
   }
 }
