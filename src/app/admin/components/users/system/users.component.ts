@@ -159,27 +159,27 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   	}
   }
   private loadRoleData(): void {
-  	this.roleIds = [];
-  	const currencyData = this.commonService.getRoles();
-  	if (currencyData) {
-  		this.subscriptions.add(
-  			currencyData.valueChanges.subscribe(({ data }) => {
-  				this.userRoles = data.getRoles as UserRole[];
-  				const filteredRoles = this.userRoles.filter(x => x.code !== 'USER');
-  				if (filteredRoles) {
-  					this.roleIds = filteredRoles.map(val => val.userRoleId ?? '');
-  				} else {
-  					this.roleIds = [];
-  				}
-  				this.loadUsers();
-  			}, (error) => {
-  				this.inProgress = false;
-  				if (this.auth.token === '') {
-  					void this.router.navigateByUrl('/');
-  				}
-  			})
-  		);
-  	}
+    this.roleIds = [];
+    const currencyData = this.commonService.getRoles();
+    if (currencyData) {
+      this.subscriptions.add(
+        currencyData.valueChanges.subscribe(({ data }) => {
+          this.userRoles = data.getRoles as UserRole[];
+          const filteredRoles = this.userRoles;
+          if (filteredRoles) {
+            this.roleIds = filteredRoles.map(val => val.userRoleId ?? '');
+          } else {
+            this.roleIds = [];
+          }
+          this.loadUsers();
+        }, (error) => {
+          this.inProgress = false;
+          if (this.auth.token === '') {
+            this.router.navigateByUrl('/');
+          }
+        })
+      );
+    }
   }
 
   private loadUsers(): void {

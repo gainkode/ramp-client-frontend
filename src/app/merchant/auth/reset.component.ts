@@ -11,13 +11,14 @@ import { EnvService } from 'services/env.service';
 	styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/auth.scss']
 })
 export class MerchantResetComponent implements OnDestroy {
-	token = '';
-	inProgress = false;
-	errorMessage = '';
-	hidePassword1 = true;
-	hidePassword2 = true;
-	logoSrc = `${EnvService.image_host}/images/logo-color.png`;
-	logoAlt = EnvService.product;
+    token = '';
+    inProgress = false;
+    errorMessage = '';
+    hidePassword1 = true;
+    hidePassword2 = true;
+    logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+    logoAlt = EnvService.product;
+    recaptcha = undefined;
 
 	passwordForm = this.formBuilder.group({
 		password1: [,
@@ -66,24 +67,29 @@ export class MerchantResetComponent implements OnDestroy {
 		return (p1 === p2);
 	}
 
-	onSubmit(): void {
-		this.errorMessage = '';
-		if (this.passwordForm.valid) {
-			if (!this.passwordsEqual()) {
-				this.errorMessage = 'Passwords are not equal';
-			} else {
-				this.inProgress = true;
-				const password = this.passwordForm.get('password1')?.value;
-				this.subscriptions.add(
-					this.auth.setPassword(this.token, password).subscribe(({ data }) => {
-						this.inProgress = false;
-						this.router.navigateByUrl('/merchant/auth/success/reset');
-					}, (error) => {
-						this.inProgress = false;
-						this.errorMessage = this.errorHandler.getError(error.message, 'Unable to reset password');
-					})
-				);
-			}
-		}
-	}
+    capchaResult(event){
+        this.recaptcha = event;
+        localStorage.setItem('recaptchaId', event);
+    }
+
+    onSubmit(): void {
+        this.errorMessage = '';
+        if (this.passwordForm.valid) {
+            if (!this.passwordsEqual()) {
+                this.errorMessage = 'Passwords are not equal';
+            } else {
+                this.inProgress = true;
+                const password = this.passwordForm.get('password1')?.value;
+                this.subscriptions.add(
+                    this.auth.setPassword(this.token, password).subscribe(({ data }) => {
+                        this.inProgress = false;
+                        this.router.navigateByUrl('/merchant/auth/success/reset');
+                    }, (error) => {
+                        this.inProgress = false;
+                        this.errorMessage = this.errorHandler.getError(error.message, 'Unable to reset password');
+                    })
+                );
+            }
+        }
+    }
 }

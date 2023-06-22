@@ -19,6 +19,11 @@
                         [maxlength]="50" formControlName="password2" [errorMessages]="passwordErrorMessages"
                         [separator]="true">
                     </app-form-password>
+                    <div style="width: 100%; display: flex; justify-content: center;">
+                        <recaptcha
+                            (completed)="capchaResult($event)"
+                        ></recaptcha>
+                    </div>
                     <!-- Errors -->
                     <div *ngIf="errorMessage!==''">
                         <span class="__auth-error-line">

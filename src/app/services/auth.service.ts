@@ -205,8 +205,8 @@ const SIGNUP = gql`
 `;
 
 const FORGOT_PASSWORD = gql`
-  mutation ForgotPassword($email: String!, $recaptcha: String!) {
-    forgotPassword(recaptcha: $recaptcha, email: $email)
+  mutation ForgotPassword($email: String!) {
+    forgotPassword(email: $email)
   }
 `;
 
@@ -652,16 +652,14 @@ export class AuthService {
 		});
 	}
 
-	forgotPassword(usermail: string): Observable<any> {
-		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
-		return this.apollo.mutate({
-			mutation: FORGOT_PASSWORD,
-			variables: {
-				recaptcha: recaptchaId,
-				email: usermail
-			}
-		});
-	}
+    forgotPassword(usermail: string): Observable<any> {
+        return this.apollo.mutate({
+            mutation: FORGOT_PASSWORD,
+            variables: {
+                email: usermail
+            }
+        });
+    }
 
 	setPassword(usertoken: string, userpassword: string): Observable<any> {
 		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;

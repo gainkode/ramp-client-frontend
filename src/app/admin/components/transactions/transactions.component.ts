@@ -22,25 +22,26 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
-  	'accountType',
-  	'accountMode',
-  	'country',
-  	'tier',
-  	'transactionKycStatus',
-  	'users',
-  	'widgetName',
-  	'search',
-  	'source',
-  	'createdDate',
-  	'completedDate',
-  	'paymentInstrument',
-  	'transactionIds',
-  	'transactionType',
-  	'transactionStatus',
-  	'walletAddress',
-  	'verifyWhenPaid',
-  	'transactionFlag',
-  	'preauthFlag'
+    'accountType',
+    'accountMode',
+    'country',
+    'tier',
+    'transactionKycStatus',
+    'users',
+    'widgetName',
+    'search',
+    'source',
+    'createdDate',
+    'completedDate',
+    'paymentInstrument',
+    'transactionIds',
+    'transactionType',
+    'transactionStatus',
+    'walletAddress',
+    'fiatCurrency',
+    'verifyWhenPaid',
+    'transactionFlag',
+    'preauthFlag'
   ];
   displayedColumns: string[] = [
   	'details', 'code', 'created', 'accountName', 'email', 'accountStatus', 'type', 'widgetName', 'from', 'to',
@@ -63,6 +64,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   filter = new Filter({});
   activeTab = 'info';
   adminAdditionalSettings: Record<string, any> = {};
+  fiatCurrencies: Array<CurrencyView> = [];
 
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -227,25 +229,26 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   private loadCurrencies(): void {
-  	this.inProgress = true;
-  	this.currencyOptions = [];
-  	this.subscriptions.add(
-  		this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-  			const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-  			if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-  				this.currencyOptions = currencySettings.settingsCurrency.list
-  					?.map((val) => new CurrencyView(val)) as CurrencyView[];
-  			} else {
-  				this.currencyOptions = [];
-  			}
-  			this.loadTransactions();
-  		}, (error) => {
-  			this.inProgress = false;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+    this.inProgress = true;
+    this.currencyOptions = [];
+    this.subscriptions.add(
+      this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+          this.currencyOptions = currencySettings.settingsCurrency.list
+            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
+          this.fiatCurrencies = this.currencyOptions.filter(item => item.fiat == true);
+        } else {
+          this.currencyOptions = [];
+        }
+        this.loadTransactions();
+      }, (error) => {
+        this.inProgress = false;
+        if (this.auth.token === '') {
+          this.router.navigateByUrl('/');
+        }
+      })
+    );
   }
 
   showWallets(transactionId: string): void {

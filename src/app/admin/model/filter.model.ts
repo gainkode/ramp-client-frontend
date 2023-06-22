@@ -2,45 +2,46 @@ import { AccountStatus, DateTimeInterval, KycStatus, PaymentInstrument, RiskAler
 import { EmptyObject } from 'apollo-angular/types';
 
 export class Filter {
-	public accountTypes?: Array<UserType>;
-	public notificationType?: string;
-	public accountModes?: Array<UserMode>;
-	public accountStatuses?: Array<AccountStatus>;
-	public assets?: Array<string>;
-	public countries?: Array<string>; // code3
-	public sources?: Array<TransactionSource>;
-	public user?: string;
-	public users?: Array<string>;
-	public widgets?: Array<string>;
-	public widgetNames?: Array<string>;
-	public riskAlertCode?: RiskAlertCodes;
-	public transactionIds?: Array<string>;
-	public transactionTypes?: Array<TransactionType>;
-	public transactionStatuses?: Array<TransactionStatus>;
-	public tiers?: Array<string>;
-	public kycStatuses?: Array<KycStatus>;
-	public transactionKycStatuses?: Array<TransactionKycStatus>;
-	public riskLevels?: Array<RiskLevel>;
-	public paymentInstruments?: Array<PaymentInstrument>;
-	public createdDateInterval?: DateTimeInterval;
-	public completedDateInterval?: DateTimeInterval;
-	public registrationDateInterval?: DateTimeInterval;
-	public updatedDateInterval?: DateTimeInterval;
-	public transactionDate?: Date;
-	public walletAddress?: string;
-	public walletIds?: Array<string>;
-	public totalBuyVolumeOver?: number;
-	public transactionCountOver?: number;
-	public search?: string;
-	public verifyWhenPaid?: boolean;
-	public transactionFlag?: boolean;
-	public preauthFlag?: boolean;
-	public zeroBalance?: boolean;
-	public transactionId?: string;
-	public userId?: string;
-	public resultsOnly?: Array<UserActionResult>; 
-	public statusesOnly?: Array<string>;
-	public userActionTypes?: Array<UserActionType>;
+  public accountTypes?: Array<UserType>;
+  public notificationType?: string;
+  public accountModes?: Array<UserMode>;
+  public accountStatuses?: Array<AccountStatus>;
+  public assets?: Array<string>;
+  public fiatCurrency?: string;
+  public countries?: Array<string>; // code3
+  public sources?: Array<TransactionSource>;
+  public user?: string;
+  public users?: Array<string>;
+  public widgets?: Array<string>;
+  public widgetNames?: Array<string>;
+  public riskAlertCode?: RiskAlertCodes;
+  public transactionIds?: Array<string>;
+  public transactionTypes?: Array<TransactionType>;
+  public transactionStatuses?: Array<TransactionStatus>;
+  public tiers?: Array<string>;
+  public kycStatuses?: Array<KycStatus>;
+  public transactionKycStatuses?: Array<TransactionKycStatus>;
+  public riskLevels?: Array<RiskLevel>;
+  public paymentInstruments?: Array<PaymentInstrument>;
+  public createdDateInterval?: DateTimeInterval;
+  public completedDateInterval?: DateTimeInterval;
+  public registrationDateInterval?: DateTimeInterval;
+  public updatedDateInterval?: DateTimeInterval;
+  public transactionDate?: Date;
+  public walletAddress?: string;
+  public walletIds?: Array<string>;
+  public totalBuyVolumeOver?: number;
+  public transactionCountOver?: number;
+  public search?: string;
+  public verifyWhenPaid?: boolean;
+  public transactionFlag?: boolean;
+  public preauthFlag?: boolean;
+  public zeroBalance?: boolean;
+  public transactionId?: string;
+  public userId?: string;
+  public resultsOnly?: Array<UserActionResult>; 
+  public statusesOnly?: Array<string>;
+  public userActionTypes?: Array<UserActionType>;
 
 	constructor(filterValues: EmptyObject) {
 		if(filterValues.resultsOnly){
@@ -75,9 +76,13 @@ export class Filter {
 			this.assets = filterValues.assets;
 		}
 
-		if (filterValues.countries) {
-			this.countries = filterValues.countries;
-		}
+    if(filterValues.fiatCurrency) {
+      this.fiatCurrency = filterValues.fiatCurrency
+    }
+
+    if (filterValues.countries) {
+      this.countries = filterValues.countries;
+    }
 
 		if (filterValues.sources) {
 			this.sources = filterValues.sources;

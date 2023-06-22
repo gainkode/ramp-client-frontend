@@ -113,9 +113,18 @@
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Assets
                                             </label>
-                                            <ng-select [items]="currencies" bindLabel="name" bindValue="id"
+                                            <ng-select [items]="currencies" bindLabel="name" bindValue="symbol"
                                                 formControlName="assets" [multiple]="true" [closeOnSelect]="false"
                                                 placeholder="Select assets">
+                                            </ng-select>
+                                        </div>
+                                        <div *ngIf="field === 'fiatCurrency'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                Fiat currency
+                                            </label>
+                                            <ng-select [items]="fiatCurrencies" bindLabel="name" bindValue="symbol"
+                                                formControlName="fiatCurrency" [closeOnSelect]="false"
+                                                placeholder="Select fiat">
                                             </ng-select>
                                         </div>
                                         <div *ngIf="field === 'transactionType'" class="form-group">
