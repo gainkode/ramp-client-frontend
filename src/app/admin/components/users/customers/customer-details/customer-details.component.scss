@@ -92,3 +92,23 @@
         z-index: 0 !important;
     }
 }
+
+.flex-end {
+    display: flex; 
+    justify-content: flex-end;
+}
+
+.flex-space-between {
+    display: flex; 
+    justify-content: space-between;
+}
+
+.flex-center {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+}
+
+.textarea-resize-none {
+    resize: none;
+}

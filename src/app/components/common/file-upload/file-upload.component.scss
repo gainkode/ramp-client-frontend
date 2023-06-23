@@ -1,0 +1,44 @@
+.mat-mdc-form-field-subscript-wrapper {
+    display: none;
+}
+
+.mat-mdc-form-field {
+    width: 100%;
+}
+
+.file-upload-wrapper {
+    padding: 0 15px;
+}
+
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    input {
+        display: inline-block;
+        min-width: 280px;
+        width: 280px;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+}
+
+.file-upload-progress {
+    display: flex;
+    align-items: center;
+    .cancel-upload {
+        margin-left: 10px;
+    }
+}
+
+#uploadFile {
+    top: 0px;
+    left: 0px;
+    width: 100%;    
+    z-index: 9;
+    opacity: 0;
+    height: 100%;
+    cursor: pointer;
+    position: absolute;
+}

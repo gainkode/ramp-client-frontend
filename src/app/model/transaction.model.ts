@@ -186,14 +186,11 @@ export class TransactionItemFull {
 			this.sender = paymentData.sender.title;
 			this.recipient = paymentData.recipient.title;
 			this.amountToReceive = paymentData.amountToReceive;
-			if (data.rate !== undefined && data.rate !== null) {
-				this.rate = data.rate;
-			} else {
-				this.rate = data.initialRate ?? 0;
-			}
-			if (data.type == TransactionType.Deposit) {
+			this.rate = data.rate ?? data.initialRate;
+
+			if (data.type === TransactionType.Deposit) {
 				this.address = this.recipient ?? '-';
-			} else if (data.type == TransactionType.Withdrawal) {
+			} else if(data.type === TransactionType.Withdrawal) {
 				this.address = this.sender ?? '-';
 			} else {
 				this.address = data.destination ?? '-';
@@ -496,7 +493,7 @@ export class TransactionItem {
 	amountToReceive = 0;
 	fees = 0;
 	networkFee = 0;
-	rate = 0;
+	rate: string | number = 0;
 	ip = '';
 	status: TransactionStatusDescriptorMap | undefined = undefined;
 	typeIcon = 'error';
@@ -526,7 +523,8 @@ export class TransactionItem {
 			this.typeIcon = paymentData.typeIcon;
 			this.sender = paymentData.sender;
 			this.recipient = paymentData.recipient;
-			this.rate = data.rate ?? 0;
+			this.rate = data.rate ?? data.initialRate ?? '';
+
 			this.status = userStatus;
 			this.ip = data.userIp as string;
 			const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;
@@ -666,10 +664,7 @@ function getPaymentData(
 	result.currencyToSpend = data.currencyToSpend ?? '';
 	result.currencyToReceive = data.currencyToReceive ?? '';
 	result.amountToSpend = data.amountToSpend ?? 0;
-	result.amountToReceive =
-    data.amountToReceiveWithoutFee ??
-    data.initialAmountToReceiveWithoutFee ??
-    0;
+	result.amountToReceive = data.amountToReceiveWithoutFee ?? data.initialAmountToReceiveWithoutFee ?? 0;
 
 	if (data.type === TransactionType.Buy) {
 		result.currencyFiat = result.currencyToSpend;
@@ -855,7 +850,7 @@ function getPaymentData(
 	} else if (data.type === TransactionType.Deposit) {
 		result.currencyFiat = result.currencyToReceive;
 		result.currencyCrypto = '';
-
+		
 		const destVaultData = JSON.parse(data.destVault ?? '{}');
 		let recipientName = data.destination ?? `${result.currencyFiat} Wallet`;
 		if (destVaultData?.name) {

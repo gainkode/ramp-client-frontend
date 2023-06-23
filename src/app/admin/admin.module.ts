@@ -54,7 +54,8 @@ import { AdminCryptoWalletDetailsComponent } from './components/wallets/crypto/c
 import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
 import { AdminCustomersComponent } from './components/users/customers/customers.component';
 import { AdminMessageDialogComponent } from './components/users/send-message/send-message.component';
-import { AdminCustomerDetailsComponent } from './components/users/customers/customer-details.component';
+import { AdminCustomerDetailsComponent } from './components/users/customers/customer-details/customer-details.component';
+import { AdminCustomerDocsComponent } from './components/users/customers/customer-docs/customer-docs.component';
 import { AdminSystemUsersComponent } from './components/users/system/users.component';
 import { AdminUserDetailsComponent } from './components/users/system/user-details.component';
 import { AdminRoleSelectComponent } from './misc/role-select/role-select.component';
@@ -149,6 +150,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminFiatWalletsComponent, AdminFiatWalletDetailsComponent,
 		AdminCryptoWalletsComponent, AdminCryptoWalletDetailsComponent,
 		AdminCustomersComponent, AdminCustomerDetailsComponent,
+		AdminCustomerDocsComponent,
 		AdminSystemUsersComponent, AdminUserDetailsComponent, AdminRoleSelectComponent, AdminMessageDialogComponent,
 		AdminUserDevicesComponent, AdminDeviceDetailsComponent,
 		AdminUserActionsComponent, AdminActionDetailsComponent,

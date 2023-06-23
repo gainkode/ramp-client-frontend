@@ -1,5 +1,5 @@
 overwrite: true
-schema: http://localhost:4001/gql/api
+schema: https://testnet.getcoins.com.au/gql/api
 documents: null
 generates:
   ./src/app/model/generated-models.ts:

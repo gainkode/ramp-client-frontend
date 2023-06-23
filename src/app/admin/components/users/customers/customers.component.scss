@@ -47,3 +47,19 @@
   align-items: center;
   margin-top: 12px;
 }
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.details-wrapper {
+  button {
+    margin: 0 5px;
+  }
+}
+
+::ng-deep.mat-mdc-tab.mdc-tab{
+  height: 40px !important;
+}

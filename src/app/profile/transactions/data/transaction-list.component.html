@@ -151,7 +151,7 @@
 
         <!-- Details Column -->
         <ng-container matColumnDef="details">
-            <th mat-header-cell *matHeaderCellDef
+            <th [hidden]="true" mat-header-cell *matHeaderCellDef
                 class="__profile-table-column __profile-transactions-table-column-details __profile-transactions-table-details-colummn-fullscreen">
                 <div *ngIf="!recent" class="__profile-table-details-table">
                     <button class="__small-button" type="button" disabled>
@@ -190,8 +190,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-paginator color="accent" *ngIf="(recent) ? false : (transactionCount > pageCounts[0] && transactionCount > 0)"
+    <mat-mdc-paginator color="accent" *ngIf="(recent) ? false : (transactionCount > pageCounts[0] && transactionCount > 0)"
         class="__profile-data-table" [pageIndex]="pageIndex" [length]="transactionCount" [pageSize]="pageSize"
         [pageSizeOptions]="pageCounts" showFirstLastButtons (page)="handlePage($event)">
-    </mat-paginator>
+    </mat-mdc-paginator>
 </div>

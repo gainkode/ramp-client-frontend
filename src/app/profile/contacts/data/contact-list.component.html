@@ -106,7 +106,7 @@
 
         <!-- Details Column -->
         <ng-container matColumnDef="details">
-            <th mat-header-cell *matHeaderCellDef
+            <th [hidden]="true" mat-header-cell *matHeaderCellDef
                 class="__profile-table-column __profile-contacts-table-column-details">
                 <div class="__profile-table-details-table">
                     <button class="__small-button" type="button" disabled>
@@ -131,8 +131,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-paginator color="accent" *ngIf="contactCount > pageCounts[0] && contactCount > 0"
+    <mat-mdc-paginator color="accent" *ngIf="contactCount > pageCounts[0] && contactCount > 0"
         class="__profile-data-table" [pageIndex]="pageIndex" [length]="contactCount"
         [pageSize]="pageSize" [pageSizeOptions]="pageCounts" showFirstLastButtons (page)="handlePage($event)">
-    </mat-paginator>
+    </mat-mdc-paginator>
 </div>

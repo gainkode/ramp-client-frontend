@@ -113,7 +113,7 @@ $theme: mat.define-light-theme((
     warn: $warn,
   ),
   typography: mat.define-typography-config(),
-  density: 0,
+  density: -2,
 ));
 
 @include mat.all-component-themes($theme);

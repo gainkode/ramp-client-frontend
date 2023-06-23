@@ -248,12 +248,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
-  filterByUserId(): void {
-  	this.router.navigateByUrl(`/admin/customers/${this.data?.user?.id}`).then(() => {
-  		window.location.reload();
-  	});
-  }
-
   updateRate(): void {
   	if (this.currentRate) {
   		this.form.get('rate')?.setValue(this.currentRate);

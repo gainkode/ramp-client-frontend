@@ -74,6 +74,7 @@ import {
 	FormSearchBoxComponent,
 	FormEditBoxComponent
 } from './common/controls';
+import { FileUploadComponent } from './common/file-upload/file-upload.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -144,6 +145,7 @@ const formControlComponents = [
 		DropdownItemComponent,
 		TabLabelComponent,
 		ContactFormComponent,
+		FileUploadComponent,
 		RecaptchaComponent,
 		DeleteDialogBox,
 		CommonDialogBox,
@@ -175,6 +177,7 @@ const formControlComponents = [
 		DropdownItemComponent,
 		TabLabelComponent,
 		ContactFormComponent,
+		FileUploadComponent,
 		RecaptchaComponent,
 		DeleteDialogBox,
 		CommonDialogBox,

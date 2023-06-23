@@ -79,7 +79,7 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     	private dataService: PaymentDataService) { }
 
     ngOnInit(): void {
-    	this.pSubscriptions.add(this.dataForm.valueChanges.subscribe({ next: (result: any) => this.onFormUpdated() }));
+    	this.pSubscriptions.add(this.dataForm.valueChanges.subscribe(() => this.onFormUpdated()));
     	this.pSubscriptions.add(this.code1Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 1)));
     	this.pSubscriptions.add(this.code2Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 2)));
     	this.pSubscriptions.add(this.code3Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 3)));

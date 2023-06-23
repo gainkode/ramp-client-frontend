@@ -2,8 +2,8 @@
     <label *ngIf="label!==''" class="main-content-label tx-11 tx-medium tx-gray-600">
         {{label}}
     </label>
-    <div *ngIf="setArray===false">
-        <p *ngIf="valueString && setLink===false" class="mg-b-20">
+    <div *ngIf="!setArray">
+        <p *ngIf="valueString && !setLink" class="mg-b-20">
             {{valueString}}
         </p>
         <p *ngIf="valueString && url" class="mg-b-20">
@@ -12,10 +12,10 @@
             </a>
         </p>
         <p *ngIf="valueString && urlPath" class="mg-b-20">
-            <a *ngIf="smartLink===false" [routerLink]="urlPath">
+            <a *ngIf="!smartLink" [routerLink]="urlPath">
                 {{valueString}}
             </a>
-            <a *ngIf="smartLink===true" [routerLink]="null" (click)="linkClick()">
+            <a *ngIf="smartLink" [routerLink]="null" (click)="linkClick()">
                 {{valueString}}
             </a>
         </p>
@@ -24,7 +24,7 @@
                 imageSource="{{valueImage?.imgSource}}"></app-dropdown-item>
         </div>
     </div>
-    <div *ngIf="setArray===true" class="mg-b-20">
+    <div *ngIf="setArray" class="mg-b-20">
         <div *ngFor="let s of valueStrings" class="value">
             <p class="mg-b-5">
                 {{s}}

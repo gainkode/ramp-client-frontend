@@ -189,11 +189,6 @@ const routes: Routes = [
 				component: AdminCountryBlackListComponent,
 				data: { header: 'Black list' }
 			},
-			//   {
-			//     path: 'reconciliation',
-			//     component: AdminReconciliationComponent,
-			//     data: { header: 'Reconciliation' }
-			//   },
 			{
 				path: 'risk-center',
 				component: AdminRisksComponent,

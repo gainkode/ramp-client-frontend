@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { CommonTargetValue } from 'model/common.model';
 import { UserModeView } from 'model/payment.model';
 
@@ -39,8 +40,6 @@ export class AdminDetailsItemComponent {
   	}
   }
 
-  @Output() click = new EventEmitter();
-
   valueString?: string;
   valueStrings?: string[];
   valueImage?: CommonTargetValue;
@@ -50,9 +49,9 @@ export class AdminDetailsItemComponent {
   url: string | undefined = undefined;
   smartUrl: string | undefined = undefined;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   linkClick(): void {
-  	this.click.emit();
+  	void this.router.navigateByUrl(this.smartUrl).then(() => window.location.reload());
   }
 }

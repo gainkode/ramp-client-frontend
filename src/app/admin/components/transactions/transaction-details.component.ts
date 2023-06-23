@@ -150,7 +150,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
-  	//this.rateErrorMessage = error;
   	if (rate) {
   		this.currentRate = rate.depositRate;
   	}
@@ -326,12 +325,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			}
   		})
   	);
-  }
-
-  filterByUserId(): void {
-  	void this.router.navigateByUrl(`/admin/customers/${this.data?.user?.id}`).then(() => {
-  		window.location.reload();
-  	});
   }
 
   updateRate(): void {
