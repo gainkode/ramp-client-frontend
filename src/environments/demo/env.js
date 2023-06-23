@@ -26,6 +26,8 @@
     window.__env_data.deposit_withdrawal = true;
     // Recaptcha ID
     window.__env_data.recaptchaId = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+    window.__env_data.recaptchaSiteKey = '0x4AAAAAAAE-qpHEMwxyozoe';
+    window.__env_data.recaptchaProvider = 'Turnstile';
     // Google ID
     window.__env_data.googleId = '588649307348-vgo0s711n38c5p7ig83m1tpkujijgker.apps.googleusercontent.com';
     // Support team email address
