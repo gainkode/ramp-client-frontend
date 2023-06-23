@@ -144,16 +144,13 @@ export class TransactionItemFull {
 			this.sender = paymentData.sender.title;
 			this.recipient = paymentData.recipient.title;
 			this.amountToReceive = paymentData.amountToReceive;
-			if (data.rate !== undefined && data.rate !== null) {
-				this.rate = data.rate;
-			} else {
-				this.rate = data.initialRate ?? 0;
-			}
-			if(data.type == TransactionType.Deposit){
+			this.rate = data.rate ?? data.initialRate;
+
+			if (data.type === TransactionType.Deposit) {
 				this.address = this.recipient ?? '-';
-			}else if(data.type == TransactionType.Withdrawal){
+			} else if(data.type === TransactionType.Withdrawal) {
 				this.address = this.sender ?? '-';
-			}else{
+			} else {
 				this.address = data.destination ?? '-';
 			}
 			const kycStatus = TransactionKycStatusList.find(x => x.id === (data as Transaction).kycStatus);
@@ -422,7 +419,7 @@ export class TransactionItem {
 	amountToReceive = 0;
 	fees = 0;
 	networkFee = 0;
-	rate = 0;
+	rate: string | number = 0;
 	ip = '';
 	status: TransactionStatusDescriptorMap | undefined = undefined;
 	typeIcon = 'error';
@@ -451,7 +448,8 @@ export class TransactionItem {
 			this.typeIcon = paymentData.typeIcon;
 			this.sender = paymentData.sender;
 			this.recipient = paymentData.recipient;
-			this.rate = data.rate ?? 0;
+			this.rate = data.rate ?? data.initialRate ?? '';
+
 			this.status = userStatus;
 			this.ip = data.userIp as string;
 			const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;

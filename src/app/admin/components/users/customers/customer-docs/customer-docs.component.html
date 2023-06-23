@@ -1,23 +1,23 @@
 <div *ngIf="isEditDocument; else docsTable">
   <div [formGroup]="form" class="inputs-wrap" [@fade]="isEditDocument">
-    <mat-form-field class="size-full" appearance="outline">
+    <mat-mdc-form-field class="size-full" appearance="outline">
       <mat-label>Document Type</mat-label>
       <mat-select appendTo="body" formControlName="type">
         <mat-option *ngFor="let type of documentTypes" [value]="type">
           {{ type }}
         </mat-option>
       </mat-select>
-    </mat-form-field>
+    </mat-mdc-form-field>
   
-    <mat-form-field style="font-size: 12px" class="size-full" appearance="outline">
+    <mat-mdc-form-field style="font-size: 12px" class="size-full" appearance="outline">
       <mat-label>Name</mat-label>
       <input matInput type="text" formControlName="name" />
-    </mat-form-field>
+    </mat-mdc-form-field>
   
-    <mat-form-field class="size-full" appearance="outline">
+    <mat-mdc-form-field class="size-full" appearance="outline">
       <mat-label>Description</mat-label>
       <input matInput type="text" formControlName="description" />
-    </mat-form-field>
+    </mat-mdc-form-field>
   
     <br />
     <app-file-upload></app-file-upload>

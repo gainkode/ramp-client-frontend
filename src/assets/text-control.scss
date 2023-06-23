@@ -561,6 +561,11 @@ textarea.__form-text-area-error {
     border-style: none none none solid;
 
     display: flex;
+
+    .align-mat-select {
+        margin-top: 3px;
+        margin-right: 5px;
+    }
 }
 
 .__form-finance-combo-item {

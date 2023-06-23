@@ -142,17 +142,17 @@
       .mat-checkbox-frame {
         border-color: rgba(255, 255, 255, 0.6);
       }
-      .mat-paginator,
-      .mat-paginator-page-size .mat-select-trigger {
+      .mat-mdc-paginator,
+      .mat-mdc-paginator-page-size .mat-mdc-select-trigger {
         color: rgba(255, 255, 255, 0.54) !important;
       }
-      .mat-paginator {
+      .mat-mdc-paginator {
         background: $dark-theme;
       }
-      .mat-select-value {
+      .mat-mdc-select-value {
         color: rgb(255, 247, 247, 0.87);
       }
-      .mat-select-arrow {
+      .mat-mdc-select-arrow {
         color: rgba(255, 255, 255, 0.73);
       }
     }
@@ -271,17 +271,17 @@
       .mat-checkbox-frame {
         border-color: rgba(255, 255, 255, 0.6);
       }
-      .mat-paginator,
-      .mat-paginator-page-size .mat-select-trigger {
+      .mat-mdc-paginator,
+      .mat-mdc-paginator-page-size .mat-mdc-select-trigger {
         color: rgba(255, 255, 255, 0.54) !important;
       }
-      .mat-paginator {
+      .mat-mdc-paginator {
         background: #2da28f;
       }
-      .mat-select-value {
+      .mat-mdc-select-value {
         color: rgb(255, 247, 247, 0.87);
       }
-      .mat-select-arrow {
+      .mat-mdc-select-arrow {
         color: rgba(255, 255, 255, 0.73);
       }
     }

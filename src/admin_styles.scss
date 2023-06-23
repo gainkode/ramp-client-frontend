@@ -404,12 +404,12 @@ button:focus:not(:focus-visible) {
     border: 1px solid #4cb0a0 !important;
   }
 
-  .mat-select-panel {
+  .mat-mdc-select-panel {
     background: var(--transparent-body);
     color: #fff;
   }
 
-  .mat-option {
+  .mat-mdc-option {
     color: #eee;
   }
 }

@@ -262,18 +262,18 @@ mat-dialog-container {
     color: $color_main_blue_800;
 }
 
-.mat-select-panel {
+.mat-mdc-select-panel {
     background: $color_white;
 }
 
-.mat-select-arrow-wrapper {
+.mat-mdc-select-arrow-wrapper {
     background-image: var(--arrow_down);
     background-position: center;
     background-repeat: no-repeat;
     background-size: 8px;
 }
 
-.mat-select-arrow {
+.mat-mdc-select-arrow {
     opacity: 0;
 }
 
