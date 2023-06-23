@@ -3,7 +3,7 @@ import { DataSource } from '@angular/cdk/table';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CustomerDocument, DocumentTypeValueType, GetDocumentFileResult } from 'admin/model/customer.model';
+import { CustomerDocument, DocumentTypeValue, GetDocumentFileResult } from 'admin/model/customer.model';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 
 const ELEMENT_DATA: any[] = [
@@ -34,19 +34,19 @@ const ELEMENT_DATA: any[] = [
 		  ])
 		])
 	  ],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	// changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminCustomerDocsComponent implements OnInit, OnDestroy {
 	private readonly destroy$ = new Subject<void>();
 
-	documentTypes: string[] = Object.values(DocumentTypeValueType).map((value) => String(value));
+	documentTypes: string[] = Object.values(DocumentTypeValue).map((value) => String(value));
 	displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
 	dataToDisplay = [...ELEMENT_DATA];
   
 	dataSource = new ExampleDataSource(this.dataToDisplay);
 
 	form = this.fb.group({
-		type: new FormControl<DocumentTypeValueType>(undefined),
+		type: new FormControl<DocumentTypeValue>(undefined),
 		name: new FormControl<string>(undefined),
 		description: new FormControl<string>(undefined)
 	});
@@ -57,6 +57,10 @@ export class AdminCustomerDocsComponent implements OnInit, OnDestroy {
 		private fb: FormBuilder,
 		private router: Router
 	) {}
+
+	// getDocumentTypes(): string[] {
+	// 	if (this.form.controls.type === '')
+	// }
 
 	ngOnInit(): void {
 		console.log(this.documentTypes)
