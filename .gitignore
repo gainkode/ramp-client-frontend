@@ -6,3 +6,4 @@ node_modules_14
 node_modules_*
 environment.global.ts
 .idea
+*.eslintrc.json
