@@ -10,7 +10,7 @@
       ],
       "parserOptions": {
         "project": [
-          "./cm-ewallet-client/tsconfig.json"
+          "tsconfig.json"
         ],
         "createDefaultProgram": true
       },
