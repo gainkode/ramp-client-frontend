@@ -26,7 +26,7 @@ $font_main: var(--font_main);
     color: $color_purple_900_text;
     text-align: center;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         font-size: 12px;
         line-height: 22px;
     }
@@ -83,7 +83,7 @@ $font_main: var(--font_main);
     grid-template-rows: 24px;
     grid-template-columns: 130px 24px 48px 24px 48px 24px 48px 24px 130px;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         grid-template-rows: 16px;
         grid-template-columns: 32px 16px 16px 16px 16px 16px 16px 16px 32px;
     }
@@ -167,7 +167,7 @@ $font_main: var(--font_main);
     justify-content: center;
     align-items: center;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         flex-direction: column;
     }
 }
@@ -182,7 +182,7 @@ $font_main: var(--font_main);
     grid-template-rows: 110px;
     grid-template-columns: 110px 40px auto;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         width: 240px;
         display: flex;
         flex-direction: column;
@@ -204,7 +204,7 @@ $font_main: var(--font_main);
     align-items: flex-start;
     justify-content: center;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         width: 240px;
         justify-content: center;
         align-items: center;
@@ -241,7 +241,7 @@ $font_main: var(--font_main);
     line-height: 18px;
     color: $color_purple_900_text;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         font-size: 10px;
         line-height: 16px;
     }

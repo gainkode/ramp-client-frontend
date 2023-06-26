@@ -55,7 +55,10 @@
 }
 
 .details-wrapper {
-  button {
+  display: flex;
+  align-items: center;
+  .row-button {
+    top: 0;
     margin: 0 5px;
   }
 }

@@ -153,7 +153,7 @@ $font_main: var(--font_main);
     line-height: 56px;
     color: $color_orange_500;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         padding: 8px 32px;
         height: 64px;
         font-size: 27px;

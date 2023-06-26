@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { NotificationItem } from 'model/notification.model';
@@ -40,19 +40,30 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   pageIndex = 0;
   sortedField = 'created';
   sortedDesc = true;
-  filter = new Filter({});
+  isFilterCollapsed = true;
+  filter: Filter | undefined = undefined;
   adminAdditionalSettings: Record<string, any> = {};
   
   private subscriptions: Subscription = new Subscription();
-  private detailsDialog: NgbModalRef | undefined = undefined;
 
   constructor(
   	private modalService: NgbModal,
   	private auth: AuthService,
   	private adminService: AdminDataService,
-  	private router: Router
+  	private router: Router,
+  	private route: ActivatedRoute
   ) {
   	this.permission = this.auth.isPermittedObjectCode('NOTIFICATIONS');
+
+  	this.route.queryParams
+  		.subscribe(params => {
+  			if (!!params.userId) {
+  				this.filter = { search: params.userId } as Filter;
+  				this.isFilterCollapsed = false;
+  			} else {
+  				this.filter = new Filter({});
+  			}
+  		});
   }
 
   ngOnInit(): void {
@@ -86,7 +97,8 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
 
   showDetails(notification: NotificationItem, content: any): void {
   	this.selectedMessage = notification;
-  	this.detailsDialog = this.modalService.open(content, {
+  	
+  	this.modalService.open(content, {
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
   	});
@@ -102,23 +114,26 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   }
   private loadNotifications(): void {
   	this.inProgress = true;
+
   	const listData$ = this.adminService.getNotifications(
   		this.pageIndex,
   		this.pageSize,
   		this.sortedField,
   		this.sortedDesc,
   		this.filter).pipe(take(1));
+	
   	this.subscriptions.add(
-  		listData$.subscribe(({ list, count }) => {
-  			this.messages = list;
-  			this.messageCount = count;
-  			this.inProgress = false;
-  		}, (error) => {
-  			this.inProgress = false;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+  		listData$.pipe(finalize(() => this.inProgress = false))
+  			.subscribe({
+  				next: ({ list, count }) => {
+  					this.messages = list;
+  					this.messageCount = count;
+  				},
+  				error: () => {
+  					if (this.auth.token === '') {
+  						void this.router.navigateByUrl('/');
+  					}
+  				}
+  			}));
   }
 }

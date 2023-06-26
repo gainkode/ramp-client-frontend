@@ -187,16 +187,16 @@ a:active {
     min-height: ($max_height - $top_menu_height_lg - 10) + px;
     background-color: $color_white;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         min-height: $min_height + px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         min-width: $mid_width_container + px;
         min-height: $min_height + px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         min-width: $out_width_container + px;
     }
 }

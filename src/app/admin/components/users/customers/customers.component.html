@@ -73,6 +73,14 @@
                           playlist_add_check
                         </i>
                       </button>
+                      <button type="button" mat-icon-button class="row-button"
+                        matTooltip="View Notifications" matTooltipClass="info-tooltip"
+                        [routerLink]="'/admin/notifications'"
+                        [queryParams]="{userId: element.id}">
+                        <i class="material-icons">
+                          circle_notifications
+                        </i>
+                      </button>
                       <button *ngIf="!element.emailConfirmed && permission > 1" type="button" mat-icon-button class="row-button"
                         matTooltip="Confirm email" matTooltipClass="info-tooltip"
                         [attr.aria-label]="'Confirm email'" (click)="confirmEmail(element, confirmed_content)">

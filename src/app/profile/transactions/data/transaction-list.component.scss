@@ -119,7 +119,7 @@ $font_main: var(--font_main);
 .__profile-transactions-table-details-colummn-mobile {
     display: none;
     
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         display: table-cell;
     }
 }
@@ -127,7 +127,7 @@ $font_main: var(--font_main);
 .__profile-transactions-table-details-colummn-fullscreen {
     display: table-cell;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         display: none;
     }
 }

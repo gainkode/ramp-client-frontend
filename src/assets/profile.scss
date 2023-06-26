@@ -23,17 +23,17 @@ $font_main: var(--font_main);
     border-style: none solid none none;
     z-index: 250;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         top: $top_menu_height_sm + px;
         width: $side_menu_narrow_width_sm + px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         top: $top_menu_height_sm + px;
         width: $side_menu_narrow_width_sm + px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         display: none;
         visibility: hidden;
     }
@@ -53,17 +53,17 @@ $font_main: var(--font_main);
     border-style: none solid none none;
     z-index: 250;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         top: $top_menu_height_sm + px;
         width: $side_menu_width_sm + px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         top: $top_menu_height_sm + px;
         width: $side_menu_width_sm + px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         width: 0px;
         visibility: hidden;
     }
@@ -97,19 +97,19 @@ $font_main: var(--font_main);
     background-color: $color_white;
     margin-left: $side_menu_narrow_width_lg + px;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         width: calc(100vw - 48px - #{$side_menu_narrow_width_sm + px});
         padding: 0px;
         margin-left: $side_menu_narrow_width_sm + px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         width: calc(100vw - #{$side_menu_narrow_width_sm + px});
         padding: 0px;
         margin-left: $side_menu_narrow_width_sm + px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         // padding: 0px;
         // width: 0px;
         // visibility: hidden;
@@ -127,19 +127,19 @@ $font_main: var(--font_main);
     padding: 0px 16px;
     margin-left: $side_menu_width_lg + px;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         padding: 0px;
         width: calc(100vw - 64px - #{$side_menu_width_sm + px});
         margin-left: $side_menu_width_sm + px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         padding: 0px;
         width: calc(100vw - 64px - #{$side_menu_width_sm + px});
         margin-left: $side_menu_width_sm + px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         // padding: 0px;
         // width: 0px;
         // visibility: hidden;
@@ -163,17 +163,17 @@ $font_main: var(--font_main);
     background-color: $color_purple_900;
     z-index: 200;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         height: $top_menu_height_sm + px;
         width: $side_menu_width_sm + px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         height: $top_menu_height_sm + px;
         width: $side_menu_width_sm + px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         display: none;
         visibility: hidden;
     }
@@ -187,7 +187,7 @@ $font_main: var(--font_main);
     color: $color_white;
     cursor: pointer;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         margin: 0px 30px;
     }
 }
@@ -218,7 +218,7 @@ $font_main: var(--font_main);
     align-items: flex-end;
     background-color: transparent;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         display: none;
         visibility: hidden;
     }
@@ -248,12 +248,12 @@ $font_main: var(--font_main);
     width: calc(100% - 475px);
     transition: width 250ms cubic-bezier(0, 0, 0.2, 1);
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         width: calc(100% - 342px);
         transition: width 250ms cubic-bezier(0, 0, 0.2, 1);
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         display: none;
     }
 }
@@ -264,11 +264,11 @@ $font_main: var(--font_main);
     background-color: $color_white;
     z-index: 50;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         width: 342px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         width: 100%;
         margin: 0px;
     }
@@ -295,12 +295,12 @@ $font_main: var(--font_main);
     margin: 0px;
     min-height: 700px;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         width: 342px;
         min-height: 600px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         width: 100%;
         min-height: 400px;
         border-style: none;
@@ -343,7 +343,7 @@ $font_main: var(--font_main);
     width: 0px;
     visibility: hidden;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         width: 100%;
         visibility: visible;
     }
@@ -374,7 +374,7 @@ $font_main: var(--font_main);
 }
 
 .__profile-content-mobile-container {
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         display: none;
         visibility: hidden;
     }
@@ -804,7 +804,7 @@ $font_main: var(--font_main);
 
     color: $color_white;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         display: none;
         visibility: hidden;
     }
@@ -829,7 +829,7 @@ $font_main: var(--font_main);
     min-height: 400px;
     width: 100%;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         min-height: 350px;
     }
 }
@@ -847,7 +847,7 @@ $font_main: var(--font_main);
     row-gap: 26px;
     width: 100%;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 }
@@ -922,7 +922,7 @@ $font_main: var(--font_main);
     align-items: center;
     overflow-x: auto;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         display: none;
         visibility: hidden;
     }
@@ -1014,7 +1014,7 @@ $font_main: var(--font_main);
 .__profile-balance-chart-period-selector {
     margin: 32px 0px 0px 0px;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md3}px) {
         display: none;
         visibility: hidden;
     }

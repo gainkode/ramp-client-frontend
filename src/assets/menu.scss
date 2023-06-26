@@ -18,15 +18,15 @@ $font_main: var(--font_main);
     width: 100%;
     z-index: 100;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         height: $top_menu_height_sm + px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         height: $top_menu_height_sm + px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         display: none;
         width: 0px;
         min-width: 0px;
@@ -37,7 +37,7 @@ $font_main: var(--font_main);
 .__top-menu-hamburger {
     display: none;
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         position: sticky;
         top: 0px;
         display: flex;
@@ -65,15 +65,15 @@ $font_main: var(--font_main);
     align-items: center;
     margin-left: $side_menu_width_lg + px;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         margin-left: $side_menu_width_sm + px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         margin-left: $side_menu_width_sm + px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         width: 0px;
         visibility: hidden;
     }
@@ -86,15 +86,15 @@ $font_main: var(--font_main);
     align-items: center;
     margin-left: $side_menu_narrow_width_lg + px;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         margin-left: $side_menu_narrow_width_sm + px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         margin-left: $side_menu_narrow_width_sm + px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         width: 0px;
         visibility: hidden;
     }
@@ -120,13 +120,6 @@ $font_main: var(--font_main);
     background-color: $color_pink_500;
     width: 100%;
     z-index: 500;
-
-    // @media (max-width: $md3 + px) {
-    //     display: none;
-    //     width: 0px;
-    //     min-width: 0px;
-    //     visibility: hidden;
-    // }
 
     div.__error-message-text {
         grid-row: 1;
@@ -156,7 +149,7 @@ $font_main: var(--font_main);
     min-height: 0px;
     width: 100%;
 
-    // @media (max-width: $md3 + px) {
+    // @media (max-width: #{$md1}px) {
     //     display: none;
     //     width: 0px;
     //     min-width: 0px;
@@ -174,7 +167,7 @@ $font_main: var(--font_main);
 
 .__popup-menu-button {
     height: 28px;
-    margin: 8px 30px 0px 2px;
+    margin: 0 15px;
     padding: 0px;
     border: none;
     background-color: $color_white;
@@ -224,11 +217,11 @@ $font_main: var(--font_main);
 .__side-menu-footer-container {
     margin-left: 48px;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         margin-left: 24px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         margin-left: 24px;
     }
 }
@@ -237,11 +230,11 @@ $font_main: var(--font_main);
     margin-top: 44px;
     margin-left: 48px;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         margin-left: 0px;
     }
 
-    @media (max-width: $md2 + px) {
+    @media (max-width: #{$md2}px) {
         margin-left: 0px;
     }
 }
@@ -249,11 +242,11 @@ $font_main: var(--font_main);
 .__tool-bar-container {
     margin: 32px 24px 24px 24px;
 
-    @media (max-width: $md1 + px) {
+    @media (max-width: #{$md1}px) {
         margin: 24px 24px 16px 24px;
     }
 
-    @media (max-width: $md3 + px) {
+    @media (max-width: #{$md1}px) {
         margin: 8px;
     }
 }

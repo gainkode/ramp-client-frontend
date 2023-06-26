@@ -3,7 +3,7 @@ import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { SettingsCurrencyWithDefaults, UserRole } from 'model/generated-models';
@@ -154,24 +154,26 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	this.currencyList = [];
   	this.inProgress = true;
   	const currencyData = this.commonService.getSettingsCurrency();
+	
   	if (currencyData) {
   		this.subscriptions.add(
-  			currencyData.valueChanges.subscribe(({ data }) => {
-  				const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-  				if (currencySettings.settingsCurrency) {
-  					if (currencySettings.settingsCurrency.count ?? 0 > 0) {
-  						this.currencyList = currencySettings.settingsCurrency.list?.
-  							map((val) => new CurrencyView(val)) as CurrencyView[];
+  			currencyData.valueChanges.subscribe({
+  				next: ({ data }) => {
+  					const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+  					if (currencySettings.settingsCurrency) {
+  						if (currencySettings.settingsCurrency.count ?? 0 > 0) {
+  							this.currencyList = currencySettings.settingsCurrency.list?.
+  								map((val) => new CurrencyView(val)) as CurrencyView[];
+  						}
   					}
-  				}
-  				this.loadRoleData();
-  			}, (error) => {
-  				this.inProgress = false;
-  				if (this.auth.token === '') {
-  					void this.router.navigateByUrl('/');
-  				}
-  			})
-  		);
+  					this.loadRoleData();
+  				},
+  				error: () => {
+  					this.inProgress = false;
+  					this.nagivateToHome();
+  				} 
+  			}));
+
   	}
   }
 
@@ -180,22 +182,18 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	const currencyData = this.commonService.getRoles();
   	if (currencyData) {
   		this.subscriptions.add(
-  			currencyData.valueChanges.subscribe(({ data }) => {
-  				const roleData = data.getRoles as UserRole[];
-  				const userRole = roleData.find(x => x.code === 'USER');
-  				if (userRole) {
-  					this.roleIds = [userRole.userRoleId ?? ''];
-  				} else {
-  					this.roleIds = [];
-  				}
-  				this.loadCustomers();
-  			}, (error) => {
-  				this.inProgress = false;
-  				if (this.auth.token === '') {
-  					void this.router.navigateByUrl('/');
-  				}
-  			})
-  		);
+  			currencyData.valueChanges.pipe().subscribe({
+  				next: ({ data }) => {
+  					const roleData = data.getRoles as UserRole[];
+  					const userRole = roleData.find(x => x.code === 'USER');
+  					this.roleIds = userRole ? [userRole.userRoleId ?? ''] : [];
+  					this.loadCustomers();
+  				},
+  				error: () => {
+  					this.inProgress = false;
+  					this.nagivateToHome();
+  				} 
+  			}));
   	}
   }
 
@@ -209,18 +207,16 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   		this.sortedDesc,
   		this.filter).pipe(take(1));
   	this.selected = false;
-  	this.subscriptions.add(
-  		listData$.subscribe(({ list, count }) => {
-  			this.customers = list;
-  			this.customerCount = count;
-  			this.inProgress = false;
-  		}, (error) => {
-  			this.inProgress = false;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+
+	  this.subscriptions.add(
+  		listData$.pipe(finalize(() => this.inProgress = false))
+  			.subscribe({
+  				next: ({ list, count }) => {
+  					this.customers = list;
+  					this.customerCount = count;
+  				},
+  				error: () => this.nagivateToHome()
+  			}));
   }
 
   onSaveCustomer(): void {
@@ -243,22 +239,23 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	this.sendMessageError = '';
   	const ids = this.customers.filter(x => x.selected === true).map(val => val.id);
   	const requestData$ = this.adminService.sendAdminNotification(ids, data.level, data.title, data.text);
-  	this.subscriptions.add(
-  		requestData$.subscribe(({ result }) => {
-  			this.sendMessageInProgress = false;
-  			this.selected = false;
-  			this.customers.forEach(x => x.selected = false);
-  			if (this.messageDialog) {
-  				this.messageDialog.close();
-  			}
-  		}, (error) => {
-  			this.sendMessageInProgress = false;
-  			this.sendMessageError = error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+	
+	  this.subscriptions.add(
+  		requestData$.pipe(finalize(() => this.sendMessageInProgress = false))
+  			.subscribe({
+  				next: () => {
+  					this.selected = false;
+  					this.customers.forEach(x => x.selected = false);
+  					if (this.messageDialog) {
+  						this.messageDialog.close();
+  					}
+  				},
+  				error: (errorMessage) => {
+  					this.sendMessageError = errorMessage;
+  					this.nagivateToHome();
+  				} 
+  			}));
+
   }
 
   export(content: any): void {
@@ -269,18 +266,16 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   		this.sortedField,
   		this.sortedDesc,
   		this.filter);
-  	this.subscriptions.add(
-  		exportData$.subscribe(({ data }) => {
-  			this.modalService.open(content, {
-  				backdrop: 'static',
-  				windowClass: 'modalCusSty',
-  			});
-  		}, (error) => {
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+		  this.subscriptions.add(exportData$.pipe()
+  			.subscribe({
+  				next: () => {
+  					this.modalService.open(content, {
+  						backdrop: 'static',
+  						windowClass: 'modalCusSty',
+  					});
+  				},
+  				error: () => this.nagivateToHome()
+  			}));
   }
 
   handleFilterApplied(filter: Filter): void {
@@ -303,21 +298,27 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
 
   confirmEmail(user: UserItem, content: any): void {
   	const requestData$ = this.adminService.confirmEmail(user.id);
+
   	this.subscriptions.add(
-  		requestData$.subscribe(({ result }) => {
-  			this.modalService.open(content, {
-  				backdrop: 'static',
-  				windowClass: 'modalCusSty',
-  			});
-  		}, (error) => {
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+  		requestData$.pipe()
+  			.subscribe({
+  				next: () => {
+  					this.modalService.open(content, {
+  						backdrop: 'static',
+  						windowClass: 'modalCusSty',
+  					});
+  				},
+  				error: () => this.nagivateToHome()
+  			}));
   }
 
   showWhiteList(userId: string): void {
   	void this.router.navigateByUrl(`/admin/white-device-list/${userId}`);
+  }
+
+  private nagivateToHome(): void {
+  	if (this.auth.token === '') {
+  		void this.router.navigateByUrl('/');
+  	}
   }
 }
