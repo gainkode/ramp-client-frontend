@@ -1,34 +1,23 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
-import { EnvService } from '../../../app/services/env.service';
+import { EnvService } from 'services/env.service';
 
 @Component({
-	selector: 'recaptcha',
+	selector: 'app-recaptcha',
 	templateUrl: 'recaptcha.component.html',
-	styleUrls: ['../../../assets/button.scss']
+	styleUrls: ['recaptcha.component.scss']
 })
-export class RecaptchaComponent implements OnInit, OnDestroy {
+export class RecaptchaComponent{
     @Output() completed = new EventEmitter();
     @Output() onReject = new EventEmitter();
     @Output() onError = new EventEmitter<string>();
 
-    private pTokenSubscription: Subscription | undefined = undefined;
-
     siteKey = EnvService.recaptchaSiteKey;
     provider = EnvService.recaptchaProvider;
-    constructor(
-    	public dialog: MatDialog,
-    	private auth: AuthService) {
-    }
 
-    ngOnInit(): void {}
+    constructor(public dialog: MatDialog) {}
 
-    ngOnDestroy(): void {
-    }
-
-    capchaResult(event): void {
+    capchaResult(event: string | null): void {
     	localStorage.setItem('recaptchaId', event);
     	this.completed.emit(event);
     }

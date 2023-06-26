@@ -181,6 +181,14 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   	return this.dataForm.get('verifyWhenPaid');
   }
 
+  get isOrderDetailsFormValid(): boolean {
+  	return (!this.initialized ||
+			!this.validData || 
+			!this.walletField?.valid ||
+			!this.emailField?.valid) ||
+			(!this.quoteUnlimit && this.quoteExceed && !this.verifyWhenPaidField?.value);
+  }
+
   constructor(
   	private router: Router,
   	private auth: AuthService,
@@ -421,7 +429,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   		this.pSpendAutoUpdated = true;
   		this.amountSpendField?.setValue(defaultSpendAmount);
   	}
+
   	if (this.receiveCurrencyList.length > 0) {
+
   		if (defaultReceiveCurrency === '') {
   			defaultReceiveCurrency = this.receiveCurrencyList[0].symbol;
   		} else {
@@ -456,6 +466,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   	let result = (c.fiat === true);
   	if (result && this.settings.fiatList.length > 0) {
   		result = (this.settings.fiatList.find(x => x === c.symbol) !== undefined);
+		
   	}
   	return result;
   }

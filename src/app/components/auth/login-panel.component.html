@@ -9,13 +9,9 @@
         <app-form-password [label]="'Password'" [placeholder]="'Enter your password here'" [maxlength]="50"
             formControlName="password" [errorMessages]="passwordErrorMessages" [separator]="true">
         </app-form-password>
-        <div style="width: 100%; display: flex; justify-content: center;">
-            <recaptcha
-                (completed)="capchaResult($event)"
-            ></recaptcha>
-        </div>
+
+        <app-recaptcha (completed)="capchaResult($event)"></app-recaptcha>
         
-        <!-- <re-captcha (resolved)="capchaResult($event)" siteKey="YOUR_SITE_KEY"></re-captcha> -->
         <!-- Errors -->
         <div *ngIf="errorMessage!==''">
             <span class="__auth-error-line">

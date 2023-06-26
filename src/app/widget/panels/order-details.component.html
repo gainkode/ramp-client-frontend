@@ -6,7 +6,7 @@
         </app-form-textbox>
 
         <!-- Transaction -->
-        <div *ngIf="settings.transaction===undefined">
+        <div *ngIf="!settings.transaction">
             <div class="__form-label">
                 Transaction
             </div>
@@ -28,7 +28,7 @@
         </div>
 
         <!-- Spend -->
-        <app-form-finance-combo [label]="spendTitle" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
+        <app-form-finance-combo [label]="spendTitle" [boxFieldName]="'amountSpend'"
             [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'"
             [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="false">
         </app-form-finance-combo>
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Receive -->
-            <app-form-finance-combo [label]="receiveTitle" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
+            <app-form-finance-combo [label]="receiveTitle" [boxFieldName]="'amountReceive'"
                 [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
                 [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="false">
             </app-form-finance-combo>
@@ -112,7 +112,7 @@
                 </div>
             </div>
 
-            <mat-checkbox *ngIf="showVerifyWhenPaid && quoteUnlimit===false && settings.embedded===true" color="accent" formControlName="verifyWhenPaid"
+            <mat-checkbox *ngIf="showVerifyWhenPaid && !quoteUnlimit && settings.embedded" color="accent" formControlName="verifyWhenPaid"
                 class="__widget-checkout" style="margin-top: 8px;">
                 <span style="white-space: pre-line;font-size: 14px;">
                     Verify when Paid
@@ -147,9 +147,15 @@
             </div>
             
             <!-- Receive -->
-            <app-form-finance-combo [label]="receiveTitle" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
-                [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
-                [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="false">
+            <app-form-finance-combo 
+                [label]="receiveTitle" 
+                [boxFieldName]="'amountReceive'"
+                [boxField]="amountReceiveField" 
+                [comboField]="currencyReceiveField" 
+                [comboFieldName]="'currencyReceive'"
+                [comboList]="receiveCurrencyList" 
+                [errorMessages]="amountReceiveErrorMessages" 
+                [separator]="false">
             </app-form-finance-combo>
 
             <!-- Wallets -->
@@ -203,8 +209,7 @@
 
         <!-- Buttons -->
         <div class="__widget-buttons-area">
-            <button class="__main-button" type="submit"
-                [disabled]="!initialized || !validData || !walletField?.valid || !emailField?.valid || (quoteUnlimit===false && quoteExceed && this.verifyWhenPaidField?.value!==true)">
+            <button class="__main-button" type="submit" [disabled]="isOrderDetailsFormValid">
                 next
             </button>
         </div>

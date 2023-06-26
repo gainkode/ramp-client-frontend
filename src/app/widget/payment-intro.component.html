@@ -1,14 +1,14 @@
 <div class="__widget-data-box-lg">
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
         <!-- Spend -->
-        <app-form-finance-combo [label]="'Amount to Buy'" [placeholder]="'...'" [boxFieldName]="'amountSpend'"
+        <app-form-finance-combo [label]="'Amount to Buy'" [boxFieldName]="'amountSpend'"
             [boxField]="amountSpendField" [comboField]="currencySpendField" [comboFieldName]="'currencySpend'"
             [comboList]="spendCurrencyList" [errorMessages]="amountSpendErrorMessages" [separator]="true">
         </app-form-finance-combo>
         <div class="__form-separator"></div>
 
         <!-- Receive -->
-        <app-form-finance-combo [label]="'Amount to Receive'" [placeholder]="'...'" [boxFieldName]="'amountReceive'"
+        <app-form-finance-combo [label]="'Amount to Receive'" [boxFieldName]="'amountReceive'"
             [boxField]="amountReceiveField" [comboField]="currencyReceiveField" [comboFieldName]="'currencyReceive'"
             [comboList]="receiveCurrencyList" [errorMessages]="amountReceiveErrorMessages" [separator]="false">
         </app-form-finance-combo>

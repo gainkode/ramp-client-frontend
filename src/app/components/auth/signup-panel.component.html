@@ -34,11 +34,7 @@
                 </span>
             </mat-checkbox>
         </div>
-        <div style="width: 100%; display: flex; justify-content: center;">
-            <recaptcha
-                (completed)="capchaResult($event)"
-            ></recaptcha>
-        </div>
+        <app-recaptcha (completed)="capchaResult($event)"></app-recaptcha>
         <div class="__form-separator"></div>
 
         <!-- Errors -->

@@ -16,7 +16,7 @@ export class FormFinanceComboComponent {
     @Input() label = '';
     @Input() smallLabel = false;
     @Input() assist = '';
-    @Input() placeholder = '';
+    @Input() placeholder = '...';
     @Input() boxFieldName = '';
     @Input() comboFieldName = '';
     @Input() boxField: AbstractControl | null = null;

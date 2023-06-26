@@ -49,10 +49,6 @@
       <h5 class="modal-title">Recaptcha</h5>
     </div>
     <div class="modal-body">
-      <div style="width: 100%; display: flex; justify-content: center;">
-        <recaptcha
-          (completed)="capchaResult($event)"
-        ></recaptcha>
-      </div>
+        <app-recaptcha (completed)="capchaResult($event)"></app-recaptcha>
     </div>
 </ng-template>
