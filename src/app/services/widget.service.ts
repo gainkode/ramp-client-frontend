@@ -21,6 +21,7 @@ export class WidgetService {
 	private onKycStatusUpdate: Function | undefined = undefined;  // (status: boolean)
 	private onPaymentProvidersLoaded: Function | undefined = undefined;  // (status: boolean)
 	private onSellPaymentProvidersLoaded: Function | undefined = undefined;  // (status: boolean)
+	private onRecaptchaCallback: Function | undefined = undefined;  // (status: boolean)
 	private onWireTranferListLoaded: Function | undefined = undefined;  // (wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string)
 	private userInfoRequired: Function | undefined = undefined;
 	private companyLevelVerification: Function | undefined = undefined;
@@ -45,7 +46,8 @@ export class WidgetService {
 		wireTranferListLoadedCallback: Function | undefined,
 		userInfoRequired?: Function | undefined,
 		companyLevelVerificationHandler?: Function | undefined,
-		sellPaymentProvidersCallback?: Function | undefined,) {
+		sellPaymentProvidersCallback?: Function | undefined,
+		recaptchaCallback?: Function | undefined) {
 		this.onProgressChanged = progressCallback;
 		this.onError = errorCallback;
 		this.onIdentificationRequired = identificationCallback;
@@ -56,6 +58,7 @@ export class WidgetService {
 		this.onKycStatusUpdate = kycStatusCallback;
 		this.onPaymentProvidersLoaded = paymentProvidersCallback;
 		this.onSellPaymentProvidersLoaded = sellPaymentProvidersCallback;
+		this.onRecaptchaCallback = recaptchaCallback;
 		this.onWireTranferListLoaded = wireTranferListLoadedCallback;
 		this.userInfoRequired = userInfoRequired;
 		this.companyLevelVerification = companyLevelVerificationHandler;
@@ -95,6 +98,17 @@ export class WidgetService {
 
 	authenticate(login: string, widgetId: string) {
 		// Consider that the user is one-time wallet user rather than internal one
+		let recaptcha = localStorage.getItem('recaptchaId');
+		if(recaptcha){
+			this.authenticateInternal(login, widgetId);
+		}else{
+			if(this.onRecaptchaCallback){
+				this.onRecaptchaCallback();
+			}
+		}
+	}
+
+	authenticateInternal(login: string, widgetId: string) {
 		try {
 			const authenticateData$ = this.auth.authenticate(
 				widgetId !== '',

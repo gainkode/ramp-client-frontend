@@ -551,6 +551,7 @@ export class AuthService {
 				password: noPassword ? undefined : userpassword,
 				widgetId
 			};
+			localStorage.removeItem('recaptchaId');
 			return this.apollo.mutate({
 				mutation: LOGIN,
 				variables: vars
@@ -981,6 +982,7 @@ export class AuthService {
 
 	logout(): void {
 		this.apollo.client.resetStore();
+		localStorage.removeItem('recaptchaId');
 		localStorage.removeItem('currentToken');
 		localStorage.removeItem('currentUser');
 		localStorage.removeItem('currentAction');
