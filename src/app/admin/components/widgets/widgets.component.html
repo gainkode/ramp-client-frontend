@@ -119,11 +119,11 @@
                   Destinations
                 </th>
                 <td *matCellDef="let element" mat-cell class="widget-list-data-column widget-chips-align">
-                  <mat-chip-list>
-                    <mat-chip *ngFor="let address of element.destinationAddress" class="widget-chip" (click)="copyParameter(address.destination)">
+                  <mat-chip-listbox>
+                    <mat-chip-option *ngFor="let address of element.destinationAddress" class="widget-chip" (click)="copyParameter(address.destination)">
                       <span class="tx-13">{{address.currency}}: {{address.destination}}</span>
-                    </mat-chip>
-                  </mat-chip-list>
+                    </mat-chip-option>
+                  </mat-chip-listbox>
                 </td>
               </ng-container>
 

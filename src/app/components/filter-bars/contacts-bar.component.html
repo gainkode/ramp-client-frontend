@@ -101,13 +101,13 @@
         </div>
 
         <div class="__tool-bar-filter-cloud">
-            <mat-chip-list aria-label="Transaction filter cloud">
-                <mat-chip style="font-size: 14px;margin: 0px 18px 0px 0px;" *ngFor="let chip of chips"
+            <mat-chip-listbox aria-label="Transaction filter cloud">
+                <mat-chip-option style="font-size: 14px;margin: 0px 18px 0px 0px;" *ngFor="let chip of chips"
                     selectable="false" removable="true" (removed)="removeChip(chip)">
                     {{chip.name}}
                     <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-            </mat-chip-list>
+                </mat-chip-option>
+            </mat-chip-listbox>
         </div>
     </div>
 </form>

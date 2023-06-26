@@ -79,6 +79,7 @@
         border-radius: 25px;
         height: 27px;
       }
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-label {
         left: 12px !important;
         top: 24px !important;
@@ -121,24 +122,25 @@
       .dataTable-sorter::before {
         border-top: 4px solid #fff;
       }
-      .mat-table {
+      .mat-mdc-table {
         background: $dark-theme !important;
       }
-      .mat-header-cell {
+      .mat-mdc-header-cell {
         color: #fff !important;
       }
-      .mat-cell,
-      .mat-footer-cell {
+      .mat-mdc-cell,
+      .mat-mdc-footer-cell {
         color: #eee !important;
       }
       mat-row,
       mat-header-row,
       mat-footer-row,
-      th.mat-header-cell,
-      td.mat-cell,
-      td.mat-footer-cell {
+      th.mat-mdc-header-cell,
+      td.mat-mdc-cell,
+      td.mat-mdc-footer-cell {
         border-bottom-color: rgba(255, 255, 255, 0.12) !important;
       }
+      /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
       .mat-checkbox-frame {
         border-color: rgba(255, 255, 255, 0.6);
       }
@@ -156,20 +158,21 @@
         color: rgba(255, 255, 255, 0.73);
       }
     }
-    .mat-select-panel {
+    .mat-mdc-select-panel {
       background: #30304d;
     }
-    .mat-option {
+    .mat-mdc-option {
       color: #ccc;
     }
-    .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+    /* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version.*/
+    .mat-primary .mat-mdc-option.mat-selected:not(.mat-option-disabled) {
       color: #fff;
     }
-    .mat-option:hover:not(.mat-option-disabled),
+    .mat-mdc-option:hover:not(.mat-option-disabled),
     .mat-option:focus:not(.mat-option-disabled) {
       background: rgb(42, 42, 68);
     }
-    .mat-select-panel .mat-option.mat-selected:not(.mat-option-multiple) {
+    .mat-mdc-select-panel .mat-mdc-option.mat-selected:not(.mat-mdc-option-multiple) {
       background: rgba(0, 0, 0, 0.12);
     }
 
@@ -208,6 +211,7 @@
         border-radius: 25px;
         height: 27px;
       }
+      /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
       .mat-form-field-label {
         left: 12px !important;
         top: 24px !important;
@@ -250,24 +254,25 @@
       .dataTable-sorter::before {
         border-top: 4px solid #fff;
       }
-      .mat-table {
+      .mat-mdc-table {
         background: #2da28f !important;
       }
-      .mat-header-cell {
+      .mat-mdc-header-cell {
         color: #fff !important;
       }
-      .mat-cell,
-      .mat-footer-cell {
+      .mat-mdc-cell,
+      .mat-mdc-footer-cell {
         color: #eee !important;
       }
       mat-row,
       mat-header-row,
       mat-footer-row,
-      th.mat-header-cell,
-      td.mat-cell,
-      td.mat-footer-cell {
+      th.mat-mdc-header-cell,
+      td.mat-mdc-cell,
+      td.mat-mdc-footer-cell {
         border-bottom-color: rgba(255, 255, 255, 0.12) !important;
       }
+      /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
       .mat-checkbox-frame {
         border-color: rgba(255, 255, 255, 0.6);
       }
@@ -285,20 +290,21 @@
         color: rgba(255, 255, 255, 0.73);
       }
     }
-    .mat-select-panel {
+    .mat-mdc-select-panel {
       background: #30304d;
     }
-    .mat-option {
+    .mat-mdc-option {
       color: #ccc;
     }
-    .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+    /* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version.*/
+    .mat-primary .mat-mdc-option.mat-selected:not(.mat-option-disabled) {
       color: #fff;
     }
-    .mat-option:hover:not(.mat-option-disabled),
+    .mat-mdc-option:hover:not(.mat-option-disabled),
     .mat-option:focus:not(.mat-option-disabled) {
       background: rgb(42, 42, 68);
     }
-    .mat-select-panel .mat-option.mat-selected:not(.mat-option-multiple) {
+    .mat-mdc-select-panel .mat-mdc-option.mat-selected:not(.mat-mdc-option-multiple) {
       background: rgba(0, 0, 0, 0.12);
     }
 

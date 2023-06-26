@@ -217,6 +217,7 @@ input:-webkit-autofill::first-line {
     color: $color_purple_900_text;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
 .mat-select-placeholder {
     color: $color_purple_200 !important;
     font-weight: 300;
@@ -239,10 +240,11 @@ input:-webkit-autofill::first-line {
     color: $color_purple_200 !important;
 }
 
-.mat-input-element {
+.mat-mdc-input-element {
     background: $color_white;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version.*/
 mat-dialog-container {
     background-color: $color_white !important;
 }
@@ -256,6 +258,7 @@ mat-dialog-container {
     overflow: hidden;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of select that may no longer apply for the MDC version.*/
 .__mat-select-item {
     font-family: $font_main;
     font-size: 14px;
@@ -281,7 +284,7 @@ mat-dialog-container {
     color: $color_main_blue_600;
 }
 
-.mat-mdc-row .mat-cell {
+.mat-mdc-row .mat-mdc-cell {
     border-bottom: 1px solid transparent;
     border-top: 1px solid transparent;
 }
@@ -290,6 +293,7 @@ mat-dialog-container {
     background-color: $color_main_blue_50 !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version.*/
 .mat-checkbox-label {
     margin-left: 16px;
     font-family: $font_main;
@@ -310,7 +314,7 @@ mat-dialog-container {
     background-color: $color_white;
 }
 
-.mat-optgroup {
+.mat-mdc-optgroup {
     display: block;
     font-family: $font_main;
     font-style: normal;

@@ -305,10 +305,11 @@ app-advanced-forms telephone-input input:not(.country-search) {
   font-size: 0.8rem !important;
 }
 
-.mat-form-field {
+.mat-mdc-form-field {
   width: 300px;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-appearance-outline .mat-form-field-infix {
   padding: 0.5rem 0 !important;
 }
@@ -318,7 +319,7 @@ app-advanced-forms telephone-input input:not(.country-search) {
 }
 
 .dark-theme {
-  .mat-menu-panel {
+  .mat-mdc-menu-panel {
     background-color: #383d52;
     color: #fff;
   }
@@ -329,7 +330,7 @@ app-advanced-forms telephone-input input:not(.country-search) {
     background-color: #2a2e3f;
   }
 
-  .mat-hint,
+  .mat-mdc-form-field-hint,
   .country-selector-code {
     color: #eee !important;
   }
@@ -337,14 +338,14 @@ app-advanced-forms telephone-input input:not(.country-search) {
   .label-wrapper {
     color: #fff;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-appearance-outline .mat-form-field-outline {
     color: #404353;
   }
 }
 
 .transparent-theme {
-  .mat-menu-panel {
+  .mat-mdc-menu-panel {
     background-color: var(--transparent-body);
     color: #fff;
   }
@@ -355,7 +356,7 @@ app-advanced-forms telephone-input input:not(.country-search) {
     background-color: rgba(0, 0, 0, 0.2) !important;
   }
 
-  .mat-hint,
+  .mat-mdc-form-field-hint,
   .country-selector-code {
     color: #eee !important;
   }
@@ -363,7 +364,7 @@ app-advanced-forms telephone-input input:not(.country-search) {
   .label-wrapper {
     color: #fff;
   }
-
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-appearance-outline .mat-form-field-outline {
     color: #4cb0a0;
   }
@@ -414,7 +415,7 @@ button:focus:not(:focus-visible) {
   }
 }
 
-.mat-form-field {
+.mat-mdc-form-field {
   width: 100% !important;
 }
 
@@ -447,6 +448,7 @@ button:focus:not(:focus-visible) {
 
 .dark-theme,
 .transparent-theme {
+  /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
   .mat-form-field-label {
     color: #eee;
   }
