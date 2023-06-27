@@ -26,7 +26,7 @@ import { WidgetService } from '../services/widget.service';
 @Component({
 	selector: 'app-widget',
 	templateUrl: 'widget.component.html',
-	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
+	styleUrls: ['widget.component.scss'],
 })
 export class WidgetComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';
@@ -115,10 +115,11 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	private dataService: PaymentDataService,
   	private profileService: ProfileDataService,
   	private errorHandler: ErrorService) { }
+
   private shuftiSubscriptionFlag = false;
   private companyLevelVerificationFlag = false;
 
-  ngOnInit(): void {
+  	ngOnInit(): void {
   	this.widgetService.register(
   		this.progressChanged.bind(this),
   		this.handleError.bind(this),
@@ -133,7 +134,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.userInfoRequired.bind(this),
   		this.companyLevelVerification.bind(this),
   		this.sellSettingsCommonComplete.bind(this),
-			this.onRecaptchaCallback.bind(this)
+  		this.onRecaptchaCallback.bind(this)
   	);
   	this.initMessage = 'Loading...';
 
@@ -153,7 +154,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.loadAccountData();
   	this.pager.init('initialization', 'Initialization');
   	this.loadCustomData();
-    
+		
   	if(!this.shuftiSubscriptionFlag){
   		this.startShuftiNotificationListener();
   	} 
@@ -248,12 +249,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					this.redirectUrl = userParams.params.redirectUrl;
   				}
   			}
-
-  			// if(setCurrencyExchangeRate){
-  			//   this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
-  			//   setCurrencyExchangeRate = false;
-  			// }
-  			// console.log(this.summary)
   		}
       
   		if(data?.fee){
@@ -268,9 +263,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		if (presetAddress) {
   			this.widget.walletAddressPreset = true;
   		}
-  		// if (this.quickCheckout) {
-  		//   this.widget.walletAddressPreset = false;
-  		// }
+
   		this.widget.transaction = undefined;
   		if (data.currenciesCrypto) {
   			if (data.currenciesCrypto.length > 0) {
@@ -339,14 +332,14 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.startExchangeRate();
   }
 
-	private onRecaptchaCallback(){
-		if(this.widget && !this.widget.embedded && !this.recaptchaDialog && !this.auth.user){
+  private onRecaptchaCallback(): void{
+  	if(this.widget && !this.widget.embedded && !this.recaptchaDialog && !this.auth.user){
   		this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
   			backdrop: 'static',
   			windowClass: 'modalCusSty',
   		});
   	}
-	}
+  }
 
   private startExchangeRate(): void {
   	this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
@@ -385,9 +378,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   						this.shuftiSubscribeResult = false;
   					}
   				}
-  				// else if(subscriptionData.kycStatus == 'waiting'){
-  				//   this.kycComplete();
-  				// }
   				this.loadAccountData();
   			},
   			(error) => {
@@ -453,7 +443,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   }
 
   resetWizard(): void {
-  	if(this.redirectUrl != ''){
+  	if(this.redirectUrl !== ''){
   		window.location.replace(this.redirectUrl);
   	}else{
   		this.inProgress = false;
@@ -476,7 +466,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   capchaResult(event): void{
   	this.recaptchaDialog?.close();
-		this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
+  	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
 
   handleError(message: string): void {
@@ -791,14 +781,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   private sellSettingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
   	this.paymentProviders = providers.map(val => val);
 
-
-  	//test
-  	// const wt = this.paymentProviders.find(x => x.instrument === PaymentInstrument.WireTransfer);
-  	// if (wt) {
-  	//   wt.id = 'Openpayd';
-  	// }
-
-
   	const nextStage = 4;
 
   	if (this.paymentProviders.length < 1) {
@@ -819,22 +801,12 @@ export class WidgetComponent implements OnInit, OnDestroy {
   private settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
   	this.paymentProviders = providers.map(val => val);
 
-
-  	//test
-  	// const wt = this.paymentProviders.find(x => x.instrument === PaymentInstrument.WireTransfer);
-  	// if (wt) {
-  	//   wt.id = 'Openpayd';
-  	// }
-
-
   	const nextStage = 4;
 
-  	console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded);
   	if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
   		if(this.companyLevelVerificationFlag){
-  			console.log(this.overLimitLevel);
   			this.nextStage('company_level_verification', 'Verification', this.pager.step, true);
-  		}else{
+  		} else {
   			const tempStageId = this.pager.stageId;
   			if (tempStageId === 'verification') {
   				this.pager.goBack();
@@ -873,7 +845,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		} else {
   			this.createBuyTransaction(provider.id, provider.instrument, '');
   		}
-  	}else{
+  	} else {
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
   			this.nextStage('sell_details', 'Bank details', 2, true);
   		} else {
@@ -1088,7 +1060,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.initMessage = 'Processing...';
   	if (this.summary) {
   		const destination = this.summary.address;
-  		if(providerId == 'GetCoinsPayment'){
+  		if(providerId === 'GetCoinsPayment'){
   			this.pSubscriptions.add(
   				this.dataService.createTransactionWithWidgetUserParams(
   					this.summary.transactionType,
@@ -1109,7 +1081,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					this.inProgress = false;
   					this.widgetLink = data.createTransactionWithWidgetUserParams;
   					this.onIFramePay.emit(true);
-  					console.log(this.widgetLink);
   				}, (error) => {
   					this.inProgress = false;
   					if (tempStageId === 'verification') {
