@@ -12,6 +12,7 @@ export class UserMessageData {
 	level: UserNotificationLevel = UserNotificationLevel.Info;
 	title = '';
 	text = '';
+	users:string[] = []
 }
 
 @Component({
@@ -84,6 +85,7 @@ export class AdminMessageDialogComponent implements OnInit {
   	this.submitted = true;
   	if (this.messageForm.valid) {
   		this.send.emit({
+				users: this.messageForm.get('users').value,
   			level: this.levelField?.value ?? UserNotificationLevel.Info,
   			title: this.titleField?.value ?? '',
   			text: this.textField?.value ?? ''
