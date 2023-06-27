@@ -4,7 +4,6 @@ import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
 import { KycProvider, PaymentInstrument, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
-import { EnvService } from './env.service';
 
 const GET_RATES = gql`
 query GetRates($currenciesFrom: [String!]!, $currencyTo: String!) {

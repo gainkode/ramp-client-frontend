@@ -25,8 +25,7 @@
       <app-widget-sell-details *ngSwitchCase="'sell_details'" [summary]="summary" (onBack)="paymentBack()"
         (onComplete)="sellComplete($event)">
       </app-widget-sell-details>
-      <app-widget-complete *ngSwitchCase="'complete'" [transaction]="summary.transactionType" [showRestartButton]="true"
-        (onFinish)="resetWizard()"></app-widget-complete>
+      <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="true" (onFinish)="resetWizard()"></app-widget-complete>
     </div>
   </div>
 </div>

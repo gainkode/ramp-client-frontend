@@ -8,8 +8,7 @@
       <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
       <!-- Order details -->
       <app-widget-receive-details *ngSwitchCase="'receive_details'" [presetCurrency]="presetCurrency"
-        [presetWalletId]='presetWalletId' [wallets]="userWallets" [currencies]="cryptoList"
-        (onProgress)="progressChanged($event)">
+        [presetWalletId]='presetWalletId' [currencies]="cryptoList" (onProgress)="progressChanged($event)">
       </app-widget-receive-details>
     </div>
   </div>

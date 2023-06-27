@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
@@ -156,6 +156,5 @@ export class MaterialModule {}
 		CompanyLevelVerificationComponent,
 	],
 	providers: [],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class WidgetModule {}
