@@ -6,6 +6,7 @@ import { FeedbackInput, LoginResult, PostAddress, SettingsCommon, User, UserMode
 import { EmptyObject } from 'apollo-angular/types';
 import { EnvService } from './env.service';
 import { NotificationService } from 'services/notification.service';
+import { CookieService} from 'ngx-cookie-service';
 
 const LOGIN = gql`
   mutation Login($recaptcha: String!, $email: String!, $password: String, $widgetId: String) {
@@ -487,7 +488,8 @@ export class AuthService {
 	constructor(
 		private apollo: Apollo,
 		private notification: NotificationService,
-		private socialAuth: SocialAuthService
+		private socialAuth: SocialAuthService,
+		private cookieService: CookieService
 	) { }
 
 	registerUserUpdated(callback: Function | undefined) {
@@ -987,5 +989,7 @@ export class AuthService {
 		localStorage.removeItem('currentUser');
 		localStorage.removeItem('currentAction');
 		localStorage.removeItem('common');
+
+		this.cookieService.delete('cm-ewallet-refresh-token');
 	}
 }

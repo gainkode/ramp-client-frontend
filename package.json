@@ -49,6 +49,7 @@
     "ng-apexcharts": "^1.5.12",
     "ng-recaptcha": "11.0.0",
     "ngx-color-picker": "14.0.0",
+    "ngx-cookie-service": "^15.0.0",
     "ngx-mask": "14.2.4",
     "ngx-perfect-scrollbar": "10.1.1",
     "ngx-turnstile": "^0.0.7",
