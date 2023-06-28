@@ -78,13 +78,13 @@ $font_main: var(--font_main);
     //     0px 3px 16px rgba(153, 140, 149, 0.12);
     border-radius: 8px;
 
-    @media (max-width: $widget_max_width + px) {
+    @media (max-width: #{$widget_max_width}px) {
         box-shadow: unset;
         border-radius: 0px;
         width: $widget_min_width + px;
     }
 
-    @media (max-width: $widget_min_width + px) {
+    @media (max-width: #{$widget_min_width}px) {
         width: 0px;
         visibility: hidden;
     }
@@ -104,7 +104,7 @@ $font_main: var(--font_main);
     grid-template-rows: 96px;
     margin: auto;
 
-    @media (max-width: $widget_max_width + px) {
+    @media (max-width: #{$widget_max_width}px) {
         grid-template-rows: 56px;
         height: 56px;
     }
@@ -134,7 +134,7 @@ $font_main: var(--font_main);
     width: 48px;
     height: 48px;
 
-    // @media (max-width: $widget_max_width + px) {
+    // @media (max-width: #{$widget_max_width}px) {
     //     display: flex;
     //     grid-row: 1;
     //     grid-column: 2 / 3;
@@ -148,7 +148,7 @@ $font_main: var(--font_main);
     height: 56px;
     margin: 0px 24px;
 
-    @media (max-width: $widget_max_width + px) {
+    @media (max-width: #{$widget_max_width}px) {
         margin: 0px 12px;
     }
 }
@@ -223,10 +223,10 @@ $font_main: var(--font_main);
     align-items: flex-start;
     justify-content: center;
 
-    @media (max-width: $widget_max_width + px) {
+    @media (max-width: #{$widget_max_width}px) {
     }
 
-    @media (max-width: $widget_min_width + px) {
+    @media (max-width: #{$widget_min_width}px) {
         width: 0px;
         visibility: hidden;
     }
@@ -241,7 +241,7 @@ $font_main: var(--font_main);
     // visibility: hidden;
     // display: none;
 
-    // @media (max-width: $widget_max_width + px) {
+    // @media (max-width: #{$widget_max_width}px) {
     //     display: flex;
     //     visibility: visible;
     //     flex-direction: column;
@@ -394,7 +394,7 @@ $font_main: var(--font_main);
     width: 100%;
     max-width: 312px;
 
-    @media (max-width: $widget_max_width + px) {
+    @media (max-width: #{$widget_max_width}px) {
         display: none;
         visibility: hidden;
     }
