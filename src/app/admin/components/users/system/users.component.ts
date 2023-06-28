@@ -319,8 +319,8 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   sendMessageStart(data: UserMessageData): void {
   	this.sendMessageInProgress = true;
   	this.sendMessageError = '';
-  	const ids = this.users.filter(x => x.selected === true).map(val => val.id);
-  	const requestData$ = this.adminService.sendAdminNotification(ids, data.level, data.title, data.text);
+  	// const ids = this.users.filter(x => x.selected === true).map(val => val.id);
+  	const requestData$ = this.adminService.sendAdminNotification(data.users, data.level, data.title, data.text);
   	this.subscriptions.add(
   		requestData$.subscribe(({ result }) => {
   			this.sendMessageInProgress = false;
