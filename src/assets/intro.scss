@@ -25,7 +25,7 @@ $font_main: var(--font_main);
         grid-template-rows: auto 413px 203px auto 140px auto auto auto 133px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-template-rows: auto 716px 8px auto auto auto auto auto 226px;
     }
 }
@@ -48,7 +48,7 @@ $font_main: var(--font_main);
         line-height: 56px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         text-align: center;
     }
 }
@@ -140,7 +140,7 @@ $font_main: var(--font_main);
     background-repeat: no-repeat;
     background-size: cover;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-row: 1 / 3;
         background-size: 150%;
         background-repeat: repeat-y;
@@ -170,7 +170,7 @@ $font_main: var(--font_main);
     align-items: center;
     justify-content: space-between;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         height: 84px;
     }
 }
@@ -186,7 +186,7 @@ $font_main: var(--font_main);
         margin: 0px 40px 0px 0px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         display: none;
     }
 }
@@ -194,7 +194,7 @@ $font_main: var(--font_main);
 .__intro-menu-button-area {
     display: none;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         display: block;
         margin: 0px 19px 0px 0px;
     }
@@ -214,7 +214,7 @@ $font_main: var(--font_main);
     flex-direction: column;
     margin: 0px 0px 133px 0px;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         width: 100%;
         margin: 0px 0px 226px 0px;
     }
@@ -235,7 +235,7 @@ $font_main: var(--font_main);
     align-items: flex-start;
     justify-content: flex-start;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 0px 16px 12px 16px;
     }
 }
@@ -256,7 +256,7 @@ $font_main: var(--font_main);
         grid-template-columns: auto 394px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-template-columns: auto;
         grid-template-rows: auto 381px;
     }
@@ -275,7 +275,7 @@ $font_main: var(--font_main);
         margin: 28px 40px 0px 40px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 13px 16px 0px 16px;
     }
 }
@@ -305,7 +305,7 @@ $font_main: var(--font_main);
         margin: 24px 0px 0px 0px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-column: 1;
         grid-row: 2;
         align-self: center;
@@ -334,7 +334,7 @@ $font_main: var(--font_main);
         margin: 24px 0px 0px 0px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 16px 0px;
         display: flex;
         flex-direction: column;
@@ -350,7 +350,7 @@ $font_main: var(--font_main);
     flex-direction: column;
     align-items: center;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-row: 4;
     }
 }
@@ -367,7 +367,7 @@ $font_main: var(--font_main);
         margin: 14px 16px 0px 16px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 24px 16px;
     }
 }
@@ -379,7 +379,7 @@ $font_main: var(--font_main);
         margin: 40px 0px 0px 0px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 40px 0px 20px 0px;
     }
 }
@@ -399,7 +399,7 @@ $font_main: var(--font_main);
         margin: 0px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 0px 0px 40px 0px;
         flex-direction: column;
         justify-content: flex-start;
@@ -423,7 +423,7 @@ $font_main: var(--font_main);
         width: 252px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         width: 241px;
     }
 }
@@ -457,7 +457,7 @@ $font_main: var(--font_main);
         margin: 38px 24px 0px 24px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 24px 24px 0px 24px;
     }
 }
@@ -472,7 +472,7 @@ $font_main: var(--font_main);
     align-items: flex-start;
     background-color: $color_main_blue_900;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
@@ -497,7 +497,7 @@ $font_main: var(--font_main);
         margin: 0px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         width: 265px;
         height: 204px;
         margin: 0px;
@@ -507,7 +507,7 @@ $font_main: var(--font_main);
 .__intro-stat-data-section-separator {
     display: none;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         display: block;
         width: 80px;
         height: 1px;
@@ -575,7 +575,7 @@ $font_main: var(--font_main);
         margin: 40px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 40px 0px;
     }
 }
@@ -605,7 +605,7 @@ $font_main: var(--font_main);
         grid-template-columns: 40px auto 365px 40px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-template-rows: auto auto;
         grid-template-columns: auto;
     }
@@ -628,7 +628,7 @@ $font_main: var(--font_main);
         margin: 0px 24px 0px 0px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-column: 1;
         grid-row: 2;
         align-items: center;
@@ -640,7 +640,7 @@ $font_main: var(--font_main);
 .__intro-info-title-container {
     margin: 0px;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 0px 0px 16px 0px;
     }
 }
@@ -648,7 +648,7 @@ $font_main: var(--font_main);
 .__intro-info-content-container {
     text-align: start;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         text-align: center;
     }
 }
@@ -656,7 +656,7 @@ $font_main: var(--font_main);
 .__intro-data-button-container {
     margin: 40px 0px;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 24px 0px;
     }
 }
@@ -686,7 +686,7 @@ $font_main: var(--font_main);
         height: 365px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-column: 1;
         grid-row: 1;
 
@@ -718,7 +718,7 @@ $font_main: var(--font_main);
         margin: 24px 0px 28px 0px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 24px 16px;
     }
 }
@@ -727,7 +727,7 @@ $font_main: var(--font_main);
     margin: 0px 16px;
     width: 674px;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         width: calc(100% - 32px);
     }
 }
@@ -762,7 +762,7 @@ $font_main: var(--font_main);
     grid-template-columns: repeat(7, auto);
     column-gap: 4px;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-template-rows: auto auto;
         grid-template-columns: repeat(3, auto);
         row-gap: 8px;
@@ -796,7 +796,7 @@ $font_main: var(--font_main);
 .__intro-policy-link-middle-separator {
     display: block;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         display: none;
     }
 }
@@ -819,7 +819,7 @@ $font_main: var(--font_main);
     column-gap: 18px;
     margin: 0px 0px 8px 0px;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-template-rows: 32px 32px;
         grid-template-columns: repeat(4, auto);
         row-gap: 12px;
@@ -865,7 +865,7 @@ $font_main: var(--font_main);
     grid-row: 1;
     grid-column: 5;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-row: 2;
         grid-column: 2;
     }
@@ -876,7 +876,7 @@ $font_main: var(--font_main);
     grid-row: 1;
     grid-column: 6;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         grid-row: 2;
         grid-column: 3;
     }
@@ -894,7 +894,7 @@ $font_main: var(--font_main);
         margin: 0px 40px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 16px;
     }
 }

@@ -420,6 +420,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   	defaultSpendAmount: number | undefined = undefined,
   	defaultReceiveAmount: number | undefined = undefined): void {
   	this.setCurrencyLists();
+	
   	if (this.spendCurrencyList.length > 0) {
   		if (defaultSpendCurrency === '') {
   			defaultSpendCurrency = this.spendCurrencyList[0].symbol;
@@ -433,6 +434,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   		this.pSpendAutoUpdated = true;
   		this.amountSpendField?.setValue(defaultSpendAmount);
   	}
+
+	console.log(this.receiveCurrencyList)
 
   	if (this.receiveCurrencyList.length > 0) {
 
@@ -457,9 +460,15 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   private setCurrencyLists(): void {
+	
   	if (this.currentTransaction === TransactionType.Buy) {
   		this.spendCurrencyList = this.pCurrencies.filter((c) => this.filterFiat(c));
   		this.receiveCurrencyList = this.pCurrencies.filter((c) => this.filterCrypto(c));
+		
+		// if (MASKED) {
+
+		// }
+
   	} else if (this.currentTransaction === TransactionType.Sell) {
   		this.spendCurrencyList = this.pCurrencies.filter((c) => this.filterCrypto(c));
   		this.receiveCurrencyList = this.pCurrencies.filter((c) => this.filterFiat(c));

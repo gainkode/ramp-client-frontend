@@ -133,11 +133,11 @@ export class WidgetReceiveDetailsComponent implements OnInit, OnDestroy {
   	this.walletInit = true;
   	this.selectedWallet = this.wallets.find(x => x.address === address);
   	if (this.selectedWallet) {
-  		this.showQrCode(this.currencyField?.value, this.walletField?.value);
+  		this.showQrCode(this.walletField?.value);
   	}
   }
 
-  private showQrCode(currency: any, address: any): void {
+  private showQrCode(address: any): void {
   	this.qrCode = address;
   }
 

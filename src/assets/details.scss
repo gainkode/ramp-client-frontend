@@ -74,7 +74,7 @@ $font_main: var(--font_main);
     margin: 0px 16px 24px 16px;
     height: 100%;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 0px;
         overflow: auto;
     }

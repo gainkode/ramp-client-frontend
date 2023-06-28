@@ -26,7 +26,7 @@ $font_main: var(--font_main);
         height: $top_menu_height_sm + px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         display: none;
         width: 0px;
         min-width: 0px;
@@ -37,7 +37,7 @@ $font_main: var(--font_main);
 .__top-menu-hamburger {
     display: none;
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         position: sticky;
         top: 0px;
         display: flex;
@@ -73,7 +73,7 @@ $font_main: var(--font_main);
         margin-left: $side_menu_width_sm + px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         width: 0px;
         visibility: hidden;
     }
@@ -94,7 +94,7 @@ $font_main: var(--font_main);
         margin-left: $side_menu_narrow_width_sm + px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         width: 0px;
         visibility: hidden;
     }
@@ -246,7 +246,7 @@ $font_main: var(--font_main);
         margin: 24px 24px 16px 24px;
     }
 
-    @media (max-width: #{$md1}px) {
+    @media (max-width: #{$md3}px) {
         margin: 8px;
     }
 }
