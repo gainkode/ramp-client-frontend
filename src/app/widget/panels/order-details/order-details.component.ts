@@ -178,11 +178,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   }
 
   get isOrderDetailsFormValid(): boolean {
-  	return (!this.initialized ||
+  	return	!this.initialized ||
 			!this.validData || 
 			!this.walletField?.valid ||
-			!this.emailField?.valid) ||
-			(!this.quoteUnlimit && this.quoteExceed && !this.verifyWhenPaidField?.value);
+			!this.emailField?.valid ||
+			(this.quoteUnlimit === false && this.quoteExceed && this.verifyWhenPaidField?.value !== true);
   }
 
   constructor(

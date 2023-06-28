@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, take, tap } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { UserRole } from 'model/generated-models';
@@ -12,6 +12,8 @@ import { UserItem } from 'model/user.model';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { UserMessageData } from '../send-message/send-message.component';
+
+const USER_ROLE_ID = '30cebffa-7e64-4be3-96d8-a96626bb81c6';
 
 @Component({
 	selector: 'app-admin-system-users',
@@ -91,9 +93,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   	this.loadRoleData();
   	this.initUserSearch();
   	this.subscriptions.add(
-  		this.roleUserForm.controls.user.valueChanges.subscribe(val => {
-  			this.roleUser = val;
-  		})
+  		this.roleUserForm.controls.user.valueChanges.subscribe(val => this.roleUser = val)
   	);
   }
 
@@ -113,7 +113,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
 
   onUserSelected(item: UserItem): void {
   	item.selected = !item.selected;
-  	this.selected = this.users.some(x => x.selected === true);
+  	this.selected = this.users.some(x => x.selected);
   }
 
   handleFilterApplied(filter: Filter): void {
@@ -130,19 +130,13 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   	this.roleUserForm.reset();
   	this.roleUser = item;
   	this.roleUserSelected = (item !== undefined);
-  	this.rolesDialog = this.modalService.open(content, {
-  		backdrop: 'static',
-  		windowClass: 'modalCusSty',
-  	});
+  	this.rolesDialog = this.openModalDialog(content);
   }
 
   addUser(content: any): void {
   	this.userDetailsTitle = 'Create a new User';
   	this.selectedUser = undefined;
-  	this.detailsDialog = this.modalService.open(content, {
-  		backdrop: 'static',
-  		windowClass: 'modalCusSty',
-  	});
+  	this.detailsDialog = this.openModalDialog(content);
   }
 
   selectAll(): void {
@@ -159,27 +153,24 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   	}
   }
   private loadRoleData(): void {
-    this.roleIds = [];
-    const currencyData = this.commonService.getRoles();
-    if (currencyData) {
-      this.subscriptions.add(
-        currencyData.valueChanges.subscribe(({ data }) => {
-          this.userRoles = data.getRoles as UserRole[];
-          const filteredRoles = this.userRoles;
-          if (filteredRoles) {
-            this.roleIds = filteredRoles.map(val => val.userRoleId ?? '');
-          } else {
-            this.roleIds = [];
-          }
-          this.loadUsers();
-        }, (error) => {
-          this.inProgress = false;
-          if (this.auth.token === '') {
-            this.router.navigateByUrl('/');
-          }
-        })
-      );
-    }
+  	this.roleIds = [];
+  	const currencyData = this.commonService.getRoles();
+  	if (currencyData) {
+  		this.subscriptions.add(
+  			currencyData.valueChanges.subscribe({
+  				next: ({ data }) => {
+  					this.userRoles = data.getRoles as UserRole[];
+  					const filteredRoles = this.userRoles;
+  					this.roleIds = filteredRoles ? filteredRoles.map(val => val.userRoleId ?? '') : [];
+  					this.roleIds = [... this.roleIds.filter(r => r !== USER_ROLE_ID)];
+  					this.loadUsers();
+  				},
+  				error: () => {
+  					this.inProgress = false;
+  					this.nagivateToHome();
+  				}
+  			}));
+  	}
   }
 
   private loadUsers(): void {
@@ -192,18 +183,18 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   		this.sortedDesc,
   		this.filter).pipe(take(1));
   	this.selected = false;
+
   	this.subscriptions.add(
-  		listData$.subscribe(({ list, count }) => {
-  			this.users = list;
-  			this.userCount = count;
-  			this.inProgress = false;
-  		}, (error) => {
-  			this.inProgress = false;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+  		listData$.pipe(finalize(() => this.inProgress = false))
+  			.subscribe({
+  				next: ({ list, count }) => {
+  					this.users = list;
+  					this.userCount = count;
+  				},
+  				error: () => {
+  					this.nagivateToHome();
+  				}
+  			}));
   }
 
   private initUserSearch(): void {
@@ -260,23 +251,26 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   		if (assigned.length > 0) {
   			this.roleInProgress = true;
   			const requestData$ = this.adminService.assignRole(this.roleUser.id, assigned);
+
   			this.subscriptions.add(
-  				requestData$.subscribe(({ data }) => {
-  					if (removed.length > 0) {
-  						this.removeUserRole(this.roleUser?.id ?? '', removed);
-  					} else {
-  						this.roleInProgress = false;
-  						this.rolesDialog?.close('OK');
-  						this.loadUsers();
-  					}
-  				}, (error) => {
-  					this.roleInProgress = false;
-  					this.errorMessage = error;
-  					if (this.auth.token === '') {
-  						void this.router.navigateByUrl('/');
-  					}
-  				})
-  			);
+  				requestData$.pipe()
+  					.subscribe({
+  						next: () => {
+  							if (removed.length > 0) {
+  								this.removeUserRole(this.roleUser?.id ?? '', removed);
+  							} else {
+  								this.roleInProgress = false;
+  								this.rolesDialog?.close('OK');
+  								this.loadUsers();
+  							}
+  						},
+  						error: (error) => {
+  							this.roleInProgress = false;
+  							this.sendMessageError = error;
+  							this.nagivateToHome();
+  						}
+  					}));
+
   		} else {
   			this.removeUserRole(this.roleUser.id, removed);
   		}
@@ -286,19 +280,18 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   private removeUserRole(userId: string, roles: string[]): void {
   	this.roleInProgress = true;
   	const requestData$ = this.adminService.removeRole(userId, roles);
-  	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
-  			this.roleInProgress = false;
-  			this.rolesDialog?.close('OK');
-  			this.loadUsers();
-  		}, (error) => {
-  			this.roleInProgress = false;
-  			this.errorMessage = error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+	  this.subscriptions.add(
+  		requestData$.pipe(finalize(() => this.roleInProgress = false))
+  			.subscribe({
+  				next: () => {
+  					this.rolesDialog?.close('OK');
+  					this.loadUsers();
+  				},
+  				error: (error) => {
+  					this.sendMessageError = error;
+  					this.nagivateToHome();
+  				}
+  			}));
   }
 
   onSaveUser(): void {
@@ -310,85 +303,83 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   sendMessage(content: any): void {
-  	this.messageDialog = this.modalService.open(content, {
-  		backdrop: 'static',
-  		windowClass: 'modalCusSty',
-  	});
+  	this.messageDialog = this.openModalDialog(content);
   }
 
   sendMessageStart(data: UserMessageData): void {
   	this.sendMessageInProgress = true;
   	this.sendMessageError = '';
-  	// const ids = this.users.filter(x => x.selected === true).map(val => val.id);
+
   	const requestData$ = this.adminService.sendAdminNotification(data.users, data.level, data.title, data.text);
-  	this.subscriptions.add(
-  		requestData$.subscribe(({ result }) => {
-  			this.sendMessageInProgress = false;
-  			this.selected = false;
-  			this.users.forEach(x => x.selected = false);
-  			if (this.messageDialog) {
-  				this.messageDialog.close();
-  			}
-  		}, (error) => {
-  			this.sendMessageInProgress = false;
-  			this.sendMessageError = error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+
+	  this.subscriptions.add(
+  		requestData$.pipe(finalize(() => this.sendMessageInProgress = false))
+  			.subscribe({
+  				next: () => {
+  					this.selected = false;
+  					this.users.forEach(x => x.selected = false);
+  					if (this.messageDialog) {
+  						this.messageDialog.close();
+  					}
+  				},
+  				error: (error) => {
+  					this.sendMessageError = error;
+  					this.nagivateToHome();
+  				}
+  			}));
   }
 
   export(content: any): void {
-  	const ids = this.users.filter(x => x.selected === true).map(val => val.id);
+  	const ids = this.users.filter(x => x.selected).map(val => val.id);
   	const exportData$ = this.adminService.exportUsersToCsv(
   		ids,
   		this.roleIds,
   		this.sortedField,
   		this.sortedDesc,
   		this.filter);
-  	this.subscriptions.add(
-  		exportData$.subscribe(({ data }) => {
-  			this.modalService.open(content, {
-  				backdrop: 'static',
-  				windowClass: 'modalCusSty',
-  			});
-  		}, (error) => {
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+
+	  	this.subscriptions.add(
+  		exportData$.pipe()
+  			.subscribe({
+  				next: () => this.openModalDialog(content),
+  				error: () => this.nagivateToHome()
+  			}));
   }
 
   showDetails(user: UserItem, content: any): void {
   	this.userDetailsTitle = 'User Details';
   	this.selectedUser = user;
-  	this.detailsDialog = this.modalService.open(content, {
-  		backdrop: 'static',
-  		windowClass: 'modalCusSty',
-  	});
+  	this.detailsDialog = this.openModalDialog(content);
   }
 
   confirmEmail(user: UserItem, content: any): void {
   	this.errorMessage = '';
   	const requestData$ = this.adminService.confirmEmail(user.id);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ result }) => {
-  			this.modalService.open(content, {
-  				backdrop: 'static',
-  				windowClass: 'modalCusSty',
-  			});
-  		}, (error) => {
-  			this.errorMessage = error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+  		requestData$.pipe()
+  			.subscribe({
+  				next: () => this.openModalDialog(content),
+  				error: (error) => {
+  					this.errorMessage = error;
+  					this.nagivateToHome();
+  				} 
+  			}));
   }
 
   showWhiteList(userId: string): void {
   	void this.router.navigateByUrl(`/admin/white-device-list/${userId}`);
+  }
+
+  private openModalDialog(content: any): NgbModalRef {
+  	return this.modalService.open(content, {
+  		backdrop: 'static',
+  		windowClass: 'modalCusSty',
+  	});
+  }
+
+  private nagivateToHome(): void {
+  	if (this.auth.token === '') {
+  		void this.router.navigateByUrl('/');
+  	}
   }
 }
