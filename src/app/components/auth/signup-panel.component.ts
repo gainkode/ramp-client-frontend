@@ -43,7 +43,7 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     showPrivacyLink = false;
     userTypeSection = 'personal';
     done = false;
-    recaptcha = undefined;
+    recaptcha = '';
 
     signupForm = this.formBuilder.group({
     	email: ['',
