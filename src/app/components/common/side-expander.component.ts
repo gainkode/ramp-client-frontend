@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
 	selector: 'app-side-expander-button',
 	templateUrl: 'side-expander.component.html',
-	styleUrls: ['../../../assets/button.scss']
+	styleUrls: []
 })
 export class SideExpanderComponent {
     @Input() expanded = false;

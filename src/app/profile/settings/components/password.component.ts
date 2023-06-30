@@ -15,7 +15,7 @@ import { PasswordValidator } from 'utils/password.validator';
 	templateUrl: './password.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		'../../../../assets/button.scss',
+		
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss'
 	]

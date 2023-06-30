@@ -12,7 +12,7 @@ import { ErrorService } from 'services/error.service';
 @Component({
 	selector: 'app-profile-balance-list',
 	templateUrl: './balance-list.component.html',
-	styleUrls: ['../../../../assets/button.scss', '../../../../assets/profile.scss', './balance-list.component.scss']
+	styleUrls: ['../../../../assets/profile.scss', './balance-list.component.scss']
 })
 export class ProfileBalanceListComponent implements OnInit, OnDestroy {
     @Output() onError = new EventEmitter<string>();

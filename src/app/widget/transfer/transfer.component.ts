@@ -9,20 +9,20 @@ import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
 import { ExchangeRateService } from 'services/rate.service';
 import { environment } from '@environments/environment';
-import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
-import { WireTransferUserSelection } from '../model/cost-scheme.model';
-import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
-import { WalletItem } from '../model/wallet.model';
-import { AuthService } from '../services/auth.service';
-import { NotificationService } from '../services/notification.service';
-import { ProfileDataService } from '../services/profile.service';
-import { WidgetPagerService } from '../services/widget-pager.service';
-import { WidgetService } from '../services/widget.service';
+import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { WireTransferUserSelection } from 'model/cost-scheme.model';
+import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategoryItem, WireTransferPaymentCategory, PaymentWidgetType } from 'model/payment-base.model';
+import { WalletItem } from 'model/wallet.model';
+import { AuthService } from 'services/auth.service';
+import { NotificationService } from 'services/notification.service';
+import { ProfileDataService } from 'services/profile.service';
+import { WidgetPagerService } from 'services/widget-pager.service';
+import { WidgetService } from 'services/widget.service';
 
 @Component({
 	selector: 'app-transfer-widget',
 	templateUrl: 'transfer.component.html',
-	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
+	styleUrls: [],
 })
 export class TransferWidgetComponent implements OnInit, OnDestroy {
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();

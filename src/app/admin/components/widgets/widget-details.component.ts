@@ -20,7 +20,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
 	selector: 'app-admin-widget-details',
 	templateUrl: 'widget-details.component.html',
-	styleUrls: ['widget-details.component.scss', '../../assets/scss/_validation.scss', '../../../../assets/button.scss']
+	styleUrls: ['widget-details.component.scss', '../../assets/scss/_validation.scss']
 })
 export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;

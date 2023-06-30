@@ -6,7 +6,7 @@ import { EnvService } from 'services/env.service';
 @Component({
 	selector: 'app-common-dialog-box',
 	templateUrl: 'common-box.dialog.html',
-	styleUrls: ['../../../assets/button.scss', '../../../assets/dialog.scss']
+	styleUrls: ['../../../assets/dialog.scss']
 })
 export class CommonDialogBox {
 	buttonTitle = '';

@@ -15,7 +15,7 @@ import { ProfileDataService } from 'services/profile.service';
 	templateUrl: './ip-list.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		'../../../../assets/button.scss',
+		
 		'../../../../assets/profile.scss',
 		'./ip-list.component.scss'
 	]

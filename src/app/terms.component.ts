@@ -4,7 +4,7 @@ import { EnvService } from './services/env.service';
 
 @Component({
 	templateUrl: 'terms.component.html',
-	styleUrls: ['../assets/button.scss', '../assets/intro.scss']
+	styleUrls: ['../assets/intro.scss']
 })
 export class TermsComponent {
 	title = '';

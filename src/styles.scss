@@ -1,7 +1,9 @@
-@import "./assets/material-theme.scss";
-@import "./assets/fonts.scss";
-@import "./assets/colors.scss";
-@import "./assets/consts.scss";
+@import "material-theme.scss";
+@import "fonts.scss";
+@import "colors.scss";
+@import "consts.scss";
+@import "button.scss";
+@import "payment.scss";
 
 :root {
     --widget_background: url("assets/widget-bg.svg");

@@ -1,24 +1,23 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TransactionType, Rate, SettingsCurrencyWithDefaults, TransactionSource, TransactionShort } from 'model/generated-models';
+import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType } from 'model/payment-base.model';
 import { CheckoutSummary, CurrencyView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { AuthService } from 'services/auth.service';
+import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
 import { ExchangeRateService } from 'services/rate.service';
-
-import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType } from '../model/payment-base.model';
-import { AuthService } from '../services/auth.service';
-import { CommonDataService } from '../services/common-data.service';
-import { WidgetPagerService } from '../services/widget-pager.service';
+import { WidgetPagerService } from 'services/widget-pager.service';
 
 @Component({
 	selector: 'app-send-widget',
 	templateUrl: 'send.component.html',
-	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
+	styleUrls: [],
 })
-export class SendWidgetComponent implements OnInit {
+export class SendWidgetComponent implements OnInit, OnDestroy {
   @Input() presetContactId = '';
   @Input() presetWalletId = '';
   @Input() presetCurrency = '';

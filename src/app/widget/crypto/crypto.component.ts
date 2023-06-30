@@ -10,15 +10,15 @@ import { ErrorService } from 'services/error.service';
 import { NotificationService } from 'services/notification.service';
 import { PaymentDataService } from 'services/payment.service';
 import { environment } from '@environments/environment';
-import { WidgetSettings } from '../model/payment-base.model';
-import { EnvService } from '../services/env.service';
-import { WidgetPagerService } from '../services/widget-pager.service';
-import { WidgetService } from '../services/widget.service';
+import { WidgetSettings } from 'model/payment-base.model';
+import { EnvService } from 'services/env.service';
+import { WidgetPagerService } from 'services/widget-pager.service';
+import { WidgetService } from 'services/widget.service';
 
 @Component({
 	selector: 'app-crypto-widget',
 	templateUrl: 'crypto.component.html',
-	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
+	styleUrls: [],
 })
 export class CryptoWidgetComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';

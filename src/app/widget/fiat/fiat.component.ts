@@ -1,21 +1,21 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { WireTransferUserSelection } from 'model/cost-scheme.model';
 import { TransactionType, PaymentInstrument, SettingsCurrencyWithDefaults, TransactionSource, TransactionShort } from 'model/generated-models';
+import { WidgetSettings, PaymentCompleteDetails, PaymentErrorDetails, WireTransferPaymentCategoryItem, WireTransferPaymentCategory, PaymentWidgetType } from 'model/payment-base.model';
+import { CheckoutSummary, CurrencyView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
+import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
-import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
-import { WireTransferUserSelection } from '../model/cost-scheme.model';
-import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
-import { CheckoutSummary, CurrencyView } from '../model/payment.model';
-import { CommonDataService } from '../services/common-data.service';
-import { PaymentDataService } from '../services/payment.service';
-import { WidgetService } from '../services/widget.service';
+import { PaymentDataService } from 'services/payment.service';
+import { WidgetService } from 'services/widget.service';
 
 @Component({
 	selector: 'app-fiat-widget',
 	templateUrl: 'fiat.component.html',
-	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
+	styleUrls: [],
 })
 export class FiatWidgetComponent implements OnInit, OnDestroy {
 	@Input() set settings(val: WidgetSettings | undefined) {

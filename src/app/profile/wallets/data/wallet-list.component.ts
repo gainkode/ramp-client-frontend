@@ -17,7 +17,6 @@ import { ProfileDataService } from 'services/profile.service';
 	templateUrl: './wallet-list.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		'../../../../assets/button.scss',
 		'../../../../assets/profile.scss',
 		'./wallet-list.component.scss'
 	]

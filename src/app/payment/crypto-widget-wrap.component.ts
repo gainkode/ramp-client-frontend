@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
 	templateUrl: 'crypto-widget-wrap.component.html',
-	styleUrls: ['../../assets/payment.scss']
+	styleUrls: []
 })
 export class CryptoWidgetWrapComponent {
 	userParamsId = '';

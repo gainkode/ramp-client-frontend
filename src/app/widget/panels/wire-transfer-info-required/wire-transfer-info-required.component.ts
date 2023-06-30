@@ -11,7 +11,6 @@ import { getFormattedUtcDate } from 'utils/utils';
 	selector: 'app-widget-wire-transfer-info-required',
 	templateUrl: 'wire-transfer-info-required.component.html',
 	styleUrls: [
-		'../../../../assets/button.scss',
 		'../../../../assets/text-control.scss',
 		'../../../../assets/auth.scss'
 	]

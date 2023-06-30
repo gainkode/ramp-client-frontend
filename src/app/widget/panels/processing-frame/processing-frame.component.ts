@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, View
 @Component({
 	selector: 'app-widget-processing-frame',
 	templateUrl: 'processing-frame.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/button.scss']
+	styleUrls: []
 })
 export class WidgetProcessingFrameComponent implements AfterViewInit {
   @Input() iframeContent = '';

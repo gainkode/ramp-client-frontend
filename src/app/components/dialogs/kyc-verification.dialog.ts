@@ -9,7 +9,7 @@ import { AuthService } from 'services/auth.service';
 @Component({
 	selector: 'app-kyc-verification-dialog-box',
 	templateUrl: 'kyc-verification.dialog.html',
-	styleUrls: ['../../../assets/button.scss', '../../../assets/dialog.scss']
+	styleUrls: ['../../../assets/dialog.scss']
 })
 export class KycVerificationDialogBox implements OnDestroy {
 	complete = false;

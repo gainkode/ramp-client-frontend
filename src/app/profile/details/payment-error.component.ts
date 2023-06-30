@@ -7,7 +7,7 @@ import { AuthService } from 'services/auth.service';
 @Component({
 	selector: 'app-profile-payment-error',
 	templateUrl: './payment-error.component.html',
-	styleUrls: ['../../../assets/button.scss', '../../../assets/details.scss', '../../../assets/text-control.scss']
+	styleUrls: ['../../../assets/details.scss', '../../../assets/text-control.scss']
 })
 export class ProfilePaymentErrorComponent implements OnInit {
     @Input() error: PaymentErrorDetails | undefined;

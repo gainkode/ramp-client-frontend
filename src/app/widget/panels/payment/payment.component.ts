@@ -8,7 +8,7 @@ import { PaymentDataService } from 'services/payment.service';
 @Component({
 	selector: 'app-widget-payment',
 	templateUrl: 'payment.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/button.scss', '../../../../assets/text-control.scss']
+	styleUrls: ['../../../../assets/text-control.scss']
 })
 export class WidgetPaymentComponent implements OnInit, OnDestroy {
   @Input() providers: PaymentProviderInstrumentView[] = [];

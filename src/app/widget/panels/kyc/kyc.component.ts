@@ -11,7 +11,7 @@ import { PaymentDataService } from 'services/payment.service';
 @Component({
 	selector: 'app-widget-kyc',
 	templateUrl: 'kyc.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/button.scss']
+	styleUrls: []
 })
 export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @Input() errorMessage = '';

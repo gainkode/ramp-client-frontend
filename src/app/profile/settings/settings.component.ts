@@ -6,7 +6,7 @@ import { AuthService } from 'services/auth.service';
 @Component({
 	selector: 'app-profile-settings',
 	templateUrl: './settings.component.html',
-	styleUrls: ['../../../assets/profile.scss', '../../../assets/button.scss']
+	styleUrls: ['../../../assets/profile.scss']
 })
 export class ProfileSettingsComponent {
     @Output() onShowError = new EventEmitter<string>();

@@ -8,8 +8,6 @@ import { EnvService } from 'services/env.service';
 	selector: 'app-widget-crypto-finish',
 	templateUrl: 'crypto-finish.component.html',
 	styleUrls: [
-		'../../../../assets/payment.scss',
-		'../../../../assets/button.scss',
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss',
 		'../../../../assets/details.scss'

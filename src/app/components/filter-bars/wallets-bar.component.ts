@@ -7,7 +7,7 @@ import { CurrencyView } from 'model/payment.model';
 @Component({
 	selector: 'app-wallets-filter',
 	templateUrl: './wallets-bar.component.html',
-	styleUrls: ['../../../assets/menu.scss', '../../../assets/button.scss']
+	styleUrls: ['../../../assets/menu.scss']
 })
 export class WalletsFilterBarComponent implements OnInit, OnDestroy {
     @Input() data: WalletsFilter | undefined = undefined;

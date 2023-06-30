@@ -5,7 +5,7 @@ import { DialogData } from 'model/dialog.model';
 @Component({
 	selector: 'app-delete-dialog-box',
 	templateUrl: 'delete-box.dialog.html',
-	styleUrls: ['../../../assets/button.scss', '../../../assets/dialog.scss']
+	styleUrls: ['../../../assets/dialog.scss']
 })
 export class DeleteDialogBox {
 	constructor(public dialogRef: MatDialogRef<DeleteDialogBox>,

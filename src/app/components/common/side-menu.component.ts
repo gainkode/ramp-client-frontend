@@ -4,7 +4,7 @@ import { MenuItem } from '../../model/common.model';
 @Component({
 	selector: 'app-side-menu',
 	templateUrl: 'side-menu.component.html',
-	styleUrls: ['../../../assets/fonts.scss', '../../../assets/colors.scss', '../../../assets/menu.scss', '../../../assets/button.scss']
+	styleUrls: ['../../../assets/fonts.scss', '../../../assets/colors.scss', '../../../assets/menu.scss']
 })
 export class SideMenuComponent {
     @Output() onMenuClick = new EventEmitter<MenuItem>();

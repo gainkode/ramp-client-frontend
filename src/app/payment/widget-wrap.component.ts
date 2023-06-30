@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
 	templateUrl: 'widget-wrap.component.html',
-	styleUrls: ['../../assets/payment.scss']
+	styleUrls: []
 })
 export class WidgetWrapComponent {
 	userParamsId = '';

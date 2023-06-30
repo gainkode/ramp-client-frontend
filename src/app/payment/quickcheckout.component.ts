@@ -8,7 +8,7 @@ import { NotificationService } from 'services/notification.service';
 
 @Component({
 	templateUrl: 'quickcheckout.component.html',
-	styleUrls: ['../../assets/payment.scss'],
+	styleUrls: [],
 	encapsulation: ViewEncapsulation.None
 })
 export class QuickCheckoutComponent {

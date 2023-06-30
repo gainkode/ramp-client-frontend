@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
 	selector: 'app-widget-progress',
 	templateUrl: 'progress.component.html',
-	styleUrls: ['../../../../assets/payment.scss'],
+	styleUrls: [],
 })
 export class WidgetProgressComponent {
   @Input() title = '';

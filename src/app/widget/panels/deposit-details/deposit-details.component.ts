@@ -12,8 +12,6 @@ import { PaymentDataService } from 'services/payment.service';
 	selector: 'app-widget-deposit-details',
 	templateUrl: 'deposit-details.component.html',
 	styleUrls: [
-		'../../../../assets/payment.scss',
-		'../../../../assets/button.scss',
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss',
 		'../../../../assets/details.scss'

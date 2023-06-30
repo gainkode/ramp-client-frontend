@@ -21,7 +21,7 @@ import { getCheckedProviderList, getProviderList } from 'utils/utils';
 @Component({
 	selector: 'app-admin-transaction-create',
 	templateUrl: 'transaction-create.component.html',
-	styleUrls: ['transaction-create.component.scss', '../../assets/scss/_validation.scss','../../../../assets/menu.scss', '../../../../assets/button.scss']
+	styleUrls: ['transaction-create.component.scss', '../../assets/scss/_validation.scss','../../../../assets/menu.scss']
 })
 export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   @Input() permission = 0;

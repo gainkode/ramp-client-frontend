@@ -16,8 +16,6 @@ import { ProfileDataService } from 'services/profile.service';
 	selector: 'app-widget-receive-details',
 	templateUrl: 'receive-details.component.html',
 	styleUrls: [
-		'../../../../assets/payment.scss',
-		'../../../../assets/button.scss',
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss',
 		'../../../../assets/details.scss'

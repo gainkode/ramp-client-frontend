@@ -5,7 +5,7 @@ import { EnvService } from 'services/env.service';
 @Component({
 	selector: 'app-widget-disclaimer',
 	templateUrl: 'disclaimer.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/button.scss']
+	styleUrls: []
 })
 export class WidgetDisclaimerComponent {
   @Input() agreementChecked = false;

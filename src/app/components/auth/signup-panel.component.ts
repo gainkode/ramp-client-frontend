@@ -11,10 +11,8 @@ import { EnvService } from 'services/env.service';
 	selector: 'app-signup-panel',
 	templateUrl: 'signup-panel.component.html',
 	styleUrls: [
-		'../../../assets/button.scss',
 		'../../../assets/text-control.scss',
 		'../../../assets/auth.scss',
-		'../../../assets/payment.scss'
 	]
 })
 export class SignUpPanelComponent implements OnInit, OnDestroy {

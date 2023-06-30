@@ -5,7 +5,7 @@ import { DialogData } from 'model/dialog.model';
 @Component({
 	selector: 'app-yesno-dialog-box',
 	templateUrl: 'yesno-box.dialog.html',
-	styleUrls: ['../../../assets/button.scss', '../../../assets/dialog.scss']
+	styleUrls: ['../../../assets/dialog.scss']
 })
 export class YesNoDialogBox {
 	constructor(public dialogRef: MatDialogRef<YesNoDialogBox>,

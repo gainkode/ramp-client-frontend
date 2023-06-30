@@ -5,7 +5,6 @@ import { TransactionItem } from 'model/transaction.model';
 	selector: 'app-profile-transaction-details',
 	templateUrl: './transaction-details.component.html',
 	styleUrls: [
-		'../../../../assets/button.scss',
 		'../../../../assets/details.scss',
 		'../../../../assets/text-control.scss'
 	]

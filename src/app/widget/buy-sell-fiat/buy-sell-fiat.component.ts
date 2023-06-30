@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TransactionSource, TransactionType } from '../model/generated-models';
-import { PaymentCompleteDetails, PaymentErrorDetails, PaymentWidgetType, WidgetSettings } from '../model/payment-base.model';
-import { AuthService } from '../services/auth.service';
+import { TransactionSource, TransactionType } from 'model/generated-models';
+import { PaymentWidgetType, PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings } from 'model/payment-base.model';
+import { AuthService } from 'services/auth.service';
 
 @Component({
-	selector: 'app-buy-sell-widget',
-	templateUrl: 'buy-sell.component.html',
-	styleUrls: ['../../assets/payment.scss']
+	selector: 'app-buy-sell-fiat-widget',
+	templateUrl: 'buy-sell-fiat.component.html',
+	styleUrls: [],
 })
-export class BuySellWidgetComponent {
+export class BuySellFiatWidgetComponent {
 	@Input() set widgetType(val: PaymentWidgetType) {
 		this.selectPaymentType(val);
 	}
@@ -34,20 +34,17 @@ export class BuySellWidgetComponent {
   	this.widgetSettings.embedded = true;
   	this.widgetSettings.email = this.auth.user?.email ?? '';
   	switch (selected) {
-  		case PaymentWidgetType.Buy:
-  			this.widgetSettings.transaction = TransactionType.Buy;
+  		case PaymentWidgetType.Deposit:
+  			this.widgetSettings.transaction = TransactionType.Deposit;
   			break;
-  		case PaymentWidgetType.Sell:
-  			this.widgetSettings.transaction = TransactionType.Sell;
-  			break;
-  		case PaymentWidgetType.Transfer:
-  			this.widgetSettings.transaction = TransactionType.Transfer;
+  		case PaymentWidgetType.Withdrawal:
+  			this.widgetSettings.transaction = TransactionType.Withdrawal;
   			break;
   		default:
   			break;
   	}
   	this.widgetSettings.source = TransactionSource.Wallet;
-  	this.widgetSettings.walletAddressPreset = (selected === PaymentWidgetType.Sell);
+  	this.widgetSettings.walletAddressPreset = false;
   	this.widgetSettings.kycFirst = false;
   	this.widgetSettings.disclaimer = false;
   	this.widgetVisible = true;

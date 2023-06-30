@@ -8,7 +8,7 @@ import { UserNotificationLevel } from 'model/generated-models';
 @Component({
 	selector: 'app-send-notification-dialog-box',
 	templateUrl: 'send-notification-box.dialog.html',
-	styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/dialog.scss']
+	styleUrls: ['../../../assets/text-control.scss', '../../../assets/dialog.scss']
 })
 export class SendNotificationDialogBox {
 	messageForm = this.formBuilder.group({

@@ -9,7 +9,7 @@ import { getFormattedUtcDate } from 'utils/utils';
 	templateUrl: './info-datebox.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		'../../../../assets/button.scss',
+		
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss',
 	]

@@ -8,7 +8,7 @@ import { EnvService } from 'services/env.service';
 
 @Component({
 	templateUrl: 'reset.component.html',
-	styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/auth.scss']
+	styleUrls: ['../../../assets/text-control.scss', '../../../assets/auth.scss']
 })
 export class MerchantResetComponent implements OnDestroy {
     token = '';

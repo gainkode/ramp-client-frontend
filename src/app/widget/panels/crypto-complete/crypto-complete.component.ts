@@ -13,8 +13,6 @@ const interval = 600000;  // 10 minutes
 	selector: 'app-widget-crypto-complete',
 	templateUrl: 'crypto-complete.component.html',
 	styleUrls: [
-		'../../../../assets/payment.scss',
-		'../../../../assets/button.scss',
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss',
 		'../../../../assets/details.scss'

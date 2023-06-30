@@ -16,7 +16,7 @@ import { getTierBlocks } from 'utils/profile.utils';
 @Component({
 	selector: 'app-profile-verification-settings',
 	templateUrl: './verification.component.html',
-	styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
+	styleUrls: ['../../../../assets/menu.scss', '../../../../assets/profile.scss']
 })
 export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     @Output() error = new EventEmitter<string>();

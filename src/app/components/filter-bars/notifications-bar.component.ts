@@ -6,7 +6,7 @@ import { NotificationsFilter, ProfileBaseFilter } from 'model/filter.model';
 @Component({
 	selector: 'app-notifications-filter',
 	templateUrl: './notifications-bar.component.html',
-	styleUrls: ['../../../assets/menu.scss', '../../../assets/button.scss']
+	styleUrls: ['../../../assets/menu.scss']
 })
 export class NotificationsFilterBarComponent implements OnInit, OnDestroy {
     @Input() data: NotificationsFilter | undefined = undefined;

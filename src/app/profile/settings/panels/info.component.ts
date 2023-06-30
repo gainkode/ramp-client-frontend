@@ -23,7 +23,7 @@ enum ChangedDataType {
 @Component({
 	selector: 'app-profile-info-settings',
 	templateUrl: './info.component.html',
-	styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
+	styleUrls: ['../../../../assets/menu.scss', '../../../../assets/profile.scss']
 })
 export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     @Output() error = new EventEmitter<string>();

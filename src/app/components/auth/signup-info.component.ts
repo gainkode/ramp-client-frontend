@@ -12,7 +12,6 @@ import { getFormattedUtcDate } from 'utils/utils';
 	selector: 'app-signup-info-panel',
 	templateUrl: 'signup-info.component.html',
 	styleUrls: [
-		'../../../assets/button.scss',
 		'../../../assets/text-control.scss',
 		'../../../assets/auth.scss'
 	]

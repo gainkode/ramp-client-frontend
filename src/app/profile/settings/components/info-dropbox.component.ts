@@ -8,7 +8,7 @@ import { CommonTargetValue } from 'model/common.model';
 	templateUrl: './info-dropbox.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		'../../../../assets/button.scss',
+		
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss',
 	],

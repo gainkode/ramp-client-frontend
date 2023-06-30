@@ -95,7 +95,7 @@ export class ExchangeRateService {
 				currencyFrom = this.currencyTo as string;
 				currencyTo = this.currencyFrom as string;
 			}
-			if (currencyFrom && currencyTo) {
+			if (currencyFrom && currencyTo) {				
 				const ratesData$ = this.dataService.getRates([currencyFrom], currencyTo);
 				if (this.pRateSubscription) {
 					this.pRateSubscription.unsubscribe();

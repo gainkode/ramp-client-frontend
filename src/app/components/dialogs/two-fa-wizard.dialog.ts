@@ -7,7 +7,7 @@ import { EnvService } from 'services/env.service';
 @Component({
 	selector: 'app-two-fa-dialog-wizard',
 	templateUrl: 'two-fa-wizard.dialog.html',
-	styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/dialog.scss']
+	styleUrls: ['../../../assets/text-control.scss', '../../../assets/dialog.scss']
 })
 export class TwoFaDialogWizard {
 	codeForm = this.formBuilder.group({

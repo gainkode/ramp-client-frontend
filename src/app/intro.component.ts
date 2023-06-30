@@ -9,7 +9,7 @@ import { EnvService } from './services/env.service';
 
 @Component({
 	templateUrl: 'intro.component.html',
-	styleUrls: ['../assets/button.scss', '../assets/intro.scss']
+	styleUrls: ['../assets/intro.scss']
 })
 export class IntroComponent implements OnInit {
 	logoSrc = `${EnvService.image_host}/images/logo-color.png`;

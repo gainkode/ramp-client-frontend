@@ -37,6 +37,7 @@ export class WidgetSettings {
 	currencyFrom = '';
 	currencyTo = '';
 	hideAmountFrom = false;
+	masked = false;
 	amountFrom = 0;
 	minAmountFrom: number | undefined = undefined;
 	maxAmountFrom: number | undefined = undefined;

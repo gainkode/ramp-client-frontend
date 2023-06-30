@@ -1,16 +1,16 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import { TransactionType, Rate, SettingsCurrencyWithDefaults } from 'model/generated-models';
+import { CheckoutSummary, CurrencyView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
-import { Rate, SettingsCurrencyWithDefaults, TransactionType } from '../model/generated-models';
-import { CheckoutSummary, CurrencyView } from '../model/payment.model';
-import { CommonDataService } from '../services/common-data.service';
-import { ErrorService } from '../services/error.service';
-import { ExchangeRateService } from '../services/rate.service';
+import { CommonDataService } from 'services/common-data.service';
+import { ErrorService } from 'services/error.service';
+import { ExchangeRateService } from 'services/rate.service';
 
 @Component({
 	selector: 'app-payment-intro',
 	templateUrl: 'payment-intro.component.html',
-	styleUrls: ['../../assets/payment.scss', '../../assets/button.scss']
+	styleUrls: []
 })
 export class PaymentIntroComponent implements OnInit, OnDestroy {
   @Output() onComplete = new EventEmitter<CheckoutSummary>();

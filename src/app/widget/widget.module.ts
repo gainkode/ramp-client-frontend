@@ -20,19 +20,10 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { ComponentsModule } from '../components/components.module';
 import { WidgetComponent } from './widget.component';
 import { WidgetOrderDetailsComponent } from './panels/order-details/order-details.component';
-import { BuySellWidgetComponent } from './buy-sell.component';
 import { RouterModule } from '@angular/router';
-import { ReceiveWidgetComponent } from './receive.component';
 import { QRCodeModule } from 'angularx-qrcode';
-import { SendWidgetComponent } from './send.component';
-import { TransferWidgetComponent } from './transfer.component';
-import { PaymentIntroComponent } from './payment-intro.component';
 import { MatRadioModule } from '@angular/material/radio';
-import { BuySellFiatWidgetComponent } from './buy-sell-fiat.component';
-import { FiatWidgetComponent } from './fiat.component';
-import { CryptoWidgetComponent } from './crypto.component';
-import { CryptoWizardComponent } from './crypto-wizard.component';
-import { WidgetWizardComponent } from './widget-wizard.component';
+
 import {
 	WidgetProgressComponent,
 	WidgetRecentTransactionsComponent,
@@ -62,6 +53,16 @@ import {
 	WidgetCompleteComponent,
 	WidgetErrorComponent,
 } from './panels';
+import { BuySellFiatWidgetComponent } from './buy-sell-fiat/buy-sell-fiat.component';
+import { BuySellWidgetComponent } from './buy-sell/buy-sell.component';
+import { CryptoWizardComponent } from './crypto-wizard/crypto-wizard.component';
+import { CryptoWidgetComponent } from './crypto/crypto.component';
+import { FiatWidgetComponent } from './fiat/fiat.component';
+import { PaymentIntroComponent } from './payment-intro/payment-intro.component';
+import { ReceiveWidgetComponent } from './receive/receive.component';
+import { SendWidgetComponent } from './send/send.component';
+import { TransferWidgetComponent } from './transfer/transfer.component';
+import { WidgetWizardComponent } from './widget-wizard/widget-wizard.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 

@@ -18,7 +18,7 @@ import { ProfileDataService } from 'services/profile.service';
 	templateUrl: './notification-list.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		'../../../../assets/button.scss',
+		
 		'../../../../assets/profile.scss',
 		'./notification-list.component.scss'
 	]

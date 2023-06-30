@@ -9,7 +9,7 @@ import { PaymentDataService } from 'services/payment.service';
 @Component({
 	selector: 'app-widget-code-auth',
 	templateUrl: 'code-auth.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/button.scss', '../../../../assets/text-control.scss']
+	styleUrls: ['../../../../assets/text-control.scss']
 })
 export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('code1input') code1input: ElementRef | undefined = undefined;

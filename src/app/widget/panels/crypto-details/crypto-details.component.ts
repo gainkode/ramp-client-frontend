@@ -12,8 +12,6 @@ import { ErrorService } from 'services/error.service';
 	selector: 'app-widget-crypto-details',
 	templateUrl: 'crypto-details.component.html',
 	styleUrls: [
-		'../../../../assets/payment.scss',
-		'../../../../assets/button.scss',
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss'
 	]

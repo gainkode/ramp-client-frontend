@@ -5,14 +5,14 @@ import { TransactionType, UserType, SettingsCurrencyWithDefaults, WidgetUserPara
 import { CurrencyView, TransactionTypeView, UserTypeView, UserTypeList, QuickCheckoutTransactionTypeList } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { CommonDataService } from 'services/common-data.service';
+import { EnvService } from 'services/env.service';
 import { ErrorService } from 'services/error.service';
-import { CommonDataService } from '../services/common-data.service';
-import { EnvService } from '../services/env.service';
 
 @Component({
 	selector: 'app-widget-widget-wizard',
 	templateUrl: 'widget-wizard.component.html',
-	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss', '../../assets/text-control.scss'],
+	styleUrls: ['../../../assets/text-control.scss'],
 })
 export class WidgetWizardComponent implements OnInit, OnDestroy {
 	private pSubscriptions: Subscription = new Subscription();

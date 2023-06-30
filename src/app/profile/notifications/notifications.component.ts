@@ -12,7 +12,7 @@ import { UserNotification } from 'model/generated-models';
 @Component({
 	selector: 'app-profile-notifications',
 	templateUrl: './notifications.component.html',
-	styleUrls: ['../../../assets/profile.scss', '../../../assets/button.scss']
+	styleUrls: ['../../../assets/profile.scss']
 })
 export class ProfileNotificationsComponent implements OnDestroy {
     @Output() onShowError = new EventEmitter<string>();

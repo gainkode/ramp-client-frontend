@@ -19,7 +19,6 @@ import { getAvatarPath, getFullName, getPaymentTitles } from '../utils/utils';
 	templateUrl: 'merchant.component.html',
 	styleUrls: [
 		'../../assets/menu.scss',
-		'../../assets/button.scss',
 		'../../assets/profile.scss',
 		'../../assets/details.scss'
 	]

@@ -8,7 +8,7 @@ import { ProfileItemContainer, ProfileItemContainerType } from 'model/profile-it
 @Component({
 	selector: 'app-contacts-filter',
 	templateUrl: './contacts-bar.component.html',
-	styleUrls: ['../../../assets/menu.scss', '../../../assets/button.scss']
+	styleUrls: ['../../../assets/menu.scss']
 })
 export class ContactsFilterBarComponent implements OnInit, OnDestroy {
     @Input() showCreateButton = false;

@@ -450,6 +450,7 @@ query GetWidget($id: String!) {
     currentUserParams
     allowToPayIfKycFailed
     fee
+    masked
   }
 }
 `;

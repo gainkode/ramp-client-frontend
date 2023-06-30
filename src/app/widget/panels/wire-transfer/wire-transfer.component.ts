@@ -5,7 +5,7 @@ import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'mo
 @Component({
 	selector: 'app-widget-wire-transfer',
 	templateUrl: 'wire-transfer.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/button.scss', '../../../../assets/text-control.scss']
+	styleUrls: ['../../../../assets/text-control.scss']
 })
 export class WidgetWireTransferComponent {
     @Input() bankAccountId = '';

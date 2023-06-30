@@ -17,7 +17,6 @@ import { ProfileDataService } from 'services/profile.service';
 	templateUrl: './security.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		'../../../../assets/button.scss',
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss'
 	]

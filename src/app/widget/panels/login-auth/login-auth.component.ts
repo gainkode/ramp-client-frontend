@@ -5,7 +5,7 @@ import { WidgetSettings } from 'model/payment-base.model';
 @Component({
 	selector: 'app-widget-login-auth',
 	templateUrl: 'login-auth.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/button.scss', '../../../../assets/text-control.scss']
+	styleUrls: ['../../../../assets/text-control.scss']
 })
 export class WidgetLoginAuthComponent {
     @Input() email = '';

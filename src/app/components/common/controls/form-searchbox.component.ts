@@ -4,7 +4,7 @@ import { ControlContainer, ControlValueAccessor, UntypedFormControl, FormControl
 @Component({
 	selector: 'app-form-searchbox',
 	templateUrl: 'form-searchbox.component.html',
-	styleUrls: ['../../../../assets/text-control.scss', '../../../../assets/button.scss'],
+	styleUrls: ['../../../../assets/text-control.scss'],
 	providers: [{
 		provide: NG_VALUE_ACCESSOR,
 		useExisting: FormSearchBoxComponent,

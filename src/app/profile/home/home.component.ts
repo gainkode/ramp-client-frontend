@@ -15,7 +15,7 @@ import { ProfileBalanceListComponent } from './data/balance-list.component';
 @Component({
 	selector: 'app-profile-home',
 	templateUrl: './home.component.html',
-	styleUrls: ['../../../assets/menu.scss', '../../../assets/button.scss', '../../../assets/profile.scss']
+	styleUrls: ['../../../assets/menu.scss', '../../../assets/profile.scss']
 })
 export class ProfileHomeComponent implements OnInit, OnDestroy {
     @Output() onShowDetails = new EventEmitter<ProfileItemContainer>();

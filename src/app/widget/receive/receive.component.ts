@@ -1,16 +1,16 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SettingsCurrencyWithDefaults } from 'model/generated-models';
+import { CurrencyView } from 'model/payment.model';
+import { WalletItem } from 'model/wallet.model';
 import { Subscription } from 'rxjs';
+import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
-import { CurrencyView } from '../model/payment.model';
-import { WalletItem } from '../model/wallet.model';
-import { CommonDataService } from '../services/common-data.service';
 
 @Component({
 	selector: 'app-receive-widget',
 	templateUrl: 'receive.component.html',
-	styleUrls: ['../../assets/button.scss', '../../assets/payment.scss'],
+	styleUrls: [],
 })
 export class ReceiveWidgetComponent implements OnInit, OnDestroy {
   @Input() presetWalletId = '';

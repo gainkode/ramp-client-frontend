@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 @Component({
 	selector: 'app-restore-panel',
 	templateUrl: 'restore-panel.component.html',
-	styleUrls: ['../../../assets/button.scss', '../../../assets/text-control.scss', '../../../assets/auth.scss']
+	styleUrls: ['../../../assets/text-control.scss', '../../../assets/auth.scss']
 })
 export class RestorePanelComponent implements OnDestroy {
     @Input() errorMessage = '';

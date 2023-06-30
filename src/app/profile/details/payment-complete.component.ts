@@ -7,7 +7,7 @@ import { AuthService } from 'services/auth.service';
 @Component({
 	selector: 'app-profile-payment-complete',
 	templateUrl: './payment-complete.component.html',
-	styleUrls: ['../../../assets/button.scss', '../../../assets/details.scss', '../../../assets/text-control.scss']
+	styleUrls: ['../../../assets/details.scss', '../../../assets/text-control.scss']
 })
 export class ProfilePaymentCompleteComponent implements OnInit {
     @Input() payment: PaymentCompleteDetails | undefined;

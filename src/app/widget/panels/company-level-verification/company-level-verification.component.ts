@@ -9,8 +9,6 @@ import { ErrorService } from 'services/error.service';
 	selector: 'company-level-verification',
 	templateUrl: 'company-level-verification.component.html',
 	styleUrls: [
-		'../../../../assets/payment.scss',
-		'../../../../assets/button.scss',
 		'../../../../assets/text-control.scss',
 		'../../../../assets/auth.scss'
 	]

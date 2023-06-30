@@ -17,7 +17,7 @@ import { ProfileDataService } from 'services/profile.service';
 	templateUrl: './contact-list.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		'../../../../assets/button.scss',
+		
 		'../../../../assets/profile.scss',
 		'./contact-list.component.scss'
 	]

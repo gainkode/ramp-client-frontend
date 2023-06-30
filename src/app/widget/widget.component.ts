@@ -218,9 +218,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		let presetAddress = false;
 
   		this.widget.widgetId = data.widgetId;
+  		this.widget.masked = data.masked;
   		this.widget.email = data.currentUserEmail ?? '';
   		this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
-      
+		
   		if (data.currentUserParams) {
   			let setCurrencyExchangeRate = false;
   			userParams = JSON.parse(data.currentUserParams);

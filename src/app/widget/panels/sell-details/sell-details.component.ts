@@ -7,7 +7,7 @@ import { CheckoutSummary } from 'model/payment.model';
 @Component({
 	selector: 'app-widget-sell-details',
 	templateUrl: 'sell-details.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/button.scss', '../../../../assets/text-control.scss']
+	styleUrls: ['../../../../assets/text-control.scss']
 })
 export class WidgetSellDetailsComponent {
     @Input() summary: CheckoutSummary | undefined = undefined;

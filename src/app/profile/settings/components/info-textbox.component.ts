@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 	templateUrl: './info-textbox.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		'../../../../assets/button.scss',
+		
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss',
 	]

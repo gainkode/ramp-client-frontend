@@ -12,7 +12,7 @@ import { WalletValidator } from 'utils/wallet.validator';
 @Component({
 	selector: 'app-profile-contact-create',
 	templateUrl: './contact-create.component.html',
-	styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss', '../../../../assets/text-control.scss']
+	styleUrls: ['../../../../assets/details.scss', '../../../../assets/text-control.scss']
 })
 export class ProfileContactCreateComponent implements OnInit, OnDestroy {
     @Input() cryptoList: CurrencyView[] = [];

@@ -5,7 +5,7 @@ import { InstantpayDetails } from 'model/payment-base.model';
 @Component({
 	selector: 'app-widget-processing-instantpay',
 	templateUrl: 'processing-instantpay.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/button.scss', '../../../../assets/text-control.scss']
+	styleUrls: ['../../../../assets/text-control.scss']
 })
 export class WidgetProcessingInstantpayComponent {
   @Input() errorMessage = '';

@@ -9,7 +9,7 @@ import { ProfileDataService } from 'services/profile.service';
 @Component({
 	selector: 'app-profile-contact-details',
 	templateUrl: './contact-details.component.html',
-	styleUrls: ['../../../../assets/button.scss', '../../../../assets/details.scss', '../../../../assets/text-control.scss']
+	styleUrls: ['../../../../assets/details.scss', '../../../../assets/text-control.scss']
 })
 export class ProfileContactDetailsComponent implements OnDestroy {
     @Input() contact: ContactItem | undefined;

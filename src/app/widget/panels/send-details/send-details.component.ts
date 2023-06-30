@@ -17,8 +17,6 @@ import { WalletValidator } from 'utils/wallet.validator';
 	selector: 'app-widget-send-details',
 	templateUrl: 'send-details.component.html',
 	styleUrls: [
-		'../../../../assets/payment.scss',
-		'../../../../assets/button.scss',
 		'../../../../assets/text-control.scss',
 		'../../../../assets/profile.scss'
 	]

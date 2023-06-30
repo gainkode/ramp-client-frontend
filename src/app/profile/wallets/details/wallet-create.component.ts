@@ -16,7 +16,6 @@ import { ProfileDataService } from 'services/profile.service';
 	selector: 'app-profile-wallet-create',
 	templateUrl: './wallet-create.component.html',
 	styleUrls: [
-		'../../../../assets/button.scss',
 		'../../../../assets/menu.scss',
 		'../../../../assets/details.scss',
 		'../../../../assets/text-control.scss'

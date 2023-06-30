@@ -11,7 +11,7 @@ import { ProfileDataService } from 'services/profile.service';
 @Component({
 	selector: 'app-widget-recent-transactions',
 	templateUrl: 'recent-transactions.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
+	styleUrls: ['../../../../assets/profile.scss']
 })
 export class WidgetRecentTransactionsComponent implements OnDestroy, OnInit {
   @Output() back = new EventEmitter();

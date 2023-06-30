@@ -17,7 +17,6 @@ import { ProfileDataService } from 'services/profile.service';
 	templateUrl: './transaction-list.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		'../../../../assets/button.scss',
 		'../../../../assets/profile.scss',
 		'./transaction-list.component.scss'
 	]

@@ -15,7 +15,7 @@ import { EnvService } from 'services/env.service';
 @Component({
 	selector: 'app-profile-balance-chart',
 	templateUrl: './balance-chart.component.html',
-	styleUrls: ['../../../../assets/menu.scss', '../../../../assets/button.scss', '../../../../assets/profile.scss']
+	styleUrls: ['../../../../assets/menu.scss', '../../../../assets/profile.scss']
 })
 export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
 	@Input() set selectedCurrency(val: string) {

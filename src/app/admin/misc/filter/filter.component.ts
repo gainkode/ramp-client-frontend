@@ -16,7 +16,7 @@ import { AuthService } from 'services/auth.service';
 @Component({
 	selector: 'app-admin-filter',
 	templateUrl: './filter.component.html',
-	styleUrls: ['./filter.component.scss', '../../../../assets/button.scss']
+	styleUrls: ['./filter.component.scss']
 })
 export class AdminFilterComponent implements OnInit, OnDestroy {
   @Input() fields: Array<string> = [];

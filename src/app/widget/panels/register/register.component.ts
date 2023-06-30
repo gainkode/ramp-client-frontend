@@ -4,7 +4,7 @@ import { UserType } from 'model/generated-models';
 @Component({
 	selector: 'app-widget-register',
 	templateUrl: 'register.component.html',
-	styleUrls: ['../../../../assets/payment.scss', '../../../../assets/auth.scss', '../../../../assets/button.scss']
+	styleUrls: ['../../../../assets/auth.scss']
 })
 export class WidgetRegisterComponent {
     @Input() email = '';
