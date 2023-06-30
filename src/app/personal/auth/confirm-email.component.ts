@@ -27,7 +27,20 @@ export class PersonalConfirmEmailComponent implements OnDestroy, AfterViewInit {
     	private auth: AuthService,
     	private errorHandler: ErrorService,
     	public router: Router,
-    	public activeRoute: ActivatedRoute) {}
+    	public activeRoute: ActivatedRoute) {
+				this.token = this.activeRoute.snapshot.params['token'];
+				if (this.token !== undefined) {
+					this.subscriptions.add(
+						this.auth.confirmEmail(this.token).subscribe(({ data }) => {
+							this.validated = true;
+							this.valid = true;
+						}, (error) => {
+							this.validated = true;
+							this.errorMessage = this.errorHandler.getError(error.message, 'Unable to validate email');
+						})
+					);
+				}
+			}
 
     capchaResult(event){
     	this.recaptchaDialog?.close();
@@ -47,10 +60,10 @@ export class PersonalConfirmEmailComponent implements OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-    	this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
-    		backdrop: 'static',
-    		windowClass: 'modalCusSty',
-    	});
+    	// this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
+    	// 	backdrop: 'static',
+    	// 	windowClass: 'modalCusSty',
+    	// });
     }
     ngOnDestroy(): void {
     	this.subscriptions.unsubscribe();

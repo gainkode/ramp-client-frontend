@@ -98,14 +98,15 @@ export class WidgetService {
 
 	authenticate(login: string, widgetId: string) {
 		// Consider that the user is one-time wallet user rather than internal one
-		let recaptcha = localStorage.getItem('recaptchaId');
-		if(recaptcha){
-			this.authenticateInternal(login, widgetId);
-		}else{
-			if(this.onRecaptchaCallback){
-				this.onRecaptchaCallback();
-			}
-		}
+		this.authenticateInternal(login, widgetId);
+		// let recaptcha = localStorage.getItem('recaptchaId');
+		// if(recaptcha){
+		// 	this.authenticateInternal(login, widgetId);
+		// }else{
+		// 	if(this.onRecaptchaCallback){
+		// 		this.onRecaptchaCallback();
+		// 	}
+		// }
 	}
 
 	authenticateInternal(login: string, widgetId: string) {
