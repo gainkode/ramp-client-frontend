@@ -990,6 +990,6 @@ export class AuthService {
 		localStorage.removeItem('currentAction');
 		localStorage.removeItem('common');
 
-		// this.cookieService.delete('cm-ewallet-refresh-token');
+		this.cookieService.delete('cm-ewallet-refresh-token');
 	}
 }
