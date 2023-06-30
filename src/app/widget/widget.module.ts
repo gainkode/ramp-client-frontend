@@ -53,16 +53,19 @@ import {
 	WidgetCompleteComponent,
 	WidgetErrorComponent,
 } from './panels';
-import { BuySellFiatWidgetComponent } from './buy-sell-fiat/buy-sell-fiat.component';
-import { BuySellWidgetComponent } from './buy-sell/buy-sell.component';
-import { CryptoWizardComponent } from './crypto-wizard/crypto-wizard.component';
-import { CryptoWidgetComponent } from './crypto/crypto.component';
-import { FiatWidgetComponent } from './fiat/fiat.component';
-import { PaymentIntroComponent } from './payment-intro/payment-intro.component';
-import { ReceiveWidgetComponent } from './receive/receive.component';
-import { SendWidgetComponent } from './send/send.component';
-import { TransferWidgetComponent } from './transfer/transfer.component';
-import { WidgetWizardComponent } from './widget-wizard/widget-wizard.component';
+
+import { 
+	WidgetWizardComponent,
+	SendWidgetComponent,
+	TransferWidgetComponent, 
+	ReceiveWidgetComponent,
+	BuySellFiatWidgetComponent,
+	BuySellWidgetComponent,
+	CryptoWidgetComponent,
+	CryptoWizardComponent,
+	FiatWidgetComponent,
+	PaymentIntroComponent
+} from 'widget';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
