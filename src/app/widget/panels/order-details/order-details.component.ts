@@ -291,6 +291,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   				this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
   				if (this.auth.authenticated) {
   					this.loadRates();
+						this.loadTransactionsTotal();
   				} else {
   					this.onProgress.emit(false);
   				}
@@ -385,7 +386,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   						}
   					}
   				});
-  				this.loadTransactionsTotal();
   			}, (error) => {
   				this.onProgress.emit(false);
   				this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
