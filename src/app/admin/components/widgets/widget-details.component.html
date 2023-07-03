@@ -380,6 +380,22 @@
             </div>
           </div>
         </div>
+
+        <div class="form-group">
+          <div class="__tool-bar-double-sided-data-box __row-per-checkbox">
+            <div class="__tool-bar-block">
+                <div class="__tool-bar-label">
+                  Mask
+                </div>
+            </div>
+            <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__toggle-switch">
+                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                        formControlName="masked">
+                </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">

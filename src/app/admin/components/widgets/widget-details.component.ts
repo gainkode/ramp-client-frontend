@@ -95,6 +95,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	disclaimer: false,
   	twoFA: false,
   	showRate: true,
+		masked: false,
   	minAmountFrom: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
   	maxAmountFrom: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
   	fee: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
@@ -197,6 +198,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   					userType: sellecteduserType,
   					kycBeforePayment: this.widgetAdditionalSettings?.kycBeforePayment ?? false,
   					showRate: this.widgetAdditionalSettings?.showRate ?? true,
+						masked: widget.masked ?? false,
   					twoFA: this.widgetAdditionalSettings?.twoFA ?? false,
   					disclaimer: this.widgetAdditionalSettings?.disclaimer ?? false,
   					minAmountFrom: this.widgetAdditionalSettings?.minAmountFrom ?? 0,
@@ -256,6 +258,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	widget.allowToPayIfKycFailed = formValue.allowToPayIfKycFailed;
   	widget.fee = formValue.fee;
   	widget.newVaultPerTransaction = formValue.newVaultPerTransaction;
+		widget.masked = formValue.masked;
   	// widget.destinationAddress = this.widgetDestinationAddress;
 
   	return widget;
