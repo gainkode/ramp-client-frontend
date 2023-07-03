@@ -877,26 +877,27 @@ $font_main: var(--font_main);
         0px 3px 16px rgba(153, 140, 149, 0.12);
 }
 
-.__widget-provider-item-button:focus {
-    outline: none;
+.__widget-provider-item-button {
+    :focus{
+        outline: none;
+    }
+    .__widget-provider-item-title {
+        margin: 8px 0px;
+        font-family: $font_main;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 15px;
+    
+        text-align: center;
+        color: $color_purple_900_text;
+    }
 }
 
 .__widget-provider-item-image {
     width: 82px;
     height: 82px;
     margin: 8px;
-}
-
-.__widget-provider-item-title {
-    margin: 8px 0px;
-    font-family: $font_main;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 15px;
-
-    text-align: center;
-    color: $color_purple_900_text;
 }
 
 .__widget-external-frame-container {
