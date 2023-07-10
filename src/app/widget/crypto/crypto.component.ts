@@ -40,7 +40,7 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   paymentSuccess = false;
   paymentTitle = '';
   notificationStarted = false;
-  logoSrc = '';
+  logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
   logoAlt = EnvService.product;
   abandonCounter = 0;
 
@@ -88,7 +88,6 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   	this.requiredExtraData = false;
   	this.initMessage = 'Loading...';
   	if (data) {
-  		this.logoSrc = data.logoSrc ?? `${EnvService.image_host}/images/logo-widget.png`;
   		if (data.additionalSettings) {
   			//{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}
   			const extraData = JSON.parse(data.additionalSettings);
