@@ -191,7 +191,6 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
     	this.avatarError = false;
     	const file: File = event.target.files[0];
     	if (file) {
-    		const fileName = file.name;
     		const formData = new FormData();
     		formData.append('docs', file);
 
@@ -205,7 +204,7 @@ export class ProfileInfoSettingsComponent implements OnInit, OnDestroy {
 
     		this.uploadProgress = 0;
     		this.uploadSubscription = upload.subscribe(event => {
-    			if (event.type == HttpEventType.UploadProgress) {
+    			if (event.type === HttpEventType.UploadProgress) {
     				const total = event.total ?? 0;
     				if (total > 0) {
     					this.uploadProgress = Math.round(100 * (event.loaded / total));

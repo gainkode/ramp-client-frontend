@@ -1,61 +1,76 @@
 <div *ngIf="isEditDocument; else docsTable">
   <div [formGroup]="form" class="inputs-wrap" [@fade]="isEditDocument">
-    <mat-mdc-form-field class="size-full" appearance="outline">
+    <mat-form-field appearance="outline">
+      <mat-label>Document Group</mat-label>
+      <mat-select appendTo="body" formControlName="group">
+        <mat-option *ngFor="let group of documentGroups" [value]="group">
+          {{ group }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      [ngClass]="{'size-wider': isDocumentSide}"
+      appearance="outline"
+      *ngIf="isDocumentTypeGrouped"
+    >
       <mat-label>Document Type</mat-label>
       <mat-select appendTo="body" formControlName="type">
-        <mat-option *ngFor="let type of documentTypes" [value]="type">
+        <mat-option *ngFor="let type of documentTypes$ | async" [value]="type">
           {{ type }}
         </mat-option>
       </mat-select>
-    </mat-mdc-form-field>
-  
-    <mat-mdc-form-field style="font-size: 12px" class="size-full" appearance="outline">
+    </mat-form-field>
+
+    <mat-form-field
+    class="size-smaller"
+    appearance="outline"
+    *ngIf="isDocumentSide"
+  >
+    <mat-label>Side</mat-label>
+      <mat-select appendTo="body" formControlName="side">
+        <mat-option value="FRONT">Front</mat-option>
+        <mat-option value="BACK">Back</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
       <mat-label>Name</mat-label>
       <input matInput type="text" formControlName="name" />
-    </mat-mdc-form-field>
-  
-    <mat-mdc-form-field class="size-full" appearance="outline">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
       <mat-label>Description</mat-label>
       <input matInput type="text" formControlName="description" />
-    </mat-mdc-form-field>
-  
+    </mat-form-field>
+
     <br />
-    <app-file-upload></app-file-upload>
+    <app-file-upload (fileSelected)="onFileSelected($event)"></app-file-upload>
   </div>
 
-  <button type="button" mat-button color="accent" (click)="onCancelEditDocument()">Cancel</button>
+  <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onCancelEditDocument()">
+    Cancel
+  </button>
+
+  <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onSave()">
+    Save
+  </button>
 </div>
 
-<ng-template #docsTable >
-  <button type="button" mat-button color="accent" (click)="onAddDocument()">Accent</button>
-  
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table" [@fade]="isEditDocument === false">
-    <!-- Position Column -->
-    <ng-container matColumnDef="position">
-      <th mat-header-cell *matHeaderCellDef>No.</th>
-      <td mat-cell *matCellDef="let element">{{element.position}}</td>
-    </ng-container>
-  
-    <!-- Name Column -->
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let element">{{element.name}}</td>
-    </ng-container>
-  
-    <!-- Weight Column -->
-    <ng-container matColumnDef="weight">
-      <th mat-header-cell *matHeaderCellDef>Weight</th>
-      <td mat-cell *matCellDef="let element">{{element.weight}}</td>
-    </ng-container>
-  
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="symbol">
-      <th mat-header-cell *matHeaderCellDef>Symbol</th>
-      <td mat-cell *matCellDef="let element">{{element.symbol}}</td>
-    </ng-container>
-  
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</ng-template>
+<ng-template #docsTable>
+  <button class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="onAddDocument()">Add Document</button>
 
+  <div
+    class="accounts-wrapper shadow animated fadeIn admin-account__table-wrapper"
+  >
+
+  <app-table
+		[sort]="sort"
+		#sort="matSort"
+		matSort
+		matSortActive="status"
+		matSortDirection="desc"
+		matSortDisableClear
+		 [dataSource]="tableDataSource" [columns]="columnsToDisplay" class="accounts-table"></app-table>
+  </div>
+</ng-template>

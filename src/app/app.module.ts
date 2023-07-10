@@ -27,6 +27,7 @@ import { ExchangeRateService } from './services/rate.service';
 import { WidgetPagerService } from './services/widget-pager.service';
 import { WidgetService } from './services/widget.service';
 import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/env.service';
+import { TableModule } from 'components/data-list/table/table.module';
 
 function socialConfigFactory(): SocialAuthServiceConfig {
 	EnvServiceFactory.call(undefined);
@@ -51,7 +52,8 @@ function socialConfigFactory(): SocialAuthServiceConfig {
 		HttpClientModule,
 		BrowserAnimationsModule,
 		SocialLoginModule,
-		DirectiveModule
+		DirectiveModule,
+		TableModule
 	],
 	providers: [
 		EnvServiceProvider,

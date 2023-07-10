@@ -1,16 +1,17 @@
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Subscription, finalize } from 'rxjs';
 
 @Component({
 	selector: 'app-file-upload',
 	templateUrl: './file-upload.component.html',
 	styleUrls: ['./file-upload.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	// changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadComponent {
   @Input()
   requiredFileType: string;
+  @Output() fileSelected = new EventEmitter();
 
   fileName = 'Choose a file';
   uploadProgress: number;
@@ -19,13 +20,21 @@ export class FileUploadComponent {
   constructor(private http: HttpClient) {}
 
   onFileSelected(event): void {
-  	const file: File = event.target.files[0];
+  	const files: FileList = event.target.files;
 
-  	if (file) {
-  		this.fileName = file.name;
+  	if (files) {
+  		// this.fileName = file.name;
+
   		const formData = new FormData();
-  		formData.append('thumbnail', file);
 
+  		for (var i = 0; i < files.length; i++) {
+  			formData.append('files', files[i]);
+  		}
+		
+  		this.fileSelected.emit(formData);
+
+
+		
   		// const upload$ = this.http
   		// 	.post('/api/thumbnail-upload', formData, {
   		// 		reportProgress: true,
