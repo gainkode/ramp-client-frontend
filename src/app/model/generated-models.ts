@@ -2403,6 +2403,7 @@ export type QueryGetOneToManyRatesMerchantArgs = {
 export type QueryGetRatesArgs = {
   currenciesFrom: Array<Scalars['String']['input']>;
   currencyTo: Scalars['String']['input'];
+  provider?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4657,6 +4658,8 @@ export type Widget = {
   additionalSettings?: Maybe<Scalars['String']['output']>;
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']['output']>;
   code: Scalars['String']['output'];
+  companyAddress?: Maybe<Scalars['String']['output']>;
+  companyName?: Maybe<Scalars['String']['output']>;
   countriesCode2?: Maybe<Array<Scalars['String']['output']>>;
   created: Scalars['DateTime']['output'];
   createdBy?: Maybe<Scalars['String']['output']>;
@@ -4667,15 +4670,19 @@ export type Widget = {
   currentUserParams?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   destinationAddress?: Maybe<Array<WidgetDestination>>;
+  emailFrom?: Maybe<Scalars['String']['output']>;
   fee?: Maybe<Scalars['Float']['output']>;
   hasFixedAddress: Scalars['Boolean']['output'];
   instruments?: Maybe<Array<PaymentInstrument>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
+  logoSrc?: Maybe<Scalars['String']['output']>;
   masked: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   newVaultPerTransaction?: Maybe<Scalars['Boolean']['output']>;
   paymentProviders?: Maybe<Array<Scalars['String']['output']>>;
   secret?: Maybe<Scalars['String']['output']>;
+  sendgridApiKey?: Maybe<Scalars['String']['output']>;
+  supportEmail?: Maybe<Scalars['String']['output']>;
   transactionTypes?: Maybe<Array<TransactionType>>;
   userCode?: Maybe<Scalars['String']['output']>;
   userId: Scalars['String']['output'];
@@ -4723,16 +4730,22 @@ export type WidgetShort = {
   additionalSettings?: Maybe<Scalars['String']['output']>;
   allowToPayIfKycFailed?: Maybe<Scalars['Boolean']['output']>;
   code: Scalars['String']['output'];
+  companyAddress?: Maybe<Scalars['String']['output']>;
+  companyName?: Maybe<Scalars['String']['output']>;
   currenciesCrypto?: Maybe<Array<Scalars['String']['output']>>;
   currenciesFiat?: Maybe<Array<Scalars['String']['output']>>;
   currentUserEmail?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  emailFrom?: Maybe<Scalars['String']['output']>;
   hasFixedAddress: Scalars['Boolean']['output'];
   instruments?: Maybe<Array<PaymentInstrument>>;
+  logoSrc?: Maybe<Scalars['String']['output']>;
   masked: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   newVaultPerTransaction?: Maybe<Scalars['Boolean']['output']>;
   paymentProviders?: Maybe<Array<Scalars['String']['output']>>;
+  sendgridApiKey?: Maybe<Scalars['String']['output']>;
+  supportEmail?: Maybe<Scalars['String']['output']>;
   transactionTypes?: Maybe<Array<TransactionType>>;
   widgetId: Scalars['ID']['output'];
 };
