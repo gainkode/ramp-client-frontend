@@ -83,7 +83,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   notificationStarted = false;
   recentTransactions = false;
   introDisclaimerBack = false;
-  logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
+  logoSrc = '';
   logoAlt = EnvService.product;
   disclaimerTextData = disclaimerDataDefault;
   completeTextData = completeDataDefault;
@@ -200,6 +200,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.requiredExtraData = false;
   	this.initMessage = 'Loading...';
   	if (data) {
+  		this.logoSrc = data.logoSrc ?? `${EnvService.image_host}/images/logo-widget.png`;
   		this.widget.allowToPayIfKycFailed = data.allowToPayIfKycFailed ?? false;
   		let userParams: Record<string, any> = {};
   		if (data.additionalSettings) {
