@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
-import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionType } from 'model/generated-models';
+import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionType, UserRoleObjectCode } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
 import { TransactionItemFull } from 'model/transaction.model';
 import { AuthService } from 'services/auth.service';
@@ -82,7 +82,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   	if (filterUserId) {
   		this.filter.users = [filterUserId as string];
   	}
-  	this.permission = this.auth.isPermittedObjectCode('TRANSACTIONS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Transactions);
   }
 
   ngOnInit(): void {

@@ -8,6 +8,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { AdminDataService } from 'services/admin-data.service';
 import { ApiKeyItem } from 'model/apikey.model';
 import { AuthService } from 'services/auth.service';
+import { UserRoleObjectCode } from 'model/generated-models';
 
 @Component({
 	selector: 'app-admin-apikeys',
@@ -48,7 +49,7 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
   	private clipboard: Clipboard,
   	private router: Router
   ) {
-  	this.permission = this.auth.isPermittedObjectCode('SETTINGS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Settings);
   }
 
   ngOnInit(): void {

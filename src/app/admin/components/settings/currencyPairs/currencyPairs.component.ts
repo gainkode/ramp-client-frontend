@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CurrencyPairItem } from 'model/currencyPairs.model';
+import { UserRoleObjectCode } from 'model/generated-models';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
@@ -52,7 +53,7 @@ export class AdminCurrencyPairsComponent implements OnInit, OnDestroy, AfterView
   	private clipboard: Clipboard,
   	private router: Router
   ) {
-  	this.permission = this.auth.isPermittedObjectCode('SETTINGS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Settings);
   }
 
   ngOnInit(): void {

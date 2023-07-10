@@ -6,7 +6,7 @@ import { take } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
 import { getCountryByCode2, getCountryByCode3 } from 'model/country-code.model';
-import { BlackCountryListResult } from 'model/generated-models';
+import { BlackCountryListResult, UserRoleObjectCode } from 'model/generated-models';
 import { AuthService } from 'services/auth.service';
 
 @Component({
@@ -36,7 +36,7 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy {
 		private adminService: AdminDataService,
 		private router: Router
 	) {
-		this.permission = this.auth.isPermittedObjectCode('KYC');
+		this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Kyc);
 	}
 
 	ngOnInit(): void {

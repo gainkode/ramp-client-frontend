@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { WireTransferBankAccountItem } from 'model/cost-scheme.model';
-import { WireTransferBankAccountListResult } from 'model/generated-models';
+import { UserRoleObjectCode, WireTransferBankAccountListResult } from 'model/generated-models';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from 'services/auth.service';
 import { AdminDataService } from 'services/admin-data.service';
@@ -38,7 +38,7 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
 		private adminService: AdminDataService,
 		private router: Router
 	) {
-		this.permission = this.auth.isPermittedObjectCode('COSTS');
+		this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Costs);
 	}
 
 	ngOnInit(): void {

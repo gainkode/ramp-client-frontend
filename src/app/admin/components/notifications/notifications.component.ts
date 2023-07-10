@@ -8,6 +8,7 @@ import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { NotificationItem } from 'model/notification.model';
 import { AuthService } from 'services/auth.service';
+import { UserRoleObjectCode } from 'model/generated-models';
 
 @Component({
 	selector: 'app-admin-notifications',
@@ -24,12 +25,14 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   displayedColumns: string[] = [
   	'details',
   	'created',
+		'status',
   	'viewed',
   	'user',
   	'title',
   	'code',
   	'userNotificationLevel',
-  	'text'
+  	'text',
+		'messageId'
   ];
   inProgress = false;
   permission = 0;
@@ -53,7 +56,7 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   	private router: Router,
   	private route: ActivatedRoute
   ) {
-  	this.permission = this.auth.isPermittedObjectCode('NOTIFICATIONS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Notifications);
 
   	this.route.queryParams
   		.subscribe(params => {

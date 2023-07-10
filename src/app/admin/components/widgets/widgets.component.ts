@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Filter } from 'admin/model/filter.model';
 import { WidgetItem } from 'admin/model/widget.model';
+import { UserRoleObjectCode } from 'model/generated-models';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
@@ -69,7 +70,7 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   	private router: Router
   ) {
   	this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
-  	this.permission = this.auth.isPermittedObjectCode('AFFILIATES');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Affiliates);
   }
 
   ngOnInit(): void {

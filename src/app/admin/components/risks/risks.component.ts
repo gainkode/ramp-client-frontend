@@ -8,6 +8,7 @@ import { Filter } from 'admin/model/filter.model';
 import { RiskAlertItem } from 'admin/model/risk-alert.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
+import { UserRoleObjectCode } from 'model/generated-models';
 
 @Component({
 	selector: 'app-admin-risks',
@@ -51,7 +52,7 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   	private adminService: AdminDataService,
   	private router: Router
   ) {
-  	this.permission = this.auth.isPermittedObjectCode('RISKS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Notifications);
   }
 
   ngOnInit(): void {

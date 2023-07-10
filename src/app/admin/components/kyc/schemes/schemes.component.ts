@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { KycScheme } from 'model/identification.model';
 import { AuthService } from 'services/auth.service';
+import { UserRoleObjectCode } from 'model/generated-models';
 
 @Component({
 	selector: 'app-admin-kyc-schemes',
@@ -39,7 +40,7 @@ export class AdminKycSchemesComponent implements OnInit, OnDestroy {
 		private adminService: AdminDataService,
 		private router: Router
 	) {
-		this.permission = this.auth.isPermittedObjectCode('KYC');
+		this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Kyc);
 	}
 
 	ngOnInit(): void {

@@ -491,6 +491,8 @@ const GET_NOTIFICATIONS = gql`
         userNotificationLevel
         userNotificationTypeCode
         viewed
+        messageId
+        messageStatus
       }
     }
   }

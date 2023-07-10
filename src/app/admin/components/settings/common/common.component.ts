@@ -8,7 +8,7 @@ import { CurrencyView, CustodyProviderList, KycProviderList } from 'model/paymen
 import { LiquidityProviderList } from 'admin/model/lists.model';
 import { TransactionConfirmationModeList } from 'admin/model/settings.model';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { PaymentProviderPayoutType, SettingsCommon, SettingsCurrencyWithDefaults, TransactionConfirmationMode } from 'model/generated-models';
+import { PaymentProviderPayoutType, SettingsCommon, SettingsCurrencyWithDefaults, TransactionConfirmationMode, UserRoleObjectCode } from 'model/generated-models';
 import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
 
@@ -168,7 +168,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		private modalService: NgbModal,
 		private router: Router
 	) {
-		this.permission = this.auth.isPermittedObjectCode('SETTINGS');
+		this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Settings);
 	}
 
 	ngOnInit(): void {

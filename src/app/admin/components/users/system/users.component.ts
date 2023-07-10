@@ -7,7 +7,7 @@ import { concat, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, take, tap } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
-import { UserRole } from 'model/generated-models';
+import { UserRole, UserRoleObjectCode } from 'model/generated-models';
 import { UserItem } from 'model/user.model';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
@@ -86,7 +86,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   	private commonService: CommonDataService,
   	private router: Router
   ) {
-  	this.permission = this.auth.isPermittedObjectCode('SYSTEM_USERS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.SystemUsers);
   }
   ngOnInit(): void {
   	this.loadCommonSettings();

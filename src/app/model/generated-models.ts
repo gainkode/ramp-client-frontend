@@ -2403,6 +2403,7 @@ export type QueryGetOneToManyRatesMerchantArgs = {
 export type QueryGetRatesArgs = {
   currenciesFrom: Array<Scalars['String']['input']>;
   currencyTo: Scalars['String']['input'];
+  provider?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4358,6 +4359,8 @@ export type UserNotification = {
   created?: Maybe<Scalars['DateTime']['output']>;
   linkedId?: Maybe<Scalars['String']['output']>;
   linkedTable?: Maybe<Scalars['String']['output']>;
+  messageId?: Maybe<Scalars['String']['output']>;
+  messageStatus?: Maybe<Scalars['String']['output']>;
   params?: Maybe<Scalars['String']['output']>;
   text?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
@@ -4463,6 +4466,29 @@ export type UserRole = {
   name: Scalars['String']['output'];
   userRoleId?: Maybe<Scalars['String']['output']>;
 };
+
+export enum UserRoleObjectCode {
+  AccountBalanceTracker = 'ACCOUNT_BALANCE_TRACKER',
+  Affiliates = 'AFFILIATES',
+  ChargebackRate = 'CHARGEBACK_RATE',
+  Contacts = 'CONTACTS',
+  Costs = 'COSTS',
+  Customers = 'CUSTOMERS',
+  Exchanger = 'EXCHANGER',
+  Fees = 'FEES',
+  Kyc = 'KYC',
+  MerchantWidget = 'MERCHANT_WIDGET',
+  Notifications = 'NOTIFICATIONS',
+  QuickCheckout = 'QUICK_CHECKOUT',
+  Reconciliation = 'RECONCILIATION',
+  Risks = 'RISKS',
+  RollingReserves = 'ROLLING_RESERVES',
+  Settings = 'SETTINGS',
+  ShowEmail = 'SHOW_EMAIL',
+  SystemUsers = 'SYSTEM_USERS',
+  Transactions = 'TRANSACTIONS',
+  Wallets = 'WALLETS'
+}
 
 export type UserRolePermission = {
   __typename?: 'UserRolePermission';

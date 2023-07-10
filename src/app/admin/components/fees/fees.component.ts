@@ -6,7 +6,7 @@ import { take } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { CostScheme } from 'model/cost-scheme.model';
 import { FeeScheme } from 'model/fee-scheme.model';
-import { PaymentInstrument, SettingsCostListResult } from 'model/generated-models';
+import { PaymentInstrument, SettingsCostListResult, UserRoleObjectCode } from 'model/generated-models';
 import { AuthService } from 'services/auth.service';
 
 @Component({
@@ -41,7 +41,7 @@ export class AdminFeeSchemesComponent implements OnInit, OnDestroy {
 		private adminService: AdminDataService,
 		private router: Router
 	) {
-		this.permission = this.auth.isPermittedObjectCode('FEES');
+		this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Fees);
 	}
 
 	ngOnInit(): void {
