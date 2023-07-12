@@ -8,7 +8,7 @@ import { RiskAlertCodeList } from 'admin/model/lists.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
 import { Countries } from 'model/country-code.model';
-import { SettingsKycTier } from 'model/generated-models';
+import { SettingsKycTier, UserRoleObjectCode } from 'model/generated-models';
 import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionKycStatusList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserActionTypeList, UserModeList, UserNotificationCodeList, UserStatusList, UserTypeList } from 'model/payment.model';
 import { AdminDateRangeComponent } from '../date-range/date-range.component';
 import { AuthService } from 'services/auth.service';
@@ -89,6 +89,16 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   	if (this.fields.includes('widgetName')) {
   		this.widgetNamesSearch();
   	}
+
+		this.fields = this.fields.filter(item => {
+			if(item == 'user' || item == 'users'){
+				if(!this.auth.isPermittedObjectCode(UserRoleObjectCode.ShowEmail)){
+					item = undefined;
+				}
+			}
+			return item;
+		})
+		console.log(this.fields)
   }
 
   ngOnDestroy(): void {

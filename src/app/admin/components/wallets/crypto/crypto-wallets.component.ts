@@ -8,6 +8,7 @@ import { Filter } from 'admin/model/filter.model';
 import { WalletItem } from 'admin/model/wallet.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
+import { UserRoleObjectCode } from 'model/generated-models';
 
 @Component({
 	selector: 'app-admin-crypto-wallets',
@@ -57,7 +58,7 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   		const filterData = (filterVaultId as string).split('#');
   		this.filter.walletIds = filterData;
   	}
-  	this.permission = this.auth.isPermittedObjectCode('WALLETS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Wallets);
   }
 
   ngOnInit(): void {

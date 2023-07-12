@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { DeviceItem, UserItem } from 'model/user.model';
 import { AuthService } from 'services/auth.service';
+import { UserRoleObjectCode } from 'model/generated-models';
 
 @Component({
 	selector: 'app-admin-user-devices',
@@ -40,7 +41,7 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
 		private activeRoute: ActivatedRoute
 	) {
 		this.filterUserId = this.activeRoute.snapshot.params['userid'];
-		this.permission = this.auth.isPermittedObjectCode('SYSTEM_USERS');
+		this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.SystemUsers);
 	}
 
 	ngOnInit(): void {

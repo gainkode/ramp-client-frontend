@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { finalize, take } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
-import { SettingsCurrencyWithDefaults, UserRole } from 'model/generated-models';
+import { SettingsCurrencyWithDefaults, UserRole, UserRoleObjectCode } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
 import { UserItem } from 'model/user.model';
 import { AuthService } from 'services/auth.service';
@@ -92,7 +92,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	if (filterUserId) {
   		this.filter.users = [filterUserId as string];
   	}
-  	this.permission = this.auth.isPermittedObjectCode('CUSTOMERS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Customers);
   }
 
   ngOnInit(): void {

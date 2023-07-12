@@ -8,6 +8,7 @@ import { Filter } from 'admin/model/filter.model';
 import { FiatWalletItem } from 'admin/model/wallet.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
+import { UserRoleObjectCode } from 'model/generated-models';
 
 @Component({
 	selector: 'app-admin-fiat-wallets',
@@ -56,7 +57,7 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
   		const filterData = (filterVaultId as string).split('#');
   		this.filter.walletIds = filterData;
   	}
-  	this.permission = this.auth.isPermittedObjectCode('WALLETS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Wallets);
   }
 
   ngOnInit(): void {

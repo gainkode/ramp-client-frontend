@@ -8,7 +8,7 @@ import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { UserActionItem } from 'model/user.model';
-import { UserAction, UserActionResult, UserActionType } from 'model/generated-models';
+import { UserAction, UserActionResult, UserActionType, UserRoleObjectCode } from 'model/generated-models';
 
 @Component({
 	selector: 'app-admin-user-actions',
@@ -52,7 +52,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   	private adminService: AdminDataService,
   	private router: Router
   ) {
-  	this.permission = this.auth.isPermittedObjectCode('SYSTEM_USERS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.SystemUsers);
   }
 
   ngOnInit(): void {

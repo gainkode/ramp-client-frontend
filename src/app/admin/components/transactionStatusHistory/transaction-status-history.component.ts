@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
-import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap } from 'model/generated-models';
+import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, UserRoleObjectCode } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
 import { TransactionStatusHistoryItem } from 'model/transaction.model';
 import { AuthService } from 'services/auth.service';
@@ -62,7 +62,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   	if (filterUserId) {
   		this.filter.users = [filterUserId as string];
   	}
-  	this.permission = this.auth.isPermittedObjectCode('TRANSACTIONS');
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Transactions);
   }
 
   ngOnInit(): void {
