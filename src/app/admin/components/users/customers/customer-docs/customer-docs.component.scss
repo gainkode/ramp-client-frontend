@@ -40,15 +40,28 @@ mat-form-field {
 	}
 }
 
-.admin-account {
+.create_docs-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 15px;
+}
+
+.docs-wrapper {
+  position: relative;
+  min-height: 300px;
 	// &__table-wrapper {
 	// 	position: relative;
 	// 	height: calc(100% - #{$search-row-height});
 
-	// 	&.emptyData {
-	// 		height: calc(100% - #{$search-row-height} - #{$empty-table-error-height});
-	// 	}
-	// }
+		&.emptyData:after {
+      content: 'No Data';
+      position: absolute;
+      top: 50%;
+      left: 40%;
+		}
 }
 
-
+.flex {
+  display: flex !important;
+}

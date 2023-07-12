@@ -16,7 +16,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { UnsubscriberBase } from 'services/unsubscriber.base';
 import { ColumnTypes, TableColumnConfig } from './table.model';
-import { customerDocumentsConfig } from 'admin/components/users/customers/customer-docs.config';
 
 @Component({
 	selector: 'app-table',
@@ -32,14 +31,13 @@ export class TableComponent<T> extends UnsubscriberBase implements AfterContentI
 	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 	@ViewChild(MatTable, { static: true }) table: MatTable<T>;
 
-	// @TODO: to be reconsidered and removed after removing Expired Total row in Potential Savings modal
 	@Input() decorativeRowsCount = 0;
 	@Input() pageSizeOptions: number[] = [10, 25, 50];
 	@Input() pageSize = 25;
 
 	@Input()
 	public set columns(columns: TableColumnConfig<T>[]) {
-		this._allColumns = customerDocumentsConfig;
+		this._displayColumns = columns;
 	}
 
 	@Input() dataSource: MatTableDataSource<T>;
@@ -59,8 +57,7 @@ export class TableComponent<T> extends UnsubscriberBase implements AfterContentI
 
 	public expandedElement: T | null;
 
-	private _displayColumns: TableColumnConfig<T>[] = customerDocumentsConfig;
-	private _allColumns: TableColumnConfig<T>[] = [];
+	private _displayColumns: TableColumnConfig<T>[] = [];
 	private _isPresenterModeEnabled: boolean;
 
 	constructor(
@@ -69,8 +66,7 @@ export class TableComponent<T> extends UnsubscriberBase implements AfterContentI
 		super();
 	}
 
-	public ngOnInit() {
-		console.log(this.dataSource)
+	public ngOnInit(): void {
 		this.cdr.markForCheck();
 	}
 
@@ -105,7 +101,6 @@ export class TableComponent<T> extends UnsubscriberBase implements AfterContentI
 	}
 
 	public get availableColumns(): TableColumnConfig<T>[] {
-		console.log(this._displayColumns)
 		return this._displayColumns;
 	}
 

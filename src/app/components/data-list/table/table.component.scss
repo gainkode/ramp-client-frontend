@@ -80,6 +80,7 @@ $table-header-background: #fff;
 		}
 
 		& td.mat-mdc-cell {
+			// font-size: 13px !important;
 			padding-left: 5px;
 			padding-right: 5px;
 			@include font-props(false);
@@ -168,6 +169,7 @@ $table-header-background: #fff;
 
 		// Action button cell
 		& .action-button {
+			margin-left: 0.5rem;
 			@include action-btn-cell;
 		}
 	}

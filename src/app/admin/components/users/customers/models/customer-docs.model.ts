@@ -24,10 +24,10 @@ export enum DocumentTypeValue {
 
 export enum DocumentType {
 	ID = 'ID',
-	POA = 'Proof of address',
+	ProofOfAddress = 'Proof of address',
 	Selfie = 'Selfie',
-	SOF = 'Source of founds',
-	DOD = 'DoD',
+	SourceOfFunds = 'Source of founds',
+	DoD = 'DoD',
 	DoDVideo = 'DoD video',
 	Other = 'Other'
 }

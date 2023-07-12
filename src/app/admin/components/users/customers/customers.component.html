@@ -322,7 +322,7 @@
                 (save)="onSaveCustomer()" (close)="modal.dismiss('Close')">
               </app-admin-customer-details>
             </div> -->
-            <div class="modal-body">
+            <div class="modal-body tabs">
               <!-- <h5 class="modal-title">Customer details</h5> -->
               <mat-tab-group>
                 <mat-tab label="Customer details">
@@ -346,9 +346,9 @@
                   </ng-template>
                 </mat-tab>
               </mat-tab-group>
-              <!-- <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
-              </button> -->
+              </button>
             </div>
           </ng-template>
 

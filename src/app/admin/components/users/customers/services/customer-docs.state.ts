@@ -21,11 +21,9 @@ export class CustomerDocsStateService {
 		});
 	}
 
-	// public resetState(): void {
-	// 	return this._state$.next({
-	// 		...initialAdminAccountsState,
-	// 		accountsDetails: new Map<string, IAccount>(),
-	// 		accountsPermissions: new Map<string, IAdminAccountPermissions>(),
-	// 	});
-	// }
+	public resetState(): void {
+		return this._state$.next({
+			...initialCustomerDocsState
+		});
+	}
 }

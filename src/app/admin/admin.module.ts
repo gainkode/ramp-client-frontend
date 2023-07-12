@@ -94,6 +94,7 @@ import { CustomerDocsApi } from './components/users/customers/services/customer-
 import { CustomerDocsFacadeService } from './components/users/customers/services/customer-docs.service';
 import { CustomerDocsStateService } from './components/users/customers/services/customer-docs.state';
 import { TableModule } from 'components/data-list/table/table.module';
+import { SpinnerModule } from 'shared/spinner/spinner.module';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -121,6 +122,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		MatTableModule,
 		MatPaginatorModule,
 		MatProgressSpinnerModule,
+		SpinnerModule,
 		MatSortModule,
 		MatButtonModule,
 		MatFormFieldModule,

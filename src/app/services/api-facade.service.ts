@@ -1,5 +1,5 @@
 import { EnvService } from 'services/env.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IRequestOptions } from 'model/api';
@@ -17,8 +17,23 @@ export class ApiFacadeService {
 		return this.httpClient.get<T>(this.makeUri(this.apiUrl, uri), this.concatAuthOptions(options));
 	}
 
+	public getFile(uri: string): Observable<Blob> {
+		return this.httpClient.get(this.makeUri(this.apiUrl, uri), {
+			headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.auth.token),
+			responseType: 'blob'
+		});
+	}
+
 	public post<T>(uri: string, body: any = {}, options: IRequestOptions = {}): Observable<T> {
 		return this.httpClient.post<T>(this.makeUri(this.apiUrl, uri), body, this.concatAuthOptions(options));
+	}
+
+	public postFormData(uri: string, body: FormData): Observable<HttpEvent<Object>> {
+		return this.httpClient.post(this.makeUri(this.apiUrl, uri), body, {
+			headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.auth.token),
+			observe: 'events',
+			reportProgress: true
+		});
 	}
 
 	public put<T>(uri: string, body: any = {}, options: IRequestOptions = {}): Observable<T> {
@@ -33,7 +48,7 @@ export class ApiFacadeService {
 		return chunks.join('/');
 	}
 
-	private concatAuthOptions(options: IRequestOptions): IRequestOptions {
+	private concatAuthOptions(options: IRequestOptions) {
 		const auth = { headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.auth.token) };
 		return { ... options, ...auth };
 	}

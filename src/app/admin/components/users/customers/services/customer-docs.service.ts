@@ -1,24 +1,13 @@
 import { Injectable } from '@angular/core';
-// import { ISimpleResponse } from '@app/interfaces/api';
-// import { WrapToasterService } from '@app/services/wrap-toaster-service';
-// import {
-// 	IAdminAccount,
-// 	// IAdminAccountPermissions,
-// 	// IDeleteAccountPayload,
-// 	// IUpdateAccountPayload,
-// } from '@modules/admin-panel/modules/admin-accounts/models/admin-account.model';
-// import {
-// 	IAdminAccountsState,
-// 	initialAdminAccountsState,
-// } from '@modules/admin-panel/modules/admin-accounts/models/admin-accounts-state.model';
-// import { AdminAccountsApi } from '@modules/admin-panel/modules/admin-accounts/services/admin-accounts.api';
-// import { AdminAccountsState } from '@modules/admin-panel/modules/admin-accounts/services/admin-accounts.state';
-import { Observable, of } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { CustomerDocsApi } from './customer-docs.api';
 import { CustomerDocsState, initialCustomerDocsState } from '../models/customer-docs-state.model';
 import { CustomerDocument } from '../models/customer-docs.model';
 import { CustomerDocsStateService } from './customer-docs.state';
+import { ISimpleResponse } from 'model/api';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { saveAs } from 'file-saver';
 
 @Injectable()
 export class CustomerDocsFacadeService {
@@ -26,89 +15,60 @@ export class CustomerDocsFacadeService {
 
 	constructor(
 		private api: CustomerDocsApi,
-		private state: CustomerDocsStateService
+		private state: CustomerDocsStateService,
+		private _snackBar: MatSnackBar,
 	) {}
 
-	public loadAll(userId: string): Observable<CustomerDocument[]> {
-		// Verify cache
-		if (this.state.getState.isLoaded) {
-			// Get from cache
+	public loadAll(userId: string, skipCache: boolean): Observable<CustomerDocument[]> {
+		if (!skipCache && this.state.getState.isLoaded) {
 			return this.getState$.pipe(map(x => x?.documents));
 		}
-		// this.state.resetState();
+		
+		this.state.resetState();
 		this.state.setState({ isLoading: true });
 
 		// Get fresh data from BE
 		return this.loadData(userId);
 	}
 
-	// public expandDetails(expandedElement: CustomerDocument | null): Observable<CustomerDocument> {
-	// 	this.state.setState({ expandedElement });
-	// 	return this.loadDetails(expandedElement?.account_uuid);
-	// }
+	public deleteDocument(id: string): Observable<ISimpleResponse> {
+		this.state.setState({ isLoading: true });
+		return this.api.removeDocument(id).pipe(
+			tap(() => {
+				const updatedDocsList = this.state.getState.documents.filter(
+					(doc) => doc.id !== id,
+				);
 
-	// public updateAccount(payload: IUpdateAccountPayload): Observable<IAccount | null> {
-	// 	this.state.setState({ isLoading: true });
-	// 	return this.api.updateAccount(payload).pipe(
-	// 		tap((updatedValue: IAccount) => {
-	// 			const currentAccountsDetails = this.state.getState.accountsDetails;
-	// 			currentAccountsDetails.set(payload.account_uuid, updatedValue);
-	// 			const updatedAccList = this.state.getState.accounts.map((acc) => {
-	// 				if (acc.account_uuid === payload.account_uuid) {
-	// 					return updatedValue;
-	// 				}
+				this.state.setState({
+					documents: updatedDocsList,
+					isLoading: false,
+				});
+				this._snackBar.open('The document has been successfully deleted.', null, { duration: 5000 });
+			}),
+			catchError((error) => {
+				console.error(error);
+				this._snackBar.open('There was an error deleting the document. Please contact R&D', null, { duration: 5000 });
+				this.state.setState({ isLoading: false });
 
-	// 				return acc;
-	// 			});
+				return of(null);
+			}),
+		);
+	}
 
-	// 			this.state.setState({
-	// 				accountsDetails: currentAccountsDetails,
-	// 				accounts: updatedAccList,
-	// 				expandedElement: { ...this.state.getState.expandedElement },
-	// 				isLoading: false,
-	// 			});
-	// 			this.toasterService.handleSuccessMessage('Account details updated.');
-	// 		}),
-	// 		catchError((error) => {
-	// 			console.error(error);
-	// 			this.toasterService.handleRequestFailed(error);
-	// 			this.state.setState({ isLoading: false });
+	public onLoadFiles(document: CustomerDocument): Observable<Blob[]> {
+		this.state.setState({ isLoading: true });
+		const ids = document.files.map(file => this.api.downloadDocs(file.id));
 
-	// 			return of(null);
-	// 		}),
-	// 	);
-	// }
-
-	// public deleteAccount(payload: IDeleteAccountPayload): Observable<ISimpleResponse> {
-	// 	this.state.setState({ isLoading: true });
-	// 	return this.api.deleteAccount(payload).pipe(
-	// 		tap(() => {
-	// 			const currentAccountsDetails = this.state.getState.accountsDetails;
-	// 			currentAccountsDetails.delete(payload.account.account_uuid);
-	// 			const updatedAccList = this.state.getState.accounts.filter(
-	// 				(acc) => acc.account_uuid !== payload.account.account_uuid,
-	// 			);
-
-	// 			this.state.setState({
-	// 				accountsDetails: currentAccountsDetails,
-	// 				accounts: updatedAccList,
-	// 				expandedElement: null,
-	// 				isLoading: false,
-	// 			});
-	// 			this.toasterService.handleSuccessMessage('The account has been successfully deleted.');
-	// 		}),
-	// 		catchError((error) => {
-	// 			console.error(error);
-	// 			this.toasterService.handleErrorMessage('There was an error deleting the account. Please contact R&D');
-	// 			this.state.setState({ isLoading: false });
-
-	// 			return of(null);
-	// 		}),
-	// 	);
-	// }
-
-	public closeDetails(): void {
-		this.state.setState({ expandedElement: null });
+		return forkJoin(ids).pipe(
+			tap((response) => {
+				this.state.setState({ isLoading: false });
+				response.forEach((file) => saveAs(file));
+			}),
+			catchError(() => {
+				this.state.setState({ isLoading: false });
+				return of(null);
+			}),
+		);
 	}
 
 	private loadData(userId: string): Observable<CustomerDocument[]> {
@@ -126,30 +86,4 @@ export class CustomerDocsFacadeService {
 			}),
 		);
 	}
-
-	// private loadDetails(account_uuid?: string): Observable<IAccount | null> {
-	// 	if (!account_uuid && typeof account_uuid !== 'string') {
-	// 		return of(null);
-	// 	}
-
-	// 	if (this.state.getState.accountsDetails.has(account_uuid)) {
-	// 		return of(this.state.getState.accountsDetails.get(account_uuid));
-	// 	}
-
-	// 	return this.api.loadDetails(account_uuid).pipe(
-	// 		tap((value: IAccount) => {
-	// 			const currentAccountsDetails = this.state.getState.accountsDetails;
-	// 			currentAccountsDetails.set(account_uuid, value);
-	// 			this.state.setState({
-	// 				accountsDetails: currentAccountsDetails,
-	// 			});
-	// 		}),
-	// 		catchError((error) => {
-	// 			console.error(error);
-	// 			this.toasterService.handleRequestFailed(error);
-
-	// 			return of(null);
-	// 		}),
-	// 	);
-	// }
 }

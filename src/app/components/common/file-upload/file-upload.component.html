@@ -8,7 +8,7 @@
         </mat-toolbar>
           <input
             type="file"
-            multiple="multiple"
+            [multiple]="multiple"
             #fileInput
             id="uploadFile"
             (change)="onFileSelected($event)"

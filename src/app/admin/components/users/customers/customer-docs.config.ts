@@ -25,5 +25,10 @@ export const customerDocumentsConfig: TableColumnConfig<CustomerDocument>[] = [
 		prop: 'created',
 		columnType: ColumnTypes.shortDate,
 		// isSortable: true,
-	}
+	},
+	{
+		name: 'Actions',
+		prop: '...',
+		columnType: ColumnTypes.custom,
+	},
 ];

@@ -76,7 +76,8 @@
               "buffer",
               "apexcharts",
               "apollo-link-timeout",
-              "utils/wallet.validator"
+              "utils/wallet.validator",
+              "file-saver"
             ]
           },
           "configurations": {

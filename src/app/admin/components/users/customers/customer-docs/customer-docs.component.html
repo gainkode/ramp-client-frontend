@@ -35,7 +35,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Name</mat-label>
+      <mat-label>Document Name</mat-label>
       <input matInput type="text" formControlName="name" />
     </mat-form-field>
 
@@ -45,32 +45,53 @@
     </mat-form-field>
 
     <br />
-    <app-file-upload (fileSelected)="onFileSelected($event)"></app-file-upload>
+    <app-file-upload [multiple]="true" (fileSelected)="onFileSelected($event)"></app-file-upload>
+
+    <div class="create_docs-buttons">
+      <button class="btn btn-outline-primary wd-100" type="button" [disabled]="uploadProgress" (click)="onCancelEditDocument()">
+        Cancel
+      </button>
+    
+      <button class="btn btn-primary wd-100" type="button" [disabled]="!form.valid || !isFileUploaded || uploadProgress" (click)="onSave()">
+        {{ !uploadProgress ? 'Save' : ''}}
+        <span *ngIf="uploadProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </button>
+    </div>
   </div>
-
-  <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onCancelEditDocument()">
-    Cancel
-  </button>
-
-  <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onSave()">
-    Save
-  </button>
 </div>
 
 <ng-template #docsTable>
-  <button class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="onAddDocument()">Add Document</button>
+  <button class="btn btn-primary mg-t-10 mg-b-10 tx-14" type="button" (click)="onAddDocument()">Add Document</button>
 
-  <div
-    class="accounts-wrapper shadow animated fadeIn admin-account__table-wrapper"
-  >
+  <div class="docs-wrapper" [class.emptyData]="!tableDataSource.data.length">
 
-  <app-table
-		[sort]="sort"
-		#sort="matSort"
-		matSort
-		matSortActive="status"
-		matSortDirection="desc"
-		matSortDisableClear
-		 [dataSource]="tableDataSource" [columns]="columnsToDisplay" class="accounts-table"></app-table>
+    <app-table
+      [dataSource]="tableDataSource" 
+      [columns]="columnsToDisplay">
+
+      <ng-container matColumnDef="...">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="flex">
+            <button
+              type="button"
+              class="action-button"
+              (click)="onFileDownload(row)">
+              <i class="fas fa-download"></i>
+            </button>
+
+            <button
+              type="button"
+              class="action-button"
+              (click)="onFileRemove(row)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+    </app-table>
+    <ng-container *ngIf="isLoading$ | async">
+			<app-spinner></app-spinner>
+		</ng-container>
   </div>
 </ng-template>
