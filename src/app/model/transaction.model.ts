@@ -101,10 +101,10 @@ export class TransactionItemFull {
 	declineReason = '';
 	declineReasonExtra = '';
 	vaultIds: string[] = [];
-	flag: boolean = false;
-	canBeCancelled: boolean = false;
-	hasToBeRefunded: boolean = false;
-	canBeReviewed: boolean = false;
+	flag = false;
+	canBeCancelled = false;
+	hasToBeRefunded = false;
+	canBeReviewed = false;
 
 	constructor(data: Transaction | TransactionShort | null) {
 		if (data !== null) {
@@ -113,15 +113,15 @@ export class TransactionItemFull {
 			const datepipe: DatePipe = new DatePipe('en-US');
 			this.created = datepipe.transform(
 				data.created,
-				'dd-MM-YYYY HH:mm:ss'
+				'dd-MM-YYYY HH:mm:ss:SSS'
 			) as string;
 			this.executed = datepipe.transform(
 				data.executed,
-				'dd-MM-YYYY HH:mm:ss'
+				'dd-MM-YYYY HH:mm:ss:SSS'
 			) as string;
 			this.updated = datepipe.transform(
 				data.updated,
-				'dd-MM-YYYY HH:mm:ss'
+				'dd-MM-YYYY HH:mm:ss:SSS'
 			) as string;
 			this.accountId = data.userId ?? '';
 			this.accountStatus = data.accountStatus ?? '';
@@ -279,7 +279,7 @@ export class TransactionItemFull {
 			}
 
 			if (data.paymentOrder) {
-				this.paymentOrderPreauth = data.paymentOrder.preauth == true;
+				this.paymentOrderPreauth = data.paymentOrder.preauth;
 				if (data.paymentOrder.paymentInfo) {
 					let payment = JSON.parse(data.paymentOrder.paymentInfo);
 					// sometimes it comes as a string with escape symbols.
@@ -396,7 +396,7 @@ export class TransactionItemFull {
 			default:
 				color = 'white';
 		}
-		if (this.subStatus.toLowerCase() == 'partiallypaid') {
+		if (this.subStatus.toLowerCase() === 'partiallypaid') {
 			color = 'orange';
 		}
 		return color;

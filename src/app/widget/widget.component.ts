@@ -33,6 +33,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   @Input() quickCheckout = false;
   @Input() settings: WidgetSettings | undefined = undefined;
   @Input() shuftiSubscribeResult: boolean | undefined = undefined;
+  @Input() autentixSubscribeResult: boolean | undefined = undefined;
   @Input() set internal(val: boolean) {
   	this.internalPayment = val;
   }
@@ -92,6 +93,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
   private shuftiNotificationsSubscription: Subscription | undefined = undefined;
+  private autentixNotificationsSubscription: Subscription | undefined = undefined;
 
   get showTransactionsLink(): boolean {
   	const user = this.auth.user;
@@ -117,6 +119,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	private errorHandler: ErrorService) { }
 
   private shuftiSubscriptionFlag = false;
+  private autentixSubscriptionFlag = false;
   private companyLevelVerificationFlag = false;
 
   	ngOnInit(): void {
@@ -138,25 +141,15 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	);
   	this.initMessage = 'Loading...';
 
-  	// this.summary.orderId = 'ID1351816';
-  	// this.selectedWireTransfer.id = WireTransferPaymentCategory.EU;
-  	// this.selectedWireTransfer.title = 'Title';
-  	// const dataObject = {
-  	//   bankAddress: 'A5-3 Room, Floor 23, 8 Canada Square, London, England, UK, E14 5HQ',
-  	//   bankName: 'HSBC',
-  	//   beneficiaryAddress: 'Apartment 8, Rue Paul Janson 50, 6150 Anderlues, Belgium',
-  	//   beneficiaryName: 'Mister John Doe',
-  	//   iban: 'EG810025025800000258946648241',
-  	//   swiftBic: 'HSBCTRI2516'
-  	// };
-  	// this.selectedWireTransfer.data = JSON.stringify(dataObject);
-  	// this.pager.init('wire_transfer_result', 'Initialization');
   	this.loadAccountData();
   	this.pager.init('initialization', 'Initialization');
   	this.loadCustomData();
 		
   	if(!this.shuftiSubscriptionFlag){
   		this.startShuftiNotificationListener();
+  	} 
+  	if(!this.autentixSubscriptionFlag){
+  		this.startAutentixNotificationListener();
   	} 
   }
 
@@ -191,8 +184,13 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	if(this.shuftiNotificationsSubscription){
   		this.shuftiNotificationsSubscription.unsubscribe();
   	}
+
+	if (this.autentixNotificationsSubscription) {
+		this.autentixNotificationsSubscription.unsubscribe();
+	}
     
   	this.shuftiSubscriptionFlag = false;
+	this.autentixSubscriptionFlag = false;
   	this.exhangeRate.stop();
   }
 
@@ -371,6 +369,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			({ data }) => {
   				const subscriptionData = data.kycCompletedNotification;
   				console.log('Shufti completed', subscriptionData);
+
   				if(subscriptionData.kycStatus == 'completed'){
   					if (subscriptionData.kycValid === true) {
   						this.shuftiSubscribeResult = true;
@@ -389,6 +388,31 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	}
   	// }
   }
+
+  private startAutentixNotificationListener(): void {
+  	if(this.auth.user && this.auth.user?.kycProvider === KycProvider.Au10tix){
+  		console.log('Autentix completed notifications subscribed');
+  		this.autentixSubscriptionFlag = true;
+
+  		this.autentixNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications()
+  			.subscribe(({ data }) => {
+  				const subscriptionData = data.kycCompletedNotification;
+  				console.log('Autentix completed', subscriptionData);
+
+  				if(subscriptionData.kycStatus === 'completed'){
+  					this.autentixSubscribeResult = subscriptionData?.kycValid === true;
+  				}
+  				this.loadAccountData();
+  			},
+  			(error) => {
+  				this.autentixSubscriptionFlag = false;
+  				console.error('KYC complete notification error', error);
+  			}
+  			);
+  	}
+  	// }
+  }
+
 
   private stopNotificationListener(): void {
   	if (this.pNotificationsSubscription) {
@@ -473,6 +497,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   handleError(message: string): void {
   	this.setError('Transaction failed', message, 'handleError');
   }
+
   handleReject(): void {
   	console.log(this.widget.kycFirst, this.widget.allowToPayIfKycFailed, this.paymentProviders);
   	this.loadAccountData();
@@ -1002,17 +1027,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		console.log('KYC COMPLETE');
   		this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
   		this.shuftiSubscribeResult = undefined;
-  		// if (this.paymentProviders.length < 1) {
-  		//   this.setError(
-  		//     'No payment providers',
-  		//     `No supported payment providers found for "${this.summary.currencyFrom}"`,
-  		//     'kycComplete');
-  		// } else if (this.paymentProviders.length > 1) {
-  		//   this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
-  		//   // this.nextStage('payment', 'Payment info', 5, true);
-  		// } else {  
-  		//   this.selectProvider(this.paymentProviders[0]);
-  		// }
+		this.autentixSubscribeResult = undefined;
   	} else {
   		this.nextStage('complete', 'Complete', 6, false);
   	}
@@ -1031,7 +1046,13 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			this.shuftiSubscriptionFlag = false;
   		}
 
+		if(this.autentixNotificationsSubscription){
+			this.autentixNotificationsSubscription.unsubscribe();
+			this.autentixSubscriptionFlag = false;
+		}
+
   		this.startShuftiNotificationListener();
+  		this.startAutentixNotificationListener();
 
   		if (this.summary.agreementChecked) {
   			if (this.summary.transactionId === '') {
@@ -1149,22 +1170,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   								errorMessage: this.errorMessage
   							} as PaymentErrorDetails);
   						} else {
-  							//   if (this.widget.orderDefault) {
-  							//     this.setError('Transaction failed', 'Order code is invalid', 'createBuyTransaction order');
-  							//   } else {
-  							//     if (tempStageId === 'verification') {
-  							//       this.pager.goBack();
-  							//     } else {
-  							//       if(order.transactionId && order.transactionId != ''){
-  							//         this.summary.instrument = instrument;
-  							//         this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
-  							//         this.transactionIdConfirmationCode = order.transactionId;
-  							//         this.nextStage('code_auth', 'Authorization', 3, true);
-  							//       }else{
-  							//         this.pager.swapStage(tempStageId);
-  							//       }
-  							//     }
-  							//   }
   							if (tempStageId === 'verification') {
   								this.pager.goBack();
   							} else {

@@ -19,14 +19,14 @@ export class QuickCheckoutComponent {
 	expressValue = 0;
 	settings: WidgetSettings | undefined = undefined;
 	bg_mask = (EnvService.widget_bg_mask === 'true');
-	shuftiSubscribeResult: boolean | undefined = undefined;
+	
 	private pSubscriptions: Subscription = new Subscription();
 
 	constructor(
 		private route: ActivatedRoute,
 		private notification: NotificationService
 	) {
-		// this.startShuftiNotificationListener();
+
 		this.userParamsId = this.route.snapshot.params['userParamsId'] ?? '';
 		this.expressFrom = this.route.snapshot.params['from'] ?? '';
 		this.expressTo = this.route.snapshot.params['to'] ?? '';
@@ -41,29 +41,5 @@ export class QuickCheckoutComponent {
 
 	ngOnDestroy(): void {
 		this.pSubscriptions.unsubscribe();
-	}
-
-	private startShuftiNotificationListener(): void {
-		console.log('Shufti notifications started');
-		this.pSubscriptions.add(
-			this.notification.subscribeToKycCompleteNotifications().subscribe(
-				({ data }) => {
-					const subscriptionData = data.kycCompletedNotification;
-					console.log('Shufti completed', subscriptionData);
-					if(subscriptionData.kycStatus == 'completed'){
-						if (subscriptionData.kycValid === true) {
-							this.shuftiSubscribeResult = true;
-						}else{
-							console.log('Shufti rejected');
-							this.shuftiSubscribeResult = false;
-						}
-					}
-				},
-				(error) => {
-					console.error('KYC complete notification error', error);
-				}
-			)
-		);
-		// }
 	}
 }

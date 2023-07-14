@@ -1,4 +1,3 @@
-import { E } from '@angular/cdk/keycodes';
 import { EnvService } from '../services/env.service';
 import { getCryptoSymbol } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
@@ -556,7 +555,8 @@ export const KycStatusList: Array<KycStatusView> = [
 export const KycProviderList: Array<KycProviderView> = [
 	{ id: KycProvider.Local, name: 'Local' },
 	{ id: KycProvider.SumSub, name: 'SumSub' },
-	{ id: KycProvider.Shufti, name: 'Shufti' }
+	{ id: KycProvider.Shufti, name: 'Shufti' },
+	{ id: KycProvider.Au10tix, name: 'Au10tix' },
 ];
 
 export const RiskLevelViewList: Array<RiskLevelView> = [

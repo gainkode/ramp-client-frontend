@@ -710,6 +710,7 @@ export type KycInfoField = {
 };
 
 export enum KycProvider {
+  Au10tix = 'Au10tix',
   Local = 'Local',
   Shufti = 'Shufti',
   SumSub = 'SumSub'
@@ -4484,9 +4485,10 @@ export enum UserRoleObjectCode {
   Risks = 'RISKS',
   RollingReserves = 'ROLLING_RESERVES',
   Settings = 'SETTINGS',
-  ShowEmail = 'SHOW_EMAIL',
   SystemUsers = 'SYSTEM_USERS',
   Transactions = 'TRANSACTIONS',
+  UsersEmails = 'USERS_EMAILS',
+  UsersPhones = 'USERS_PHONES',
   Wallets = 'WALLETS'
 }
 

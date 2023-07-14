@@ -7,6 +7,7 @@ export class KycTierResultData {
 }
 
 export function getCurrentTierLevelName(tierId: string, tiersData: SettingsKycTierShortExListResult, user: User | null = null): KycTierResultData {
+	console.log(tiersData)
 	const result: KycTierResultData = {
 		levelName: null,
 		required: false

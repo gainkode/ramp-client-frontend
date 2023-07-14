@@ -182,12 +182,11 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 
 	private loadCommonSettings(): void{
 		const settingsCommon = this.auth.getLocalSettingsCommon();
-		console.log(settingsCommon);
-		if(settingsCommon){
+		if (settingsCommon) {
 			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-			this.kycProviderOptions = this.kycProviderOptions.filter(item => this.adminAdditionalSettings.kycProviders[item.id] == true);
-			this.liquidityProviderOptions = this.liquidityProviderOptions.filter(item => this.adminAdditionalSettings.liquidityProvider[item.id] == true);
-			this.custodyProviderOptions = this.custodyProviderOptions.filter(item => this.adminAdditionalSettings.custodyProvider[item.id] == true);
+			this.kycProviderOptions = this.kycProviderOptions.filter(item => this.adminAdditionalSettings.kycProviders[item.id]);
+			this.liquidityProviderOptions = this.liquidityProviderOptions.filter(item => this.adminAdditionalSettings.liquidityProvider[item.id]);
+			this.custodyProviderOptions = this.custodyProviderOptions.filter(item => this.adminAdditionalSettings.custodyProvider[item.id]);
 		}
 	}
 	private loadCurrencies(): void {
@@ -668,7 +667,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		this.saveInProgress = true;
 		this.errorMessage = '';
 		this.subscriptions.add(
-			this.adminService.updateSettingsCommon(data).subscribe(({ data }) => {
+			this.adminService.updateSettingsCommon(data).subscribe(() => {
 				this.saveInProgress = false;
 				this.modalService.open(content, {
 					backdrop: 'static',

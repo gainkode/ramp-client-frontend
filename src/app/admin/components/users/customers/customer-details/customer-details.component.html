@@ -379,10 +379,19 @@
         formControlName="comment"></textarea>
     </div>
 
-    <app-admin-details-item *ngIf="userData?.kycProvider!==KYC_PROVIDER.Shufti" label="KYC Details"
+    <app-admin-details-item *ngIf="userData?.kycProvider!==KYC_PROVIDER.Shufti && userData?.kycProvider!== KYC_PROVIDER.Au10tix" label="KYC Details"
       [value]="kycProviderLink" [linkUrl]="kycProviderLink">
     </app-admin-details-item>
-    <div *ngIf="userData?.kycProvider===KYC_PROVIDER.Shufti" class="form-group">
+    
+    <div *ngIf="userData?.kycProvider === KYC_PROVIDER.Shufti" class="form-group">
+      <button class="btn btn-primary pd-x-30 me-2 mg-t-5" type="button" (click)="onKycProviderLink()">
+        <span *ngIf="kycProviderLinkInProgress" class="spinner-border spinner-border-sm" role="status"
+          aria-hidden="true"></span>
+        KYC Verification
+      </button>
+    </div>
+
+    <div *ngIf="userData?.kycProvider === KYC_PROVIDER.Au10tix" class="form-group">
       <button class="btn btn-primary pd-x-30 me-2 mg-t-5" type="button" (click)="onKycProviderLink()">
         <span *ngIf="kycProviderLinkInProgress" class="spinner-border spinner-border-sm" role="status"
           aria-hidden="true"></span>
