@@ -533,7 +533,7 @@ query CoriunderWebAuthParams(
  $instrument: PaymentInstrument!
   $provider: String!
   $card: PaymentCard
-  $transactionId: String
+  $transactionFullId: String
 ) {
     getCoriunderWebAuthParams(
         params: {
@@ -542,7 +542,7 @@ query CoriunderWebAuthParams(
             provider: $provider
             card: $card
         }
-        transactionId: $transactionId
+        transactionId: $transactionFullId
     )
 }
 `;
@@ -701,8 +701,11 @@ export class PaymentDataService {
 		return this.apollo.mutate({
 			mutation: GET_CORIUNDER_TOKEN,
 			variables: {
-        params,
-        transactionId: params.transactionId
+        transactionId: params.transactionId,
+        instrument: params.instrument,
+        provider: params.provider,
+        card: params.card,
+        transactionFullId: params.transactionId
 			}
 		});
 	}
