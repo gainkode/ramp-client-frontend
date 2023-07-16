@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget } from 'model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthInput, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -801,7 +801,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	if (level !== '') {
   		this.overLimitLevel = level;
   	}
-  	this.requestKyc = state;// || this.summary.quoteLimit !== 0;
+  	this.requestKyc = state;
   }
 
   private sellSettingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
@@ -1158,6 +1158,17 @@ export class WidgetComponent implements OnInit, OnDestroy {
   						this.summary.networkFee = order.approxNetworkFee ?? 0;
   						this.summary.transactionDate = new Date().toLocaleString();
   						this.summary.transactionId = order.transactionId as string;
+
+						debugger
+						if (this.summary.providerView.id === "Coriunder") {
+							this.dataService.getCoriunderWebAuthParams(
+								<PaymentPreauthInput>{
+									instrument: PaymentInstrument.WireTransfer,
+									transactionId: this.summary.transactionId,
+									provider: this.summary.providerView.id
+								}).subscribe()
+						}
+						
   						if (instrument === PaymentInstrument.WireTransfer) {
   							this.nextStage('wire_transfer_result', 'Payment', 5, false);
   						} else {

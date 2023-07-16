@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
-import { KycProvider, PaymentInstrument, TransactionSource, TransactionType } from '../model/generated-models';
+import { KycProvider, PaymentInstrument, PaymentPreauthInput, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -527,6 +527,26 @@ mutation AbandonCryptoInvoice(
 }
 `;
 
+const GET_CORIUNDER_TOKEN = gql`
+query CoriunderWebAuthParams(
+ $transactionId: String!
+ $instrument: PaymentInstrument!
+  $provider: String!
+  $card: PaymentCard
+  $transactionId: String
+) {
+    getCoriunderWebAuthParams(
+        params: {
+            transactionId: $transactionId
+            instrument: $instrument
+            provider: $provider
+            card: $card
+        }
+        transactionId: $transactionId
+    )
+}
+`;
+
 @Injectable()
 export class PaymentDataService {
 	constructor(private apollo: Apollo) { }
@@ -673,6 +693,16 @@ export class PaymentDataService {
 			variables: {
 				transactionId: id,
 				code
+			}
+		});
+	}
+
+  getCoriunderWebAuthParams(params: PaymentPreauthInput): Observable<any> {
+		return this.apollo.mutate({
+			mutation: GET_CORIUNDER_TOKEN,
+			variables: {
+        params,
+        transactionId: params.transactionId
 			}
 		});
 	}

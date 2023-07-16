@@ -356,8 +356,7 @@ export class WidgetService {
 	private getTiers(summary: CheckoutSummary, widget: WidgetSettings): void {
 		const currency = summary.currencyFrom ?? 'EUR';
 		const amount = summary.amountFrom ?? 0;
-		const limit = summary.quoteLimit ?? 0;
-		const overLimit = amount - limit;
+		
 		const tiersData$ = this.paymentService.getAppropriateSettingsKycTiers(
 			amount,
 			currency,
