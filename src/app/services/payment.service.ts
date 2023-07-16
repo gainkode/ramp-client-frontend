@@ -528,7 +528,7 @@ mutation AbandonCryptoInvoice(
 `;
 
 const GET_CORIUNDER_TOKEN = gql`
-query CoriunderWebAuthParams(
+query GetCoriunderWebAuthParams(
  $transactionId: String!
  $instrument: PaymentInstrument!
   $provider: String!
@@ -537,13 +537,15 @@ query CoriunderWebAuthParams(
 ) {
     getCoriunderWebAuthParams(
         params: {
-            transactionId: $transactionId
-            instrument: $instrument
-            provider: $provider
-            card: $card
+          transactionId: $transactionId
+          instrument: $instrument
+          provider: $provider
+          card: $card
         }
         transactionId: $transactionFullId
-    )
+    ) {
+      trans_amount
+    }
 }
 `;
 
