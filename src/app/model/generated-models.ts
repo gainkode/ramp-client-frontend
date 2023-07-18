@@ -272,9 +272,11 @@ export type CoriunderWebAuthParams = {
   client_phoneNum?: Maybe<Scalars['String']['output']>;
   disp_lng?: Maybe<Scalars['String']['output']>;
   disp_lngList?: Maybe<Scalars['String']['output']>;
+  disp_mobile?: Maybe<Scalars['String']['output']>;
   disp_payFor?: Maybe<Scalars['String']['output']>;
   disp_paymentType?: Maybe<Scalars['String']['output']>;
-  disp_recurring?: Maybe<Scalars['Float']['output']>;
+  disp_recurring?: Maybe<Scalars['Int']['output']>;
+  full_url?: Maybe<Scalars['String']['output']>;
   hashtype?: Maybe<Scalars['Int']['output']>;
   merchantID?: Maybe<Scalars['String']['output']>;
   notification_url?: Maybe<Scalars['String']['output']>;

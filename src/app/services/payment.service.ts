@@ -531,9 +531,9 @@ const GET_CORIUNDER_TOKEN = gql`
 query GetCoriunderWebAuthParams(
  $transactionId: String!
  $instrument: PaymentInstrument!
-  $provider: String!
-  $card: PaymentCard
-  $transactionFullId: String
+ $provider: String!
+ $card: PaymentCard
+ $transactionFullId: String
 ) {
     getCoriunderWebAuthParams(
         params: {
@@ -544,7 +544,7 @@ query GetCoriunderWebAuthParams(
         }
         transactionId: $transactionFullId
     ) {
-      trans_amount
+      full_url
     }
 }
 `;

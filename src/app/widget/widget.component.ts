@@ -89,7 +89,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   disclaimerTextData = disclaimerDataDefault;
   completeTextData = completeDataDefault;
   transactionIdConfirmationCode = '';
-
+  coriunderDetails;
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
   private shuftiNotificationsSubscription: Subscription | undefined = undefined;
@@ -185,12 +185,12 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.shuftiNotificationsSubscription.unsubscribe();
   	}
 
-	if (this.autentixNotificationsSubscription) {
-		this.autentixNotificationsSubscription.unsubscribe();
-	}
+  	if (this.autentixNotificationsSubscription) {
+  		this.autentixNotificationsSubscription.unsubscribe();
+  	}
     
   	this.shuftiSubscriptionFlag = false;
-	this.autentixSubscriptionFlag = false;
+  	this.autentixSubscriptionFlag = false;
   	this.exhangeRate.stop();
   }
 
@@ -1027,7 +1027,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		console.log('KYC COMPLETE');
   		this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
   		this.shuftiSubscribeResult = undefined;
-		this.autentixSubscribeResult = undefined;
+  		this.autentixSubscribeResult = undefined;
   	} else {
   		this.nextStage('complete', 'Complete', 6, false);
   	}
@@ -1046,10 +1046,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			this.shuftiSubscriptionFlag = false;
   		}
 
-		if(this.autentixNotificationsSubscription){
-			this.autentixNotificationsSubscription.unsubscribe();
-			this.autentixSubscriptionFlag = false;
-		}
+  		if(this.autentixNotificationsSubscription){
+  			this.autentixNotificationsSubscription.unsubscribe();
+  			this.autentixSubscriptionFlag = false;
+  		}
 
   		this.startShuftiNotificationListener();
   		this.startAutentixNotificationListener();
@@ -1159,16 +1159,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   						this.summary.transactionDate = new Date().toLocaleString();
   						this.summary.transactionId = order.transactionId as string;
 
-						debugger
-						if (this.summary.providerView.id === "Coriunder") {
-							this.dataService.getCoriunderWebAuthParams(
-								<PaymentPreauthInput>{
-									instrument: PaymentInstrument.WireTransfer,
-									transactionId: this.summary.transactionId,
-									provider: this.summary.providerView.id
-								}).subscribe()
-						}
-						
   						if (instrument === PaymentInstrument.WireTransfer) {
   							this.nextStage('wire_transfer_result', 'Payment', 5, false);
   						} else {
@@ -1289,10 +1279,24 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		);
   	}
   }
-
+ 
   private startPayment(): void {
   	if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {
-  		this.nextStage('credit_card', 'Payment info', this.pager.step, true);
+
+  		if (this.summary.providerView.id === 'Coriunder') {
+  			this.dataService.getCoriunderWebAuthParams(
+				<PaymentPreauthInput>{
+					instrument: PaymentInstrument.WireTransfer,
+					transactionId: this.summary.transactionId,
+					provider: this.summary.providerView.id
+				}).subscribe((result) => {
+					console.log(result.full_url)
+  				this.nextStage('credit_card', 'Payment info', this.pager.step, true);
+  			});
+  		} else {
+  			this.nextStage('credit_card', 'Payment info', this.pager.step, true);
+  		}
+
   	} else if (this.summary.providerView?.instrument === PaymentInstrument.Apm) {
   		this.completeInstantpayTransaction(
   			this.summary.transactionId,

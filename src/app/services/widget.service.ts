@@ -9,49 +9,6 @@ import { ErrorService } from './error.service';
 import { PaymentDataService } from './payment.service';
 import { getCurrentTierLevelName, isKycRequired, KycTierResultData } from './widget.utils';
 
-export const testTiersList = {
-    "count": 2,
-    "list": [
-        {
-            "settingsKycTierId": "e64c3572-92e9-46be-bd78-4beefa2e9fc0",
-            "name": "Basic",
-            "description": "",
-            "amount": 15000,
-            "requireUserFullName": false,
-            "requireUserPhone": false,
-            "requireUserBirthday": false,
-            "requireUserAddress": false,
-            "requireUserFlatNumber": false,
-            "levelName": "Identity Verification",
-            "levelDescription": "Basic Level \nBuy up to 10k",
-            "originalLevelName": "Identity-verification",
-            "originalFlowName": "Identity-verification",
-            "skipForWaiting": false,
-            "showForm": null,
-            "__typename": "SettingsKycTierShortEx"
-        },
-        {
-            "settingsKycTierId": "61b6db17-a193-4e2f-b675-88411b433d6a",
-            "name": "Pro",
-            "description": null,
-            "amount": null,
-            "requireUserFullName": false,
-            "requireUserPhone": false,
-            "requireUserBirthday": false,
-            "requireUserAddress": false,
-            "requireUserFlatNumber": false,
-            "levelName": "Source of Funds",
-            "levelDescription": "Pro Level\n10k to 50k",
-            "originalLevelName": "source-of-funds",
-            "originalFlowName": "source-of-funds",
-            "skipForWaiting": false,
-            "showForm": null,
-            "__typename": "SettingsKycTierShortEx"
-        }
-    ],
-    "__typename": "SettingsKycTierShortExListResult"
-}
-
 @Injectable()
 export class WidgetService {
 	private onProgressChanged: Function | undefined = undefined;  // (status: boolean)
@@ -145,7 +102,7 @@ export class WidgetService {
 		// let recaptcha = localStorage.getItem('recaptchaId');
 		// if(recaptcha){
 		// 	this.authenticateInternal(login, widgetId);
-		// }else{
+		// } else {
 		// 	if(this.onRecaptchaCallback){
 		// 		this.onRecaptchaCallback();
 		// 	}
@@ -366,23 +323,12 @@ export class WidgetService {
 
 		this.pSubscriptions.add(
 			tiersData$.subscribe(({ data }) => {
-				if (this.auth.user?.kycProvider !== KycProvider.Au10tix ) {
-					const currentTierId = this.auth.user?.kycValid !== true ? '-' : this.auth.user?.kycTierId ?? '';
-					const tierData = getCurrentTierLevelName(
-						currentTierId, 
-						data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult,
-						this.auth.user);
-					this.getKycStatus(summary, widget, tierData);
-				} else {
-					const currentTierId = this.auth.user?.kycValid !== true ? '-' : this.auth.user?.kycTierId ?? '';
-				
-					const tierData = getCurrentTierLevelName(
-						currentTierId, 
-						testTiersList as SettingsKycTierShortExListResult,
-						this.auth.user);
-					this.getKycStatus(summary, widget, tierData);
-				}
-				
+				const currentTierId = this.auth.user?.kycValid !== true ? '-' : this.auth.user?.kycTierId ?? '';
+				const tierData = getCurrentTierLevelName(
+					currentTierId, 
+					data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult,
+					this.auth.user);
+				this.getKycStatus(summary, widget, tierData);
 			}, (error) => {
 				if (this.onProgressChanged) {
 					this.onProgressChanged(false);
