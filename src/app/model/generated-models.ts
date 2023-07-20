@@ -260,6 +260,7 @@ export type CheckOrCreateDestinationAddressResult = {
 export type CoriunderWebAuthParams = {
   __typename?: 'CoriunderWebAuthParams';
   PLID?: Maybe<Scalars['String']['output']>;
+  amount_options?: Maybe<Scalars['String']['output']>;
   client_billAddress1?: Maybe<Scalars['String']['output']>;
   client_billAddress2?: Maybe<Scalars['String']['output']>;
   client_billCity?: Maybe<Scalars['String']['output']>;
@@ -276,7 +277,6 @@ export type CoriunderWebAuthParams = {
   disp_payFor?: Maybe<Scalars['String']['output']>;
   disp_paymentType?: Maybe<Scalars['String']['output']>;
   disp_recurring?: Maybe<Scalars['Int']['output']>;
-  full_url?: Maybe<Scalars['String']['output']>;
   hashtype?: Maybe<Scalars['Int']['output']>;
   merchantID?: Maybe<Scalars['String']['output']>;
   notification_url?: Maybe<Scalars['String']['output']>;
@@ -291,6 +291,7 @@ export type CoriunderWebAuthParams = {
   trans_refNum?: Maybe<Scalars['String']['output']>;
   trans_storePm?: Maybe<Scalars['Float']['output']>;
   trans_type?: Maybe<Scalars['Int']['output']>;
+  ui_version?: Maybe<Scalars['Int']['output']>;
   url_redirect?: Maybe<Scalars['String']['output']>;
 };
 
@@ -627,6 +628,15 @@ export enum Gender {
   M = 'M',
   O = 'O'
 }
+
+export type GetCoriunderWebAuthResult = {
+  __typename?: 'GetCoriunderWebAuthResult';
+  full_url?: Maybe<Scalars['String']['output']>;
+  params?: Maybe<CoriunderWebAuthParams>;
+  paramsString?: Maybe<Scalars['String']['output']>;
+  signature?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
 
 export type GetRates = {
   __typename?: 'GetRates';
@@ -2081,8 +2091,6 @@ export type Query = {
   getAppropriateSettingsKyc?: Maybe<SettingsKyc>;
   /** Get KYC levels settings for relevant options */
   getAppropriateSettingsKycTiers?: Maybe<SettingsKycTierShortExListResult>;
-  /** KYC widget API web auth params generation */
-  getCoriunderWebAuthParams?: Maybe<CoriunderWebAuthParams>;
   /** Get a black list of countries */
   getCountryBlackList?: Maybe<BlackCountryListResult>;
   getCurrencyPairLiquidityProvider?: Maybe<CurrencyPairLiquidityProvider>;
@@ -2329,12 +2337,6 @@ export type QueryGetAppropriateSettingsKycTiersArgs = {
   source?: InputMaybe<TransactionSource>;
   targetKycProvider: KycProvider;
   widgetId?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryGetCoriunderWebAuthParamsArgs = {
-  params?: InputMaybe<PaymentPreauthInput>;
-  transactionId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3415,6 +3417,7 @@ export type StringMapInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  externalPaymentCompletedNotification?: Maybe<Scalars['Void']['output']>;
   kycCompletedNotification?: Maybe<Scalars['Void']['output']>;
   kycServiceNotification?: Maybe<Scalars['Void']['output']>;
   newNotification?: Maybe<Scalars['Void']['output']>;

@@ -93,6 +93,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
   private shuftiNotificationsSubscription: Subscription | undefined = undefined;
+	private externalPaymentNotificationsSubscription: Subscription | undefined = undefined;
   private autentixNotificationsSubscription: Subscription | undefined = undefined;
 
   get showTransactionsLink(): boolean {
@@ -150,7 +151,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	} 
   	if(!this.autentixSubscriptionFlag){
   		this.startAutentixNotificationListener();
-  	} 
+  	}
   }
 
   private initPage(): void {
@@ -1102,6 +1103,19 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					this.showWidget = false;
   					this.inProgress = false;
   					this.widgetLink = data.createTransactionWithWidgetUserParams;
+						this.externalPaymentNotificationsSubscription = this.notification.subscribeToExternalPaymentCompleteNotifications().subscribe(
+							({ data }) => {
+								const subscriptionData = data.externalPaymentCompletedNotification;
+								console.log('External Payment completed', subscriptionData);
+								if(subscriptionData.orderStatus == 'completed'){
+									this.showWidget = true;
+								}
+							},
+							(error) => {
+								this.shuftiSubscriptionFlag = false;
+								console.error('KYC complete notification error', error);
+							}
+						);
   					this.onIFramePay.emit(true);
   				}, (error) => {
   					this.inProgress = false;
