@@ -93,6 +93,7 @@
     </app-widget-payment>
     <!-- Credit card -->
     <app-widget-credit-card *ngSwitchCase="'credit_card'"
+      [iframeUrl]="iframeUrl"
       [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="paymentBack()"
       (onComplete)="creditCardPaymentComplete($event)"></app-widget-credit-card>
     <!-- Wire transfer -->
