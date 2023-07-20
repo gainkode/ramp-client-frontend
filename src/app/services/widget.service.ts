@@ -435,14 +435,7 @@ export class WidgetService {
 		const dataList = list
 			.filter(x => x.provider?.currencies?.includes(currency, 0) || x.provider?.currencies?.length == 0 || x.instrument === PaymentInstrument.WireTransfer)
 			.map(val => new PaymentProviderInstrumentView(val));
-		// if (!dataList.find(x => x.instrument === PaymentInstrument.WireTransfer)) {
-		//     dataList.push(new PaymentProviderInstrumentView({
-		//         instrument: PaymentInstrument.WireTransfer,
-		//         provider: {
-		//             name: 'WireTransferPayment'
-		//         }
-		//     }));
-		// }
+
 		return dataList;
 	}
 
