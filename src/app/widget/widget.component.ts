@@ -83,24 +83,19 @@ export class WidgetComponent implements OnInit, OnDestroy {
   paymentComplete = false;
   notificationStarted = false;
   recentTransactions = false;
-  introDisclaimerBack = false;
   logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
   logoAlt = EnvService.product;
   disclaimerTextData = disclaimerDataDefault;
   completeTextData = completeDataDefault;
   transactionIdConfirmationCode = '';
-  coriunderDetails;
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
   private shuftiNotificationsSubscription: Subscription | undefined = undefined;
   private autentixNotificationsSubscription: Subscription | undefined = undefined;
+  private coriunderNotificationsSubscription: Subscription | undefined = undefined;
 
   get showTransactionsLink(): boolean {
-  	const user = this.auth.user;
-  	if (user && this.auth.authenticated) {
-  		return true;
-  	}
-  	return false;
+  	return this.auth.user && this.auth.authenticated;
   }
 
   constructor(
@@ -187,6 +182,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   	if (this.autentixNotificationsSubscription) {
   		this.autentixNotificationsSubscription.unsubscribe();
+  	}
+
+  	if (this.coriunderNotificationsSubscription) {
+  		this.coriunderNotificationsSubscription.unsubscribe();
   	}
     
   	this.shuftiSubscriptionFlag = false;
@@ -295,10 +294,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			this.widget.disclaimer = false;
   			this.widget.kycFirst = false;
   			this.widget.email = '';
-  			// temp
-  			//this.widget.kycFirst = true;
-  			//this.widget.email = 'tugaymv@gmail.com';
-  			//this.widget.disclaimer = true;
   			this.widget.transaction = TransactionType.Buy;
   			//temp
   			this.widget.source = TransactionSource.QuickCheckout;
@@ -386,7 +381,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			}
   		);
   	}
-  	// }
   }
 
   private startAutentixNotificationListener(): void {
@@ -410,7 +404,24 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			}
   			);
   	}
-  	// }
+  }
+
+  private startCoriunderNotificationListener(): void {
+  	const isCoriunderProvider = this.paymentProviders.some(x => x.id === 'Coriunder');
+
+  	if(this.auth.user && isCoriunderProvider){
+  		console.log('Coriunder completed notifications subscribed');
+
+  		this.coriunderNotificationsSubscription = this.notification.subscribeToPaymentCompleteNotifications()
+  			.subscribe({
+  				next: (data: any) => {
+  					console.log('Coriunder completed');
+  				},
+  				error: (error) => {
+  					console.error('Payment complete notification error', error);
+  				}
+  			});
+  	}
   }
 
 
@@ -489,7 +500,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
     
   }
 
-  capchaResult(event): void{
+  capchaResult(event): void {
   	this.recaptchaDialog?.close();
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
@@ -515,6 +526,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		}
   	}
   }
+  
   handleAuthError(): void {
   	if (this.widget.embedded) {
   		void this.router.navigateByUrl('/');
@@ -541,7 +553,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.mobileSummary = false;
   }
 
-  private stageBack(): void {
+  stageBack(): void {
   	this.inProgress = false;
   	const stage = this.pager.goBack();
   	if (stage) {
@@ -714,14 +726,9 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   orderDetailsComplete(email: string): void {
   	if (this.summary.email === email) {
-  		// if (this.summary.agreementChecked) {
-  		//   this.desclaimerNext();
-  		// } else {
-  		//   this.nextStage('disclaimer', 'Disclaimer', 2, false);
-  		// }
   		if(this.auth.user){
   			this.disclaimerNext();
-  		}else{
+  		} else {
   			this.summary.transactionId = '';
   			this.summary.fee = 0;
   			this.summary.email = email;
@@ -748,10 +755,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   // =======================
 
   // == Disclaimer =========
-  disclaimerBack(): void {
-  	this.stageBack();
-  }
-
   disclaimerNext(): void {
   	this.summary.agreementChecked = true;
   	if (this.summary.transactionType === TransactionType.Sell) {
@@ -859,9 +862,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   // =====================
 
   // == Payment info ==
-  paymentBack(): void {
-  	this.stageBack();
-  }
 
   selectProvider(provider: PaymentProviderInstrumentView): void {
   	if(this.summary.transactionType === TransactionType.Buy){
@@ -948,10 +948,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.nextStage('register', 'Authorization', 3, true);
   }
 
-  registerBack(): void {
-  	this.stageBack();
-  }
-
   onLoginRequired(email: string): void {
   	if (this.widget.embedded) {
   		void this.router.navigateByUrl('/');
@@ -984,10 +980,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.checkLoginResult(data);
   }
 
-  loginBack(): void {
-  	this.stageBack();
-  }
-
   transactionConfiramtionComplete(order: TransactionShort): void {
   	this.summary.orderId = order.code as string;
   	this.summary.fee = order.feeFiat as number ?? 0;
@@ -1002,24 +994,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.startPayment();
   	}
   }
-  // ====================
 
-  // == Identification ==
-  identificationComplete(data: LoginResult): void {
-  	this.auth.setLoginUser(data);
-  	this.summary.email = data.user?.email ?? '';
-  	this.widgetService.getSettingsCommon(this.summary, this.widget, false);
-  }
-
-  identificationBack(): void {
-  	this.stageBack();
-  }
   // ====================
 
   // == KYC =============
-  kycBack(): void {
-  	this.stageBack();
-  }
 
   kycComplete(): void {
   	if (this.widget.kycFirst) {
@@ -1102,6 +1080,9 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					this.showWidget = false;
   					this.inProgress = false;
   					this.widgetLink = data.createTransactionWithWidgetUserParams;
+  					if (this.widgetLink) {
+  						this.startCoriunderNotificationListener();
+  					}
   					this.onIFramePay.emit(true);
   				}, (error) => {
   					this.inProgress = false;
@@ -1110,6 +1091,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					} else {
   						this.pager.swapStage(tempStageId);
   					}
+
   					if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
   						this.handleAuthError();
   					} else {
@@ -1127,7 +1109,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					}
   				})
   			);
-  		}else{  
+  		} else {  
   			this.pSubscriptions.add(
   				this.dataService.createTransaction(
   					this.summary.transactionType,
@@ -1174,7 +1156,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   							if (tempStageId === 'verification') {
   								this.pager.goBack();
   							} else {
-  								if(order.transactionId && order.transactionId != ''){
+  								if(order.transactionId && order.transactionId){
   									this.summary.instrument = instrument;
   									this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
   									this.transactionIdConfirmationCode = order.transactionId;
@@ -1251,7 +1233,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   							errorMessage: this.errorMessage
   						} as PaymentErrorDetails);
   					} else {
-  						if(order.transactionId && order.transactionId != ''){
+  						if(order.transactionId && order.transactionId){
   							this.transactionIdConfirmationCode = order.transactionId;
   							this.nextStage('code_auth', 'Authorization', 3, true);
   						}else{
@@ -1379,8 +1361,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   				this.auth.setUser(data.me as User);
   				this.auth.notifyUserUpdated();
   			}
-  		}, (error) => {
-
   		})
   	);
   }

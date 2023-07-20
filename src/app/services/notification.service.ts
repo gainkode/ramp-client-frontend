@@ -134,4 +134,11 @@ export class NotificationService {
 			fetchPolicy: 'no-cache'
 		});
 	}
+
+	subscribeToPaymentCompleteNotifications(): Observable<any> {
+		return this.apolloNotificationClient.subscribe({
+			query: SUBSCRIBE_KYC_COMPLETED_NOTIFICATIONS,
+			fetchPolicy: 'no-cache'
+		});
+	}
 }

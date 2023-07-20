@@ -386,18 +386,6 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   }
   // ====================
 
-  // == Identification ==
-  identificationComplete(data: LoginResult): void {
-  	this.auth.setLoginUser(data);
-  	this.summary.email = data.user?.email ?? '';
-  	this.widgetService.getSettingsCommon(this.summary, this.widget, false);
-  }
-
-  identificationBack(): void {
-  	this.stageBack();
-  }
-  // ====================
-
   // ======= KYC ========
   kycBack(): void {
   	this.stageBack();
