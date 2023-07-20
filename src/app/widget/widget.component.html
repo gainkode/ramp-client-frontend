@@ -116,8 +116,7 @@
       [summary]="summary" 
       [levelName]="overLimitLevel"
       [completedWhenVerified]="widget.kycFirst"
-      [shuftiSubscribeResult]="shuftiSubscribeResult"
-      [autentixSubscribeResult]="autentixSubscribeResult"
+      [kycSubscribeResult]="kycSubscribeResult"
       [allowToPayIfKycFailed]="widget.allowToPayIfKycFailed"
       [widgetId]="widget.widgetId"
       [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"
@@ -157,7 +156,8 @@
   </div>
 </div>
 
-<div *ngIf="showWidget" class="__widget-iframe-container">
-  <app-widget-iframe [sourceLink]="widgetLink"></app-widget-iframe>
+<div *ngIf="widgetLink">
+  <iframe [src]="widgetLink | safeurl" frameborder="0" allow="camera" class="widget-iframe"></iframe>
+  <!-- <app-widget-iframe [widgetLink]="widgetLink"></app-widget-iframe> -->
 </div>
 

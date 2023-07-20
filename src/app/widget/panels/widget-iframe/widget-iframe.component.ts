@@ -6,8 +6,11 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./widget-iframe.component.scss']
 })
 export class WidgetIframeComponent {
-  @Input() sourceLink = '';
+  @Input() widgetLink = '';
 
+  ngOnInit() {
+    console.log(this.widgetLink)
+  }
   allow = 'camer';
 
 }

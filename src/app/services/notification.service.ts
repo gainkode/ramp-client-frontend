@@ -32,6 +32,12 @@ subscription onKycCompletedNotification {
 }
 `;
 
+const SUBSCRIBE_EXTERNAL_PAYMENT_COMPLETED_NOTIFICATIONS = gql`
+subscription onExternalPaymentCompletedNotification {
+  externalPaymentCompletedNotification
+}
+`;
+
 const SEND_TEST_NOTIFICATION_POST = gql`
 mutation SendTestNotification {
   sendTestNotification
@@ -135,9 +141,9 @@ export class NotificationService {
 		});
 	}
 
-	subscribeToPaymentCompleteNotifications(): Observable<any> {
+	subscribeToExternalPaymentCompleteNotifications(): Observable<any> {
 		return this.apolloNotificationClient.subscribe({
-			query: SUBSCRIBE_KYC_COMPLETED_NOTIFICATIONS,
+			query: SUBSCRIBE_EXTERNAL_PAYMENT_COMPLETED_NOTIFICATIONS,
 			fetchPolicy: 'no-cache'
 		});
 	}

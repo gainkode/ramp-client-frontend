@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
-import { TransactionType, SettingsKycShort, TransactionSource, KycProvider, SettingsKycTierShortExListResult, SettingsKycTierShortEx } from 'model/generated-models';
+import { TransactionType, SettingsKycShort, TransactionSource, KycProvider, SettingsKycTierShortExListResult } from 'model/generated-models';
 import { KycLevelShort } from 'model/identification.model';
 import { CheckoutSummary } from 'model/payment.model';
 import { Subscription } from 'rxjs';
@@ -20,8 +20,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   @Input() completedWhenVerified = false;
   @Input() allowToPayIfKycFailed = false;
   @Input() summary: CheckoutSummary | undefined = undefined;
-  @Input() shuftiSubscribeResult: boolean | undefined = undefined;
-  @Input() autentixSubscribeResult: boolean | undefined = undefined;
+  @Input() kycSubscribeResult: boolean | undefined = undefined;
   @Input() widgetId: string | undefined = undefined;
   @Output() onError = new EventEmitter<string>();
   @Output() onReject = new EventEmitter();
@@ -58,21 +57,13 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   	this.pSubscriptions.unsubscribe();
   }
   ngOnChanges(): void {
-  	if(!this.shuftiSubscribeResult){
+  	if(!this.kycSubscribeResult){
   		this.handleReject();
-  	}else if(this.shuftiSubscribeResult){
+  	} else if(this.kycSubscribeResult){
   		this.onNext.emit();
   	}
 
-  	if(!this.autentixSubscribeResult){
-  		this.handleReject();
-  	}else if(this.autentixSubscribeResult){
-  		this.onNext.emit();
-  	}
-
-	
-  	this.shuftiSubscribeResult = undefined;
-  	this.autentixSubscribeResult = undefined;
+  	this.kycSubscribeResult = undefined;
   }
   
   handleReject(): void {

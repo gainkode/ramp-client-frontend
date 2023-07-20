@@ -17,6 +17,7 @@ export class QuickCheckoutComponent {
 	expressFrom = '';
 	expressTo = '';
 	expressValue = 0;
+	widgetSize = true;
 	settings: WidgetSettings | undefined = undefined;
 	bg_mask = (EnvService.widget_bg_mask === 'true');
 	
@@ -37,6 +38,10 @@ export class QuickCheckoutComponent {
 			this.settings.currencyTo = this.expressTo;
 			this.settings.amountFrom = this.expressValue;
 		}
+	}
+
+	iframePay(): void {
+		this.widgetSize = false;
 	}
 
 	ngOnDestroy(): void {

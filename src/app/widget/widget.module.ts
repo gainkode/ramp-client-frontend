@@ -159,7 +159,7 @@ export class MaterialModule {}
 		CryptoWidgetComponent,
 		CryptoWizardComponent,
 		WidgetWizardComponent,
-		CompanyLevelVerificationComponent,
+		CompanyLevelVerificationComponent
 	],
 	providers: [],
 })

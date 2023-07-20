@@ -3,10 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthInput, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget } from 'model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { NotificationService } from 'services/notification.service';
@@ -32,8 +32,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';
   @Input() quickCheckout = false;
   @Input() settings: WidgetSettings | undefined = undefined;
-  @Input() shuftiSubscribeResult: boolean | undefined = undefined;
-  @Input() autentixSubscribeResult: boolean | undefined = undefined;
   @Input() set internal(val: boolean) {
   	this.internalPayment = val;
   }
@@ -88,12 +86,11 @@ export class WidgetComponent implements OnInit, OnDestroy {
   disclaimerTextData = disclaimerDataDefault;
   completeTextData = completeDataDefault;
   transactionIdConfirmationCode = '';
+  kycSubscribeResult: boolean | undefined = undefined;
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
-  private shuftiNotificationsSubscription: Subscription | undefined = undefined;
-  private autentixNotificationsSubscription: Subscription | undefined = undefined;
-  private coriunderNotificationsSubscription: Subscription | undefined = undefined;
-
+  private externalKycProvideNotificationsSubscription: Subscription | undefined = undefined;
+  private externalPaymentNotificationsSubscription: Subscription | undefined = undefined;
   get showTransactionsLink(): boolean {
   	return this.auth.user && this.auth.authenticated;
   }
@@ -113,8 +110,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	private profileService: ProfileDataService,
   	private errorHandler: ErrorService) { }
 
-  private shuftiSubscriptionFlag = false;
-  private autentixSubscriptionFlag = false;
+  private externalKycSubscriptionFlag = false;
   private companyLevelVerificationFlag = false;
 
   	ngOnInit(): void {
@@ -140,11 +136,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.pager.init('initialization', 'Initialization');
   	this.loadCustomData();
 		
-  	if(!this.shuftiSubscriptionFlag){
-  		this.startShuftiNotificationListener();
-  	} 
-  	if(!this.autentixSubscriptionFlag){
-  		this.startAutentixNotificationListener();
+  	if(!this.externalKycSubscriptionFlag){
+  		this.startExternalKycProvideListener();
   	} 
   }
 
@@ -176,20 +169,15 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.pSubscriptions.unsubscribe();
   	this.stopNotificationListener();
     
-  	if(this.shuftiNotificationsSubscription){
-  		this.shuftiNotificationsSubscription.unsubscribe();
+  	if(this.externalKycProvideNotificationsSubscription){
+  		this.externalKycProvideNotificationsSubscription.unsubscribe();
   	}
 
-  	if (this.autentixNotificationsSubscription) {
-  		this.autentixNotificationsSubscription.unsubscribe();
-  	}
-
-  	if (this.coriunderNotificationsSubscription) {
-  		this.coriunderNotificationsSubscription.unsubscribe();
+  	if (this.externalPaymentNotificationsSubscription) {
+  		this.externalPaymentNotificationsSubscription.unsubscribe();
   	}
     
-  	this.shuftiSubscriptionFlag = false;
-  	this.autentixSubscriptionFlag = false;
+  	this.externalKycSubscriptionFlag = false;
   	this.exhangeRate.stop();
   }
 
@@ -356,76 +344,60 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	);
   }
 
-  private startShuftiNotificationListener(): void {
-  	if(this.auth.user && this.auth.user?.kycProvider == KycProvider.Shufti){
-  		console.log('Shufti completed notifications subscribed');
-  		this.shuftiSubscriptionFlag = true;
-  		this.shuftiNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications().subscribe(
+  private startExternalKycProvideListener(): void {
+  	const isExternalProvider = this.auth.user?.kycProvider === KycProvider.Shufti || this.auth.user?.kycProvider === KycProvider.Au10tix; 
+  	
+  	if(this.auth.user && isExternalProvider){
+  		console.log('Kyc completed notifications subscribed');
+  		this.externalKycSubscriptionFlag = true;
+  		this.externalKycProvideNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications().subscribe(
   			({ data }) => {
-  				const subscriptionData = data.kycCompletedNotification;
-  				console.log('Shufti completed', subscriptionData);
+  				const  subscriptionData= data.kycCompletedNotification;
+  				console.log('KYC completed', subscriptionData);
 
-  				if(subscriptionData.kycStatus == 'completed'){
+  				if(subscriptionData.kycStatus === 'completed'){
   					if (subscriptionData.kycValid === true) {
-  						this.shuftiSubscribeResult = true;
-  					}else{
-  						console.log('Shufti rejected');
-  						this.shuftiSubscribeResult = false;
+  						this.kycSubscribeResult = true;
+  					} else {
+  						console.log('KYC rejected');
+  						this.kycSubscribeResult = false;
   					}
   				}
   				this.loadAccountData();
   			},
   			(error) => {
-  				this.shuftiSubscriptionFlag = false;
+  				this.externalKycSubscriptionFlag = false;
   				console.error('KYC complete notification error', error);
   			}
   		);
   	}
   }
 
-  private startAutentixNotificationListener(): void {
-  	if(this.auth.user && this.auth.user?.kycProvider === KycProvider.Au10tix){
-  		console.log('Autentix completed notifications subscribed');
-  		this.autentixSubscriptionFlag = true;
+  private startExternalPaymentNotificationListener(): void {
+  	this.externalPaymentNotificationsSubscription = this.notification.subscribeToExternalPaymentCompleteNotifications()
+  		.pipe(finalize(() => this.onIFramePay.emit(false)))
+  		.subscribe({
+  			next: data => {
+  				const subscriptionData = data.externalPaymentCompletedNotification;
+  				console.log('External Payment completed', subscriptionData);
 
-  		this.autentixNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications()
-  			.subscribe(({ data }) => {
-  				const subscriptionData = data.kycCompletedNotification;
-  				console.log('Autentix completed', subscriptionData);
-
-  				if(subscriptionData.kycStatus === 'completed'){
-  					this.autentixSubscribeResult = subscriptionData?.kycValid === true;
+  				if(subscriptionData.orderStatus === 'completed'){
+  					this.showWidget = true;
+  					this.nextStage('complete', 'Complete', 6, false);
+  				} else if(subscriptionData.orderStatus === 'declined') {
+  					this.setError('External Payment failed', 'Payment declined', 'creatExternalTransaction');
   				}
-  				this.loadAccountData();
   			},
-  			(error) => {
-  				this.autentixSubscriptionFlag = false;
-  				console.error('KYC complete notification error', error);
+  			error: (error) => {
+  				console.error('External Payment notification error', error);
+
+  				this.setError('External Payment', 'Payment declined', 'creatExternalTransaction');
   			}
-  			);
-  	}
-  }
-
-  private startCoriunderNotificationListener(): void {
-  	const isCoriunderProvider = this.paymentProviders.some(x => x.id === 'Coriunder');
-
-  	if(this.auth.user && isCoriunderProvider){
-  		console.log('Coriunder completed notifications subscribed');
-
-  		this.coriunderNotificationsSubscription = this.notification.subscribeToPaymentCompleteNotifications()
-  			.subscribe({
-  				next: (data: any) => {
-  					console.log('Coriunder completed');
-  				},
-  				error: (error) => {
-  					console.error('Payment complete notification error', error);
-  				}
-  			});
-  	}
+  		});
   }
 
 
-  private stopNotificationListener(): void {
+  private stopNotificationListener(): void { 
   	if (this.pNotificationsSubscription) {
   		this.pNotificationsSubscription.unsubscribe();
   	}
@@ -1004,8 +976,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.loadAccountData();
   		console.log('KYC COMPLETE');
   		this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
-  		this.shuftiSubscribeResult = undefined;
-  		this.autentixSubscribeResult = undefined;
+  		this.kycSubscribeResult = undefined;
   	} else {
   		this.nextStage('complete', 'Complete', 6, false);
   	}
@@ -1019,18 +990,11 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	}
   	if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
   		this.auth.setLoginUser(data);
-  		if(this.shuftiNotificationsSubscription){
-  			this.shuftiNotificationsSubscription.unsubscribe();
-  			this.shuftiSubscriptionFlag = false;
+  		if(this.externalKycProvideNotificationsSubscription){
+  			this.externalKycProvideNotificationsSubscription.unsubscribe();
+  			this.externalKycSubscriptionFlag = false;
   		}
-
-  		if(this.autentixNotificationsSubscription){
-  			this.autentixNotificationsSubscription.unsubscribe();
-  			this.autentixSubscriptionFlag = false;
-  		}
-
-  		this.startShuftiNotificationListener();
-  		this.startAutentixNotificationListener();
+  		this.startExternalKycProvideListener();
 
   		if (this.summary.agreementChecked) {
   			if (this.summary.transactionId === '') {
@@ -1079,11 +1043,11 @@ export class WidgetComponent implements OnInit, OnDestroy {
   				).subscribe(({ data }) => {
   					this.showWidget = false;
   					this.inProgress = false;
+					this.onIFramePay.emit(true);
   					this.widgetLink = data.createTransactionWithWidgetUserParams;
   					if (this.widgetLink) {
-  						this.startCoriunderNotificationListener();
+  						this.startExternalPaymentNotificationListener();
   					}
-  					this.onIFramePay.emit(true);
   				}, (error) => {
   					this.inProgress = false;
   					if (tempStageId === 'verification') {
