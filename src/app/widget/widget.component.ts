@@ -1082,7 +1082,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.initMessage = 'Processing...';
   	if (this.summary) {
   		const destination = this.summary.address;
-  		if(providerId === 'GetCoinsPayment'){
+  		if(providerId === 'GetCoinsPayment' || providerId === 'Coriunder'){
   			this.pSubscriptions.add(
   				this.dataService.createTransactionWithWidgetUserParams(
   					this.summary.transactionType,
@@ -1282,21 +1282,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
  
   private startPayment(): void {
   	if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {
-
-  		if (this.summary.providerView.id === 'Coriunder') {
-  			this.dataService.getCoriunderWebAuthParams(
-				<PaymentPreauthInput>{
-					instrument: PaymentInstrument.WireTransfer,
-					transactionId: this.summary.transactionId,
-					provider: this.summary.providerView.id
-				}).subscribe((result) => {
-					console.log(result.full_url)
-  				this.nextStage('credit_card', 'Payment info', this.pager.step, true);
-  			});
-  		} else {
-  			this.nextStage('credit_card', 'Payment info', this.pager.step, true);
-  		}
-
+  		this.nextStage('credit_card', 'Payment info', this.pager.step, true);
   	} else if (this.summary.providerView?.instrument === PaymentInstrument.Apm) {
   		this.completeInstantpayTransaction(
   			this.summary.transactionId,
