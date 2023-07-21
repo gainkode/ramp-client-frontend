@@ -330,15 +330,15 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   private startNotificationListener(): void {
   	this.notificationStarted = true;
-  	this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
-  		({ data }) => {
-  			this.handleTransactionSubscription(data);
-  		},
-  		(error) => {
-  			this.notificationStarted = false;
-  			// there was an error subscribing to notifications
-  			if (!environment.production) {
-  				console.error('Notifications error', error);
+  	this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications()
+  		.subscribe({
+  			next: ({ data }) => this.handleTransactionSubscription(data),
+  			error: (error) => {
+  				this.notificationStarted = false;
+  				// there was an error subscribing to notifications
+  				if (!environment.production) {
+  					console.error('Notifications error', error);
+  				}
   			}
   		}
   	);
@@ -350,26 +350,28 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	if(this.auth.user && isExternalProvider){
   		console.log('Kyc completed notifications subscribed');
   		this.externalKycSubscriptionFlag = true;
-  		this.externalKycProvideNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications().subscribe(
-  			({ data }) => {
-  				const  subscriptionData= data.kycCompletedNotification;
-  				console.log('KYC completed', subscriptionData);
-
-  				if(subscriptionData.kycStatus === 'completed'){
-  					if (subscriptionData.kycValid === true) {
-  						this.kycSubscribeResult = true;
-  					} else {
-  						console.log('KYC rejected');
-  						this.kycSubscribeResult = false;
+  		this.externalKycProvideNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications()
+  			.subscribe(
+  				{
+  					next: ({ data }) => {
+  						const  subscriptionData= data.kycCompletedNotification;
+  						console.log('KYC completed', subscriptionData);
+	
+  						if(subscriptionData.kycStatus === 'completed'){
+  							if (subscriptionData.kycValid) {
+  								this.kycSubscribeResult = true;
+  							} else {
+  								console.log('KYC rejected');
+  								this.kycSubscribeResult = false;
+  							}
+  						}
+  						this.loadAccountData();
+  					},
+  					error: (error) => {
+  						this.externalKycSubscriptionFlag = false;
+  						console.error('KYC complete notification error', error);
   					}
-  				}
-  				this.loadAccountData();
-  			},
-  			(error) => {
-  				this.externalKycSubscriptionFlag = false;
-  				console.error('KYC complete notification error', error);
-  			}
-  		);
+  				});
   	}
   }
 
@@ -380,13 +382,17 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			next: data => {
   				const subscriptionData = data.externalPaymentCompletedNotification;
   				console.log('External Payment completed', subscriptionData);
-
+				
   				if(subscriptionData.orderStatus === 'completed'){
-  					this.showWidget = true;
-  					this.nextStage('complete', 'Complete', 6, false);
+  					// this.showWidget = true;
+  					// this.nextStage('complete', 'Complete', 6, false);
   				} else if(subscriptionData.orderStatus === 'declined') {
   					this.setError('External Payment failed', 'Payment declined', 'creatExternalTransaction');
-  				}
+  				} else {
+					// remove this, only for coinsdrom 
+					this.showWidget = true;
+					this.nextStage('complete', 'Complete', 6, false);
+				}
   			},
   			error: (error) => {
   				console.error('External Payment notification error', error);
@@ -551,18 +557,22 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	const widgetData = this.commonService.getCustomText().valueChanges.pipe(take(1));
   	this.inProgress = true;
   	this.pSubscriptions.add(
-  		widgetData.subscribe(({ data }) => {
-  			this.inProgress = false;
-  			if (data.getTextPages) {
-  				const pagesData = data.getTextPages as TextPage[];
-  				this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
-  				this.completeTextData = pagesData.filter(x => x.page === 2).map(x => x.text ?? '').filter(x => x !== '');
-  			}
-  			this.initPage();
-  		}, (error) => {
-  			this.inProgress = false;
-  			this.initPage();
-  		})
+  		widgetData.subscribe(
+  			{
+  				next: ({ data }) => {
+  					this.inProgress = false;
+  					if (data.getTextPages) {
+  						const pagesData = data.getTextPages as TextPage[];
+  						this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
+  						this.completeTextData = pagesData.filter(x => x.page === 2).map(x => x.text ?? '').filter(x => x !== '');
+  					}
+  					this.initPage();
+  				},
+  				error: () => {
+  					this.inProgress = false;
+  					this.initPage();
+  				}
+  			})
   	);
   }
 
@@ -571,42 +581,45 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	const widgetData = this.dataService.getWidget(this.userParamsId).valueChanges.pipe(take(1));
   	this.inProgress = true;
   	this.pSubscriptions.add(
-  		widgetData.subscribe(({ data }) => {
-  			this.inProgress = false;
-  			this.initData(data.getWidget as Widget);
-  			let validTransactionType = true;
-  			if (this.widget.transaction) {
+  		widgetData.subscribe({
+  			next: ({ data }) => {
+  				this.inProgress = false;
+  				this.initData(data.getWidget as Widget);
+	   
+  				if (!this.widget.transaction) {
+  					this.showTransactionError('Wrong widget settings', 'Missing transaction type', false);
+  					return;
+  				}
+	  
   				const transactionType = this.widget.transaction.toLowerCase();
-  				validTransactionType = (transactionType === TransactionType.Buy.toLowerCase() || transactionType === TransactionType.Sell.toLowerCase());
-  			}
-  			if (validTransactionType) {
-  				if (this.widget.orderDefault) {
-  					if (this.auth.user?.email !== this.widget.email) {
-  						this.summary.email = '';
-  					}
-  					this.orderDetailsComplete(this.widget.email);
-  				} else {
-  					if (this.quickCheckout || this.summary.agreementChecked) {
-  						this.pager.init('order_details', 'Order details');
+  				const validTransactionType = ['buy', 'sell'].includes(transactionType);
+	  
+  				if (validTransactionType) {
+  					if (this.widget.orderDefault) {
+  						if (this.auth.user?.email !== this.widget.email) {
+  							this.summary.email = '';
+  						}
+  						this.orderDetailsComplete(this.widget.email);
   					} else {
-  						this.pager.init('intro_disclaimer', 'Disclaimer');
+  						const isOrderDetails = this.quickCheckout || this.summary.agreementChecked;
+  						this.pager.init(
+  							isOrderDetails ? 'order_details' : 'intro_disclaimer',
+  							isOrderDetails ?  'Order details' : 'Disclaimer'
+  						);
   					}
   				}
-  			} else {
+  			}, 
+  			error: () => {
+  				this.inProgress = false;
+  				this.initData(undefined);
   				this.showTransactionError(
   					'Wrong widget settings',
-  					`Incorrect transaction type: ${this.widget.transaction}`,
+  					`Cannot load the widget`,
   					false);
+  				this.pager.init('order_details', 'Order details');
   			}
-  		}, (error) => {
-  			this.inProgress = false;
-  			this.initData(undefined);
-  			this.showTransactionError(
-  				'Wrong widget settings',
-  				`Cannot load the widget`,
-  				false);
-  			this.pager.init('order_details', 'Order details');
-  		})
+  		}
+  		)
   	);
   }
 
@@ -1043,7 +1056,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   				).subscribe(({ data }) => {
   					this.showWidget = false;
   					this.inProgress = false;
-					this.onIFramePay.emit(true);
+  					this.onIFramePay.emit(true);
   					this.widgetLink = data.createTransactionWithWidgetUserParams;
   					if (this.widgetLink) {
   						this.startExternalPaymentNotificationListener();
