@@ -379,20 +379,16 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.externalPaymentNotificationsSubscription = this.notification.subscribeToExternalPaymentCompleteNotifications()
   		.pipe(finalize(() => this.onIFramePay.emit(false)))
   		.subscribe({
-  			next: data => {
+  			next: ({ data }) => {
   				const subscriptionData = data.externalPaymentCompletedNotification;
   				console.log('External Payment completed', subscriptionData);
 				
   				if(subscriptionData.orderStatus === 'completed'){
-  					// this.showWidget = true;
-  					// this.nextStage('complete', 'Complete', 6, false);
+  					this.showWidget = true;
+  					this.nextStage('complete', 'Complete', 6, false);
   				} else if(subscriptionData.orderStatus === 'declined') {
   					this.setError('External Payment failed', 'Payment declined', 'creatExternalTransaction');
-  				} else {
-					// remove this, only for coinsdrom 
-					this.showWidget = true;
-					this.nextStage('complete', 'Complete', 6, false);
-				}
+  				}
   			},
   			error: (error) => {
   				console.error('External Payment notification error', error);
