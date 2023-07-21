@@ -40,8 +40,8 @@ export class QuickCheckoutComponent {
 		}
 	}
 
-	iframePay(): void {
-		this.widgetSize = false;
+	iframePay(event: boolean): void {
+		this.widgetSize = !event;
 	}
 
 	ngOnDestroy(): void {

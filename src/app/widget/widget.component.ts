@@ -37,7 +37,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   }
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
-  @Output() onIFramePay = new EventEmitter<Boolean>();
+  @Output() onIFramePay = new EventEmitter<boolean>();
 
   @ViewChild('recaptcha') private recaptchaModalContent;
 
@@ -377,23 +377,34 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   private startExternalPaymentNotificationListener(): void {
   	this.externalPaymentNotificationsSubscription = this.notification.subscribeToExternalPaymentCompleteNotifications()
-  		.pipe(finalize(() => this.onIFramePay.emit(false)))
   		.subscribe({
   			next: ({ data }) => {
   				const subscriptionData = data.externalPaymentCompletedNotification;
+					let finishFlag = false;
   				console.log('External Payment completed', subscriptionData);
 				
   				if(subscriptionData.orderStatus === 'completed'){
-  					this.showWidget = true;
-  					this.nextStage('complete', 'Complete', 6, false);
+						finishFlag = true;
+  					this.processingComplete();
   				} else if(subscriptionData.orderStatus === 'declined') {
+						finishFlag = true;
   					this.setError('External Payment failed', 'Payment declined', 'creatExternalTransaction');
   				}
+
+					if(finishFlag){
+						this.showWidget = true;
+						this.widgetLink = undefined;
+						this.onIFramePay.emit(false);
+					}
   			},
   			error: (error) => {
   				console.error('External Payment notification error', error);
 
   				this.setError('External Payment', 'Payment declined', 'creatExternalTransaction');
+
+					this.showWidget = true;
+					this.widgetLink = undefined;
+					this.onIFramePay.emit(false);
   			}
   		});
   }
@@ -812,7 +823,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.paymentProviders = providers.map(val => val);
 
   	const nextStage = 4;
-
+		console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded)
   	if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
   		if(this.companyLevelVerificationFlag){
   			this.nextStage('company_level_verification', 'Verification', this.pager.step, true);
