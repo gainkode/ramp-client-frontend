@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
-import { KycProvider, PaymentInstrument, TransactionSource, TransactionType } from '../model/generated-models';
+import { KycProvider, PaymentInstrument, PaymentPreauthInput, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -527,6 +527,28 @@ mutation AbandonCryptoInvoice(
 }
 `;
 
+// const GET_CORIUNDER_TOKEN = gql`
+// query GetCoriunderWebAuthParams(
+//  $transactionId: String!
+//  $instrument: PaymentInstrument!
+//  $provider: String!
+//  $card: PaymentCard
+//  $transactionFullId: String
+// ) {
+//     getCoriunderWebAuthParams(
+//         params: {
+//           transactionId: $transactionId
+//           instrument: $instrument
+//           provider: $provider
+//           card: $card
+//         }
+//         transactionId: $transactionFullId
+//     ) {
+//       full_url
+//     }
+// }
+// `;
+
 @Injectable()
 export class PaymentDataService {
 	constructor(private apollo: Apollo) { }
@@ -676,6 +698,19 @@ export class PaymentDataService {
 			}
 		});
 	}
+
+  // getCoriunderWebAuthParams(params: PaymentPreauthInput): Observable<any> {
+	// 	return this.apollo.mutate({
+	// 		mutation: GET_CORIUNDER_TOKEN,
+	// 		variables: {
+  //       transactionId: params.transactionId,
+  //       instrument: params.instrument,
+  //       provider: params.provider,
+  //       card: params.card,
+  //       transactionFullId: params.transactionId
+	// 		}
+	// 	});
+	// }
 
 	preAuthCard(id: string, paymentInstrument: string, paymentProvider: string, card: CardView): Observable<any> {
 		return this.apollo.mutate({

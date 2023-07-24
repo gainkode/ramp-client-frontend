@@ -26,7 +26,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
 
     showSumsub = false;
     showShufti = false;
-	showAutentix = false;
+    showAutentix = false;
     token = '';
     url = '';
 
@@ -65,11 +65,10 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     		} else if (this.auth.user?.kycProvider === KycProvider.Shufti) {
     			this.showShufti = true;
     			this.url = data.generateWebApiToken;
-    		} 
-			// else if (this.auth.user?.kycProvider === KycProvider.Shufti) {
-    		// 	this.showAutentix = true;
-    		// 	this.url = data.generateWebApiToken;
-    		// }
+    		}  else if (this.auth.user?.kycProvider === KycProvider.Au10tix) {
+    			this.showAutentix = true;
+    			this.url = data.generateWebApiToken;
+    		}
     	}, (error) => {
     		this.onProgress.emit(false);
     		if (this.auth.token !== '') {

@@ -257,6 +257,44 @@ export type CheckOrCreateDestinationAddressResult = {
   destination?: Maybe<Scalars['String']['output']>;
 };
 
+export type CoriunderWebAuthParams = {
+  __typename?: 'CoriunderWebAuthParams';
+  PLID?: Maybe<Scalars['String']['output']>;
+  amount_options?: Maybe<Scalars['String']['output']>;
+  client_billAddress1?: Maybe<Scalars['String']['output']>;
+  client_billAddress2?: Maybe<Scalars['String']['output']>;
+  client_billCity?: Maybe<Scalars['String']['output']>;
+  client_billCountry?: Maybe<Scalars['String']['output']>;
+  client_billState?: Maybe<Scalars['String']['output']>;
+  client_billZipcode?: Maybe<Scalars['String']['output']>;
+  client_email?: Maybe<Scalars['String']['output']>;
+  client_fullName?: Maybe<Scalars['String']['output']>;
+  client_idNum?: Maybe<Scalars['String']['output']>;
+  client_phoneNum?: Maybe<Scalars['String']['output']>;
+  disp_lng?: Maybe<Scalars['String']['output']>;
+  disp_lngList?: Maybe<Scalars['String']['output']>;
+  disp_mobile?: Maybe<Scalars['String']['output']>;
+  disp_payFor?: Maybe<Scalars['String']['output']>;
+  disp_paymentType?: Maybe<Scalars['String']['output']>;
+  disp_recurring?: Maybe<Scalars['Int']['output']>;
+  hashtype?: Maybe<Scalars['Int']['output']>;
+  merchantID?: Maybe<Scalars['String']['output']>;
+  notification_url?: Maybe<Scalars['String']['output']>;
+  show_edit?: Maybe<Scalars['String']['output']>;
+  show_marketing?: Maybe<Scalars['String']['output']>;
+  signature?: Maybe<Scalars['String']['output']>;
+  terms_url?: Maybe<Scalars['String']['output']>;
+  trans_amount?: Maybe<Scalars['Float']['output']>;
+  trans_comment?: Maybe<Scalars['String']['output']>;
+  trans_currency?: Maybe<Scalars['String']['output']>;
+  trans_installments?: Maybe<Scalars['Float']['output']>;
+  trans_refNum?: Maybe<Scalars['String']['output']>;
+  trans_storePm?: Maybe<Scalars['Float']['output']>;
+  trans_type?: Maybe<Scalars['Int']['output']>;
+  ui_version?: Maybe<Scalars['Int']['output']>;
+  url_redirect?: Maybe<Scalars['String']['output']>;
+};
+
 export enum CountryCodeType {
   Code2 = 'code2',
   Code3 = 'code3'
@@ -591,6 +629,15 @@ export enum Gender {
   O = 'O'
 }
 
+export type GetCoriunderWebAuthResult = {
+  __typename?: 'GetCoriunderWebAuthResult';
+  full_url?: Maybe<Scalars['String']['output']>;
+  params?: Maybe<CoriunderWebAuthParams>;
+  paramsString?: Maybe<Scalars['String']['output']>;
+  signature?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
 export type GetRates = {
   __typename?: 'GetRates';
   currenciesFrom?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -710,6 +757,7 @@ export type KycInfoField = {
 };
 
 export enum KycProvider {
+  Au10tix = 'Au10tix',
   Local = 'Local',
   Shufti = 'Shufti',
   SumSub = 'SumSub'
@@ -2029,7 +2077,7 @@ export type Query = {
   checkOrCreateDestinationAddress?: Maybe<CheckOrCreateDestinationAddressResult>;
   /** Check or create source vault address */
   checkOrCreateSourceVaultAddress?: Maybe<Scalars['String']['output']>;
-  /** API token generation */
+  /** KYC widget API token generation */
   generateWebApiToken: Scalars['String']['output'];
   /** Get API keys */
   getApiKeys?: Maybe<ApiKeyListResult>;
@@ -3369,6 +3417,7 @@ export type StringMapInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  externalPaymentCompletedNotification?: Maybe<Scalars['Void']['output']>;
   kycCompletedNotification?: Maybe<Scalars['Void']['output']>;
   kycServiceNotification?: Maybe<Scalars['Void']['output']>;
   newNotification?: Maybe<Scalars['Void']['output']>;
@@ -4484,9 +4533,10 @@ export enum UserRoleObjectCode {
   Risks = 'RISKS',
   RollingReserves = 'ROLLING_RESERVES',
   Settings = 'SETTINGS',
-  ShowEmail = 'SHOW_EMAIL',
   SystemUsers = 'SYSTEM_USERS',
   Transactions = 'TRANSACTIONS',
+  UsersEmails = 'USERS_EMAILS',
+  UsersPhones = 'USERS_PHONES',
   Wallets = 'WALLETS'
 }
 

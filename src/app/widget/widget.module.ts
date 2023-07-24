@@ -52,6 +52,7 @@ import {
 	WidgetProcessingInstantpayComponent,
 	WidgetCompleteComponent,
 	WidgetErrorComponent,
+	WidgetIframeComponent,
 } from './panels';
 
 import { 
@@ -106,6 +107,7 @@ export class MaterialModule {}
 		QRCodeModule,
 	],
 	declarations: [
+		WidgetIframeComponent,
 		WidgetComponent,
 		ReceiveWidgetComponent,
 		SendWidgetComponent,
@@ -157,7 +159,7 @@ export class MaterialModule {}
 		CryptoWidgetComponent,
 		CryptoWizardComponent,
 		WidgetWizardComponent,
-		CompanyLevelVerificationComponent,
+		CompanyLevelVerificationComponent
 	],
 	providers: [],
 })

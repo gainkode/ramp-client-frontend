@@ -280,6 +280,8 @@ export class UserItem {
 						this.kycReviewResult = kycReviewResultData.reviewAnswer ?? '';
 					} else if (this.kycProvider === KycProvider.Shufti) {
 						this.kycReviewResult = kycReviewResultData.event ?? '';
+					} else if (this.kycProvider === KycProvider.Au10tix) {
+						this.kycReviewResult = kycReviewResultData.event ?? '';
 					}
 				}
 			}

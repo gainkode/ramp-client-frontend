@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
+import { tierSortHandler } from 'utils/profile.utils';
 
 @Component({
 	selector: 'app-widget-kyc',
@@ -19,7 +20,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   @Input() completedWhenVerified = false;
   @Input() allowToPayIfKycFailed = false;
   @Input() summary: CheckoutSummary | undefined = undefined;
-  @Input() shuftiSubscribeResult: boolean | undefined = undefined;
+  @Input() kycSubscribeResult: boolean | undefined = undefined;
   @Input() widgetId: string | undefined = undefined;
   @Output() onError = new EventEmitter<string>();
   @Output() onReject = new EventEmitter();
@@ -56,13 +57,15 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   	this.pSubscriptions.unsubscribe();
   }
   ngOnChanges(): void {
-  	if(this.shuftiSubscribeResult == false){
+  	if(!this.kycSubscribeResult){
   		this.handleReject();
-  	}else if(this.shuftiSubscribeResult == true){
+  	} else if(this.kycSubscribeResult){
   		this.onNext.emit();
   	}
-  	this.shuftiSubscribeResult = undefined;
+
+  	this.kycSubscribeResult = undefined;
   }
+  
   handleReject(): void {
   	this.rejectKyc = true;
   }
@@ -128,6 +131,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   			const amount = this.summary?.amountFrom ?? 0;
   			const limit = this.summary?.quoteLimit ?? 0;
   			const overLimit = amount - limit;
+		
   			const tiersData$ = this.dataService.getAppropriateSettingsKycTiers(
   				overLimit,
   				currency,
@@ -139,29 +143,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   					const tiers = data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult;
   					if ((tiers.count ?? 0 > 0) && tiers.list) {
   						const rawTiers = [...tiers.list];
-  						const sortedTiers = rawTiers.sort((a, b) => {
-  							const aa = a.amount ?? 0;
-  							const ba = b.amount ?? 0;
-  							if ((a.amount === undefined || a.amount === null) && b.amount) {
-  								return 1;
-  							}
-  							if (a.amount && (b.amount === undefined || b.amount === null)) {
-  								return -1;
-  							}
-  							if (!a.amount && b.amount) {
-  								return 1;
-  							}
-  							if (a.amount && !b.amount) {
-  								return -1;
-  							}
-  							if (aa > ba) {
-  								return 1;
-  							}
-  							if (aa < ba) {
-  								return -1;
-  							}
-  							return 0;
-  						});
+  						const sortedTiers = rawTiers.sort((a, b) => tierSortHandler(a, b));
   						this.flow = sortedTiers[0].originalLevelName ?? '';
   					}
   					if (this.flow === '') {

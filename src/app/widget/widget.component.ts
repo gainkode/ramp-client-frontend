@@ -6,7 +6,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { finalize, take } from 'rxjs/operators';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { NotificationService } from 'services/notification.service';
@@ -32,13 +32,12 @@ export class WidgetComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';
   @Input() quickCheckout = false;
   @Input() settings: WidgetSettings | undefined = undefined;
-  @Input() shuftiSubscribeResult: boolean | undefined = undefined;
   @Input() set internal(val: boolean) {
   	this.internalPayment = val;
   }
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
-  @Output() onIFramePay = new EventEmitter<Boolean>();
+  @Output() onIFramePay = new EventEmitter<boolean>();
 
   @ViewChild('recaptcha') private recaptchaModalContent;
 
@@ -82,23 +81,18 @@ export class WidgetComponent implements OnInit, OnDestroy {
   paymentComplete = false;
   notificationStarted = false;
   recentTransactions = false;
-  introDisclaimerBack = false;
   logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
   logoAlt = EnvService.product;
   disclaimerTextData = disclaimerDataDefault;
   completeTextData = completeDataDefault;
   transactionIdConfirmationCode = '';
-
+  kycSubscribeResult: boolean | undefined = undefined;
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
-  private shuftiNotificationsSubscription: Subscription | undefined = undefined;
-
+  private externalKycProvideNotificationsSubscription: Subscription | undefined = undefined;
+  private externalPaymentNotificationsSubscription: Subscription | undefined = undefined;
   get showTransactionsLink(): boolean {
-  	const user = this.auth.user;
-  	if (user && this.auth.authenticated) {
-  		return true;
-  	}
-  	return false;
+  	return this.auth.user && this.auth.authenticated;
   }
 
   constructor(
@@ -116,7 +110,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	private profileService: ProfileDataService,
   	private errorHandler: ErrorService) { }
 
-  private shuftiSubscriptionFlag = false;
+  private externalKycSubscriptionFlag = false;
   private companyLevelVerificationFlag = false;
 
   	ngOnInit(): void {
@@ -138,25 +132,12 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	);
   	this.initMessage = 'Loading...';
 
-  	// this.summary.orderId = 'ID1351816';
-  	// this.selectedWireTransfer.id = WireTransferPaymentCategory.EU;
-  	// this.selectedWireTransfer.title = 'Title';
-  	// const dataObject = {
-  	//   bankAddress: 'A5-3 Room, Floor 23, 8 Canada Square, London, England, UK, E14 5HQ',
-  	//   bankName: 'HSBC',
-  	//   beneficiaryAddress: 'Apartment 8, Rue Paul Janson 50, 6150 Anderlues, Belgium',
-  	//   beneficiaryName: 'Mister John Doe',
-  	//   iban: 'EG810025025800000258946648241',
-  	//   swiftBic: 'HSBCTRI2516'
-  	// };
-  	// this.selectedWireTransfer.data = JSON.stringify(dataObject);
-  	// this.pager.init('wire_transfer_result', 'Initialization');
   	this.loadAccountData();
   	this.pager.init('initialization', 'Initialization');
   	this.loadCustomData();
 		
-  	if(!this.shuftiSubscriptionFlag){
-  		this.startShuftiNotificationListener();
+  	if(!this.externalKycSubscriptionFlag){
+  		this.startExternalKycProvideListener();
   	} 
   }
 
@@ -188,11 +169,15 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.pSubscriptions.unsubscribe();
   	this.stopNotificationListener();
     
-  	if(this.shuftiNotificationsSubscription){
-  		this.shuftiNotificationsSubscription.unsubscribe();
+  	if(this.externalKycProvideNotificationsSubscription){
+  		this.externalKycProvideNotificationsSubscription.unsubscribe();
+  	}
+
+  	if (this.externalPaymentNotificationsSubscription) {
+  		this.externalPaymentNotificationsSubscription.unsubscribe();
   	}
     
-  	this.shuftiSubscriptionFlag = false;
+  	this.externalKycSubscriptionFlag = false;
   	this.exhangeRate.stop();
   }
 
@@ -297,10 +282,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			this.widget.disclaimer = false;
   			this.widget.kycFirst = false;
   			this.widget.email = '';
-  			// temp
-  			//this.widget.kycFirst = true;
-  			//this.widget.email = 'tugaymv@gmail.com';
-  			//this.widget.disclaimer = true;
   			this.widget.transaction = TransactionType.Buy;
   			//temp
   			this.widget.source = TransactionSource.QuickCheckout;
@@ -349,48 +330,87 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   private startNotificationListener(): void {
   	this.notificationStarted = true;
-  	this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications().subscribe(
-  		({ data }) => {
-  			this.handleTransactionSubscription(data);
-  		},
-  		(error) => {
-  			this.notificationStarted = false;
-  			// there was an error subscribing to notifications
-  			if (!environment.production) {
-  				console.error('Notifications error', error);
+  	this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications()
+  		.subscribe({
+  			next: ({ data }) => this.handleTransactionSubscription(data),
+  			error: (error) => {
+  				this.notificationStarted = false;
+  				// there was an error subscribing to notifications
+  				if (!environment.production) {
+  					console.error('Notifications error', error);
+  				}
   			}
   		}
   	);
   }
 
-  private startShuftiNotificationListener(): void {
-  	if(this.auth.user && this.auth.user?.kycProvider == KycProvider.Shufti){
-  		console.log('Shufti completed notifications subscribed');
-  		this.shuftiSubscriptionFlag = true;
-  		this.shuftiNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications().subscribe(
-  			({ data }) => {
-  				const subscriptionData = data.kycCompletedNotification;
-  				console.log('Shufti completed', subscriptionData);
-  				if(subscriptionData.kycStatus == 'completed'){
-  					if (subscriptionData.kycValid === true) {
-  						this.shuftiSubscribeResult = true;
-  					}else{
-  						console.log('Shufti rejected');
-  						this.shuftiSubscribeResult = false;
+  private startExternalKycProvideListener(): void {
+  	const isExternalProvider = this.auth.user?.kycProvider === KycProvider.Shufti || this.auth.user?.kycProvider === KycProvider.Au10tix; 
+  	
+  	if(this.auth.user && isExternalProvider){
+  		console.log('Kyc completed notifications subscribed');
+  		this.externalKycSubscriptionFlag = true;
+  		this.externalKycProvideNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications()
+  			.subscribe(
+  				{
+  					next: ({ data }) => {
+  						const  subscriptionData= data.kycCompletedNotification;
+  						console.log('KYC completed', subscriptionData);
+	
+  						if(subscriptionData.kycStatus === 'completed'){
+  							if (subscriptionData.kycValid) {
+  								this.kycSubscribeResult = true;
+  							} else {
+  								console.log('KYC rejected');
+  								this.kycSubscribeResult = false;
+  							}
+  						}
+  						this.loadAccountData();
+  					},
+  					error: (error) => {
+  						this.externalKycSubscriptionFlag = false;
+  						console.error('KYC complete notification error', error);
   					}
-  				}
-  				this.loadAccountData();
-  			},
-  			(error) => {
-  				this.shuftiSubscriptionFlag = false;
-  				console.error('KYC complete notification error', error);
-  			}
-  		);
+  				});
   	}
-  	// }
   }
 
-  private stopNotificationListener(): void {
+  private startExternalPaymentNotificationListener(): void {
+  	this.externalPaymentNotificationsSubscription = this.notification.subscribeToExternalPaymentCompleteNotifications()
+  		.subscribe({
+  			next: ({ data }) => {
+  				const subscriptionData = data.externalPaymentCompletedNotification;
+					let finishFlag = false;
+  				console.log('External Payment completed', subscriptionData);
+				
+  				if(subscriptionData.orderStatus === 'completed'){
+						finishFlag = true;
+  					this.processingComplete();
+  				} else if(subscriptionData.orderStatus === 'declined') {
+						finishFlag = true;
+  					this.setError('External Payment failed', 'Payment declined', 'creatExternalTransaction');
+  				}
+
+					if(finishFlag){
+						this.showWidget = true;
+						this.widgetLink = undefined;
+						this.onIFramePay.emit(false);
+					}
+  			},
+  			error: (error) => {
+  				console.error('External Payment notification error', error);
+
+  				this.setError('External Payment', 'Payment declined', 'creatExternalTransaction');
+
+					this.showWidget = true;
+					this.widgetLink = undefined;
+					this.onIFramePay.emit(false);
+  			}
+  		});
+  }
+
+
+  private stopNotificationListener(): void { 
   	if (this.pNotificationsSubscription) {
   		this.pNotificationsSubscription.unsubscribe();
   	}
@@ -465,7 +485,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
     
   }
 
-  capchaResult(event): void{
+  capchaResult(event): void {
   	this.recaptchaDialog?.close();
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
@@ -473,6 +493,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   handleError(message: string): void {
   	this.setError('Transaction failed', message, 'handleError');
   }
+
   handleReject(): void {
   	console.log(this.widget.kycFirst, this.widget.allowToPayIfKycFailed, this.paymentProviders);
   	this.loadAccountData();
@@ -490,6 +511,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		}
   	}
   }
+  
   handleAuthError(): void {
   	if (this.widget.embedded) {
   		void this.router.navigateByUrl('/');
@@ -516,7 +538,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.mobileSummary = false;
   }
 
-  private stageBack(): void {
+  stageBack(): void {
   	this.inProgress = false;
   	const stage = this.pager.goBack();
   	if (stage) {
@@ -542,18 +564,22 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	const widgetData = this.commonService.getCustomText().valueChanges.pipe(take(1));
   	this.inProgress = true;
   	this.pSubscriptions.add(
-  		widgetData.subscribe(({ data }) => {
-  			this.inProgress = false;
-  			if (data.getTextPages) {
-  				const pagesData = data.getTextPages as TextPage[];
-  				this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
-  				this.completeTextData = pagesData.filter(x => x.page === 2).map(x => x.text ?? '').filter(x => x !== '');
-  			}
-  			this.initPage();
-  		}, (error) => {
-  			this.inProgress = false;
-  			this.initPage();
-  		})
+  		widgetData.subscribe(
+  			{
+  				next: ({ data }) => {
+  					this.inProgress = false;
+  					if (data.getTextPages) {
+  						const pagesData = data.getTextPages as TextPage[];
+  						this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
+  						this.completeTextData = pagesData.filter(x => x.page === 2).map(x => x.text ?? '').filter(x => x !== '');
+  					}
+  					this.initPage();
+  				},
+  				error: () => {
+  					this.inProgress = false;
+  					this.initPage();
+  				}
+  			})
   	);
   }
 
@@ -562,42 +588,45 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	const widgetData = this.dataService.getWidget(this.userParamsId).valueChanges.pipe(take(1));
   	this.inProgress = true;
   	this.pSubscriptions.add(
-  		widgetData.subscribe(({ data }) => {
-  			this.inProgress = false;
-  			this.initData(data.getWidget as Widget);
-  			let validTransactionType = true;
-  			if (this.widget.transaction) {
+  		widgetData.subscribe({
+  			next: ({ data }) => {
+  				this.inProgress = false;
+  				this.initData(data.getWidget as Widget);
+	   
+  				if (!this.widget.transaction) {
+  					this.showTransactionError('Wrong widget settings', 'Missing transaction type', false);
+  					return;
+  				}
+	  
   				const transactionType = this.widget.transaction.toLowerCase();
-  				validTransactionType = (transactionType === TransactionType.Buy.toLowerCase() || transactionType === TransactionType.Sell.toLowerCase());
-  			}
-  			if (validTransactionType) {
-  				if (this.widget.orderDefault) {
-  					if (this.auth.user?.email !== this.widget.email) {
-  						this.summary.email = '';
-  					}
-  					this.orderDetailsComplete(this.widget.email);
-  				} else {
-  					if (this.quickCheckout || this.summary.agreementChecked) {
-  						this.pager.init('order_details', 'Order details');
+  				const validTransactionType = ['buy', 'sell'].includes(transactionType);
+	  
+  				if (validTransactionType) {
+  					if (this.widget.orderDefault) {
+  						if (this.auth.user?.email !== this.widget.email) {
+  							this.summary.email = '';
+  						}
+  						this.orderDetailsComplete(this.widget.email);
   					} else {
-  						this.pager.init('intro_disclaimer', 'Disclaimer');
+  						const isOrderDetails = this.quickCheckout || this.summary.agreementChecked;
+  						this.pager.init(
+  							isOrderDetails ? 'order_details' : 'intro_disclaimer',
+  							isOrderDetails ?  'Order details' : 'Disclaimer'
+  						);
   					}
   				}
-  			} else {
+  			}, 
+  			error: () => {
+  				this.inProgress = false;
+  				this.initData(undefined);
   				this.showTransactionError(
   					'Wrong widget settings',
-  					`Incorrect transaction type: ${this.widget.transaction}`,
+  					`Cannot load the widget`,
   					false);
+  				this.pager.init('order_details', 'Order details');
   			}
-  		}, (error) => {
-  			this.inProgress = false;
-  			this.initData(undefined);
-  			this.showTransactionError(
-  				'Wrong widget settings',
-  				`Cannot load the widget`,
-  				false);
-  			this.pager.init('order_details', 'Order details');
-  		})
+  		}
+  		)
   	);
   }
 
@@ -689,14 +718,9 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   orderDetailsComplete(email: string): void {
   	if (this.summary.email === email) {
-  		// if (this.summary.agreementChecked) {
-  		//   this.desclaimerNext();
-  		// } else {
-  		//   this.nextStage('disclaimer', 'Disclaimer', 2, false);
-  		// }
   		if(this.auth.user){
   			this.disclaimerNext();
-  		}else{
+  		} else {
   			this.summary.transactionId = '';
   			this.summary.fee = 0;
   			this.summary.email = email;
@@ -723,10 +747,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   // =======================
 
   // == Disclaimer =========
-  disclaimerBack(): void {
-  	this.stageBack();
-  }
-
   disclaimerNext(): void {
   	this.summary.agreementChecked = true;
   	if (this.summary.transactionType === TransactionType.Sell) {
@@ -776,7 +796,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	if (level !== '') {
   		this.overLimitLevel = level;
   	}
-  	this.requestKyc = state;// || this.summary.quoteLimit !== 0;
+  	this.requestKyc = state;
   }
 
   private sellSettingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
@@ -803,7 +823,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.paymentProviders = providers.map(val => val);
 
   	const nextStage = 4;
-
+		console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded)
   	if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
   		if(this.companyLevelVerificationFlag){
   			this.nextStage('company_level_verification', 'Verification', this.pager.step, true);
@@ -834,9 +854,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   // =====================
 
   // == Payment info ==
-  paymentBack(): void {
-  	this.stageBack();
-  }
 
   selectProvider(provider: PaymentProviderInstrumentView): void {
   	if(this.summary.transactionType === TransactionType.Buy){
@@ -923,10 +940,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.nextStage('register', 'Authorization', 3, true);
   }
 
-  registerBack(): void {
-  	this.stageBack();
-  }
-
   onLoginRequired(email: string): void {
   	if (this.widget.embedded) {
   		void this.router.navigateByUrl('/');
@@ -959,10 +972,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.checkLoginResult(data);
   }
 
-  loginBack(): void {
-  	this.stageBack();
-  }
-
   transactionConfiramtionComplete(order: TransactionShort): void {
   	this.summary.orderId = order.code as string;
   	this.summary.fee = order.feeFiat as number ?? 0;
@@ -977,42 +986,17 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.startPayment();
   	}
   }
-  // ====================
 
-  // == Identification ==
-  identificationComplete(data: LoginResult): void {
-  	this.auth.setLoginUser(data);
-  	this.summary.email = data.user?.email ?? '';
-  	this.widgetService.getSettingsCommon(this.summary, this.widget, false);
-  }
-
-  identificationBack(): void {
-  	this.stageBack();
-  }
   // ====================
 
   // == KYC =============
-  kycBack(): void {
-  	this.stageBack();
-  }
 
   kycComplete(): void {
   	if (this.widget.kycFirst) {
   		this.loadAccountData();
   		console.log('KYC COMPLETE');
   		this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
-  		this.shuftiSubscribeResult = undefined;
-  		// if (this.paymentProviders.length < 1) {
-  		//   this.setError(
-  		//     'No payment providers',
-  		//     `No supported payment providers found for "${this.summary.currencyFrom}"`,
-  		//     'kycComplete');
-  		// } else if (this.paymentProviders.length > 1) {
-  		//   this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
-  		//   // this.nextStage('payment', 'Payment info', 5, true);
-  		// } else {  
-  		//   this.selectProvider(this.paymentProviders[0]);
-  		// }
+  		this.kycSubscribeResult = undefined;
   	} else {
   		this.nextStage('complete', 'Complete', 6, false);
   	}
@@ -1026,12 +1010,11 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	}
   	if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
   		this.auth.setLoginUser(data);
-  		if(this.shuftiNotificationsSubscription){
-  			this.shuftiNotificationsSubscription.unsubscribe();
-  			this.shuftiSubscriptionFlag = false;
+  		if(this.externalKycProvideNotificationsSubscription){
+  			this.externalKycProvideNotificationsSubscription.unsubscribe();
+  			this.externalKycSubscriptionFlag = false;
   		}
-
-  		this.startShuftiNotificationListener();
+  		this.startExternalKycProvideListener();
 
   		if (this.summary.agreementChecked) {
   			if (this.summary.transactionId === '') {
@@ -1061,7 +1044,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.initMessage = 'Processing...';
   	if (this.summary) {
   		const destination = this.summary.address;
-  		if(providerId === 'GetCoinsPayment'){
+  		if(providerId === 'GetCoinsPayment' || providerId === 'Coriunder'){
   			this.pSubscriptions.add(
   				this.dataService.createTransactionWithWidgetUserParams(
   					this.summary.transactionType,
@@ -1080,8 +1063,11 @@ export class WidgetComponent implements OnInit, OnDestroy {
   				).subscribe(({ data }) => {
   					this.showWidget = false;
   					this.inProgress = false;
-  					this.widgetLink = data.createTransactionWithWidgetUserParams;
   					this.onIFramePay.emit(true);
+  					this.widgetLink = data.createTransactionWithWidgetUserParams;
+  					if (this.widgetLink) {
+  						this.startExternalPaymentNotificationListener();
+  					}
   				}, (error) => {
   					this.inProgress = false;
   					if (tempStageId === 'verification') {
@@ -1089,6 +1075,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					} else {
   						this.pager.swapStage(tempStageId);
   					}
+
   					if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
   						this.handleAuthError();
   					} else {
@@ -1106,7 +1093,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					}
   				})
   			);
-  		}else{  
+  		} else {  
   			this.pSubscriptions.add(
   				this.dataService.createTransaction(
   					this.summary.transactionType,
@@ -1137,6 +1124,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   						this.summary.networkFee = order.approxNetworkFee ?? 0;
   						this.summary.transactionDate = new Date().toLocaleString();
   						this.summary.transactionId = order.transactionId as string;
+
   						if (instrument === PaymentInstrument.WireTransfer) {
   							this.nextStage('wire_transfer_result', 'Payment', 5, false);
   						} else {
@@ -1149,26 +1137,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
   								errorMessage: this.errorMessage
   							} as PaymentErrorDetails);
   						} else {
-  							//   if (this.widget.orderDefault) {
-  							//     this.setError('Transaction failed', 'Order code is invalid', 'createBuyTransaction order');
-  							//   } else {
-  							//     if (tempStageId === 'verification') {
-  							//       this.pager.goBack();
-  							//     } else {
-  							//       if(order.transactionId && order.transactionId != ''){
-  							//         this.summary.instrument = instrument;
-  							//         this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
-  							//         this.transactionIdConfirmationCode = order.transactionId;
-  							//         this.nextStage('code_auth', 'Authorization', 3, true);
-  							//       }else{
-  							//         this.pager.swapStage(tempStageId);
-  							//       }
-  							//     }
-  							//   }
   							if (tempStageId === 'verification') {
   								this.pager.goBack();
   							} else {
-  								if(order.transactionId && order.transactionId != ''){
+  								if(order.transactionId && order.transactionId){
   									this.summary.instrument = instrument;
   									this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
   									this.transactionIdConfirmationCode = order.transactionId;
@@ -1245,7 +1217,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   							errorMessage: this.errorMessage
   						} as PaymentErrorDetails);
   					} else {
-  						if(order.transactionId && order.transactionId != ''){
+  						if(order.transactionId && order.transactionId){
   							this.transactionIdConfirmationCode = order.transactionId;
   							this.nextStage('code_auth', 'Authorization', 3, true);
   						}else{
@@ -1273,7 +1245,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		);
   	}
   }
-
+ 
   private startPayment(): void {
   	if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {
   		this.nextStage('credit_card', 'Payment info', this.pager.step, true);
@@ -1373,8 +1345,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   				this.auth.setUser(data.me as User);
   				this.auth.notifyUserUpdated();
   			}
-  		}, (error) => {
-
   		})
   	);
   }

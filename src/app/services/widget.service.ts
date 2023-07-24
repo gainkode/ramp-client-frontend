@@ -102,7 +102,7 @@ export class WidgetService {
 		// let recaptcha = localStorage.getItem('recaptchaId');
 		// if(recaptcha){
 		// 	this.authenticateInternal(login, widgetId);
-		// }else{
+		// } else {
 		// 	if(this.onRecaptchaCallback){
 		// 		this.onRecaptchaCallback();
 		// 	}
@@ -313,20 +313,21 @@ export class WidgetService {
 	private getTiers(summary: CheckoutSummary, widget: WidgetSettings): void {
 		const currency = summary.currencyFrom ?? 'EUR';
 		const amount = summary.amountFrom ?? 0;
-		const limit = summary.quoteLimit ?? 0;
-		const overLimit = amount - limit;
+		
 		const tiersData$ = this.paymentService.getAppropriateSettingsKycTiers(
 			amount,
 			currency,
 			TransactionSource.Widget,
 			this.auth.user?.kycProvider as KycProvider ?? KycProvider.SumSub,
 			widget.widgetId).valueChanges.pipe(take(1));
+
 		this.pSubscriptions.add(
 			tiersData$.subscribe(({ data }) => {
-				const currentTierId = this.auth.user?.kycValid != true ? '-' : this.auth.user?.kycTierId ?? '';
+				const currentTierId = this.auth.user?.kycValid !== true ? '-' : this.auth.user?.kycTierId ?? '';
 				const tierData = getCurrentTierLevelName(
 					currentTierId, 
-					data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult, this.auth.user);
+					data.getAppropriateSettingsKycTiers as SettingsKycTierShortExListResult,
+					this.auth.user);
 				this.getKycStatus(summary, widget, tierData);
 			}, (error) => {
 				if (this.onProgressChanged) {
@@ -434,14 +435,7 @@ export class WidgetService {
 		const dataList = list
 			.filter(x => x.provider?.currencies?.includes(currency, 0) || x.provider?.currencies?.length == 0 || x.instrument === PaymentInstrument.WireTransfer)
 			.map(val => new PaymentProviderInstrumentView(val));
-		// if (!dataList.find(x => x.instrument === PaymentInstrument.WireTransfer)) {
-		//     dataList.push(new PaymentProviderInstrumentView({
-		//         instrument: PaymentInstrument.WireTransfer,
-		//         provider: {
-		//             name: 'WireTransferPayment'
-		//         }
-		//     }));
-		// }
+
 		return dataList;
 	}
 

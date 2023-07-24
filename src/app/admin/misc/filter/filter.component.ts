@@ -90,15 +90,16 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   		this.widgetNamesSearch();
   	}
 
-		this.fields = this.fields.filter(item => {
-			if(item == 'user' || item == 'users'){
-				if(!this.auth.isPermittedObjectCode(UserRoleObjectCode.ShowEmail)){
-					item = undefined;
-				}
-			}
-			return item;
-		})
-		console.log(this.fields)
+  	// UserRoleObjectCode doesn't contain ShowEmail
+  	// this.fields = this.fields.filter(item => {
+  	// 	if(item == 'user' || item == 'users'){
+  	// 		if(!this.auth.isPermittedObjectCode(UserRoleObjectCode.ShowEmail)){
+  	// 			item = undefined;
+  	// 		}
+  	// 	}
+  	// 	return item;
+  	// })
+  	// console.log(this.fields)
   }
 
   ngOnDestroy(): void {
