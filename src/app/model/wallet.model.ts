@@ -82,7 +82,7 @@ export class WalletItem {
 	}
 
 	get nameValue(): string {
-		const limit = 15;
+		const limit = 13;
 		return (this.name.length > limit) ? `${this.name.substr(0, limit)}...` : this.name;
 	}
 
