@@ -53,7 +53,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     extraData = false;
     done = false;
     done2Fa = false;
-    recaptcha = '';//undefined;
+    recaptcha = undefined;
     private socialLogin = false;
     private userMail = '';
     private subscriptions: Subscription = new Subscription();

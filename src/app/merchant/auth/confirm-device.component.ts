@@ -28,18 +28,18 @@ export class MerchantConfirmDeviceComponent implements OnDestroy, AfterViewInit 
     	private errorHandler: ErrorService,
     	public activeRoute: ActivatedRoute,
     	public router: Router) {
-				this.token = this.activeRoute.snapshot.params['token'];
-				if (this.token !== undefined) {
-					this.subscriptions.add(
-						this.auth.confirmDevice(this.token).subscribe(({ data }) => {
-							this.validated = true;
-							this.valid = true;
-						}, (error) => {
-							this.validated = true;
-							this.errorMessage = this.errorHandler.getError(error.message, 'Unable to validate device');
-						})
-					);
-				}
+				// this.token = this.activeRoute.snapshot.params['token'];
+				// if (this.token !== undefined) {
+				// 	this.subscriptions.add(
+				// 		this.auth.confirmDevice(this.token).subscribe(({ data }) => {
+				// 			this.validated = true;
+				// 			this.valid = true;
+				// 		}, (error) => {
+				// 			this.validated = true;
+				// 			this.errorMessage = this.errorHandler.getError(error.message, 'Unable to validate device');
+				// 		})
+				// 	);
+				// }
 			}
 
     capchaResult(event): void {
@@ -60,10 +60,10 @@ export class MerchantConfirmDeviceComponent implements OnDestroy, AfterViewInit 
     }
 
     ngAfterViewInit(): void {
-    	// this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
-    	// 	backdrop: 'static',
-    	// 	windowClass: 'modalCusSty',
-    	// });
+    	this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
+    		backdrop: 'static',
+    		windowClass: 'modalCusSty',
+    	});
     }
 
     ngOnDestroy(): void {
