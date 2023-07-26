@@ -65,6 +65,62 @@ const LOGIN = gql`
     }
 `;
 
+const LOGIN_WIDGET = gql`
+  mutation LoginWidget($email: String!, $password: String, $widgetId: String) {
+      loginWidget(
+          email: $email,
+          password: $password,
+          widgetId: $widgetId) {
+              authToken
+              user {
+                  userId
+                  email
+                  roles {name, immutable}
+                  permissions { roleName, objectCode, objectName, objectDescription, fullAccess }
+                  type,
+                  defaultFiatCurrency,
+                  firstName,
+                  lastName,
+                  birthday,
+                  countryCode2,
+                  countryCode3,
+                  phone,
+                  postCode,
+                  town,
+                  street,
+                  subStreet,
+                  stateName,
+                  buildingName,
+                  buildingNumber,
+                  flatNumber,
+                  addressStartDate,
+                  addressEndDate,
+                  mode,
+                  is2faEnabled,
+                  changePasswordRequired,
+                  referralCode,
+                  kycProvider,
+                  kycApplicantId,
+                  kycValid,
+                  kycStatus,
+                  kycStatusUpdateRequired,
+                  kycReviewRejectedType,
+                  kycTierId,
+                  kycTier {
+                      name
+                      description
+                      amount
+                  }
+                  defaultFiatCurrency,
+                  defaultCryptoCurrency,
+                  avatar,
+                  companyName
+            }
+            authTokenAction
+        }
+    }
+`;
+
 const REFRESH_TOKEN = gql`
   mutation RefreshToken { refreshToken }
 `;
@@ -556,6 +612,24 @@ export class AuthService {
 			localStorage.removeItem('recaptchaId');
 			return this.apollo.mutate({
 				mutation: LOGIN,
+				variables: vars
+			});
+		} else {
+			throw 'Cookie consent is rejected. Allow cookie in order to have access';
+		}
+	}
+
+	authenticateWidget(ignoreCookies: boolean, username: string, userpassword: string, noPassword: boolean, widgetId: string | undefined = undefined): Observable<any> {
+		const w = window as any;
+		const consentStatus = w.cookieconsent.utils.getCookie(this.cookieName);
+		if (consentStatus || ignoreCookies) {
+			const vars = {
+				email: username,
+				password: noPassword ? undefined : userpassword,
+				widgetId
+			};
+			return this.apollo.mutate({
+				mutation: LOGIN_WIDGET,
 				variables: vars
 			});
 		} else {

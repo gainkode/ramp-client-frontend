@@ -134,7 +134,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.userInfoRequired.bind(this),
   		this.companyLevelVerification.bind(this),
   		this.sellSettingsCommonComplete.bind(this),
-  		this.onRecaptchaCallback.bind(this)
+  		this.onRecaptchaCallback.bind(this),
+			this.quickCheckout
   	);
   	this.initMessage = 'Loading...';
 
