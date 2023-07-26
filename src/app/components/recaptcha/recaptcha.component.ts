@@ -1,24 +1,84 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	Output,
+	Inject,
+	AfterViewInit,
+	OnDestroy,
+	Renderer2,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EnvService } from 'services/env.service';
+import { DOCUMENT } from '@angular/common';
+import { TurnstileOptions } from './interfaces/turnstile-options';
+
+const CALLBACK_NAME = 'onloadTurnstileCallback';
+declare global {
+	interface Window {
+		onloadTurnstileCallback: () => void;
+		turnstile: {
+			render: (
+				idOrContainer: string | HTMLElement,
+				options: TurnstileOptions
+			) => string;
+			reset: (widgetIdOrContainer: string | HTMLElement) => void;
+			getResponse: (
+				widgetIdOrContainer: string | HTMLElement
+			) => string | undefined;
+			remove: (widgetIdOrContainer: string | HTMLElement) => void;
+		};
+	}
+}
 
 @Component({
 	selector: 'app-recaptcha',
 	templateUrl: 'recaptcha.component.html',
-	styleUrls: ['recaptcha.component.scss']
+	styleUrls: ['recaptcha.component.scss'],
 })
-export class RecaptchaComponent{
-    @Output() completed = new EventEmitter();
-    @Output() onReject = new EventEmitter();
-    @Output() onError = new EventEmitter<string>();
+export class RecaptchaComponent implements AfterViewInit, OnDestroy {
+  @Output() completed = new EventEmitter();
+  @Output() onReject = new EventEmitter();
+  @Output() onError = new EventEmitter<string>();
 
-    siteKey = EnvService.recaptchaSiteKey;
-    provider = EnvService.recaptchaProvider;
+  siteKey = EnvService.recaptchaSiteKey;
+  provider = EnvService.recaptchaProvider;
+  scriptTag = undefined;
 
-    constructor(public dialog: MatDialog) {}
+  constructor(
+  	@Inject(DOCUMENT) private document: Document,
+  	private renderer: Renderer2,
+  	public dialog: MatDialog
+  ) {}
 
-    capchaResult(event: string | null): void {
-    	localStorage.setItem('recaptchaId', event);
-    	this.completed.emit(event);
-    }
+  ngAfterViewInit(): void {
+  	const turnstileOptions: TurnstileOptions = {
+  		sitekey: this.siteKey,
+  		appearance: 'interaction-only',
+  		callback: (token: string) => this.capchaResult(token),
+  	};
+  	this.turnstileCaptchaRender(turnstileOptions);
+  	this.includeScript();
+  }
+  ngOnDestroy(): void {
+  	if (this.scriptTag) {
+  		// this.scriptTag.parentNode.removeChild(this.scriptTag);
+  		this.renderer.removeChild(this.document.head, this.scriptTag);
+  		this.scriptTag = undefined;
+  	}
+  }
+  turnstileCaptchaRender(turnstileOptions: TurnstileOptions): void {
+  	window[CALLBACK_NAME] = () => {
+  		window.turnstile.render('#recaptcha', turnstileOptions);
+  	};
+  }
+  includeScript(): void {
+  	const head = this.document.getElementsByTagName('head')[0];
+  	this.scriptTag = this.document.createElement('script');
+  	this.scriptTag.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=${CALLBACK_NAME}`;
+  	head.appendChild(this.scriptTag);
+  }
+  capchaResult(token: string): void {
+  	localStorage.setItem('recaptchaId', token);
+  	this.completed.emit(token);
+  }
 }

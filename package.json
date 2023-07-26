@@ -54,7 +54,6 @@
     "ngx-cookie-service": "^15.0.0",
     "ngx-mask": "14.2.4",
     "ngx-perfect-scrollbar": "10.1.1",
-    "ngx-turnstile": "^0.0.7",
     "popper.js": "^1.16.1",
     "rxjs": "7.8.0",
     "stream": "0.0.2",
