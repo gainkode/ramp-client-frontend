@@ -133,11 +133,12 @@ export class WidgetService {
 			}
 			this.pSubscriptions.add(
 				authenticateData$.subscribe(({ data }) => {
+					let dataLogin = data?.login ?? data?.loginWidget
 					if (this.onProgressChanged) {
 						this.onProgressChanged(false);
 					}
 					if (this.onLoginSuccess) {
-						this.onLoginSuccess(data.login as LoginResult);
+						this.onLoginSuccess(dataLogin as LoginResult);
 					}
 				}, (error) => {
 					if (this.onProgressChanged) {
