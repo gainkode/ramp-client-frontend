@@ -383,10 +383,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
 					let finishFlag = false;
   				console.log('External Payment completed', subscriptionData);
 				
-  				if(subscriptionData.orderStatus === 'completed'){
+  				if(subscriptionData.status === 'approved'){
 						finishFlag = true;
   					this.processingComplete();
-  				} else if(subscriptionData.orderStatus === 'declined') {
+  				} else if(subscriptionData.status === 'declined') {
 						finishFlag = true;
   					this.setError('External Payment failed', 'Payment declined', 'creatExternalTransaction');
   				}
