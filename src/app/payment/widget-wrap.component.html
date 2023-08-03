@@ -1,4 +1,8 @@
 <div class="__widget-frame-box">
-  <app-widget [ngStyle]="{'max-width': !widgetSize ? '100%' : ''}" class="widget-size-widget" [internal]="false" [userParamsId]="userParamsId" [quickCheckout]=true (onIFramePay)="iframePay()">
+  <app-widget 
+    [ngStyle]="{'max-width': !widgetSize ? '100%' : ''}" 
+    class="widget-size-widget" [internal]="false" 
+    [userParamsId]="userParamsId" [quickCheckout]=true 
+    (onIFramePay)="iframePay()">
   </app-widget>
 </div>

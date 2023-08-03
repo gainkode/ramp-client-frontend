@@ -1,0 +1,24 @@
+.widget-iframe {
+	height: 100vh;
+    max-height: 100vh;
+    width: 100%;
+    background: transparent;
+}
+
+.widget__wrapper { 
+    position: relative;
+    // width: 895px !important ;
+    // height: 590px !important ;
+    // justify-content: center;   
+}
+
+.widget__container {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    width: 376px !important;
+    height: 590px !important;
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+}

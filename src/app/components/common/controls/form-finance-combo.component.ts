@@ -5,7 +5,7 @@ import { CurrencyView } from 'model/payment.model';
 @Component({
 	selector: 'app-form-finance-combo',
 	templateUrl: 'form-finance-combo.component.html',
-	styleUrls: ['../../../../assets/text-control.scss'],
+	styleUrls: ['../../../../assets/text-control.scss', 'form-finance-combo.component.scss'],
 	viewProviders: [{
 		provide: ControlContainer,
 		useFactory: (controlContainer: ControlContainer) => controlContainer,

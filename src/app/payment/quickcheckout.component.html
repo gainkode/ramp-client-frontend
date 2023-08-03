@@ -1,6 +1,7 @@
 <div class="__widget-frame-box">
+ 
   <app-widget 
-    ngClass="widget-size-qc" 
+    ngClass="widget-size-qc"
     [ngStyle]="{'margin': '0 auto', 'letter-spacing': '.1em', 'min-width': !widgetSize ? '100%' : ''}" 
     [internal]="true" 
     [settings]="settings" 
@@ -8,6 +9,15 @@
     (onIFramePay)="iframePay($event)"
     [quickCheckout]=true>
   </app-widget>
+
+  <!-- <app-widget-embedded
+    [ngStyle]="{'margin': '0 auto', 'letter-spacing': '.1em', 'min-width': !widgetSize ? '100%' : ''}" 
+    [internal]="true" 
+    [settings]="settings" 
+    [userParamsId]="userParamsId" 
+    (onIFramePay)="iframePay($event)"
+    [quickCheckout]=true>
+  </app-widget-embedded> -->
 </div>
 
 <div *ngIf="!prodMode" style="grid-column: 3;grid-row: 1;padding: 12px;color: #1A68AD;height: 48px;z-index: 333;">

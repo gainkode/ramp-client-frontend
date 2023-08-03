@@ -10,7 +10,7 @@ import { CommonDialogBox } from './dialogs/common-box.dialog';
 @Component({
 	selector: 'app-contact-form',
 	templateUrl: 'contact-form.component.html',
-	styleUrls: ['../../assets/menu.scss', '../../assets/dialog.scss', '../../assets/text-control.scss']
+	styleUrls: ['../../assets/menu.scss', '../../assets/dialog.scss']
 })
 export class ContactFormComponent implements OnDestroy {
 	inProgress = false;

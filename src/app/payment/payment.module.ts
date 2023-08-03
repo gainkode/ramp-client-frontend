@@ -15,12 +15,12 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const routing = RouterModule.forChild([
 	{ path: 'quickcheckout', component: QuickCheckoutComponent },
-	{ path: 'quickcheckout/:userParamsId', component: QuickCheckoutComponent },
-	{ path: 'quickcheckout-express/:from/:to/:value', component: QuickCheckoutComponent },
-	{ path: 'widget/:userParamsId', component: WidgetWrapComponent },
-	{ path: 'crypto/:userParamsId', component: CryptoWidgetWrapComponent },
-	{ path: 'crypto-wizard', component: CryptoWidgetWizardComponent },
-	{ path: 'widget-wizard', component: NormalWidgetWizardComponent },
+	{ path: 'quickcheckout/:userParamsId', component: QuickCheckoutComponent }, // one time payment
+	{ path: 'quickcheckout-express/:from/:to/:value', component: QuickCheckoutComponent }, // ??
+	{ path: 'widget/:userParamsId', component: WidgetWrapComponent }, // external
+	{ path: 'crypto/:userParamsId', component: CryptoWidgetWrapComponent }, // ??
+	{ path: 'crypto-wizard', component: CryptoWidgetWizardComponent }, //internal
+	{ path: 'widget-wizard', component: NormalWidgetWizardComponent }, //internal
 	{ path: '**', redirectTo: 'quickcheckout' }
 ]);
 

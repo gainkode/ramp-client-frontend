@@ -67,6 +67,9 @@ import {
 	FiatWidgetComponent,
 	PaymentIntroComponent
 } from 'widget';
+import { WidgetEmbeddedOverviewComponent } from './widget-embedded/widget-embedded-overview/widget-embedded-overview.component';
+import { WidgetEmbeddedComponent } from './widget-embedded/widget-embedded.component';
+import { WidgetEmbeddedDetailsComponent } from './widget-embedded/widget-embedded-details/widget-embedded-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -147,6 +150,10 @@ export class MaterialModule {}
 		WidgetCompleteComponent,
 		WidgetErrorComponent,
 		PaymentIntroComponent,
+		
+		WidgetEmbeddedOverviewComponent,
+		WidgetEmbeddedComponent,
+		WidgetEmbeddedDetailsComponent
 	],
 	exports: [
 		WidgetComponent,
@@ -159,7 +166,11 @@ export class MaterialModule {}
 		CryptoWidgetComponent,
 		CryptoWizardComponent,
 		WidgetWizardComponent,
-		CompanyLevelVerificationComponent
+		CompanyLevelVerificationComponent,
+
+		WidgetEmbeddedOverviewComponent,
+		WidgetEmbeddedComponent,
+		WidgetEmbeddedDetailsComponent
 	],
 	providers: [],
 })
