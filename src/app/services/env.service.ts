@@ -13,6 +13,7 @@ export class EnvService {
 	public static test_kyc = true;
 	public static express_transfer = true;
 	public static deposit_withdrawal = true;
+	public static create_transaction_update_rate = true;
 	public static recaptchaId = '';
 	public static recaptchaSiteKey = '';
 	public static recaptchaProvider = '';

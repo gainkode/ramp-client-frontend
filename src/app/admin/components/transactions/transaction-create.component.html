@@ -107,13 +107,17 @@
         </div>
         
         <!-- Rate -->
-        <div *ngIf="transactionType != 'Deposit' && transactionType != 'Withdrawal'" class="form-group">
+        <div *ngIf="transactionType !== 'Deposit' && transactionType !== 'Withdrawal'" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Exchange rate
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-            <!-- <a [routerLink]="" (click)="updateRate()" style="font-size: 12px;margin-left: 8px;">
+            <a 
+              *ngIf="showSetCurrentRate"
+              class="tx-12 mg-l-10"
+              [routerLink]="" 
+              (click)="updateRate()">
               Set current
-            </a> -->
+            </a>
           </label>
           <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="text"
             formControlName="rate" required>
