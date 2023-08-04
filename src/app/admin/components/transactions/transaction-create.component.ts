@@ -5,7 +5,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
 import { CostScheme } from 'model/cost-scheme.model';
-import { PaymentInstrument, PaymentProvider, Rate, SettingsCommon, SettingsCurrencyWithDefaults, TransactionInput, TransactionSource, TransactionType } from 'model/generated-models';
+import { PaymentInstrument, PaymentProvider, Rate, SettingsCurrencyWithDefaults, TransactionInput, TransactionSource, TransactionType } from 'model/generated-models';
 import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
 import { TransactionItemFull } from 'model/transaction.model';
 import { UserItem } from 'model/user.model';
@@ -14,9 +14,16 @@ import { debounceTime, distinctUntilChanged, filter, map, switchMap, take, tap }
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
-import { ErrorService } from 'services/error.service';
+import { EnvService } from 'services/env.service';
 import { ExchangeRateService } from 'services/rate.service';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
+
+const requiredTransactionTypes = [
+	TransactionType.Buy,
+	TransactionType.Sell,
+	TransactionType.Deposit,
+	TransactionType.Withdrawal,
+];
 
 @Component({
 	selector: 'app-admin-transaction-create',
@@ -27,17 +34,12 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
   @Input() set users(val: UserItem[] | undefined) {
   	if(val){
-  		this.usersPreset = val.map(x => {
-  			return {
-  				id: x.id,
-  				title: (x.fullName !== '') ? `${x.fullName} (${x.email})` : x.email
-  			} as CommonTargetValue;
-  		}
-  		);
+  		this.usersPreset = val.map(x => ({ 
+  			id: x.id, 
+  			title: x.fullName ? `${x.fullName} (${x.email})` : x.email
+  		}) as CommonTargetValue);
 
-  		this.form.get('users')?.setValue(val.map(x => {
-  			return x.id;
-  		}));
+  		this.form.get('users')?.setValue(val.map(x => x.id));
   	}
   }
   @Output() save = new EventEmitter();
@@ -47,8 +49,8 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   private createDialog?: NgbModalRef;
 
-  transactionTypes = TransactionTypeList.filter(item => item.id == TransactionType.Buy || item.id == TransactionType.Sell || item.id == TransactionType.Deposit || item.id == TransactionType.Withdrawal);
-  instrumentTypes = PaymentInstrumentList.filter(item => item.id == PaymentInstrument.FiatVault);
+  transactionTypes = TransactionTypeList.filter((item) => requiredTransactionTypes.includes(item.id));
+  instrumentTypes = PaymentInstrumentList.filter(item => item.id === PaymentInstrument.FiatVault);
   PAYMENT_INSTRUMENT: typeof PaymentInstrument = PaymentInstrument;
 
   submitted = false;
@@ -61,8 +63,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];
   currentRate = 0;
-  amountToSpendTitle = 'Amount To Buy';
-  currencyToSpendTitle = 'Currency To Buy';
+  amountToSpendTitle = `Amount To ${TransactionType.Buy}`;
   currencyOptions: CurrencyView[] = [];
 
   usersOptions$: Observable<CommonTargetValue[]> = of([]);
@@ -125,22 +126,21 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   	return this.form.get('users');
   }
 
+  showSetCurrentRate = EnvService.create_transaction_update_rate;
+
   constructor(
   	private formBuilder: UntypedFormBuilder,
   	private router: Router,
   	private auth: AuthService,
   	private modalService: NgbModal,
-  	private errorHandler: ErrorService,
   	private exchangeRate: ExchangeRateService,
   	private commonService: CommonDataService,
   	private adminService: AdminDataService) { }
 
   ngOnInit(): void {
-  	this.getSettingsCommon();
   	this.loadCurrencies();
   	this.usersSearch();
   	this.getPaymentProviders();
-  	// this.setFData();
   	this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
   	this.subscriptions.add(
   		this.form.get('currencyToSpend')?.valueChanges.subscribe(val => {
@@ -185,7 +185,6 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   }
 
   onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
-  	//this.rateErrorMessage = error;
   	if (rate) {
   		this.currentRate = rate.depositRate;
   	}
@@ -206,15 +205,12 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
 
   private loadCurrencies(): void {
   	this.subscriptions.add(
-  		this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-  			const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-  			if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-  				this.currencyOptions = currencySettings.settingsCurrency.list?. map((val) => new CurrencyView(val)) as CurrencyView[];
-  			} else {
-  				this.currencyOptions = [];
-  			}
-  		}, (error) => {
-  			this.errorMessage = error;
+  		this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe({
+  			next: ({ data }) =>  {
+  				const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+  				this.currencyOptions = currencySettings.settingsCurrency?.list?.map((val) => new CurrencyView(val)) || [];
+  			},
+  			error: (error) => this.errorMessage = error
   		})
   	);
   }
@@ -227,83 +223,83 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   }
   
   private onFilterPaymentProviders(instrument: PaymentInstrument): void {
-  	if (instrument) {
-  		if (instrument.length > 0) {
-  			if (!instrument.includes(PaymentInstrument.WireTransfer)) {
-  				console.log(this.providers, instrument);
-  				this.filteredProviders = getProviderList([instrument], this.providers);
-  				this.showPaymentProvider = this.filteredProviders.length > 0;
-  				if (this.providers.length > 0) {
-  					this.form.get('provider')?.setValue(getCheckedProviderList(
-  						this.form.get('provider')?.value ?? [],
-  						this.filteredProviders));
-  				} else {
-  					this.form.get('provider')?.setValue([]);
-  				}
-  			}
-  		} else {
-  			this.form.get('instrument')?.setValue(undefined);
-  			this.form.get('provider')?.setValue([]);
-  		}
+  	if (instrument && instrument.length > 0 && !instrument.includes(PaymentInstrument.WireTransfer)) {
+  		console.log(this.providers, instrument);
+  		this.filteredProviders = getProviderList([instrument], this.providers);
+  		this.showPaymentProvider = this.filteredProviders.length > 0;
+  		this.form.get('provider')?.setValue(
+		  this.providers.length > 0
+  				? getCheckedProviderList(this.form.get('provider')?.value ?? [], this.filteredProviders)
+  				: []
+  		);
   	} else {
+  		this.form.get('instrument')?.setValue(undefined);
   		this.form.get('provider')?.setValue([]);
   	}
   }
 
-  private onTransactionTypeUpdate(val): void {
-  	this.transactionType = val;
-  	if(val == TransactionType.Buy || val == TransactionType.Sell){
-  		this.onCurrenciesUpdate(val);
-  	}else{
-  		this.filteredProviders = this.filteredProviders.filter(item => item.id == 'FiatVault');
+  private onTransactionTypeUpdate(transactionType: TransactionType): void {
+  	this.transactionType = transactionType;
+
+  	if(transactionType === TransactionType.Buy || transactionType === TransactionType.Sell){
+  		this.onCurrenciesUpdate(transactionType);
+  		this.setAmountToSpend(this.pAmountToSpend);
+  	} else {
+  		this.filteredProviders = this.filteredProviders.filter(item => item.id === 'FiatVault');
   		this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat === true);
-  		this.amountToSpendTitle = 'Amount';
   	}
+
+  	this.amountToSpendTitle = `Amount To ${transactionType}`;
   }
 
-  private onCurrenciesUpdate(val): void {
-  	if(val == TransactionType.Buy){
-  		this.currenciesToReceive = this.currencyOptions.filter(item => item.fiat !== true);
-  		this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat === true);
-  	}else if(val == TransactionType.Sell){
-  		this.currenciesToReceive = this.currencyOptions.filter(item => item.fiat === true);
-  		this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat !== true);
+  private onCurrenciesUpdate(type: TransactionType): void {
+  	if (type === TransactionType.Buy) {
+  		this.currenciesToReceive = this.currencyOptions.filter(item => !item.fiat);
+  		this.currenciesToSpend = this.currencyOptions.filter(item => item.fiat);
+	  } else if (type === TransactionType.Sell) {
+  		this.currenciesToReceive = this.currencyOptions.filter(item => item.fiat);
+  		this.currenciesToSpend = this.currencyOptions.filter(item => !item.fiat);
   	}
-  	this.currencyToSpendField?.setValue(this.currenciesToSpend[0].symbol);
-  	this.currencyToReceiveField?.setValue(this.currenciesToReceive[0].symbol);
+
+  	this.currencyToSpendField?.setValue(this.currenciesToSpend[0]?.symbol);
+  	this.currencyToReceiveField?.setValue(this.currenciesToReceive[0]?.symbol);
   }
 
-  private onAmountToSpendUpdate(val): void {
-  	if(!this.pSpendAutoUpdated && this.pAmountToSpend != val){
-  		let receiveAmount = 0;
-  		const rate = this.rateField?.value;
-  		const amount = this.amountToSpendField?.value;
-      
-  		if(rate && amount){
-  			if(this.transactionTypeField?.value == TransactionType.Buy){
-  				receiveAmount = amount / rate;
-  			}else if(this.transactionTypeField?.value == TransactionType.Sell){
-  				receiveAmount = amount * rate;
-  			}
+  private setAmountToSpend(newAmount: number): void {
+  	let receiveAmount = 0;
+  	const rate = this.rateField?.value;
+  	const amount = this.amountToSpendField?.value;
+
+  	if(rate && amount){
+  		if(this.transactionTypeField?.value === TransactionType.Buy){
+  			receiveAmount = amount / rate;
+  		} else if(this.transactionTypeField?.value === TransactionType.Sell){
+  			receiveAmount = amount * rate;
   		}
-      
-  		this.pReceiveAutoUpdated = true;
-  		this.pAmountToSpend = val;
-  		this.amountToReceiveField?.setValue(receiveAmount);
+  	}
+
+  	this.pReceiveAutoUpdated = true;
+  	this.pAmountToSpend = newAmount;
+  	this.amountToReceiveField?.setValue(receiveAmount);
+  }
+
+  private onAmountToSpendUpdate(val: number): void {
+  	if(!this.pSpendAutoUpdated && this.pAmountToSpend !== val){
+  		this.setAmountToSpend(val);
   	}
   	this.pSpendAutoUpdated = false;
   }
 
-  private onAmountToReceiveUpdate(val): void {
-  	if(!this.pReceiveAutoUpdated && this.pAmountToReceive != val){
+  private onAmountToReceiveUpdate(val: number): void {
+  	if(!this.pReceiveAutoUpdated && this.pAmountToReceive !== val){
   		let receiveAmount = 0;
   		const rate = this.rateField?.value;
   		const amount = this.amountToReceiveField?.value;
       
   		if(rate && amount){
-  			if(this.transactionTypeField?.value == TransactionType.Buy){
+  			if(this.transactionTypeField?.value === TransactionType.Buy){
   				receiveAmount = amount * rate;
-  			}else if(this.transactionTypeField?.value == TransactionType.Sell){
+  			}else if(this.transactionTypeField?.value === TransactionType.Sell){
   				receiveAmount = amount / rate;
   			}
   		}
@@ -364,26 +360,12 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   	if (spendFiat) {
   		this.exchangeRate.setCurrency(spend, receive, TransactionType.Buy);
   	} else {
-  		this.exchangeRate.setCurrency(receive, spend, TransactionType.Buy);
+  		this.exchangeRate.setCurrency(receive, spend, TransactionType.Sell);
   	}
   	this.exchangeRate.update();
   }
 
-  private getSettingsCommon(): void {
-  	this.subscriptions.add(
-  		this.adminService.getSettingsCommon()?.valueChanges.subscribe(settings => {
-  			const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
-  			const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
-  		})
-  	);
-  }
-
-  getTransactionToCreate(){
-  	const currentRateValue = this.form.get('rate')?.value;
-  	let currentRate: number | undefined = undefined;
-  	if (currentRateValue !== undefined) {
-  		currentRate = parseFloat(currentRateValue);
-  	}
+  getTransactionToCreate(): TransactionInput{
   	const transactionToCreate = {
   		type: this.form.get('transactionType')?.value,
   		source: TransactionSource.Wallet,
@@ -404,7 +386,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   }
 
   setParamsIfRequired(): void{
-  	if(this.transactionType == TransactionType.Deposit || this.transactionType == TransactionType.Withdrawal){
+  	if(this.transactionType === TransactionType.Deposit || this.transactionType === TransactionType.Withdrawal){
   		this.form.get('currencyToReceive')?.setValue(this.currencyToSpendField?.value);
   		this.form.get('amountToReceive')?.setValue(this.amountToSpendField?.value);
   	}
@@ -424,23 +406,24 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   private createUserTransaction(): void {
   	const users = this.usersField?.value;
   	const rate = this.rateField?.value;
-  	if(users && users.length != 0){
+  	if(users?.length !== 0){
   		for(const user of users){
   			const transactionToCreate = this.getTransactionToCreate();
   			this.saveInProgress = true;
   			const requestData = this.adminService.createUserTransaction(transactionToCreate, user, parseFloat(rate));
-  			this.subscriptions.add(
-  				requestData.subscribe(({ data }) => {
+  			this.subscriptions.add(requestData.subscribe({
+  				next: () => {
   					this.saveInProgress = false;
   					this.save.emit();
-  				}, (error) => {
+  				},
+  				error: (error) => {
   					this.errorMessage = error;
   					this.saveInProgress = false;
   					if (this.auth.token === '') {
   						void this.router.navigateByUrl('/');
   					}
-  				})
-  			);
+  				}
+  			}));
   		}
   	}
   	this.close.emit();
@@ -455,7 +438,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   		this.createDialog.close('');
   	}
     
-  	if(confirm == 1){
+  	if (confirm === 1){
   		this.createUserTransaction();
   	}
   }
