@@ -1,28 +1,24 @@
-<div class="overview-container" *ngIf="showWidgetDetails">
+<div class="d-flex">
+  <form class="overview-container" *ngIf="showWidgetDetails" [formGroup]="dataForm">
     <div class="email-body">
-      <h3 class="email-title">What is your email address?</h3>
+      <h3 class="email-title">Order Details</h3>
       <div class="email-body__item">
         <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
             <input matInput type="text" formControlName="email" />
             <mat-error>Email is required</mat-error>
         </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Wallet address</mat-label>
+          <input matInput type="text" formControlName="wallet" />
+          <!-- <mat-error *ngIf="walletField?.hasError('walletAddress')">Email is required</mat-error> -->
+      </mat-form-field>
       </div>
     </div>
-    <div class="email-body" >
-        <h3 class="email-title">What is your wallet address?</h3>
-        <div class="email-body__item">
-          <mat-form-field appearance="outline">
-              <mat-label>Wallet address</mat-label>
-              <input matInput type="text" formControlName="wallet" />
-              <!-- <mat-error *ngIf="walletField?.hasError('walletAddress')">Email is required</mat-error> -->
-          </mat-form-field>
-        </div>
-    </div>
-            
     <div class="overview-container__actions">
       <button type="button" class="overview-container__actions-back" (click)="backToOverview.emit(false)">Back </button>
       <!-- [disabled]="!emailField.valid" -->
       <button type="button" class="overview-container__actions-next" >Next </button>
     </div>
+</form>
 </div>

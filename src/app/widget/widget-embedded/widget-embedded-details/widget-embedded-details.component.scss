@@ -2,18 +2,19 @@
     flex: 1 1;
     background: white;
     padding: 24px;
+    padding-top: 10px;
     margin-left: 3px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
 	position: relative;
-    padding-top: 87px;
+    padding-top: 57px;
     width: 516px;
     height: 590px;
 
-	position: absolute; 
-	left: 370px; 
-	top: 0;
+	// position: absolute; 
+	// left: 370px; 
+	// top: 0;
     &__actions {
         position: sticky;
         bottom: 0;
