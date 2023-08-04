@@ -136,9 +136,9 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.pager.init('initialization', 'Initialization');
   	this.loadCustomData();
 		
-  	if(!this.externalKycSubscriptionFlag){
-  		this.startExternalKycProvideListener();
-  	} 
+  	// if(!this.externalKycSubscriptionFlag){
+  	// 	this.startExternalKycProvideListener();
+  	// } 
   }
 
   private initPage(): void {
@@ -825,6 +825,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	const nextStage = 4;
   	console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded);
   	if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
+			this.startExternalKycProvideListener();
   		if(this.companyLevelVerificationFlag){
   			this.nextStage('company_level_verification', 'Verification', this.pager.step, true);
   		} else {
