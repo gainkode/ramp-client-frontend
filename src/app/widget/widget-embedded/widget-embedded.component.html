@@ -26,6 +26,8 @@
 
           [showWidgetDetails]="!showWidgetDetails"
           (proceedOverview)="onOverviewReady()"
+          [exchangeRateCountDownTitle]="exchangeRateCountDownTitle"
+          [exchangeRateCountDownValue]="exchangeRateCountDownValue"
 
           (onError)="handleError($event)"
           (onProgress)="progressChanged($event)" 
@@ -95,6 +97,12 @@
           [summary]="summary"
           [showWidgetDetails]="showWidgetDetails"
           (backToOverview)="onBackToOverview()"
+
+          (onError)="handleError($event)"
+          (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
+          (onQuoteChanged)="orderQuoteChanged($event)" (onWalletAddressUpdated)="orderWalletChanged($event)"
+          (onVerifyWhenPaidChanged)="orderVerifyWhenPaidChanged($event)" (onComplete)="orderDetailsComplete($event)"
+        
           >
       </app-widget-embedded-details>
 

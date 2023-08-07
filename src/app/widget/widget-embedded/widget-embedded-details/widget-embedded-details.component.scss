@@ -10,11 +10,9 @@
 	position: relative;
     padding-top: 57px;
     width: 516px;
-    height: 590px;
+    height: auto;
+    min-height: 290px;
 
-	// position: absolute; 
-	// left: 370px; 
-	// top: 0;
     &__actions {
         position: sticky;
         bottom: 0;
@@ -23,8 +21,8 @@
         flex-flow: row nowrap;
         justify-content: flex-start;
         align-items: center;
-        margin-top: auto;
-        width: 100%;
+        width: 80%;
+        margin: 0 auto;
         column-gap: 24px;
         &-back, &-next {
             display: flex;

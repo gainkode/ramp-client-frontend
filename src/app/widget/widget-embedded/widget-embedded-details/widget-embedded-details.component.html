@@ -3,7 +3,28 @@
     <div class="email-body">
       <h3 class="email-title">Order Details</h3>
       <div class="email-body__item">
-        <mat-form-field appearance="outline">
+
+        <app-form-textbox 
+            style="width: 80%;"
+            [label]="'Email'" 
+            [maxlength]="50"
+            formControlName="email" 
+            [errorMessages]="emailErrorMessages" 
+            [separator]="true">
+        </app-form-textbox>
+
+        <div class="__form-separator-small"></div>
+        <app-form-textbox 
+        style="width: 80%;"
+            [label]="'Wallet address'" 
+            [maxlength]="120" formControlName="wallet"
+            [errorMessages]="walletErrorMessages" >
+        </app-form-textbox>
+        <div *ngIf="walletField?.hasError('walletAddress')" class="__form-assist __form-assist-error">
+            Wallet address is not valid
+        </div>
+
+        <!-- <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
             <input matInput type="text" formControlName="email" />
             <mat-error>Email is required</mat-error>
@@ -11,14 +32,14 @@
         <mat-form-field appearance="outline">
           <mat-label>Wallet address</mat-label>
           <input matInput type="text" formControlName="wallet" />
-          <!-- <mat-error *ngIf="walletField?.hasError('walletAddress')">Email is required</mat-error> -->
-      </mat-form-field>
+          <mat-error *ngIf="walletField?.hasError('walletAddress')">Email is required</mat-error>
+      </mat-form-field> -->
       </div>
     </div>
     <div class="overview-container__actions">
       <button type="button" class="overview-container__actions-back" (click)="backToOverview.emit(false)">Back </button>
       <!-- [disabled]="!emailField.valid" -->
-      <button type="button" class="overview-container__actions-next" >Next </button>
+      <button type="button" class="overview-container__actions-next" (click)="onSubmit()">Next </button>
     </div>
 </form>
 </div>

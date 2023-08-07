@@ -23,6 +23,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   @Input() initialized = false;
   @Input() internalPayment = true;
   @Input() quickCheckout = false;
+  @Input() exchangeRateCountDownTitle = '';
+  @Input() exchangeRateCountDownValue = '';
   @Input() set errorMessage(val: string) {
   	if (val !== '') {
   		this.initialized = true;
