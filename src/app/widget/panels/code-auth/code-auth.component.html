@@ -27,6 +27,10 @@
                 <input #code5input class="__form-text-box-plain" type="text" formControlName="code5" mask="0"
                     [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
             </div>
+            
+            <div class="__form-separator"></div>
+            <app-recaptcha (completed)="capchaResult($event)"></app-recaptcha>
+
             <div *ngIf="!codeField?.valid && init===true" class="__form-assist __form-assist-error">
                 Code is required
             </div>
@@ -42,7 +46,7 @@
         <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
-            <button class="__main-button __button-wide-separator" type="submit" [disabled]="done || !validData">next</button>
+            <button class="__main-button __button-wide-separator" type="submit" [disabled]="done || !validData || recaptcha == undefined">next</button>
         </div>
 
         <!-- <div class="__widget-disclaimer-container">
