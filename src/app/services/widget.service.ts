@@ -155,6 +155,12 @@ export class WidgetService {
 						if (this.onConfirmEmailRequired) {
 							this.onConfirmEmailRequired(login);
 						}
+					} else if (this.errorHandler.getCurrentError() === 'auth.recaptcha_invalid') {
+						// User has to confirm email verifying the code
+						localStorage.removeItem('recaptchaId');
+						if(this.onRecaptchaCallback){
+							this.onRecaptchaCallback();
+						}
 					} else {
 						if (this.onError) {
 							this.onError(this.errorHandler.getError(error.message, 'Unable to authenticate user'));

@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { shareReplay, take } from 'rxjs/operators';
 import { User } from './model/generated-models';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from './services/auth.service';
@@ -198,7 +198,7 @@ export class AppComponent implements OnInit, OnDestroy {
 						console.error('[1] KYC notification start error', error);
 						if (error.message === 'Access denied') {
 							this.subscriptions.add(
-								this.auth.refreshToken().subscribe(
+								this.auth.refreshToken().pipe(shareReplay(1)).subscribe(
 									({ data }) => {
 										console.log('Token refreshed');
 										setTimeout(() => {

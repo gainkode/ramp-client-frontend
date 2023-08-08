@@ -468,6 +468,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   capchaResult(event): void{
   	this.recaptchaDialog?.close();
+		this.recaptchaDialog = undefined;
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
 
