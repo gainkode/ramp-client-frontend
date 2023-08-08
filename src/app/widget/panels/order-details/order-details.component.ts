@@ -290,7 +290,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   			({ data }) => {
   				this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
 
-  				if (this.auth.authenticated && this.auth.user.email !== this.emailField?.value) {
+  				if (this.auth.authenticated && this.auth.user.email === this.emailField?.value) {
   					this.loadRates();
   					this.loadTransactionsTotal();
   				} else {
