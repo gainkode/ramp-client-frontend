@@ -33,17 +33,20 @@
             <div *ngIf="!settings.embedded" class="mt-3">
                 <app-widget-rate 
                     class="__widget-rate-container" 
-                    [title]="exchangeRateCountDownTitle"
-                    [countDown]="exchangeRateCountDownValue" 
+                    [currencySpend]="currencySpendField.value"
+                    [currencyReceive]="currencyReceiveField.value" 
                     [showRate]="settings.showRate !== false" 
                     [rate]="summary?.rate">
                 </app-widget-rate>
             </div>
     
-            <div class="order-details__container mt-4">
+            <div class="order-details__container mt-3">
                 <div class="order-details__header">
-                  <span class="order-details__header-title">Title here</span>
-                  <button type="button" class="order-details__header-button" (click)="mobileSummary = !mobileSummary">{{!mobileSummary ? 'Show' : 'Hide'}} Order Details</button>
+                  <span class="order-details__header-title">
+                    {{amountSpendField.valid ? amountSpendField.value : ''}} {{currencySpendField?.value || ''}} 
+                    <span>- is all you pay, fees included</span>
+                  </span>
+                  <button type="button" class="order-details__header-button" (click)="mobileSummary = !mobileSummary">{{!mobileSummary ? 'Details' : 'Hide'}} </button>
                 </div>
                 <div *ngIf="mobileSummary">
                     <hr class="order-details__divider mb-2">
@@ -81,7 +84,7 @@
             </div>
 
            <ng-container *ngIf="isSinglePage">
-                <div class="mt-4">
+                <div class="mt-3">
                     <app-form-textbox 
                         [placeholder]="'Email'" 
                         [maxlength]="50"
@@ -103,6 +106,10 @@
            </ng-container>
     
             <div class="button-proceed-wrapper" *ngIf="hideProceedButton">
+                <span class="order-details__overview-terms" *ngIf="isSinglePage">Continuing, you agree to 
+                    <a [href]="termsLink" target="_blank">Terms of Service</a> and 
+                    <a [href]="privacyLink" target="_blank">Privacy Policy</a>
+                </span>
                 <button type="button" [disabled]="!isOrderProceedFormValid" (click)="onProceed()">
                     Proceed <span class="tx-30">&#183;</span> Total {{amountSpendField.valid ? amountSpendField.value : '---'}}
                 </button>
@@ -145,6 +152,10 @@
                 </div>
             </div>
           </div>
+          <span class="order-details__overview-terms">Continuing, you agree to 
+            <a [href]="termsLink" target="_blank">Terms of Service</a> and 
+            <a [href]="privacyLink" target="_blank">Privacy Policy</a>
+          </span>
           <div class="order-details__overview-actions">
             <button type="button" class="order-details__overview-actions--back" (click)="onCancel()">Back </button>
             <button type="button" class="order-details__overview-actions--next" (click)="onSubmit()" [disabled]="!isOrderDetailsFormValid">Next </button>

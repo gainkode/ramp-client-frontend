@@ -32,13 +32,19 @@
 
 <div class="widget-list__container" *ngIf="showCurrencyList">
     <div class="widget-list__header">
-      <h3 class="widget-list__header-title">Available Currencies: </h3>
+      <div class="widget-list__header-search">
+          <mat-form-field appearance="outline">
+            <mat-label>Find your currency</mat-label>
+            <input matInput [formControl]="searchCurrencyControl">
+          </mat-form-field>
+      </div>
+      <!-- <h3 class="widget-list__header-title">Available Currencies: </h3> -->
       <button class="widget-list__header-button" (click)="showCurrencyList = false" type="button">
         <mat-icon>close</mat-icon>
       </button>
     </div>
     <div class="widget-list__item">
-        <div *ngFor="let item of comboList">
+        <div *ngFor="let item of filteredItems | async">
             <button type="button" class="widget-list__item-row" (click)="onCurrencySelect(item.symbol)">
                 <div class="widget-list__item-column">
                   <div>

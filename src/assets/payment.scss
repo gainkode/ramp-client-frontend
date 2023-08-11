@@ -765,9 +765,10 @@ $font_main: var(--font_main);
     font-family: $font_main;
     font-style: normal;
     font-weight: normal;
-    font-size: 14px;
-    line-height: 28px;
-
+    font-size: 12px;
+    line-height: 16px;
+    height: 16px;
+    
     text-align: center;
     color: $color_purple_900_text;
 }

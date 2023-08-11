@@ -8,6 +8,8 @@ import { Component, Input } from '@angular/core';
 export class WidgetRateComponent {
     @Input() title = '';
     @Input() countDown = '';
+    @Input() currencySpend = '';
+    @Input() currencyReceive = '';
     @Input() rate: string | undefined = undefined;
     @Input() showRate: boolean | undefined = undefined;
 

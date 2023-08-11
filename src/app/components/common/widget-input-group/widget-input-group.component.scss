@@ -129,8 +129,10 @@
             margin: 0;
         }
         &-button {
-            height: 34px;
-            padding: 8px;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 0px;
             border: none;
             background-color: transparent;
             cursor: pointer;

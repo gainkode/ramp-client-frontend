@@ -5,12 +5,9 @@
       </div>
 
       <div>
-        <!-- Initialization -->
-        <!-- <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization> -->
-        
         <!-- Order details -->
         <app-widget-internal-overview
-          *ngSwitchCase="'order_details'"
+          *ngIf="!initLoading"
           [isSinglePage]="isSinglePage"
           [showTransactionsLink]="showTransactionsLink"
           [quickCheckout]='quickCheckout' 
@@ -41,7 +38,7 @@
     <div class="m-0 widget__container-2" 
         [ngClass]="isOrderDetailsComplete ? 'd-flex' : 'd-none'" [ngSwitch]="pager.stageId">
     
-      <div *ngIf="!widget.embedded && !initLoading && !recentTransactions && pager.stageId !== 'error'" class="__widget-progress-container">
+      <div *ngIf="!widget.embedded && !recentTransactions && pager.stageId !== 'error'" class="__widget-progress-container">
         <app-widget-progress [step]="pager.step" [title]="pager.title" [progress]="inProgress"></app-widget-progress>
       </div>
       

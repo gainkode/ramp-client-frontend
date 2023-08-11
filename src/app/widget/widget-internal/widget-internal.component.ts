@@ -89,7 +89,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   isOrderDetailsComplete = false;
   isSingleOrderDetailsCompleted = false;
-  isSinglePage = false;
+  isSinglePage = true;
 
   constructor(
   	private modalService: NgbModal,
@@ -138,7 +138,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   }
 
   private initPage(): void {
-  	this.initLoading = false;
   	if (this.userParamsId === '') {
   		if (this.settings) {
   			this.widget = this.settings;
@@ -155,6 +154,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			}
   			this.initData(undefined);
   		}
+		this.initLoading = false;
   	} else {
   		this.pager.init('initialization', 'Initialization');
   		this.loadUserParams();
@@ -205,7 +205,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
 		
   		if (data.currentUserParams) {
-  			let setCurrencyExchangeRate = false;
   			userParams = JSON.parse(data.currentUserParams);
   			if (userParams.params) {
   				if (userParams.params.amount) {
@@ -215,12 +214,11 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				if (userParams.params.currency) {
   					this.widget.currencyFrom = userParams.params.currency;
   					this.summary.currencyFrom = this.widget.currencyFrom;
-  					setCurrencyExchangeRate = true;
+  		
   				}
   				if (userParams.params.convertedCurrency) {
   					this.widget.currencyTo = userParams.params.convertedCurrency;
   					this.summary.currencyTo = this.widget.currencyTo;
-  					setCurrencyExchangeRate = true;
   				}
   				if (userParams.params.transactionType) {
   					userTransaction = userParams.params.transactionType;
@@ -626,7 +624,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   							isOrderDetails ? 'order_details' : 'intro_disclaimer',
   							isOrderDetails ?  'Order details' : 'Disclaimer'
   						);
-
+						
   						if (isOrderDetails) {
   							this.isOrderDetailsComplete = false;
 
@@ -634,8 +632,11 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   								this.isSingleOrderDetailsCompleted = false;
 							  }
   						}
+
   					}
   				}
+
+				this.initLoading = false;
   			}, 
   			error: () => {
   				this.inProgress = false;
@@ -666,7 +667,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				}
   			}
   			this.initData(undefined);
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			this.initData(undefined);
   			this.setOrderDetailsStep();
@@ -682,17 +683,17 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		defaultFeeData.subscribe(({ data }) => {
   			this.inProgress = false;
 
-  			if(data.myDefaultSettingsFee.terms && data.myDefaultSettingsFee.terms != ''){
+  			if(data.myDefaultSettingsFee.terms && data.myDefaultSettingsFee.terms !== ''){
   				const defaultFeeTerms = typeof data.myDefaultSettingsFee.terms == 'string' ? JSON.parse(data.myDefaultSettingsFee.terms) : data.myDefaultSettingsFee.terms;
   				if(defaultFeeTerms.Transaction_fee){
   					this.defaultFee = defaultFeeTerms.Transaction_fee;
   				}
   			}
         
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			this.initData(undefined);
-			  this.setOrderDetailsStep();
+			this.setOrderDetailsStep();
   		})
   	);
   }

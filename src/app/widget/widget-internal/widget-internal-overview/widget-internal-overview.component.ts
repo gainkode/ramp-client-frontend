@@ -156,6 +156,9 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	updateOn: 'change',
   });
 
+  termsLink = EnvService.terms_link;
+  privacyLink = EnvService.privacy_link;
+
   get emailField(): AbstractControl | null {
   	return this.dataForm.get('email');
   }
@@ -219,54 +222,67 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	const settings = this.auth.getLocalSettingsCommon();
   	const additionalSettingsRaw = settings?.additionalSettings;
   	const additionalSettings = (additionalSettingsRaw === null) ? undefined : JSON.parse(additionalSettingsRaw ?? '{}');
-
-  	if(settings){
+  	const {
+  		transactionType,
+  		address,
+  		email,
+  		initialized,
+  		verifyWhenPaid
+  	} = this.summary || {};
+  	const {
+  		kycTier,
+  		kycValid
+  	} = this.auth.user || {};
+	
+  	if (settings){
   		this.userAdditionalSettings = typeof settings.userAdditionalSettings == 'string' ? JSON.parse(settings.userAdditionalSettings) : settings.userAdditionalSettings;
   	}
 	
   	this.isMasked = this.settings.masked;
-  	this.showVerifyWhenPaid = true;
+  	this.showVerifyWhenPaid = additionalSettings?.core?.verifyWhenPaid || true;
 
-  	if (additionalSettings?.core) {
-  		this.showVerifyWhenPaid = additionalSettings.core.verifyWhenPaid ?? true;
+  	if (transactionType) {
+  		this.currentTransaction = transactionType;
+  		this.transactionField?.setValue(transactionType);
   	}
 
-  	if (this.summary?.transactionType) {
-  		this.currentTransaction = this.summary.transactionType;
-  		this.transactionField?.setValue(this.currentTransaction);
-  	}
-  	if (this.summary?.address) {
-  		this.walletField?.setValue(this.summary.address);
+  	if (address) {
+  		this.walletField?.setValue(address);
   		this.walletInit = false;
-  		if (this.summary.address !== '') {
-  			this.selectedWallet = this.wallets.find(x => x.address === this.summary?.address);
-  			this.walletSelectorField?.setValue(this.summary.address);
+  		if (address !== '') {
+		  this.selectedWallet = this.wallets.find(x => x.address === address);
+		  this.walletSelectorField?.setValue(address);
   		}
   	}
-  	if (this.summary?.email) {
-  		this.emailField?.setValue(this.summary.email);
+
+  	if (email) {
+  		this.emailField?.setValue(email);
   	}
-  	if (this.summary?.initialized) {
-  		this.currentTransaction = this.summary.transactionType;
-  		this.transactionField?.setValue(this.summary.transactionType);
+  	
+  	if (initialized) {
+  		this.currentTransaction = transactionType;
+  		this.transactionField?.setValue(transactionType);
   	}
-  	if (this.auth.user?.kycTier) {
-  		this.currentTier = this.auth.user?.kycTier.name;
-  		if(this.auth.user?.kycValid){
-  			this.currentQuoteEur = this.auth.user?.kycTier.amount ?? 0;
-  			this.quoteUnlimit = (this.auth.user?.kycTier.amount === null);
+  	
+  	if (kycTier) {
+  		this.currentTier = kycTier.name;
+  		if (kycValid) {
+		  this.currentQuoteEur = kycTier.amount || 0;
+		  this.quoteUnlimit = kycTier.amount === null;
   		}
   	} else {
   		this.currentTier = '';
   		this.currentQuoteEur = 0;
   	}
-  	if (this.summary?.verifyWhenPaid) {
+  	
+  	if (verifyWhenPaid) {
   		this.verifyWhenPaidField?.setValue(true);
   	}
+
   	this.setWalletVisible();
   	this.setAmountTitles();
   	this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
-  	this.loadDetailsForm(this.summary?.initialized ?? false);
+  	this.loadDetailsForm(initialized ?? false);
 
   	this.pSubscriptions.add(this.currencySpendField?.valueChanges
   		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
@@ -332,14 +348,10 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   	if (currencySettings !== null) {
   		const currencyList = currencySettings.settingsCurrency;
-  		let defaultFiatCurrency = this.auth.user?.defaultFiatCurrency ?? '';
-  		if (defaultFiatCurrency === '') {
-  			defaultFiatCurrency = 'EUR';
-  		}
-  		let defaultCryptoCurrency = this.auth.user?.defaultCryptoCurrency ?? '';
-  		if (defaultCryptoCurrency === '') {
-  			defaultCryptoCurrency = 'BTC';
-  		}
+
+  		let defaultFiatCurrency = this.auth.user?.defaultFiatCurrency || 'EUR';
+  		const defaultCryptoCurrency = this.auth.user?.defaultCryptoCurrency || 'BTC';
+
   		itemCount = currencyList?.count as number;
   		if (itemCount > 0) {
   			const defaultFiat = currencyList?.list?.find(x => x.symbol === defaultFiatCurrency && x.fiat === true);
@@ -352,23 +364,13 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			const currentAmountReceive = this.summary?.amountTo;
 
   			if (this.currentTransaction === TransactionType.Buy) {
-  				if (currentCurrencySpendId === '') {
-  					currentCurrencySpendId = defaultFiatCurrency ?? '';
-  				}
-  				if (currentCurrencyReceiveId === '') {
-  					currentCurrencyReceiveId = defaultCryptoCurrency ?? '';
-  				}
+  				currentCurrencySpendId = currentCurrencySpendId || defaultFiatCurrency;
+  				currentCurrencyReceiveId = currentCurrencyReceiveId || defaultCryptoCurrency;
   			} else if (this.currentTransaction === TransactionType.Sell) {
-  				if (currentCurrencyReceiveId === '') {
-  					currentCurrencyReceiveId = defaultFiatCurrency ?? '';
-  				}
-  				if (currentCurrencySpendId === '') {
-  					currentCurrencySpendId = defaultCryptoCurrency ?? '';
-  				}
+  				currentCurrencyReceiveId = currentCurrencyReceiveId || defaultFiatCurrency;
+  				currentCurrencySpendId = currentCurrencySpendId || defaultCryptoCurrency;
   			}
-
-  			this.pCurrencies = currencyList?.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
-
+  			this.pCurrencies = currencyList?.list?.map(val => new CurrencyView(val)) || [];
   			this.addressInit = false;
 			
   			this.setCurrencyValues(
@@ -376,13 +378,13 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				currentCurrencySpendId,
   				currentCurrencyReceiveId,
   				currentAmountSpend,
-  				currentAmountReceive);
+  				currentAmountReceive
+  			);
+
   			this.addressInit = true;
 
-  			if (this.currentTransaction === TransactionType.Buy && this.wallets.length > 0) {
-  				if (this.summary?.address !== '') {
-  					this.walletField?.setValue(this.summary?.address);
-  				}
+  			if (this.currentTransaction === TransactionType.Buy && this.wallets.length > 0 && this.summary?.address) {
+  				this.walletField?.setValue(this.summary?.address);
   			}
   		}
   	}
@@ -482,60 +484,47 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   private setCurrencyLists(): void {
-  	if (this.currentTransaction === TransactionType.Buy) {
-  		if (!this.isMasked) {
-  			this.spendCurrencyList = this.pCurrencies.filter((c) => this.filterFiat(c));
-  			this.receiveCurrencyList = this.pCurrencies.filter((c) => this.filterCrypto(c));
-  		} else {
-  			this.spendCurrencyList = this.pCurrencies.filter((c) => this.filterFiat(c));
-  			this.receiveCurrencyList = this.pCurrencies.filter((c) => this.filterMaskedCrypto(c));
-  		}
-  	} else if (this.currentTransaction === TransactionType.Sell) {
-  		this.spendCurrencyList = this.pCurrencies.filter((c) => this.filterCrypto(c));
-  		this.receiveCurrencyList = this.pCurrencies.filter((c) => this.filterFiat(c));
+
+  	if (this.currentTransaction === TransactionType.Buy || this.currentTransaction === TransactionType.Sell) {
+  		const isBuy = this.currentTransaction === TransactionType.Buy;
+	
+  		this.spendCurrencyList = this.pCurrencies.filter(c => isBuy ? this.filterFiat(c) : this.filterCrypto(c));
+  		this.receiveCurrencyList = this.pCurrencies.filter(c => {
+  			if (isBuy) {
+  				return this.isMasked ? this.filterMaskedCrypto(c) : this.filterCrypto(c);
+  			}
+  			return this.filterFiat(c);
+  		});
   	}
-	  console.log(this.spendCurrencyList)
-	  console.log(this.receiveCurrencyList)
   }
 
   private filterFiat(c: CurrencyView): boolean {
-  	let result = (c.fiat === true);
-  	if (result && this.settings.fiatList.length > 0) {
-  		result = (this.settings.fiatList.find(x => x === c.symbol) !== undefined);
-
-  	}
-  	return result;
+  	return c.fiat && (this.settings.fiatList.length === 0 || this.settings.fiatList.includes(c.symbol));
   }
 
   private filterMaskedCrypto(c: CurrencyView): boolean {
-  	let result = (c.fiat === true);
-  	if (result && this.settings.cryptoList.length > 0) {
-  		result = (this.settings.cryptoList.find(x => x === c.symbol) !== undefined);
-  	}
-  	return result;
+  	return c.fiat && this.isInCryptoList(c);
   }
 
   private filterCrypto(c: CurrencyView): boolean {
-  	let result = (c.fiat === false);
-  	if (result && this.settings.cryptoList.length > 0) {
-  		result = (this.settings.cryptoList.find(x => x === c.symbol) !== undefined);
-  	}
-  	return result;
+  	return !c.fiat && this.isInCryptoList(c);
+  }
+
+  private isInCryptoList(c: CurrencyView): boolean {
+  	return this.settings.cryptoList.length === 0 || this.settings.cryptoList.includes(c.symbol);
   }
 
   private setWalletVisible(): void {
   	if (this.currentTransaction === TransactionType.Buy) {
-  		this.showWallet = !this.settings?.walletAddressPreset;
-  		if (this.showWallet) {
-  			if (this.settings.transfer) {
-  				this.showWallet = true;
-  			} else {
-  				this.showWallet = !this.settings.embedded;
-  			}
+  		if (!this.settings?.walletAddressPreset) {
+  			this.showWallet = this.settings.transfer || !this.settings.embedded;
+  		} else {
+  			this.showWallet = false;
   		}
   	} else {
   		this.showWallet = false;
   	}
+
   	if (!this.settings?.walletAddressPreset && this.userAdditionalSettings?.transactionSettings?.walletsRequired !== false) {
   		this.walletField?.setValidators([Validators.required]);
   	} else {
@@ -568,9 +557,9 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		if (this.walletField?.valid && this.showWallet) {
   			data.address = this.walletField?.value;
   		}
-  		//if (this.quoteExceedHidden) {
+  	
   		data.quoteLimit = this.quoteLimit;
-  		//}
+
   		this.onDataUpdated.emit(data);
   	}
   }
@@ -887,17 +876,14 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		}
   	}
   	this.quoteExceedHidden = false;
-  	if (this.currentTransaction === TransactionType.Buy) {
-  		const amount = this.amountSpendField?.value ?? 0;
-  		if (amount > 0 && amount > this.quoteLimit && !this.quoteUnlimit) {
-  			this.quoteExceedHidden = true;
-  		}
-  	} else if (this.currentTransaction === TransactionType.Sell) {
+
+  	if (this.currentTransaction === TransactionType.Buy || this.currentTransaction === TransactionType.Sell) {
   		const amount = this.amountSpendField?.value ?? 0;
   		if (amount > 0 && amount > this.quoteLimit && !this.quoteUnlimit) {
   			this.quoteExceedHidden = true;
   		}
   	}
+
   	this.quoteExceed = (this.settings.embedded) ?
   		this.quoteExceedHidden || (this.quoteLimit === 0 && !this.quoteUnlimit) :
   		false;
@@ -919,12 +905,10 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   onSubmit(): void {
   	this.onProgress.emit(true);
   	if (this.dataForm.valid) {
-  		if (this.auth.user) {
-  			if (this.auth.user.email !== this.emailField?.value) {
-  				this.auth.logout();
-  				return;
-  			}
+  		if (this.auth.user && this.auth.user.email !== this.emailField?.value) {
+  			this.auth.logout();
   		}
+		
   		this.initialized = false;
   		this.isSecondPartActive = false;
   		this.onVerifyWhenPaidChanged.emit(this.verifyWhenPaidField?.value ?? false);

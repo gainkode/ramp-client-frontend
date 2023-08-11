@@ -1,6 +1,7 @@
 import { Component, Input, SkipSelf } from '@angular/core';
-import { AbstractControl, ControlContainer } from '@angular/forms';
+import { AbstractControl, ControlContainer, FormControl } from '@angular/forms';
 import { CurrencyView } from 'model/payment.model';
+import { Observable, map, startWith } from 'rxjs';
 
 @Component({
 	selector: 'app-widget-input-group',
@@ -70,11 +71,25 @@ export class WidgetInputGroupComponent {
   	return this.comboList.find((x) => x.symbol === this.comboField?.value);
   }
 
+  searchCurrencyControl = new FormControl();
+  filteredItems: Observable<CurrencyView[]>;
+
   constructor() {
+
+  	this.filteredItems = this.searchCurrencyControl.valueChanges.pipe(
+  		startWith(''),
+  		map(value => this._filter(value))
+	  );
   }
 
   onCurrencySelect(value: string): void {
   	this.showCurrencyList = false;
   	this.comboField?.setValue(value);
   }
+
+  private _filter(value: string): CurrencyView[] {
+  	const filterValue = value.toLowerCase();
+  	return this.comboList.filter(item => item.display.toLowerCase().includes(filterValue));
+  }
 }
+

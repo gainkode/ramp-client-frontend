@@ -542,9 +542,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   		if (this.walletField?.valid && this.showWallet) {
   			data.address = this.walletField?.value;
   		}
-  		//if (this.quoteExceedHidden) {
+  
   		data.quoteLimit = this.quoteLimit;
-  		//}
+
   		this.onDataUpdated.emit(data);
   	}
   }
