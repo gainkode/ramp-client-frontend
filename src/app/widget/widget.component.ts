@@ -128,7 +128,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.userInfoRequired.bind(this),
   		this.companyLevelVerification.bind(this),
   		this.sellSettingsCommonComplete.bind(this),
-  		this.onRecaptchaCallback.bind(this)
+  		this.onRecaptchaCallback.bind(this),
+			this.quickCheckout
   	);
   	this.initMessage = 'Loading...';
 
@@ -487,6 +488,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   capchaResult(event): void {
   	this.recaptchaDialog?.close();
+		this.recaptchaDialog = undefined;
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
 

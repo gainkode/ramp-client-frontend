@@ -53,7 +53,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     extraData = false;
     done = false;
     done2Fa = false;
-    recaptcha = '';//undefined;
+    recaptcha = undefined;
     private socialLogin = false;
     private userMail = '';
     private subscriptions: Subscription = new Subscription();
@@ -112,14 +112,6 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     get passwordField(): AbstractControl | null {
     	return this.loginForm.get('password');
     }
-
-    // googleSignIn(): void {
-    //     this.socialSignIn('Google');
-    // }
-
-    // facebookSignIn(): void {
-    //     this.socialSignIn('Facebook');
-    // }
 
     showSignupPanel(userData: LoginResult | undefined): void {
     	if (userData) {
@@ -226,11 +218,13 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     }
     onSubmit(): void {
     	this.registerError('');
-    	this.done = true;
-    	if (this.loginForm.valid) {
+
+    	if (this.loginForm.valid && this.recaptcha) {
+    		this.done = true;
     		const login = this.emailField?.value;
     		try {
-    			const loginData = this.auth.authenticate(this.widgetId !== '', login, this.passwordField?.value, false, (this.widgetId !== '') ? this.widgetId : undefined);
+    			const widgetID =  this.widgetId !== '' ? this.widgetId : undefined;
+    			const loginData = this.auth.authenticate(this.widgetId !== '', login, this.passwordField?.value, false, widgetID);
     			this.progressChange.emit(true);
     			this.subscriptions.add(
     				loginData.subscribe(({ data }) => {

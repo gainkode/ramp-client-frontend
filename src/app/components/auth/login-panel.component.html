@@ -10,7 +10,7 @@
             formControlName="password" [errorMessages]="passwordErrorMessages" [separator]="true">
         </app-form-password>
 
-        <!-- <app-recaptcha (completed)="capchaResult($event)"></app-recaptcha> -->
+        <app-recaptcha (completed)="capchaResult($event)"></app-recaptcha>
         
         <!-- Errors -->
         <div *ngIf="errorMessage!==''">
@@ -24,13 +24,13 @@
             <button class="__outlined-button" type="button" (click)="onBack.emit()">
                 BACK
             </button>
-            <button class="__main-button __button-separator" type="submit" [disabled]="done || !loginForm?.valid || recaptcha == undefined">
+            <button class="__main-button __button-separator" type="submit" [disabled]="done">
                 login
             </button>
         </div>
         <!-- Default Buttons -->
         <div *ngIf="!wizardButtons" class="__auth-buttons-wizard-area">
-            <button class="__main-button __button-login-wide __main-button-auth" type="submit" [disabled]="done || !loginForm?.valid || recaptcha == undefined">
+            <button class="__main-button __button-login-wide __main-button-auth" type="submit" [disabled]="done">
                 login
             </button>
         </div>

@@ -1,4 +1,37 @@
 ::ng-deep{
+    .__info-tab-container {
+        display: flex;
+        flex-direction: row;
+        margin: 0px 0px 16px 0px;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .__info-type-tab {
+        padding: 0px 8px;
+        cursor: pointer;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 28px;
+        text-align: center;
+    }
+    
+    .__info-tab-selected {
+        cursor: default;
+        
+        border: 2px solid #0070c0;
+        color: #0070c0;
+        border-style: none none solid none;
+    }
+    
+    .__info-type-tab-left {
+        margin: 0px 16px 0px 0px;
+    }
+    
+    .__info-type-tab-right {
+        margin: 0px 0px 0px 16px;
+    }
     .dark-theme{
         .mat-mdc-button, .mat-mdc-icon-button, .mat-mdc-outlined-button {
             color: #b7c0d6 !important;

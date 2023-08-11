@@ -27,6 +27,7 @@ import { ExchangeRateService } from './services/rate.service';
 import { WidgetPagerService } from './services/widget-pager.service';
 import { WidgetService } from './services/widget.service';
 import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/env.service';
+import { shareReplay } from 'rxjs/operators';
 import { TableModule } from 'components/data-list/table/table.module';
 
 function socialConfigFactory(): SocialAuthServiceConfig {
@@ -93,7 +94,7 @@ export class AppModule {
 							return undefined;
 						}
 						if (forceRefreshToken) {
-							const refreshToken = this.authService.refreshToken().toPromise();
+							const refreshToken = this.authService.refreshToken().pipe(shareReplay(1)).toPromise();
 							return fromPromise(
 								refreshToken.catch(error => {
 									this.authService.logout();
@@ -103,6 +104,9 @@ export class AppModule {
 								return forward(operation);
 							});
 						}
+					}
+					if(code == 'auth.recaptcha_invalid'){
+						localStorage.removeItem('recaptchaId');
 					}
 					let codeValue = err.extensions?.code ?? 'INTERNAL_SERVER_ERROR';
 					if (codeValue === 'INTERNAL_SERVER_ERROR' && err.message) {

@@ -56,7 +56,6 @@ import { YesNoDialogBox } from './dialogs/yesno-box.dialog';
 import { ApiSecretDialogBox } from './dialogs/api-secret-box.dialog';
 import { SafeUrlPipe } from '../utils/safe-url.pipe';
 import { RecaptchaComponent } from './recaptcha/recaptcha.component';
-import { NgxTurnstileModule } from 'ngx-turnstile';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { 
 	ShuftiPanelComponent, 
@@ -101,7 +100,6 @@ const materialModules = [
 	MatTableModule,
 	MatPaginatorModule,
 	MatSortModule,
-	NgxTurnstileModule,
 	RecaptchaModule,
 ];
 
