@@ -10,6 +10,12 @@
     height: 590px;
     justify-content: center;  
     display: flex; 
+    &--single {
+        width: 400px;
+        .widget__container-2 {
+            width: 400px;
+        }
+    }
 }
 
 .widget__container-1 {
@@ -34,6 +40,6 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    width: 516px;
+    width: 500px;
     height: 590px;
 }

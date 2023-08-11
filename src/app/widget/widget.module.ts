@@ -67,9 +67,9 @@ import {
 	FiatWidgetComponent,
 	PaymentIntroComponent
 } from 'widget';
-import { WidgetEmbeddedOverviewComponent } from './widget-embedded/widget-embedded-overview/widget-embedded-overview.component';
-import { WidgetEmbeddedComponent } from './widget-embedded/widget-embedded.component';
-import { WidgetEmbeddedDetailsComponent } from './widget-embedded/widget-embedded-details/widget-embedded-details.component';
+import { WidgetEmbeddedOverviewComponent } from './widget-internal/widget-internal-overview/widget-internal-overview.component';
+import { WidgetEmbeddedComponent } from './widget-internal/widget-internal.component';
+import { SpinnerModule } from 'shared/spinner/spinner.module';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -108,6 +108,7 @@ export class MaterialModule {}
 		RouterModule,
 		MaterialModule,
 		QRCodeModule,
+		SpinnerModule,
 	],
 	declarations: [
 		WidgetIframeComponent,
@@ -152,8 +153,7 @@ export class MaterialModule {}
 		PaymentIntroComponent,
 		
 		WidgetEmbeddedOverviewComponent,
-		WidgetEmbeddedComponent,
-		WidgetEmbeddedDetailsComponent
+		WidgetEmbeddedComponent
 	],
 	exports: [
 		WidgetComponent,
@@ -170,7 +170,6 @@ export class MaterialModule {}
 
 		WidgetEmbeddedOverviewComponent,
 		WidgetEmbeddedComponent,
-		WidgetEmbeddedDetailsComponent
 	],
 	providers: [],
 })

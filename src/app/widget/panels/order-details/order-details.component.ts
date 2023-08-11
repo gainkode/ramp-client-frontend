@@ -21,7 +21,6 @@ import { WalletValidator } from 'utils/wallet.validator';
 })
 export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() initialized = false;
-  @Input() internalPayment = true;
   @Input() quickCheckout = false;
   @Input() set errorMessage(val: string) {
   	if (val !== '') {

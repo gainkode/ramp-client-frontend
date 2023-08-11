@@ -32,9 +32,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';
   @Input() quickCheckout = false;
   @Input() settings: WidgetSettings | undefined = undefined;
-  @Input() set internal(val: boolean) {
-  	this.internalPayment = val;
-  }
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
   @Output() onIFramePay = new EventEmitter<boolean>();
@@ -51,7 +48,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   transactionErrorTryAgain = true;
   inProgress = false;
   initLoading = true;
-  internalPayment = false;
   initState = true;
   showSummary = true;
   mobileSummary = false;

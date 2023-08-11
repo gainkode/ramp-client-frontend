@@ -53,7 +53,7 @@
     <!-- Order details -->
     <app-widget-order-details [quickCheckout]='quickCheckout' *ngSwitchCase="'order_details'" [initialized]="!initState" [summary]="summary"
       [settings]="widget" [wallets]="userWallets" [defaultFee]="defaultFee"
-      [internalPayment]="internalPayment" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
+      [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
       [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
       (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
       (onQuoteChanged)="orderQuoteChanged($event)" (onWalletAddressUpdated)="orderWalletChanged($event)"

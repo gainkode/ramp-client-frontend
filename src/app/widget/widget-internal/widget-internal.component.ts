@@ -13,7 +13,6 @@ import { WalletItem } from 'model/wallet.model';
 import { Subscription, take } from 'rxjs';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
-import { EnvService } from 'services/env.service';
 import { ErrorService } from 'services/error.service';
 import { NotificationService } from 'services/notification.service';
 import { PaymentDataService } from 'services/payment.service';
@@ -23,17 +22,14 @@ import { WidgetPagerService } from 'services/widget-pager.service';
 import { WidgetService } from 'services/widget.service';
 
 @Component({
-	selector: 'app-widget-embedded',
-	templateUrl: './widget-embedded.component.html',
-	styleUrls: ['./widget-embedded.component.scss']
+	selector: 'app-widget-internal',
+	templateUrl: './widget-internal.component.html',
+	styleUrls: ['./widget-internal.component.scss']
 })
 export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';
   @Input() quickCheckout = false;
   @Input() settings: WidgetSettings | undefined = undefined;
-  @Input() set internal(val: boolean) {
-  	this.internalPayment = val;
-  }
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
   @Output() onIFramePay = new EventEmitter<boolean>();
@@ -50,7 +46,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   transactionErrorTryAgain = true;
   inProgress = false;
   initLoading = true;
-  internalPayment = false;
   initState = true;
   showSummary = true;
   mobileSummary = false;
@@ -80,8 +75,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   paymentComplete = false;
   notificationStarted = false;
   recentTransactions = false;
-  logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
-  logoAlt = EnvService.product;
   disclaimerTextData = disclaimerDataDefault;
   completeTextData = completeDataDefault;
   transactionIdConfirmationCode = '';
@@ -94,8 +87,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	return this.auth.user && this.auth.authenticated;
   }
 
-
-  showWidgetDetails = false;
+  isOrderDetailsComplete = false;
+  isSingleOrderDetailsCompleted = false;
+  isSinglePage = false;
 
   constructor(
   	private modalService: NgbModal,
@@ -186,6 +180,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   private initData(data: Widget | undefined): void {
   	this.requiredExtraData = false;
   	this.initMessage = 'Loading...';
+
   	if (data) {
   		this.widget.allowToPayIfKycFailed = data.allowToPayIfKycFailed ?? false;
   		let userParams: Record<string, any> = {};
@@ -546,6 +541,14 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	if (stage) {
   		this.showSummary = stage.summary;
   	}
+
+  	if (this.pager.stageId === 'order_details') {
+  		this.isOrderDetailsComplete = false;
+
+		  if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
+  			this.isSingleOrderDetailsCompleted = false;
+		  }
+  	}
   }
 
   private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
@@ -555,6 +558,14 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.showSummary = summaryVisible;
   		this.inProgress = false;
   	}, 50);
+
+  	if (id === 'order_details' && this.isOrderDetailsComplete) {
+	  this.isOrderDetailsComplete = false;
+
+	  if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
+  			this.isSingleOrderDetailsCompleted = false;
+	  }
+  	}
   }
 
   removeStage(stage: string): void {
@@ -615,6 +626,14 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   							isOrderDetails ? 'order_details' : 'intro_disclaimer',
   							isOrderDetails ?  'Order details' : 'Disclaimer'
   						);
+
+  						if (isOrderDetails) {
+  							this.isOrderDetailsComplete = false;
+
+							  if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
+  								this.isSingleOrderDetailsCompleted = false;
+							  }
+  						}
   					}
   				}
   			}, 
@@ -625,7 +644,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   					'Wrong widget settings',
   					`Cannot load the widget`,
   					false);
-  				this.pager.init('order_details', 'Order details');
+  				this.setOrderDetailsStep();
   			}
   		}
   		)
@@ -647,11 +666,10 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				}
   			}
   			this.initData(undefined);
-  			this.pager.init('order_details', 'Order details');
   		}, (error) => {
   			this.inProgress = false;
   			this.initData(undefined);
-  			this.pager.init('order_details', 'Order details');
+  			this.setOrderDetailsStep();
   		})
   	);
   }
@@ -674,7 +692,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		}, (error) => {
   			this.inProgress = false;
   			this.initData(undefined);
-  			this.pager.init('order_details', 'Order details');
+			  this.setOrderDetailsStep();
   		})
   	);
   }
@@ -735,6 +753,12 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.summary.email = email;
   		this.widgetService.authenticate(email, this.widget.widgetId);
   	}
+
+	  this.isOrderDetailsComplete = true;
+
+	  if (this.isSinglePage && !this.isSingleOrderDetailsCompleted) {
+  		this.isSingleOrderDetailsCompleted = true;
+	  }
   }
   // =======================
 
@@ -773,7 +797,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		}
   		this.orderDetailsComplete(this.widget.email);
   	} else {
-  		this.pager.init('order_details', 'Order details');
+
+  		this.setOrderDetailsStep();
   	}
   }
   // ================
@@ -1222,7 +1247,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   						if(order.transactionId && order.transactionId){
   							this.transactionIdConfirmationCode = order.transactionId;
   							this.nextStage('code_auth', 'Authorization', 3, true);
-  						}else{
+  						} else {
   							this.setError('Transaction handling failed', this.errorMessage, 'createSellTransaction order');
   						}
   					}
@@ -1392,10 +1417,12 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.nextStage('error', 'Error', 6, false);
   }
 
-  onOverviewReady(): void {
-	this.showWidgetDetails = true;
-  }
-  onBackToOverview(): void {
-	this.showWidgetDetails = false;
+  private setOrderDetailsStep(): void {
+  	this.pager.init('order_details', 'Order details');
+  	this.isOrderDetailsComplete = false;
+
+  	if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
+  		this.isSingleOrderDetailsCompleted = false;
+	}
   }
 }

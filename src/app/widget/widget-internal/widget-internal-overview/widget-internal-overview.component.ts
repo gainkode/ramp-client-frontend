@@ -12,16 +12,17 @@ import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
 import { getCurrencySign } from 'utils/utils';
 import { WalletValidator } from 'utils/wallet.validator';
+import { EnvService } from 'services/env.service';
 
 @Component({
-	selector: 'app-widget-embedded-overview',
-	templateUrl: './widget-embedded-overview.component.html',
-	styleUrls: ['./widget-embedded-overview.component.scss']
+	selector: 'app-widget-internal-overview',
+	templateUrl: './widget-internal-overview.component.html',
+	styleUrls: ['./widget-internal-overview.component.scss']
 })
 export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() showTransactionsLink = false;
+  @Input() isSinglePage = false;
   @Input() initialized = false;
-  @Input() internalPayment = true;
   @Input() quickCheckout = false;
   @Input() exchangeRateCountDownTitle = '';
   @Input() exchangeRateCountDownValue = '';
@@ -31,6 +32,12 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	}
   	this.errorMessageData = val;
   }
+  @Input() set isOrderDetailsComplete(val: boolean) {
+  	if (!val && !this.isSecondPartActive && !this.hideProceedButton) {
+  		this.isSecondPartActive = true;
+  	}
+  }
+
   @Input() settings: WidgetSettings = new WidgetSettings();
   @Input() defaultFee: number | undefined = undefined;
   @Input() summary: CheckoutSummary | undefined = undefined;
@@ -53,8 +60,11 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   @Output() onQuoteChanged = new EventEmitter<number>();
   @Output() onComplete = new EventEmitter<string>();
 
-  @Output() proceedOverview = new EventEmitter<boolean>();
-  @Input() showWidgetDetails: boolean;
+  logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
+  logoAlt = EnvService.product;
+
+  hideProceedButton = true;
+  isSecondPartActive = false;
 
   private pInitState = true;
   private initValidators = true;
@@ -118,32 +128,32 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   };
 
   dataForm = this.formBuilder.group({
-  	// email: ['',
-  	// 	{
-  	// 		validators: [
-  	// 			Validators.required,
-  	// 			Validators.email,
-  	// 			Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
-  	// 		], updateOn: 'change'
-  	// 	}
-  	// ],
+  	email: ['',
+  		{
+  			validators: [
+  				Validators.required,
+  				Validators.email,
+  				Validators.pattern(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+  			], updateOn: 'change'
+  		}
+  	],
   	amountSpend: [undefined, { validators: [], updateOn: 'change' }],
-    amountReceive: [undefined, { validators: [], updateOn: 'change' }],
+  	amountReceive: [undefined, { validators: [], updateOn: 'change' }],
   	currencySpend: [null, { validators: [], updateOn: 'change' }],
   	currencyReceive: [null, { validators: [], updateOn: 'change' }],
   	transaction: [TransactionType.Deposit, { validators: [], updateOn: 'change' }],
   	verifyWhenPaid: [undefined],
   	walletSelector: [undefined, { validators: [], updateOn: 'change' }],
-  	// wallet: [undefined, { validators: [], updateOn: 'change' }]
+  	wallet: [undefined, { validators: [], updateOn: 'change' }]
   }, {
-  	// validators: [
-  	// 	WalletValidator.addressValidator(
-  	// 		'wallet',
-  	// 		'currencyReceive',
-  	// 		'transaction'
-  	// 	),
-  	// ],
-  	// updateOn: 'change',
+  	validators: [
+  		WalletValidator.addressValidator(
+  			'wallet',
+  			'currencyReceive',
+  			'transaction'
+  		),
+  	],
+  	updateOn: 'change',
   });
 
   get emailField(): AbstractControl | null {
@@ -183,7 +193,18 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   get isOrderDetailsFormValid(): boolean {
-  	return this.dataForm.valid && this.amountSpendField.value;
+  	return this.dataForm.valid && 
+		this.amountSpendField.value && 
+		this.walletField?.valid && 
+		this.emailField?.valid;
+  }
+
+  get isOrderProceedFormValid(): boolean {
+  	if (this.isSinglePage) {
+  		return this.isOrderDetailsFormValid;
+  	}
+
+  	return this.amountSpendField.valid && this.amountSpendField.value;
   }
 
   constructor(
@@ -473,6 +494,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		this.spendCurrencyList = this.pCurrencies.filter((c) => this.filterCrypto(c));
   		this.receiveCurrencyList = this.pCurrencies.filter((c) => this.filterFiat(c));
   	}
+	  console.log(this.spendCurrencyList)
+	  console.log(this.receiveCurrencyList)
   }
 
   private filterFiat(c: CurrencyView): boolean {
@@ -903,12 +926,23 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			}
   		}
   		this.initialized = false;
+  		this.isSecondPartActive = false;
   		this.onVerifyWhenPaidChanged.emit(this.verifyWhenPaidField?.value ?? false);
   		this.onComplete.emit(this.emailField?.value);
   	}
   }
 
   onProceed(): void {
-    this.proceedOverview.emit(true);
+  	if (this.isSinglePage) {
+  		this.onSubmit();
+  	} else {
+  		this.isSecondPartActive = true;
+  		this.hideProceedButton = false;
+  	}
+  }
+
+  onCancel(): void {
+  	this.isSecondPartActive = false;
+  	this.hideProceedButton = true;
   }
 }
