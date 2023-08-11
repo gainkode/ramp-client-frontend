@@ -328,7 +328,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		currencyData.valueChanges.subscribe(
   			({ data }) => {
   				this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
-  				if (this.auth.authenticated) {
+  				
+				if (this.auth.authenticated && this.auth.user.email === this.emailField?.value && this.settings.embedded) {
   					this.loadRates();
   					this.loadTransactionsTotal();
   				} else {

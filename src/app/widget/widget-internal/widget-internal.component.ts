@@ -124,7 +124,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.userInfoRequired.bind(this),
   		this.companyLevelVerification.bind(this),
   		this.sellSettingsCommonComplete.bind(this),
-  		this.onRecaptchaCallback.bind(this)
+  		this.onRecaptchaCallback.bind(this),
+  		this.quickCheckout
   	);
   	this.initMessage = 'Loading...';
 
@@ -132,9 +133,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.pager.init('initialization', 'Initialization');
   	this.loadCustomData();
 		
-  	if(!this.externalKycSubscriptionFlag){
-  		this.startExternalKycProvideListener();
-  	} 
+  	// if(!this.externalKycSubscriptionFlag){
+  	// 	this.startExternalKycProvideListener();
+  	// } 
   }
 
   private initPage(): void {
@@ -154,7 +155,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			}
   			this.initData(undefined);
   		}
-		this.initLoading = false;
+  		this.initLoading = false;
   	} else {
   		this.pager.init('initialization', 'Initialization');
   		this.loadUserParams();
@@ -378,10 +379,10 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				let finishFlag = false;
   				console.log('External Payment completed', subscriptionData);
 				
-  				if(subscriptionData.orderStatus === 'completed'){
+  				if(subscriptionData.status === 'approved'){
   					finishFlag = true;
   					this.processingComplete();
-  				} else if(subscriptionData.orderStatus === 'declined') {
+  				} else if(subscriptionData.status === 'declined') {
   					finishFlag = true;
   					this.setError('External Payment failed', 'Payment declined', 'creatExternalTransaction');
   				}
@@ -482,6 +483,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   capchaResult(event): void {
   	this.recaptchaDialog?.close();
+  	this.recaptchaDialog = undefined;
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
 
@@ -603,40 +605,29 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			next: ({ data }) => {
   				this.inProgress = false;
   				this.initData(data.getWidget as Widget);
-	   
-  				if (!this.widget.transaction) {
-  					this.showTransactionError('Wrong widget settings', 'Missing transaction type', false);
-  					return;
-  				}
-	  
-  				const transactionType = this.widget.transaction.toLowerCase();
-  				const validTransactionType = ['buy', 'sell'].includes(transactionType);
-	  
-  				if (validTransactionType) {
-  					if (this.widget.orderDefault) {
-  						if (this.auth.user?.email !== this.widget.email) {
-  							this.summary.email = '';
-  						}
-  						this.orderDetailsComplete(this.widget.email);
-  					} else {
-  						const isOrderDetails = this.quickCheckout || this.summary.agreementChecked;
-  						this.pager.init(
-  							isOrderDetails ? 'order_details' : 'intro_disclaimer',
-  							isOrderDetails ?  'Order details' : 'Disclaimer'
-  						);
-						
-  						if (isOrderDetails) {
-  							this.isOrderDetailsComplete = false;
 
-							  if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
-  								this.isSingleOrderDetailsCompleted = false;
-							  }
-  						}
+  				if (this.widget.transaction) {
+  					const transactionType = this.widget.transaction.toLowerCase();
+  					const validTransactionType = ['buy', 'sell'].includes(transactionType);
 
+  					if (!validTransactionType) {
+  						this.showTransactionError('Wrong widget settings', 'Missing transaction type', false);
+  						return;
   					}
   				}
-
-				this.initLoading = false;
+  
+  				if (this.widget.orderDefault) {
+  					if (this.auth.user?.email !== this.widget.email) {
+  						this.summary.email = '';
+  					}
+  					this.orderDetailsComplete(this.widget.email);
+  				} else {
+  					const isOrderDetails = this.quickCheckout || this.summary.agreementChecked;
+  					this.pager.init(
+  						isOrderDetails ? 'order_details' : 'intro_disclaimer',
+  						isOrderDetails ?  'Order details' : 'Disclaimer'
+  					);
+  				}
   			}, 
   			error: () => {
   				this.inProgress = false;
@@ -693,7 +684,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		}, () => {
   			this.inProgress = false;
   			this.initData(undefined);
-			this.setOrderDetailsStep();
+  			this.setOrderDetailsStep();
   		})
   	);
   }
@@ -851,8 +842,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.paymentProviders = providers.map(val => val);
 
   	const nextStage = 4;
-  	console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded);
+
   	if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
+		this.startExternalKycProvideListener();
   		if(this.companyLevelVerificationFlag){
   			this.nextStage('company_level_verification', 'Verification', this.pager.step, true);
   		} else {
@@ -1424,6 +1416,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   	if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
   		this.isSingleOrderDetailsCompleted = false;
-	}
+  	}
   }
 }
