@@ -35,6 +35,7 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     validData = false;
     init = false;
     done = false;
+		recaptcha = undefined;
     codeErrorMessages: { [key: string]: string; } = {
     	['required']: 'Confirmation code is required'
     };
@@ -129,6 +130,11 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
 
     registerAccount(): void {
     	this.onRegister.emit(this.email);
+    }
+
+		capchaResult(event): void{
+    	this.recaptcha = event;
+    	localStorage.setItem('recaptchaId', event);
     }
 
     onSubmit(): void {

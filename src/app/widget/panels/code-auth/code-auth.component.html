@@ -27,6 +27,10 @@
                 <input #code5input class="__form-text-box-plain" type="text" formControlName="code5" mask="0"
                     [dropSpecialCharacters]="false" maxlength="1" autocomplete="false" />
             </div>
+            
+            <div class="__form-separator"></div>
+            <!-- <app-recaptcha (completed)="capchaResult($event)"></app-recaptcha> -->
+
             <div *ngIf="!codeField?.valid && init===true" class="__form-assist __form-assist-error">
                 Code is required
             </div>

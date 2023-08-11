@@ -25,6 +25,7 @@ export class WidgetService {
 	private onWireTranferListLoaded: Function | undefined = undefined;  // (wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string)
 	private userInfoRequired: Function | undefined = undefined;
 	private companyLevelVerification: Function | undefined = undefined;
+	private onQuickcheckout: boolean | undefined = undefined;
 
 	private pSubscriptions: Subscription = new Subscription();
 
@@ -47,7 +48,8 @@ export class WidgetService {
 		userInfoRequired?: Function | undefined,
 		companyLevelVerificationHandler?: Function | undefined,
 		sellPaymentProvidersCallback?: Function | undefined,
-		recaptchaCallback?: Function | undefined) {
+		recaptchaCallback?: Function | undefined,
+		quickcheckout?: boolean | undefined) {
 		this.onProgressChanged = progressCallback;
 		this.onError = errorCallback;
 		this.onIdentificationRequired = identificationCallback;
@@ -62,6 +64,7 @@ export class WidgetService {
 		this.onWireTranferListLoaded = wireTranferListLoadedCallback;
 		this.userInfoRequired = userInfoRequired;
 		this.companyLevelVerification = companyLevelVerificationHandler;
+		this.onQuickcheckout = quickcheckout;
 	}
 
 	getSettingsCommon(summary: CheckoutSummary, widget: WidgetSettings, updatedUserData: boolean): void {
@@ -100,7 +103,7 @@ export class WidgetService {
 		// Consider that the user is one-time wallet user rather than internal one
 		// this.authenticateInternal(login, widgetId);
 		let recaptcha = localStorage.getItem('recaptchaId');
-		if(recaptcha){
+		if(recaptcha || !this.onQuickcheckout){
 			this.authenticateInternal(login, widgetId);
 		}else{
 			if(this.onRecaptchaCallback){
@@ -111,22 +114,31 @@ export class WidgetService {
 
 	authenticateInternal(login: string, widgetId: string) {
 		try {
-			const authenticateData$ = this.auth.authenticate(
+			const authenticateData$ = this.onQuickcheckout 
+			? this.auth.authenticate(
 				widgetId !== '',
 				login,
 				'',
 				true,
-				(widgetId !== '') ? widgetId : undefined).pipe(take(1));
+				(widgetId !== '') ? widgetId : undefined)
+			: this.auth.authenticateWidget(
+				widgetId !== '',
+				login,
+				'',
+				true,
+				(widgetId !== '') ? widgetId : undefined);
+			authenticateData$.pipe(take(1));
 			if (this.onProgressChanged) {
 				this.onProgressChanged(true);
 			}
 			this.pSubscriptions.add(
 				authenticateData$.subscribe(({ data }) => {
+					let dataLogin = data?.login ?? data?.loginWidget
 					if (this.onProgressChanged) {
 						this.onProgressChanged(false);
 					}
 					if (this.onLoginSuccess) {
-						this.onLoginSuccess(data.login as LoginResult);
+						this.onLoginSuccess(dataLogin as LoginResult);
 					}
 				}, (error) => {
 					if (this.onProgressChanged) {
@@ -142,6 +154,12 @@ export class WidgetService {
 						// User has to confirm email verifying the code
 						if (this.onConfirmEmailRequired) {
 							this.onConfirmEmailRequired(login);
+						}
+					} else if (this.errorHandler.getCurrentError() === 'auth.recaptcha_invalid') {
+						// User has to confirm email verifying the code
+						localStorage.removeItem('recaptchaId');
+						if(this.onRecaptchaCallback){
+							this.onRecaptchaCallback();
 						}
 					} else {
 						if (this.onError) {

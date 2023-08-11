@@ -2,7 +2,7 @@
   <app-widget 
     [ngStyle]="{'max-width': !widgetSize ? '100%' : ''}" 
     class="widget-size-widget"
-    [userParamsId]="userParamsId" [quickCheckout]=true 
+    [userParamsId]="userParamsId" [quickCheckout]=false 
     (onIFramePay)="iframePay()">
   </app-widget>
 </div>

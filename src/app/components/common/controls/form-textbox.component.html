@@ -11,7 +11,7 @@
         [ngClass]="{'__form-text-box': control?.valid || !initialized, '__form-text-box-error': !control?.valid && initialized, '__form-uppercase-input': upperCase}"
         [type]="boxType" [placeholder]="placeholder" [formControl]="control" [maxlength]="maxlength"
         [readonly]="active===false" [onlyNumber]="numberField" [attr.inputmode]="inputMode" [pattern]="inputPattern"
-        autocomplete="false" />
+        autocomplete="off" />
     <div *ngIf="!control?.valid && initialized" class="__form-input-error-icon-container">
         <mat-icon class="__form-input-error-icon">
             error

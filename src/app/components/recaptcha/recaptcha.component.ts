@@ -53,7 +53,7 @@ export class RecaptchaComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
   	const turnstileOptions: TurnstileOptions = {
   		sitekey: this.siteKey,
-  		appearance: 'interaction-only',
+  		appearance: 'always',
   		callback: (token: string) => this.capchaResult(token),
   	};
   	this.turnstileCaptchaRender(turnstileOptions);

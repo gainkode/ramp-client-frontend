@@ -363,7 +363,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   				next: () => this.save.emit(),
   				error: (errorMessage) => {
   					this.errorMessage = errorMessage;
-  					this.nagivateToHome();
+  					this.navigateToHome();
   				} 
   			})
   		);
@@ -380,14 +380,19 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   		this.adminService.getVerificationLink(this.userData?.id ?? '').valueChanges.
   			pipe(finalize(() => this.kycProviderLinkInProgress = false))
   			.subscribe({
-  				next: (data: any) => {
+  				next: ({data}) => {
+						this.kycProviderLinkInProgress = false;
   					if (data?.getVerificationLink) {
-  						void this.router.navigate([]).then(() => window.open(data?.getVerificationLink, '_blank'));
-  					}
+							void this.router.navigate([]).then(() => window.open(data?.getVerificationLink, '_blank'));
+  					}else{
+							this.errorMessage = this.errorHandler.getCurrentErrorMessage();
+  						this.navigateToHome();
+						}
   				},
   				error: (errorMessage) => {
+						this.kycProviderLinkInProgress = false;
   					this.errorMessage = errorMessage ?? this.errorHandler.getCurrentErrorMessage();
-  					this.nagivateToHome();
+  					this.navigateToHome();
   				} 
   			})
   	);
@@ -458,7 +463,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   				},
   				error: (errorMessage) => {
   					this.errorMessage = errorMessage;
-  					this.nagivateToHome();
+  					this.navigateToHome();
   				} 
   			})
   	);
@@ -474,7 +479,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   				next: () => this.save.emit(),
   				error: (errorMessage) => {
   					this.errorMessage = errorMessage;
-  					this.nagivateToHome();
+  					this.navigateToHome();
   				} 
   			})
   	);
@@ -490,13 +495,13 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   				next: () => this.save.emit(),
   				error: (errorMessage) => {
   					this.errorMessage = errorMessage;
-  					this.nagivateToHome();
+  					this.navigateToHome();
   				} 
   			})
   	);
   }
 
-  private nagivateToHome(): void {
+  private navigateToHome(): void {
   	if (this.auth.token === '') {
   		void this.router.navigateByUrl('/');
   	}

@@ -124,7 +124,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.userInfoRequired.bind(this),
   		this.companyLevelVerification.bind(this),
   		this.sellSettingsCommonComplete.bind(this),
-  		this.onRecaptchaCallback.bind(this)
+  		this.onRecaptchaCallback.bind(this),
+			this.quickCheckout
   	);
   	this.initMessage = 'Loading...';
 
@@ -132,9 +133,9 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.pager.init('initialization', 'Initialization');
   	this.loadCustomData();
 		
-  	if(!this.externalKycSubscriptionFlag){
-  		this.startExternalKycProvideListener();
-  	} 
+  	// if(!this.externalKycSubscriptionFlag){
+  	// 	this.startExternalKycProvideListener();
+  	// } 
   }
 
   private initPage(): void {
@@ -376,31 +377,31 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		.subscribe({
   			next: ({ data }) => {
   				const subscriptionData = data.externalPaymentCompletedNotification;
-					let finishFlag = false;
+  				let finishFlag = false;
   				console.log('External Payment completed', subscriptionData);
 				
-  				if(subscriptionData.orderStatus === 'completed'){
-						finishFlag = true;
+  				if(subscriptionData.status === 'approved'){
+  					finishFlag = true;
   					this.processingComplete();
-  				} else if(subscriptionData.orderStatus === 'declined') {
-						finishFlag = true;
+  				} else if(subscriptionData.status === 'declined') {
+  					finishFlag = true;
   					this.setError('External Payment failed', 'Payment declined', 'creatExternalTransaction');
   				}
 
-					if(finishFlag){
-						this.showWidget = true;
-						this.widgetLink = undefined;
-						this.onIFramePay.emit(false);
-					}
+  				if(finishFlag){
+  					this.showWidget = true;
+  					this.widgetLink = undefined;
+  					this.onIFramePay.emit(false);
+  				}
   			},
   			error: (error) => {
   				console.error('External Payment notification error', error);
 
   				this.setError('External Payment', 'Payment declined', 'creatExternalTransaction');
 
-					this.showWidget = true;
-					this.widgetLink = undefined;
-					this.onIFramePay.emit(false);
+  				this.showWidget = true;
+  				this.widgetLink = undefined;
+  				this.onIFramePay.emit(false);
   			}
   		});
   }
@@ -483,6 +484,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   capchaResult(event): void {
   	this.recaptchaDialog?.close();
+		this.recaptchaDialog = undefined;
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
 
@@ -588,28 +590,28 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			next: ({ data }) => {
   				this.inProgress = false;
   				this.initData(data.getWidget as Widget);
-	   
-  				if (!this.widget.transaction) {
-  					this.showTransactionError('Wrong widget settings', 'Missing transaction type', false);
-  					return;
-  				}
-	  
-  				const transactionType = this.widget.transaction.toLowerCase();
-  				const validTransactionType = ['buy', 'sell'].includes(transactionType);
-	  
-  				if (validTransactionType) {
-  					if (this.widget.orderDefault) {
-  						if (this.auth.user?.email !== this.widget.email) {
-  							this.summary.email = '';
-  						}
-  						this.orderDetailsComplete(this.widget.email);
-  					} else {
-  						const isOrderDetails = this.quickCheckout || this.summary.agreementChecked;
-  						this.pager.init(
-  							isOrderDetails ? 'order_details' : 'intro_disclaimer',
-  							isOrderDetails ?  'Order details' : 'Disclaimer'
-  						);
+
+  				if (this.widget.transaction) {
+  					const transactionType = this.widget.transaction.toLowerCase();
+  					const validTransactionType = ['buy', 'sell'].includes(transactionType);
+
+  					if (!validTransactionType) {
+  						this.showTransactionError('Wrong widget settings', 'Missing transaction type', false);
+  						return;
   					}
+  				}
+	
+  				if (this.widget.orderDefault) {
+  					if (this.auth.user?.email !== this.widget.email) {
+  						this.summary.email = '';
+  					}
+  					this.orderDetailsComplete(this.widget.email);
+  				} else {
+  					const isOrderDetails = this.quickCheckout || this.summary.agreementChecked;
+  					this.pager.init(
+  						isOrderDetails ? 'order_details' : 'intro_disclaimer',
+  						isOrderDetails ?  'Order details' : 'Disclaimer'
+  					);
   				}
   			}, 
   			error: () => {
@@ -819,8 +821,9 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.paymentProviders = providers.map(val => val);
 
   	const nextStage = 4;
-		console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded)
+  	console.log(this.widget.kycFirst, this.requestKyc, this.widget.embedded);
   	if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
+			this.startExternalKycProvideListener();
   		if(this.companyLevelVerificationFlag){
   			this.nextStage('company_level_verification', 'Verification', this.pager.step, true);
   		} else {

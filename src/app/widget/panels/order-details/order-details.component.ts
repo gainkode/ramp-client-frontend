@@ -288,9 +288,10 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   		currencyData.valueChanges.subscribe(
   			({ data }) => {
   				this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
-  				if (this.auth.authenticated) {
+
+  				if (this.auth.authenticated && this.auth.user.email === this.emailField?.value && this.settings.embedded) {
   					this.loadRates();
-						this.loadTransactionsTotal();
+  					this.loadTransactionsTotal();
   				} else {
   					this.onProgress.emit(false);
   				}
@@ -366,7 +367,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   private loadRates(): void {
   	const rateCurrencies = this.pCurrencies.filter(x => x.fiat === true && x.symbol !== 'EUR').map((val) => val.symbol);
-	
+
   	const rateData = this.paymentService.getOneToManyRates('EUR', rateCurrencies, false);
 
   	this.pSubscriptions.add(
@@ -896,7 +897,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   		if (this.auth.user) {
   			if (this.auth.user.email !== this.emailField?.value) {
   				this.auth.logout();
-  				return;
   			}
   		}
   		this.initialized = false;

@@ -57,7 +57,7 @@ export class WidgetKycComponent implements OnInit, OnDestroy, AfterViewInit, OnC
   	this.pSubscriptions.unsubscribe();
   }
   ngOnChanges(): void {
-  	if(!this.kycSubscribeResult){
+  	if(this.kycSubscribeResult === false){
   		this.handleReject();
   	} else if(this.kycSubscribeResult){
   		this.onNext.emit();
