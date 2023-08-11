@@ -697,6 +697,7 @@ const GET_TRANSACTIONS = gql`
         liquidityOrder { statusReason }
         liquidityOrderId
         liquidityProvider
+        paymentOrderId
         paymentOrder {
           amount
           captureOperationSn

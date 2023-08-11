@@ -65,6 +65,7 @@ export class TransactionItemFull {
 	amountToReceive = 0;
 	transferOrderId = '';
 	transferOriginalOrderId = '';
+	paymentOrderId = '';
 	transferOrderHash = '';
 	screeningAnswer = '';
 	screeningRiskscore = 0;
@@ -160,6 +161,7 @@ export class TransactionItemFull {
 			}
 
 			this.comment = transactionData.comment ?? '';
+			this.paymentOrderId = transactionData.paymentOrderId ?? '-';
 			this.transferOrderId = data.transferOrder?.orderId ?? '';
 			this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
 			this.transferOrderHash = data.transferOrder?.transferHash ?? '';
