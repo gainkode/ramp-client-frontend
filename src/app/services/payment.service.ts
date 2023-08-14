@@ -63,6 +63,7 @@ query GetAppropriatePaymentProviders(
       countriesCode2
       instruments
       default
+      external
     }
   }
 }

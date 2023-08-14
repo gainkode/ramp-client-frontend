@@ -864,7 +864,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   			this.startPayment();
   		} else {
-  			this.createBuyTransaction(provider.id, provider.instrument, '');
+  			this.createBuyTransaction(provider, provider.instrument, '');
   		}
   	} else {
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
@@ -893,7 +893,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		accountType: data.selected
   	};
   	const settingsData = JSON.stringify(settings);
-  	this.createBuyTransaction(this.summary.providerView?.id ?? '', PaymentInstrument.WireTransfer, settingsData);
+  	this.createBuyTransaction(this.summary.providerView, PaymentInstrument.WireTransfer, settingsData);
   }
 
   sendWireTransaferMessageResult(): void {
@@ -1040,14 +1040,15 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private createBuyTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string): void {
+  private createBuyTransaction(provider: PaymentProviderInstrumentView, instrument: PaymentInstrument, instrumentDetails: string): void {
   	this.errorMessage = '';
   	this.inProgress = true;
   	const tempStageId = this.pager.swapStage('initialization');
   	this.initMessage = 'Processing...';
   	if (this.summary) {
   		const destination = this.summary.address;
-  		if(providerId === 'GetCoinsPayment' || providerId === 'Coriunder'){
+			console.log(this.summary.provider)
+  		if(provider.external){
   			this.pSubscriptions.add(
   				this.dataService.createTransactionWithWidgetUserParams(
   					this.summary.transactionType,
@@ -1058,7 +1059,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					this.summary.amountFrom ?? 0,
   					instrument,
   					instrumentDetails,
-  					providerId,
+  					provider.id,
   					this.userParamsId,
   					destination,
   					this.summary.verifyWhenPaid,
@@ -1107,7 +1108,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					this.summary.amountFrom ?? 0,
   					instrument,
   					instrumentDetails,
-  					providerId,
+  					provider.id,
   					this.userParamsId,
   					destination,
   					this.summary.verifyWhenPaid
@@ -1119,7 +1120,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					this.inProgress = false;
   					if (order.code) {
   						this.summary.instrument = instrument;
-  						this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
+  						this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   						this.summary.orderId = order.code as string;
   						this.summary.fee = order.feeFiat as number ?? 0;
   						this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
@@ -1145,7 +1146,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   							} else {
   								if(order.transactionId && order.transactionId){
   									this.summary.instrument = instrument;
-  									this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
+  									this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   									this.transactionIdConfirmationCode = order.transactionId;
   									this.nextStage('code_auth', 'Authorization', 3, true);
   								}else{

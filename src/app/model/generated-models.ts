@@ -222,6 +222,7 @@ export type Callback = {
   callbackId?: Maybe<Scalars['ID']['output']>;
   created?: Maybe<Scalars['String']['output']>;
   error?: Maybe<Scalars['String']['output']>;
+  objectId?: Maybe<Scalars['String']['output']>;
   params?: Maybe<Scalars['String']['output']>;
   payload?: Maybe<Scalars['String']['output']>;
   response?: Maybe<Scalars['String']['output']>;
@@ -1040,6 +1041,7 @@ export type Mutation = {
   generateDefaultTokenWhenKycSent: LoginResult;
   get2faQRCode: Scalars['String']['output'];
   login: LoginResult;
+  loginWidget: LoginResult;
   logout: Scalars['Boolean']['output'];
   makeNotificationsViewed?: Maybe<Array<UserNotification>>;
   preauth: PaymentPreauthResultShort;
@@ -1580,6 +1582,15 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationLoginWidgetArgs = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  oAuthProvider?: InputMaybe<OAuthProvider>;
+  oAuthToken?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  widgetId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationMakeNotificationsViewedArgs = {
   notificationIds?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
@@ -2010,6 +2021,7 @@ export type PaymentPreauthResult = {
   __typename?: 'PaymentPreauthResult';
   details?: Maybe<Scalars['String']['output']>;
   html?: Maybe<Scalars['String']['output']>;
+  operation?: Maybe<PaymentOperation>;
   order?: Maybe<PaymentOrder>;
 };
 
@@ -2027,6 +2039,7 @@ export type PaymentProvider = {
   default?: Maybe<Scalars['Boolean']['output']>;
   disabled?: Maybe<Scalars['DateTime']['output']>;
   displayName?: Maybe<Scalars['String']['output']>;
+  external?: Maybe<Scalars['Boolean']['output']>;
   instruments?: Maybe<Array<Scalars['String']['output']>>;
   logo?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -2676,6 +2689,7 @@ export type QueryGetVaultAccountArgs = {
 
 
 export type QueryGetVaultAccountListForUsersArgs = {
+  admin?: InputMaybe<Scalars['Boolean']['input']>;
   custodyProviderName: Scalars['String']['input'];
   userIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
@@ -4836,6 +4850,7 @@ export type WidgetUpdateInput = {
 export type WidgetUserParams = {
   __typename?: 'WidgetUserParams';
   created: Scalars['DateTime']['output'];
+  executed?: Maybe<Scalars['DateTime']['output']>;
   params?: Maybe<Scalars['String']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
   widgetId?: Maybe<Scalars['String']['output']>;
