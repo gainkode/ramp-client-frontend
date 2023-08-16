@@ -8,18 +8,35 @@ export function getTierBlocks(user: User, verifiedTierId: string, tiersData: Set
 		const currentTierId = user.kycTierId;
 		const sortedTiers = rawTiers.sort((a, b) => tierSortHandler(a, b));
 		let beforeCurrentTier = (sortedTiers.find(x => x.settingsKycTierId === currentTierId) !== undefined);
+		let foundCurrentTier = false;
 		tiers = sortedTiers.map(val => {
 			const defaultDescription = 'Start verification process to increase your limit up to this level.';
 			const unlimitVal = (val.amount === undefined || val.amount === null);
 			let tierPassed = false;
 
-			if (beforeCurrentTier && val.settingsKycTierId === currentTierId) {
-				beforeCurrentTier = false;
-				tierPassed = val.originalLevelName !== null ? user.kycValid : true;
-			  } else {
+			// if (beforeCurrentTier && val.settingsKycTierId === currentTierId) {
+			// 	beforeCurrentTier = false;
+			// 	tierPassed = val.originalLevelName !== null ? user.kycValid : true;
+			// } else {
+			// 	tierPassed = true;
+			// }
+			if(!foundCurrentTier){
+				if (beforeCurrentTier) {
+					if (val.settingsKycTierId === currentTierId) {
+						beforeCurrentTier = false;
+						tierPassed = val.originalLevelName !== null ? user.kycValid : true;
+					} else {
+						tierPassed = true;
+					}
+				}
+	
+				if(tierPassed === false){
+					foundCurrentTier = true;
+				}
+			}else{
 				tierPassed = true;
 			}
-
+			
 			return {
 				limit: (unlimitVal) ?
 					'Unlimited' :
