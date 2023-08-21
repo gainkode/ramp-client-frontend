@@ -7,7 +7,7 @@ import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'mo
 @Component({
 	selector: 'app-widget-wire-transfer-result',
 	templateUrl: 'wire-transfer-result.component.html',
-	styleUrls: ['../../../../assets/text-control.scss']
+	styleUrls: ['../../../../assets/text-control.scss', './wire-transfer-result.component.scss']
 })
 export class WidgetWireTransferResultComponent {
     @Input() referenceId = '';
@@ -31,22 +31,22 @@ export class WidgetWireTransferResultComponent {
     }
     
     private loadData(val: WireTransferPaymentCategoryItem): void {
-    	const data = JSON.parse(val.data);
-			const bankDetails = data as BankDetailsObject;
-			
-			this.fields['Reference ID'] = this.referenceId ?? '';
-			this.fields['Account Holder'] = bankDetails.bankAccountHolderName ?? '';
-			this.fields['Account Number'] = bankDetails.bankAccountNumber ?? '';
-			this.fields['Account Name'] = bankDetails.accountName ?? '';
-			this.fields['Sort Code'] = bankDetails.sortCode ?? '';
-			this.fields['Bank Address'] = bankDetails.bankAddress ?? '';
-			this.fields['Bank Name'] = bankDetails.bankAccountName ?? '';
-			this.fields['Beneficiary Address'] = bankDetails.beneficiaryAddress ?? '';
-			this.fields['Beneficiary Name'] = bankDetails.beneficiaryName ?? '';
-			this.fields['IBAN'] = bankDetails.iban ?? '';
-			this.fields['SWIFT / BIC'] = bankDetails.swiftBic ?? '';
-			this.fields['Routing Number'] = bankDetails.routingNumber ?? '';
-			this.fields['Credit To'] = bankDetails.creditTo ?? '';
-			this.fields['Reference'] = bankDetails.reference ?? '';
+    	const bankDetails: BankDetailsObject = JSON.parse(val.data);
+			this.fields = {
+				'Reference ID': this.referenceId ?? '',
+				'Account Holder': bankDetails.bankAccountHolderName ?? '',
+				'Account Number': bankDetails.bankAccountNumber ?? '',
+				'Account Name': bankDetails.accountName ?? '',
+				'Sort Code': bankDetails.sortCode ?? '',
+				'Bank Address': bankDetails.bankAddress ?? '',
+				'Bank Name': bankDetails.bankAccountName ?? '',
+				'Beneficiary Address': bankDetails.beneficiaryAddress ?? '',
+				'Beneficiary Name': bankDetails.beneficiaryName ?? '',
+				'IBAN': bankDetails.iban ?? '',
+				'SWIFT / BIC': bankDetails.swiftBic ?? '',
+				'Routing Number': bankDetails.routingNumber ?? '',
+				'Credit To': bankDetails.creditTo ?? '',
+				'Reference': bankDetails.reference ?? ''
+			}
     }
 }

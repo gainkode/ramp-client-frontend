@@ -3,19 +3,19 @@
         Transfer Details
     </h3>
     <div class="__widget-details-container">
-        <div *ngFor="let key of Object.keys(fields)" style="width: 100%;">
-            <div *ngIf="fields[key] !== ''" class="__widget-details-title">
+        <div *ngFor="let field of fields | keyvalue" class="__widget-details-container-field">
+            <div *ngIf="field.value" class="__widget-details-title">
                 <div class="__widget-details-title-item">
-                    {{key}}:
+                    {{field.key}}:
                 </div>
-                <button class="__tool-button" type="button" (click)="copyParameter(key)">
-                    <i class="material-icons" style="font-size: 16px;margin-top: 4px;">
+                <button class="__tool-button" type="button" (click)="copyParameter(field.key)">
+                    <i class="material-icons">
                         content_copy
                     </i>
                 </button>
             </div>
-            <div *ngIf="fields[key] !== ''" class="__widget-details-item">
-                {{fields[key]}}
+            <div *ngIf="field.value" class="__widget-details-item">
+                {{field.value}}
             </div>
 
         </div>
