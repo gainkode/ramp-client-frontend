@@ -19,12 +19,16 @@ export class PaymentProviderInstrumentView {
 	image = '';
 	instrument: PaymentInstrument = PaymentInstrument.CreditCard;
 	external = false;
+	virtual = false;
 
 	constructor(data: PaymentProviderByInstrument) {
 		this.id = data.provider?.name ?? '';
 		this.name = data.provider?.name ?? '';
 		this.instrument = data.instrument ?? PaymentInstrument.CreditCard;
 		if(data.provider.external){
+			this.external = data.provider.external;
+		}
+		if(data.provider.virtual){
 			this.external = data.provider.external;
 		}
 		if (this.instrument === PaymentInstrument.Apm) {
@@ -53,11 +57,13 @@ export class PaymentProviderView {
 	id = '';
 	name = '';
 	instruments: string[] = [];
+	virtual: boolean = false;
 
 	constructor(data: PaymentProvider) {
 		this.id = data.name ?? '';
 		this.name = data.name ?? '';
 		this.instruments = data.instruments?.map(val => val) ?? [];
+		this.virtual = data.virtual;
 	}
 }
 
@@ -298,11 +304,7 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
 export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryItem> = [
 	{ id: WireTransferPaymentCategory.AU, bankAccountId: '', title: 'Australian Bank', data: '' },
 	{ id: WireTransferPaymentCategory.UK, bankAccountId: '', title: 'UK Bank', data: '' },
-	{ id: WireTransferPaymentCategory.EU, bankAccountId: '', title: 'SEPA / SWIFT', data: '' },
-	{ id: WireTransferPaymentCategory.OPENPAYD, bankAccountId: '', title: 'Openpayd', data: '' },
-	{ id: WireTransferPaymentCategory.MONOOVA, bankAccountId: '', title: 'Monoova', data: '' },
-	{ id: WireTransferPaymentCategory.PRIMETRUST, bankAccountId: '', title: 'PrimeTrust', data: '' },
-	{ id: WireTransferPaymentCategory.FLASHFX, bankAccountId: '', title: 'Flashfx', data: '' }
+	{ id: WireTransferPaymentCategory.EU, bankAccountId: '', title: 'SEPA / SWIFT', data: '' }
 ];
 
 export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = [

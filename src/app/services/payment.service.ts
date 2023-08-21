@@ -120,17 +120,27 @@ query MySettingsFee(
         bankAccountId
         name
         description
-        au
-        uk
-        eu
-        openpayd
-        openpaydObject
-        flashfx
-        flashfxObject
-        monoova
-        monoovaObject
-        primeTrust
-        primeTrustObject
+        objectsDetails{
+          id
+          currency
+          bankAddress
+          accountName
+          bankName
+          iban
+          beneficiaryAddress
+          beneficiaryName
+          swiftBic
+          payInReference
+          bankAccountHolderName
+          sortCode
+          bsb
+          bankAccountNumber
+          bankAccountName
+          depositoryBankName
+          reference
+          creditTo
+          routingNumber
+        }
       }
     },
     requiredFields

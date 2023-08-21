@@ -337,11 +337,8 @@ query GetWireTransferBankAccounts {
       description
       au
       uk
-      eu,
-      openpayd,
-      flashfx,
-      monoova,
-      primeTrust
+      eu
+      paymentProviders
     }
   }
 }
@@ -1292,6 +1289,7 @@ query GetProviders {
     currencies
     countriesCode2
     instruments
+    virtual
   }
 }
 `;
@@ -1498,10 +1496,7 @@ mutation AddWireTransferBankAccount(
   $au: String
   $uk: String
   $eu: String,
-  $openpayd: Boolean
-  $monoova: Boolean
-  $primeTrust: Boolean
-  $flashfx: Boolean
+  $paymentProviders: [String]
 ) {
   addWireTransferBankAccount(
     bankAccount: {
@@ -1510,10 +1505,7 @@ mutation AddWireTransferBankAccount(
       au: $au
       uk: $uk
       eu: $eu
-      openpayd: $openpayd
-      monoova: $monoova
-      primeTrust: $primeTrust
-      flashfx: $flashfx
+      paymentProviders: $paymentProviders
     }
   ) {
     bankAccountId
@@ -2414,10 +2406,7 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
     $au: String
     $uk: String
     $eu: String
-    $openpayd: Boolean
-    $monoova: Boolean
-    $primeTrust: Boolean
-    $flashfx: Boolean
+    $paymentProviders: [String]
   ) {
     updateWireTransferBankAccount(
       bankAccountId: $bankAccountId
@@ -2427,10 +2416,7 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
         au: $au
         uk: $uk
         eu: $eu
-        openpayd: $openpayd
-        monoova: $monoova
-        primeTrust: $primeTrust
-        flashfx: $flashfx
+        paymentProviders: $paymentProviders
       }
     ) {
       bankAccountId
@@ -3603,10 +3589,7 @@ export class AdminDataService {
           au: account.au,
           uk: account.uk,
           eu: account.eu,
-          monoova: account.monoova,
-          primeTrust: account.primeTrust,
-          openpayd: account.openpayd,
-          flashfx: account.flashfx
+          paymentProviders: account.paymentProviders
         }
       })
       : this.apollo.mutate({
@@ -3618,10 +3601,7 @@ export class AdminDataService {
           au: account.au,
           uk: account.uk,
           eu: account.eu,
-          monoova: account.monoova,
-          primeTrust: account.primeTrust,
-          openpayd: account.openpayd,
-          flashfx: account.flashfx
+          paymentProviders: account.paymentProviders
         }
       });
   }

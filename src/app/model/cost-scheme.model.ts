@@ -147,14 +147,7 @@ export class WireTransferBankAccountItem {
 	au: WireTransferBankAccountAu | undefined = undefined;
 	uk: WireTransferBankAccountUk | undefined = undefined;
 	eu: WireTransferBankAccountEu | undefined = undefined;
-	openpayd: Boolean | undefined = undefined;
-	monoova: Boolean | undefined = undefined;
-	primeTrust: Boolean | undefined = undefined;
-	flashfx: Boolean | undefined = undefined;
-	openpaydObject: WireTransferBankAccountOpenpaydObject | undefined = undefined;
-	flashfxObject: WireTransferBankAccountFlashfxObject | undefined = undefined;
-	monoovaObject: WireTransferBankAccountMonoovaObject | undefined = undefined;
-	primeTrustObject: WireTransferBankAccountPrimeTrustObject | undefined = undefined;
+	paymentProviders: String[] = [];
 
 	get auAvailable(): boolean {
 		return (this.au !== undefined);
@@ -166,22 +159,6 @@ export class WireTransferBankAccountItem {
 
 	get euAvailable(): boolean {
 		return (this.eu !== undefined);
-	}
-
-	get openpaydAvailable(): boolean {
-		return (this.openpayd !== undefined);
-	}
-
-	get monoovaAvailable(): boolean {
-		return (this.monoova !== undefined);
-	}
-
-	get primeTrustAvailable(): boolean {
-		return (this.primeTrust !== undefined);
-	}
-
-	get flashfxAvailable(): boolean {
-		return (this.flashfx !== undefined);
 	}
 
 	get auData(): string | undefined {
@@ -210,29 +187,8 @@ export class WireTransferBankAccountItem {
 			if (data.eu) {
 				this.eu = JSON.parse(data.eu) ?? undefined;
 			}
-			if (data.openpayd) {
-				this.openpayd = data.openpayd ?? false;
-			}
-			if(data.openpaydObject){
-				this.openpaydObject = JSON.parse(data.openpaydObject) ?? undefined;
-			}
-			if(data.monoova) {
-				this.monoova = data.monoova ?? false;
-			}
-			if(data.monoovaObject){
-				this.monoovaObject = JSON.parse(data.monoovaObject) ?? undefined;
-			}
-			if(data.primeTrust) {
-				this.primeTrust = data.primeTrust ?? false;
-			}
-			if(data.primeTrustObject){
-				this.primeTrustObject = JSON.parse(data.primeTrustObject) ?? undefined;
-			}
-			if (data.flashfx) {
-				this.flashfx = data.flashfx ?? false;
-			}
-			if(data.flashfxObject){
-				this.flashfxObject = JSON.parse(data.flashfxObject) ?? undefined;
+			if(data.paymentProviders){
+				this.paymentProviders = data.paymentProviders;
 			}
 		} else {
 			this.id = '';
@@ -261,43 +217,6 @@ export class WireTransferBankAccountEu {
 	beneficiaryName = '';
 	iban = '';
 	swiftBic = '';
-}
-
-export class WireTransferBankAccountOpenpaydObject {
-	currency = '';
-	bankAddress = '';
-	bankName = '';
-	beneficiaryAddress = '';
-	beneficiaryName = '';
-	iban = '';
-	swiftBic = '';
-	sortCode = '';
-	accountNumber = '';
-	bankAccountHolderName = '';
-}
-
-export class WireTransferBankAccountFlashfxObject {
-	currency = '';
-	beneficiaryAddress = '';
-	beneficiaryName = '';
-	bsb = '';
-	accountNumber = '';
-}
-
-export class WireTransferBankAccountMonoovaObject {
-	bankAccountName = '';
-	bankAccountNumber = '';
-	bsb = '';
-}
-
-export class WireTransferBankAccountPrimeTrustObject {
-	depositoryBankName = '';
-	accountNumber = '';
-	reference = '';
-	bankAddress = '';
-	routingNumber = '';
-	creditTo = '';
-	beneficiaryAddress = '';
 }
 
 export class WireTransferUserSelection {

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortEx, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from '../model/generated-models';
-import { WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
-import { CheckoutSummary, PaymentProviderInstrumentView, WireTransferPaymentCategoryList } from '../model/payment.model';
+import { WidgetSettings, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
+import { CheckoutSummary, PaymentProviderInstrumentView } from '../model/payment.model';
 import { AuthService } from './auth.service';
 import { ErrorService } from './error.service';
 import { PaymentDataService } from './payment.service';
@@ -206,74 +206,15 @@ export class WidgetService {
 						const costs = settingsResult.costs[0];
 						if (costs.bankAccounts && (costs.bankAccounts?.length ?? 0 > 0)) {
 							accountData = costs.bankAccounts[0];
-							wireTransferList = WireTransferPaymentCategoryList.map(val => val);
-							let pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.AU);
-							if (pos >= 0) {
-								if (accountData.au === null || accountData.au === undefined || accountData.au === 'null') {
-									wireTransferList.splice(pos, 1);
-								} else {
-									wireTransferList[pos].data = accountData.au;
-									wireTransferList[pos].bankAccountId = accountData.bankAccountId;
-								}
-							}
 
-							pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.UK);
-							if (pos >= 0) {
-								if (accountData.uk === null || accountData.uk === undefined || accountData.uk === 'null') {
-									wireTransferList.splice(pos, 1);
-								} else {
-									wireTransferList[pos].data = accountData.uk;
-									wireTransferList[pos].bankAccountId = accountData.bankAccountId;
-								}
-							}
-
-							pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.EU);
-							if (pos >= 0) {
-								if (accountData.eu === null || accountData.eu === undefined || accountData.eu === 'null') {
-									wireTransferList.splice(pos, 1);
-								} else {
-									wireTransferList[pos].data = accountData.eu;
-									wireTransferList[pos].bankAccountId = accountData.bankAccountId;
-								}
-							}
-
-							pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.OPENPAYD);
-							if (pos >= 0) {
-								if (accountData.openpaydObject === null || accountData.openpaydObject === undefined || accountData.openpaydObject === 'null') {
-									wireTransferList.splice(pos, 1);
-								} else {
-									wireTransferList[pos].data = accountData.openpaydObject;
-									wireTransferList[pos].bankAccountId = accountData.bankAccountId;
-								}
-							}
-
-							pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.FLASHFX);
-							if (pos >= 0) {
-								if (accountData.flashfxObject === null || accountData.flashfxObject === undefined || accountData.flashfxObject === 'null') {
-									wireTransferList.splice(pos, 1);
-								} else {
-									wireTransferList[pos].data = accountData.flashfxObject;
-									wireTransferList[pos].bankAccountId = accountData.bankAccountId;
-								}
-							}
-
-							pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.MONOOVA);
-							if (pos >= 0) {
-								if (accountData.monoovaObject === null || accountData.monoovaObject === undefined || accountData.monoovaObject === 'null') {
-									wireTransferList.splice(pos, 1);
-								} else {
-									wireTransferList[pos].data = accountData.monoovaObject;
-									wireTransferList[pos].bankAccountId = accountData.bankAccountId;
-								}
-							}
-
-							pos = wireTransferList.findIndex(x => x.id === WireTransferPaymentCategory.PRIMETRUST);
-							if (pos >= 0) {
-								if (accountData.primeTrustObject === null || accountData.primeTrustObject === undefined || accountData.primeTrustObject === 'null') {
-									wireTransferList.splice(pos, 1);
-								} else {
-									wireTransferList[pos].data = accountData.primeTrustObject;
-									wireTransferList[pos].bankAccountId = accountData.bankAccountId;
+							if(accountData.objectsDetails && accountData.objectsDetails.length != 0){
+								for(let object of accountData.objectsDetails){
+									wireTransferList.push({
+										title: object.id,
+										id: object.id,
+										data: JSON.stringify(object),
+										bankAccountId: accountData.bankAccountId
+									})
 								}
 							}
 						}

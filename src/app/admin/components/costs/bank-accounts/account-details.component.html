@@ -24,6 +24,20 @@
           <input class="form-control" type="text" formControlName="description">
         </div>
 
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Payment providers
+          </label>
+          <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id" [multiple]="true"
+            formControlName="paymentProviders" placeholder="Select one or more providers">
+          </ng-select>
+          <div *ngIf="(form.controls.paymentProviders.touched || submitted) && (form.controls.paymentProviders.errors?.['required'])"
+            class="tx-danger">
+            <small>
+              Select at least one payment provider
+            </small>
+          </div>
+        </div>
       </div>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 class="card-title mg-b-20 tx-11"
@@ -132,38 +146,6 @@
             <input class="form-control" type="text" formControlName="ukSortCode" maxlength="100">
           </div>
         </div>
-      </div>
-      
-      <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20 tx-11"
-          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-          <input type="checkbox" formControlName="openpaydSelected" class="me-2">
-          {{openpaydCategory?.title}}
-        </h5>
-      </div>
-
-      <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20 tx-11"
-          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-          <input type="checkbox" formControlName="monoovaSelected" class="me-2">
-          {{monoovaCategory?.title}}
-        </h5>
-      </div>
-
-      <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20 tx-11"
-          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-          <input type="checkbox" formControlName="primeTrustSelected" class="me-2">
-          {{primeTrustCategory?.title}}
-        </h5>
-      </div>
-
-      <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20 tx-11"
-          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
-          <input type="checkbox" formControlName="flashfxSelected" class="me-2">
-          {{flashfxCategory?.title}}
-        </h5>
       </div>
 
       <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
