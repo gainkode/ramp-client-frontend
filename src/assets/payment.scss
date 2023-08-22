@@ -66,6 +66,67 @@ $font_main: var(--font_main);
     align-items: flex-end;
     padding: 0px;
     z-index: 100;
+    transition: background-color .2s;
+    &--dark {
+        background-color: $color_black !important;
+        .widget__container-2 {
+            background-color: $color_black !important;
+            transition: background-color .2s;
+        }
+        .order-details__content,
+        .widget-input__container {
+            background: $color_black !important;
+            transition: background-color .2s;
+            .widget-input__item-label, 
+            .widget-input__item-input,
+            .widget-input__item-select {
+                transition: background-color .2s;
+                background: $color_black !important;
+                color: $color_white !important;
+                -webkit-text-fill-color: $color_white;
+            }
+        }
+
+        .order-details__content-header-buttons,
+        .__widget-rate-title,
+        .widget-list__container,
+        .order-details__container,
+        .widget-list__item-row,
+        .widget-list__header-button,
+        .order-details__overview {
+            transition: background-color .2s;
+            background: $color_black !important;
+            color: $color_white !important;
+        }
+
+        .__widget-page-header,
+        .__widget-progress-title,
+        .__widget-disclaimer-line,
+        .order-details__content-header-button,
+        .order-details__overview-terms,
+        .__form-label,
+        input.__form-text-box,
+        input.__form-text-box-plain,
+        .order-details__overview-title,
+        .order-details__item-label,
+        .order-details__item-value,
+        .order-details__header-button,
+        .order-details__header-title span {
+            color: $color_white !important;
+        }
+
+        .order-details__content-header-button--active,
+        .order-details__overview-actions--next,
+        .order-details__overview-actions button:last-child,
+        .button-proceed-wrapper button {
+            transition: background-color .2s;
+            color: $color_white !important;
+            background-color: var(--secondary) !important;
+        }
+        .order-details__content-header-button--active {
+            box-shadow: 0 8px 34px rgba(16, 172, 234, 0.1) !important;
+        }
+    }
 }
 
 .__widget-container {

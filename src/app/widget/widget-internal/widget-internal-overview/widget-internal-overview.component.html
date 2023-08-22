@@ -2,10 +2,38 @@
 <div class="order-details__wrapper">
     <div class="order-details__content order-details__content--first">
 
-        <div class="__widget-title-container__ m-0">
-            <div class="__widget-title-logo-container">
-                <!-- logoSrc -->
+        <div class="__widget-title-container__ order-details__content-header m-0">
+            <div class="__widget-title-logo-container d-flex m-0 ms-1">
               <img class="__widget-title-logo" [src]="'https://app.getcoins.com.au/images/logo-widget.png'" [alt]="logoAlt" width="160">
+
+              <ng-container *ngIf="themeService.theme$ | async as theme">
+                <button 
+                  type="button" 
+                  mat-icon-button 
+                  [title]="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+                  [ngClass]="{'moon': theme === 'dark', 'sun': theme === 'light'}"
+                  (click)="themeService.toggleTheme()">
+                  <mat-icon>
+                    {{ theme === 'light' ? 'dark_mode' : 'light_mode' }}
+                  </mat-icon>
+                </button>
+              </ng-container>
+            </div>
+
+            <div class="order-details__content-header-buttons" 
+                [class.order-details__content-header-buttons--inactive]="false">
+                <div class="order-details__content-header-button" 
+                    (click)="toggleTransationType(TRANSACTION_TYPE.Buy)"
+                    [class.order-details__content-header-button--active]="currentTransaction === TRANSACTION_TYPE.Buy">
+                    Buy</div>
+                <div class="order-details__content-header-button"
+                    (click)="toggleTransationType(TRANSACTION_TYPE.Sell)"
+                    [class.order-details__content-header-button--active]="currentTransaction === TRANSACTION_TYPE.Sell">
+                    Sell
+                    <div class="order-details__content-header-button-blink"
+                        [class.order-details__content-header-button-blink--active]="currentTransaction === TRANSACTION_TYPE.Buy">
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -30,7 +58,7 @@
                 [errorMessages]="amountReceiveErrorMessages">
             </app-widget-input-group>
     
-            <div *ngIf="!settings.embedded" class="mt-3">
+            <div *ngIf="!settings.embedded" class="mt-3 order-details__theme">
                 <app-widget-rate 
                     class="__widget-rate-container" 
                     [currencySpend]="currencySpendField.value"
@@ -110,8 +138,8 @@
                     <a [href]="termsLink" target="_blank">Terms of Service</a> and 
                     <a [href]="privacyLink" target="_blank">Privacy Policy</a>
                 </span>
-                <button type="button" [disabled]="!isOrderProceedFormValid" (click)="onProceed()">
-                    Proceed <span class="tx-30">&#183;</span> Total {{amountSpendField.valid ? amountSpendField.value : '---'}}
+                <button type="button" mat-raised-button [disabled]="!isOrderProceedFormValid" (click)="onProceed()">
+                    <span class="d-flex"> Proceed <span class="tx-30">&#183;</span> Total {{amountSpendField.valid ? amountSpendField.value : '---'}}</span>
                 </button>
             </div>
         </form>
@@ -157,8 +185,8 @@
             <a [href]="privacyLink" target="_blank">Privacy Policy</a>
           </span>
           <div class="order-details__overview-actions">
-            <button type="button" class="order-details__overview-actions--back" (click)="onCancel()">Back </button>
-            <button type="button" class="order-details__overview-actions--next" (click)="onSubmit()" [disabled]="!isOrderDetailsFormValid">Next </button>
+            <button type="button" mat-raised-button (click)="onCancel()">Back </button>
+            <button type="button" mat-raised-button (click)="onSubmit()" [disabled]="!isOrderDetailsFormValid">Next </button>
           </div>
       </form>
     </div>

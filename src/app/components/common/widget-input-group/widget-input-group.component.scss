@@ -1,11 +1,11 @@
 .widget-input {
     &__container {
-    background: white;
-    border-radius: 4px;
-    width: 100%;
-    border: 1px solid lightgray;
-    cursor: pointer;
-    margin-top: 16px;
+        background: white;
+        border-radius: 4px;
+        width: 100%;
+        border: 1px solid lightgray;
+        cursor: pointer;
+        margin-top: 16px;
         &-error {
             border-color: var(--color_pink_500);
         }
@@ -113,7 +113,7 @@
         top: 0;
         left: 0;
         width: -webkit-fill-available;
-        z-index: 1;
+        z-index: 2;
     }
     &__header {
         display: grid;
@@ -206,3 +206,29 @@
     display: flex !important;
     padding: 7px 5px;
 }
+
+/* Border */
+.mat-mdc-form-field-appearance-outline 
+.mat-mdc-form-field-outline {
+    color: white !important;
+  }
+
+/* Font color */
+input.mat-mdc-input-element {
+    color: white !important;
+}
+
+$color-outline: red;
+
+mat-mdc-form-field {
+    &.border-red {
+       // to change border color
+       .mat-mdc-form-field-outline {
+            color: $color-outline !important;
+       }
+       // to change label color
+       .mat-mdc-form-field-label {
+            color: $color-outline !important;
+       }
+    }
+ }

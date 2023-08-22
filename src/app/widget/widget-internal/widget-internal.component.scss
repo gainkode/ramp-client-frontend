@@ -27,14 +27,14 @@
     height: 590px;
     background: white;
     border-radius: 8px;
-    padding: 24px 0;
-    padding-top: 10px;
+    // padding: 24px 0;
+    // padding-top: 10px;
 }
 
 .widget__container-2 {
     flex: 1 1;
     background: white;
-    padding: 24px 0;
+    padding: 10px;
     margin-left: 3px;
     border-radius: 8px;
     display: flex;
@@ -42,4 +42,8 @@
     position: relative;
     width: 500px;
     height: 590px;
+}
+
+.widget__wrapper--dark {
+    background-color: black;
 }

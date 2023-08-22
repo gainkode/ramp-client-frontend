@@ -13,6 +13,7 @@ import { PaymentDataService } from 'services/payment.service';
 import { getCurrencySign } from 'utils/utils';
 import { WalletValidator } from 'utils/wallet.validator';
 import { EnvService } from 'services/env.service';
+import { ThemeService } from 'services/theme-service';
 
 @Component({
 	selector: 'app-widget-internal-overview',
@@ -216,7 +217,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	private commonService: CommonDataService,
   	private paymentService: PaymentDataService,
   	private errorHandler: ErrorService,
-  	private formBuilder: UntypedFormBuilder) { }
+  	private formBuilder: UntypedFormBuilder,
+	public themeService: ThemeService) { }
 
   ngOnInit(): void {
   	const settings = this.auth.getLocalSettingsCommon();
@@ -321,6 +323,11 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.pSubscriptions.unsubscribe();
   }
 
+  toggleTransationType(type: TransactionType): void {
+  	// TODO: toggle here Transaction Type
+  	// this.currentTransaction = type; 
+  }
+
   private loadDetailsForm(initState: boolean): void {
   	const currencyData = this.commonService.getSettingsCurrency();
   	this.onProgress.emit(true);
@@ -329,7 +336,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			({ data }) => {
   				this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
   				
-				if (this.auth.authenticated && this.auth.user.email === this.emailField?.value && this.settings.embedded) {
+  				if (this.auth.authenticated && this.auth.user.email === this.emailField?.value && this.settings.embedded) {
   					this.loadRates();
   					this.loadTransactionsTotal();
   				} else {

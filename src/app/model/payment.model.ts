@@ -18,11 +18,15 @@ export class PaymentProviderInstrumentView {
 	name = '';
 	image = '';
 	instrument: PaymentInstrument = PaymentInstrument.CreditCard;
+	external = false;
 
 	constructor(data: PaymentProviderByInstrument) {
 		this.id = data.provider?.name ?? '';
 		this.name = data.provider?.name ?? '';
 		this.instrument = data.instrument ?? PaymentInstrument.CreditCard;
+		if(data.provider.external){
+			this.external = data.provider.external;
+		}
 		if (this.instrument === PaymentInstrument.Apm) {
 			this.name = data.provider?.displayName ?? 'APM';
 			if (data.provider?.logo) {
