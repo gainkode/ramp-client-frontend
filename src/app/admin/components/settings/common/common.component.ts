@@ -234,17 +234,40 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				this.form.get('stoppedForServicing')?.setValue(settingsCommon.stoppedForServicing);
 
 				// Auth
-				this.form.get('emailCodeNumberLength')?.setValue(this.additionalSettings.auth.emailCodeNumberLength ?? 5);
+				let {emailCodeNumberLength} = this.additionalSettings.auth;
+				
+				this.form.get('emailCodeNumberLength')?.setValue(emailCodeNumberLength ?? 5);
 
 				// Admin
-				this.form.get('editTransactionDestination')?.setValue(this.additionalSettings.admin.editTransactionDestination ?? false);
+				let {editTransactionDestination} = this.additionalSettings.admin;
+
+				this.form.get('editTransactionDestination')?.setValue(editTransactionDestination ?? false);
 
 				// Crypto widget
 				const paymentTimeout = this.additionalSettings.cryptoWidget?.paymentTimeout ?? 600000;
 				this.form.get('cryptoWidgetPaymentTimeout')?.setValue(paymentTimeout / 1000);
 
 				// Core
-				const coreData = this.additionalSettings.core;
+				const {coreData} = this.additionalSettings.core;
+				let {
+					custodyProviders: {
+						Fireblocks: fireblocks,
+						Trustology: trustology
+					},
+					liquidityProviders: {
+						Bitstamp: bitstamp,
+						Kraken: kraken
+					},
+					paymentProviders: {
+						Openpayd: openpayd,
+						Monoova: monoova,
+						FlashFx: flashFx
+					},
+					kycProviders: {
+						SumSub: sumSub
+					}
+				} = coreData;
+
 				this.form.get('verifyWhenPaid')?.setValue((coreData.verifyWhenPaid ?? true) === true);
 				this.form.get('wireTransferWallet')?.setValue((coreData.wireTransferWallet ?? false) === true);
 				this.form.get('wireTransferExchange')?.setValue((coreData.wireTransferExchange ?? false) === true);
@@ -253,8 +276,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				this.form.get('transferOrdersTrackingTimedeltaDays')?.setValue(coreData.custodyProviders.transferOrdersTrackingTimedeltaDays ?? 7);
 				
 				// Fireblocks
-				let custodyAddresses = coreData.custodyProviders.Fireblocks.withdrawalFromCustodyProviderDestinationAddress;
-				let liquidityAddresses = coreData.custodyProviders.Fireblocks.withdrawalFromLiquidityProviderDestinationAddress;
+				let custodyAddresses = fireblocks.withdrawalFromCustodyProviderDestinationAddress;
+				let liquidityAddresses = fireblocks.withdrawalFromLiquidityProviderDestinationAddress;
 				if (custodyAddresses) {
 					if (typeof custodyAddresses === 'string') {
 						custodyAddresses = this.defaultCustodyWithdrawalKeys;
@@ -270,37 +293,37 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 					liquidityAddresses = this.defaultLiquidityWithdrawalKeys;
 				}
 
-				this.form.get('fireblocksCachedDepositAddressLifetime')?.setValue(coreData.custodyProviders.Fireblocks.cachedDepositAddressLifetime ?? 60000);
-				this.form.get('fireblocksCachedExternalWalletLifetime')?.setValue(coreData.custodyProviders.Fireblocks.cachedExternalWalletLifetime ?? 60000);
-				this.form.get('fireblocksCachedInternalWalletLifetime')?.setValue(coreData.custodyProviders.Fireblocks.cachedExternalWalletLifetime ?? 60000);
-				this.form.get('fireblocksCachedVaultAccountLifetime')?.setValue(coreData.custodyProviders.Fireblocks.cachedVaultAccountLifetime ?? 60000);
-				this.form.get('fireblocksDefaultUserVaultName')?.setValue(coreData.custodyProviders.Fireblocks.defaultUserVaultName ?? '');
-				this.form.get('fireblocksTrackWithdrawals')?.setValue(coreData.custodyProviders.Fireblocks.trackWithdrawals ?? false);
-				this.form.get('fireblocksTrackWithdrawalsOneByOne')?.setValue(coreData.custodyProviders.Fireblocks.trackWithdrawalsOneByOne ?? false);
+				this.form.get('fireblocksCachedDepositAddressLifetime')?.setValue(fireblocks.cachedDepositAddressLifetime ?? 60000);
+				this.form.get('fireblocksCachedExternalWalletLifetime')?.setValue(fireblocks.cachedExternalWalletLifetime ?? 60000);
+				this.form.get('fireblocksCachedInternalWalletLifetime')?.setValue(fireblocks.cachedExternalWalletLifetime ?? 60000);
+				this.form.get('fireblocksCachedVaultAccountLifetime')?.setValue(fireblocks.cachedVaultAccountLifetime ?? 60000);
+				this.form.get('fireblocksDefaultUserVaultName')?.setValue(fireblocks.defaultUserVaultName ?? '');
+				this.form.get('fireblocksTrackWithdrawals')?.setValue(fireblocks.trackWithdrawals ?? false);
+				this.form.get('fireblocksTrackWithdrawalsOneByOne')?.setValue(fireblocks.trackWithdrawalsOneByOne ?? false);
 				this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.setValue(custodyAddresses);
 				this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.setValue(liquidityAddresses);
-				this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalToEndUserSourceVaultAccountId.vaultId ?? '22');
-				this.form.get('fireblocksWithdrawalToEndUserSpeed')?.setValue(coreData.custodyProviders.Fireblocks.withdrawalToEndUserSpeed ?? 'MEDIUM');
+				this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.setValue(fireblocks.withdrawalToEndUserSourceVaultAccountId.vaultId ?? '22');
+				this.form.get('fireblocksWithdrawalToEndUserSpeed')?.setValue(fireblocks.withdrawalToEndUserSpeed ?? 'MEDIUM');
 				
 				// Trustology
-				this.form.get('trustologyCachedDepositAddressLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedDepositAddressLifetime ?? 60000);
-				this.form.get('trustologyCachedExternalWalletLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedExternalWalletLifetime ?? 60000);
-				this.form.get('trustologyCachedInternalWalletLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedInternalWalletLifetime ?? 60000);
-				this.form.get('trustologyCachedVaultAccountLifetime')?.setValue(coreData.custodyProviders.Trustology.cachedVaultAccountLifetime ?? 60000);
-				this.form.get('trustologyDefaultUserVaultName')?.setValue(coreData.custodyProviders.Trustology.defaultUserVaultName ?? '');
-				this.form.get('trustologyDefaultHostWalletId')?.setValue(coreData.custodyProviders.Trustology.defaultHostWalletId ?? '');
-				this.form.get('trustologyNetworkFeeEstimationVaultAccountId')?.setValue(coreData.custodyProviders.Trustology.networkFeeEstimationVaultAccountId.walletId ?? '');
-				this.form.get('trustologyNetworkFeeEstimationVaultAccountIdSubwallet')?.setValue(coreData.custodyProviders.Trustology.networkFeeEstimationVaultAccountId.subWalletName ?? 'Bitcoin');
-				this.form.get('trustologyTrackWithdrawals')?.setValue(coreData.custodyProviders.Trustology.trackWithdrawals ?? false);
-				this.form.get('trustologyTrackWithdrawalsOneByOne')?.setValue(coreData.custodyProviders.Trustology.trackWithdrawalsOneByOne ?? false);
-				this.form.get('trustologyWithdrawalFromCustodyProviderDestinationAddress')?.setValue(coreData.custodyProviders.Trustology.withdrawalFromCustodyProviderDestinationAddress ?? 'test_withdrawal');
-				this.form.get('trustologyWithdrawalFromLiquidityProviderDestinationAddress')?.setValue(coreData.custodyProviders.Trustology.withdrawalFromLiquidityProviderDestinationAddress ?? 'test_withdrawal');
-				this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountId')?.setValue(coreData.custodyProviders.Trustology.withdrawalToEndUserSourceVaultAccountId.walletId ?? '');
-				this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet')?.setValue(coreData.custodyProviders.Trustology.withdrawalToEndUserSourceVaultAccountId.subWalletName ?? 'Bitcoin');
-				this.form.get('trustologyWithdrawalToEndUserSpeed')?.setValue(coreData.custodyProviders.Trustology.withdrawalToEndUserSpeed ?? 'MEDIUM');
+				this.form.get('trustologyCachedDepositAddressLifetime')?.setValue(trustology.cachedDepositAddressLifetime ?? 60000);
+				this.form.get('trustologyCachedExternalWalletLifetime')?.setValue(trustology.cachedExternalWalletLifetime ?? 60000);
+				this.form.get('trustologyCachedInternalWalletLifetime')?.setValue(trustology.cachedInternalWalletLifetime ?? 60000);
+				this.form.get('trustologyCachedVaultAccountLifetime')?.setValue(trustology.cachedVaultAccountLifetime ?? 60000);
+				this.form.get('trustologyDefaultUserVaultName')?.setValue(trustology.defaultUserVaultName ?? '');
+				this.form.get('trustologyDefaultHostWalletId')?.setValue(trustology.defaultHostWalletId ?? '');
+				this.form.get('trustologyNetworkFeeEstimationVaultAccountId')?.setValue(trustology.networkFeeEstimationVaultAccountId.walletId ?? '');
+				this.form.get('trustologyNetworkFeeEstimationVaultAccountIdSubwallet')?.setValue(trustology.networkFeeEstimationVaultAccountId.subWalletName ?? 'Bitcoin');
+				this.form.get('trustologyTrackWithdrawals')?.setValue(trustology.trackWithdrawals ?? false);
+				this.form.get('trustologyTrackWithdrawalsOneByOne')?.setValue(trustology.trackWithdrawalsOneByOne ?? false);
+				this.form.get('trustologyWithdrawalFromCustodyProviderDestinationAddress')?.setValue(trustology.withdrawalFromCustodyProviderDestinationAddress ?? 'test_withdrawal');
+				this.form.get('trustologyWithdrawalFromLiquidityProviderDestinationAddress')?.setValue(trustology.withdrawalFromLiquidityProviderDestinationAddress ?? 'test_withdrawal');
+				this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountId')?.setValue(trustology.withdrawalToEndUserSourceVaultAccountId.walletId ?? '');
+				this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet')?.setValue(trustology.withdrawalToEndUserSourceVaultAccountId.subWalletName ?? 'Bitcoin');
+				this.form.get('trustologyWithdrawalToEndUserSpeed')?.setValue(trustology.withdrawalToEndUserSpeed ?? 'MEDIUM');
 				
 				// Core - KYC providers - Sumsub
-				this.form.get('kycSumSubWebApiTokenLifetime')?.setValue(coreData.kycProviders.SumSub.webApiTokenLifetime ?? 600000);
+				this.form.get('kycSumSubWebApiTokenLifetime')?.setValue(sumSub.webApiTokenLifetime ?? 600000);
 				
 				// Core - Risk Center
 				this.form.get('riskCenterLoginCountToCompareIpAddress')?.setValue(coreData.riskCenter.loginCountToCompareIpAddress ?? 10);
@@ -332,23 +355,23 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				this.form.get('liquidityTransferOrdersTrackingTimedeltaDays')?.setValue(coreData.liquidityProviders.transferOrdersTrackingTimedeltaDays ?? 7);
 				
 				// Bitstamp
-				this.form.get('bitstampRateLimit')?.setValue(coreData.liquidityProviders.Bitstamp.rateLimit ?? false);
-				this.form.get('bitstampTimeout')?.setValue(coreData.liquidityProviders.Bitstamp.timeout ?? 5000);
-				this.form.get('bitstampTrackOrders')?.setValue(coreData.liquidityProviders.Bitstamp.trackOrders ?? false);
-				this.form.get('bitstampTrackWithdrawals')?.setValue(coreData.liquidityProviders.Bitstamp.trackWithdrawals ?? false);
-				this.form.get('bitstampWithdrawalBenchmark')?.setValue(coreData.liquidityProviders.Bitstamp.withdrawalBenchmark ?? 10000);
-				this.form.get('bitstampWithdrawalBenchmarkAmountToRemain')?.setValue(coreData.liquidityProviders.Bitstamp.withdrawalBenchmarkAmountToRemain ?? 0);
+				this.form.get('bitstampRateLimit')?.setValue(bitstamp.rateLimit ?? false);
+				this.form.get('bitstampTimeout')?.setValue(bitstamp.timeout ?? 5000);
+				this.form.get('bitstampTrackOrders')?.setValue(bitstamp.trackOrders ?? false);
+				this.form.get('bitstampTrackWithdrawals')?.setValue(bitstamp.trackWithdrawals ?? false);
+				this.form.get('bitstampWithdrawalBenchmark')?.setValue(bitstamp.withdrawalBenchmark ?? 10000);
+				this.form.get('bitstampWithdrawalBenchmarkAmountToRemain')?.setValue(bitstamp.withdrawalBenchmarkAmountToRemain ?? 0);
 				
 				// Kraken
-				this.form.get('krakenTrackOrders')?.setValue(coreData.liquidityProviders.Kraken.trackOrders ?? false);
-				this.form.get('krakenTrackWithdrawals')?.setValue(coreData.liquidityProviders.Kraken.trackWithdrawals ?? false);
-				this.form.get('krakenWithdrawalBenchmark')?.setValue(coreData.liquidityProviders.Kraken.withdrawalBenchmark ?? 10000);
-				this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.setValue(coreData.liquidityProviders.Kraken.withdrawalBenchmarkAmountToRemain ?? 0);
+				this.form.get('krakenTrackOrders')?.setValue(kraken.trackOrders ?? false);
+				this.form.get('krakenTrackWithdrawals')?.setValue(kraken.trackWithdrawals ?? false);
+				this.form.get('krakenWithdrawalBenchmark')?.setValue(kraken.withdrawalBenchmark ?? 10000);
+				this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.setValue(kraken.withdrawalBenchmarkAmountToRemain ?? 0);
 
 				// Core - Payment Providers
-				this.form.get('openpaydWithdrawalBenchmark')?.setValue(coreData?.paymentProviders?.Openpayd?.benchmarkAmount ?? 10000);
-				this.form.get('monoovaWithdrawalBenchmark')?.setValue(coreData?.paymentProviders?.Monoova?.benchmarkAmount ?? 10000);
-				this.form.get('flashFxWithdrawalBenchmark')?.setValue(coreData?.paymentProviders?.FlashFx?.benchmarkAmount ?? 10000);
+				this.form.get('openpaydWithdrawalBenchmark')?.setValue(openpayd?.benchmarkAmount ?? 10000);
+				this.form.get('monoovaWithdrawalBenchmark')?.setValue(monoova?.benchmarkAmount ?? 10000);
+				this.form.get('flashFxWithdrawalBenchmark')?.setValue(flashFx?.benchmarkAmount ?? 10000);
 			}, (error) => {
 				this.inProgress = false;
 				this.errorMessage = error;
@@ -375,6 +398,25 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 			}
 		}
 
+		let {
+			custodyProviders: {
+				Fireblocks: fireblocks,
+				Trustology: trustology
+			},
+			liquidityProviders: {
+				Bitstamp: bitstamp,
+				Kraken: kraken
+			},
+			paymentProviders: {
+				Openpayd: openpayd,
+				Monoova: monoova,
+				FlashFx: flashFx
+			},
+			kycProviders: {
+				SumSub: sumSub
+			}
+		} = this.additionalSettings.core;
+
 		// Core
 		this.additionalSettings.core.verifyWhenPaid = this.form.get('verifyWhenPaid')?.value ?? false;
 		this.additionalSettings.core.wireTransferWallet = this.form.get('wireTransferWallet')?.value ?? false;
@@ -389,23 +431,23 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		this.additionalSettings.core.liquidityProviders.transferOrdersTrackingTimedeltaDays = parseInt(this.form.get('liquidityTransferOrdersTrackingTimedeltaDays')?.value ?? '7');
 		
 		// Bitstamp
-		this.additionalSettings.core.liquidityProviders.Bitstamp.rateLimit = this.form.get('bitstampRateLimit')?.value ?? false;
-		this.additionalSettings.core.liquidityProviders.Bitstamp.timeout = parseInt(this.form.get('bitstampTimeout')?.value ?? '5000');
-		this.additionalSettings.core.liquidityProviders.Bitstamp.trackOrders = this.form.get('bitstampTrackOrders')?.value ?? false;
-		this.additionalSettings.core.liquidityProviders.Bitstamp.trackWithdrawals = this.form.get('bitstampTrackWithdrawals')?.value ?? false;
-		this.additionalSettings.core.liquidityProviders.Bitstamp.withdrawalBenchmarkAmountToRemain = parseInt(this.form.get('bitstampWithdrawalBenchmark')?.value ?? '10000');
+		bitstamp.rateLimit = this.form.get('bitstampRateLimit')?.value ?? false;
+		bitstamp.timeout = parseInt(this.form.get('bitstampTimeout')?.value ?? '5000');
+		bitstamp.trackOrders = this.form.get('bitstampTrackOrders')?.value ?? false;
+		bitstamp.trackWithdrawals = this.form.get('bitstampTrackWithdrawals')?.value ?? false;
+		bitstamp.withdrawalBenchmarkAmountToRemain = parseInt(this.form.get('bitstampWithdrawalBenchmark')?.value ?? '10000');
 		
 		// Kraken
-		this.additionalSettings.core.liquidityProviders.Kraken.trackOrders = this.form.get('krakenTrackOrders')?.value ?? false;
-		this.additionalSettings.core.liquidityProviders.Kraken.trackWithdrawals = this.form.get('krakenTrackWithdrawals')?.value ?? false;
-		this.additionalSettings.core.liquidityProviders.Kraken.withdrawalBenchmark = parseInt(this.form.get('krakenWithdrawalBenchmark')?.value ?? '10000');
-		this.additionalSettings.core.liquidityProviders.Kraken.withdrawalBenchmarkAmountToRemain = parseInt(this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.value ?? '0');
+		kraken.trackOrders = this.form.get('krakenTrackOrders')?.value ?? false;
+		kraken.trackWithdrawals = this.form.get('krakenTrackWithdrawals')?.value ?? false;
+		kraken.withdrawalBenchmark = parseInt(this.form.get('krakenWithdrawalBenchmark')?.value ?? '10000');
+		kraken.withdrawalBenchmarkAmountToRemain = parseInt(this.form.get('krakenWithdrawalBenchmarkAmountToRemain')?.value ?? '0');
 		// -------------------------------------------------------------------------------------------
 
 		// PaymentProviders
-		this.additionalSettings.core.paymentProviders.Openpayd.benchmarkAmount = parseInt(this.form.get('openpaydWithdrawalBenchmark')?.value ?? '10000');
-		this.additionalSettings.core.paymentProviders.Monoova.benchmarkAmount = parseInt(this.form.get('monoovaWithdrawalBenchmark')?.value ?? '10000');
-		this.additionalSettings.core.paymentProviders.FlashFx.benchmarkAmount = parseInt(this.form.get('flashFxWithdrawalBenchmark')?.value ?? '10000');
+		openpayd.benchmarkAmount = parseInt(this.form.get('openpaydWithdrawalBenchmark')?.value ?? '10000');
+		monoova.benchmarkAmount = parseInt(this.form.get('monoovaWithdrawalBenchmark')?.value ?? '10000');
+		flashFx.benchmarkAmount = parseInt(this.form.get('flashFxWithdrawalBenchmark')?.value ?? '10000');
 		// this.additionalSettings.core.paymentProviders.PrimeTrust.benchmarkAmount = parseInt(this.form.get('monoovaWithdrawalBenchmark')?.value ?? '10000');
 		// -------------------------------------------------------------------------------------------
 		
@@ -413,38 +455,38 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		this.additionalSettings.core.custodyProviders.transferOrdersTrackingTimedeltaDays = parseInt(this.form.get('transferOrdersTrackingTimedeltaDays')?.value ?? '7');
 
 		// Fireblocks
-		this.additionalSettings.core.custodyProviders.Fireblocks.cachedDepositAddressLifetime = parseInt(this.form.get('fireblocksCachedDepositAddressLifetime')?.value ?? '60000');
-		this.additionalSettings.core.custodyProviders.Fireblocks.cachedExternalWalletLifetime = parseInt(this.form.get('fireblocksCachedExternalWalletLifetime')?.value ?? '60000');
-		this.additionalSettings.core.custodyProviders.Fireblocks.cachedInternalWalletLifetime = parseInt(this.form.get('fireblocksCachedExternalWalletLifetime')?.value ?? '60000');
-		this.additionalSettings.core.custodyProviders.Fireblocks.cachedVaultAccountLifetime =  parseInt(this.form.get('fireblocksCachedVaultAccountLifetime')?.value ?? '60000');
-		this.additionalSettings.core.custodyProviders.Fireblocks.defaultUserVaultName = this.form.get('fireblocksDefaultUserVaultName')?.value ?? '';
-		this.additionalSettings.core.custodyProviders.Fireblocks.trackWithdrawals = this.form.get('fireblocksTrackWithdrawals')?.value ?? false;
-		this.additionalSettings.core.custodyProviders.Fireblocks.trackWithdrawalsOneByOne = this.form.get('fireblocksTrackWithdrawalsOneByOne')?.value ?? false;
-		this.additionalSettings.core.custodyProviders.Fireblocks.withdrawalFromCustodyProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.value ?? this.defaultCustodyWithdrawalKeys;
-		this.additionalSettings.core.custodyProviders.Fireblocks.withdrawalFromLiquidityProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.value ?? this.defaultLiquidityWithdrawalKeys;
-		this.additionalSettings.core.custodyProviders.Fireblocks.withdrawalToEndUserSourceVaultAccountId.vaultId = this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.value ?? '2';
-		this.additionalSettings.core.custodyProviders.Fireblocks.withdrawalToEndUserSpeed = this.form.get('fireblocksWithdrawalToEndUserSpeed')?.value ?? 'MEDIUM';
+		fireblocks.cachedDepositAddressLifetime = parseInt(this.form.get('fireblocksCachedDepositAddressLifetime')?.value ?? '60000');
+		fireblocks.cachedExternalWalletLifetime = parseInt(this.form.get('fireblocksCachedExternalWalletLifetime')?.value ?? '60000');
+		fireblocks.cachedInternalWalletLifetime = parseInt(this.form.get('fireblocksCachedExternalWalletLifetime')?.value ?? '60000');
+		fireblocks.cachedVaultAccountLifetime =  parseInt(this.form.get('fireblocksCachedVaultAccountLifetime')?.value ?? '60000');
+		fireblocks.defaultUserVaultName = this.form.get('fireblocksDefaultUserVaultName')?.value ?? '';
+		fireblocks.trackWithdrawals = this.form.get('fireblocksTrackWithdrawals')?.value ?? false;
+		fireblocks.trackWithdrawalsOneByOne = this.form.get('fireblocksTrackWithdrawalsOneByOne')?.value ?? false;
+		fireblocks.withdrawalFromCustodyProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.value ?? this.defaultCustodyWithdrawalKeys;
+		fireblocks.withdrawalFromLiquidityProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.value ?? this.defaultLiquidityWithdrawalKeys;
+		fireblocks.withdrawalToEndUserSourceVaultAccountId.vaultId = this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.value ?? '2';
+		fireblocks.withdrawalToEndUserSpeed = this.form.get('fireblocksWithdrawalToEndUserSpeed')?.value ?? 'MEDIUM';
 
 		// Trustology
-		this.additionalSettings.core.custodyProviders.Trustology.cachedDepositAddressLifetime = parseInt(this.form.get('trustologyCachedDepositAddressLifetime')?.value ?? '60000');
-		this.additionalSettings.core.custodyProviders.Trustology.cachedExternalWalletLifetime = parseInt(this.form.get('trustologyCachedExternalWalletLifetime')?.value ?? '60000');
-		this.additionalSettings.core.custodyProviders.Trustology.cachedInternalWalletLifetime = parseInt(this.form.get('trustologyCachedInternalWalletLifetime')?.value ?? '60000');
-		this.additionalSettings.core.custodyProviders.Trustology.cachedVaultAccountLifetime = parseInt(this.form.get('trustologyCachedVaultAccountLifetime')?.value ?? '60000');
-		this.additionalSettings.core.custodyProviders.Trustology.defaultUserVaultName = this.form.get('trustologyDefaultUserVaultName')?.value ?? '';
-		this.additionalSettings.core.custodyProviders.Trustology.defaultHostWalletId = this.form.get('trustologyDefaultHostWalletId')?.value ?? '';
-		this.additionalSettings.core.custodyProviders.Trustology.networkFeeEstimationVaultAccountId.walletId = this.form.get('trustologyNetworkFeeEstimationVaultAccountId')?.value ?? '';
-		this.additionalSettings.core.custodyProviders.Trustology.networkFeeEstimationVaultAccountId.subWalletName = this.form.get('trustologyNetworkFeeEstimationVaultAccountIdSubwallet')?.value ?? '';
-		this.additionalSettings.core.custodyProviders.Trustology.trackWithdrawals = this.form.get('trustologyTrackWithdrawals')?.value ?? false;
-		this.additionalSettings.core.custodyProviders.Trustology.trackWithdrawalsOneByOne = this.form.get('trustologyTrackWithdrawalsOneByOne')?.value ?? false;
-		this.additionalSettings.core.custodyProviders.Trustology.withdrawalFromCustodyProviderDestinationAddress = this.form.get('trustologyWithdrawalFromCustodyProviderDestinationAddress')?.value ?? '';
-		this.additionalSettings.core.custodyProviders.Trustology.withdrawalFromLiquidityProviderDestinationAddress = this.form.get('trustologyWithdrawalFromLiquidityProviderDestinationAddress')?.value ?? '';
-		this.additionalSettings.core.custodyProviders.Trustology.withdrawalToEndUserSourceVaultAccountId.walletId = this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountId')?.value ?? '';
-		this.additionalSettings.core.custodyProviders.Trustology.withdrawalToEndUserSourceVaultAccountId.subWalletName = this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet')?.value ?? '';
-		this.additionalSettings.core.custodyProviders.Trustology.withdrawalToEndUserSpeed = this.form.get('trustologyWithdrawalToEndUserSpeed')?.value ?? '';
+		trustology.cachedDepositAddressLifetime = parseInt(this.form.get('trustologyCachedDepositAddressLifetime')?.value ?? '60000');
+		trustology.cachedExternalWalletLifetime = parseInt(this.form.get('trustologyCachedExternalWalletLifetime')?.value ?? '60000');
+		trustology.cachedInternalWalletLifetime = parseInt(this.form.get('trustologyCachedInternalWalletLifetime')?.value ?? '60000');
+		trustology.cachedVaultAccountLifetime = parseInt(this.form.get('trustologyCachedVaultAccountLifetime')?.value ?? '60000');
+		trustology.defaultUserVaultName = this.form.get('trustologyDefaultUserVaultName')?.value ?? '';
+		trustology.defaultHostWalletId = this.form.get('trustologyDefaultHostWalletId')?.value ?? '';
+		trustology.networkFeeEstimationVaultAccountId.walletId = this.form.get('trustologyNetworkFeeEstimationVaultAccountId')?.value ?? '';
+		trustology.networkFeeEstimationVaultAccountId.subWalletName = this.form.get('trustologyNetworkFeeEstimationVaultAccountIdSubwallet')?.value ?? '';
+		trustology.trackWithdrawals = this.form.get('trustologyTrackWithdrawals')?.value ?? false;
+		trustology.trackWithdrawalsOneByOne = this.form.get('trustologyTrackWithdrawalsOneByOne')?.value ?? false;
+		trustology.withdrawalFromCustodyProviderDestinationAddress = this.form.get('trustologyWithdrawalFromCustodyProviderDestinationAddress')?.value ?? '';
+		trustology.withdrawalFromLiquidityProviderDestinationAddress = this.form.get('trustologyWithdrawalFromLiquidityProviderDestinationAddress')?.value ?? '';
+		trustology.withdrawalToEndUserSourceVaultAccountId.walletId = this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountId')?.value ?? '';
+		trustology.withdrawalToEndUserSourceVaultAccountId.subWalletName = this.form.get('trustologyWithdrawalToEndUserSourceVaultAccountIdSubwallet')?.value ?? '';
+		trustology.withdrawalToEndUserSpeed = this.form.get('trustologyWithdrawalToEndUserSpeed')?.value ?? '';
 		// -------------------------------------------------------------------------------------------
 
 		// KYC providers
-		this.additionalSettings.core.kycProviders.SumSub.webApiTokenLifetime = parseInt(this.form.get('kycSumSubWebApiTokenLifetime')?.value ?? '600000');
+		sumSub.webApiTokenLifetime = parseInt(this.form.get('kycSumSubWebApiTokenLifetime')?.value ?? '600000');
 		// -------------------------------------------------------------------------------------------
 
 		// Transactions
