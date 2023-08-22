@@ -160,8 +160,18 @@ export function getTransactionAmountHash(rate: number, amount: number, fee: numb
 	return hash;
 }
 
-export function getProviderList(instruments: string[], providers: PaymentProviderView[]): PaymentProviderView[] {
-	return instruments.length < 1 ? providers : providers.filter(x => x.instruments.some(i => instruments.includes(i)));
+export function getProviderList(instruments: string[], providers: PaymentProviderView[], callback?: (provider: PaymentProviderView) => boolean): PaymentProviderView[] {
+	return instruments.length < 1 ? providers : providers.filter(x => {
+		if(!x.instruments.some(i => instruments.includes(i))){
+			return false;
+		}
+		if(callback){
+			if(!callback(x)){
+				return false;
+			}
+		}
+		return true;
+	});
 }
 
 export function getCheckedProviderList(checkedproviders: string | string[], providerList: PaymentProviderView[]): string[] {

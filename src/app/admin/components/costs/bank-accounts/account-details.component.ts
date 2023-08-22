@@ -5,10 +5,11 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
 import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountItem, WireTransferBankAccountUk } from 'model/cost-scheme.model';
-import { WireTransferBankAccount } from 'model/generated-models';
+import { PaymentInstrument, PaymentProvider, WireTransferBankAccount } from 'model/generated-models';
 import { WireTransferPaymentCategory } from 'model/payment-base.model';
-import { WireTransferPaymentCategoryList } from 'model/payment.model';
+import { PaymentProviderView, WireTransferPaymentCategoryList } from 'model/payment.model';
 import { AuthService } from 'services/auth.service';
+import { getProviderList } from 'utils/utils';
 
 @Component({
 	selector: 'app-admin-bank-account-details',
@@ -35,15 +36,13 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   createNew = false;
   saveInProgress = false;
   deleteInProgress = false;
+	filteredProviders: PaymentProviderView[] = [];
+	providers: PaymentProviderView[] = [];
   public errorMessage = '';
   private bankCategories = WireTransferPaymentCategoryList;
   public auCategory: any;
   public ukCategory: any;
   public euCategory: any;
-  public openpaydCategory: any;
-  public monoovaCategory: any;
-  public primeTrustCategory: any;
-  public flashfxCategory: any;
 
   form = this.formBuilder.group({
   	name: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -51,10 +50,6 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   	auSelected: [false],
   	ukSelected: [false],
   	euSelected: [false],
-  	monoovaSelected: [false],
-  	primeTrustSelected: [false],
-  	openpaydSelected: [false],
-  	flashfxSelected: [false],
   	auAccountName: [undefined],
   	auAccountNumber: [undefined],
   	auBsb: [undefined],
@@ -66,7 +61,8 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   	euBeneficiaryAddress: [undefined],
   	euBeneficiaryName: [undefined],
   	euIban: [undefined],
-  	euSwiftBic: [undefined]
+  	euSwiftBic: [undefined],
+		paymentProviders: [[]],
   });
 
   constructor(
@@ -79,13 +75,10 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+		this.getPaymentProviders();
   	this.auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.AU);
   	this.ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.UK);
   	this.euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.EU);
-  	this.openpaydCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.OPENPAYD);
-  	this.monoovaCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.MONOOVA);
-  	this.primeTrustCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.PRIMETRUST);
-  	this.flashfxCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.FLASHFX);
   }
 
   ngOnDestroy(): void {
@@ -117,32 +110,17 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   			this.form.get('euIban')?.setValue(account.eu?.iban);
   			this.form.get('euSwiftBic')?.setValue(account.eu?.swiftBic);
   		}
-      
-  		if(account.openpaydAvailable){
-  			this.form.get('openpaydSelected')?.setValue(true);
-  		}
 
-  		if(account.monoovaAvailable){
-  			this.form.get('monoovaSelected')?.setValue(true);
-  		}
-
-  		if(account.primeTrustAvailable){
-  			this.form.get('primeTrustSelected')?.setValue(true);
-  		}
-
-  		if(account.flashfxAvailable){
-  			this.form.get('flashfxSelected')?.setValue(true);
-  		}
+			if(account.paymentProviders){
+				this.form.get('paymentProviders')?.setValue(account.paymentProviders);
+			}
   	} else {
   		this.form.get('name')?.setValue('');
   		this.form.get('description')?.setValue('');
   		this.form.get('auSelected')?.setValue(false);
   		this.form.get('ukSelected')?.setValue(false);
   		this.form.get('euSelected')?.setValue(false);
-  		this.form.get('openpaydSelected')?.setValue(false);
-  		this.form.get('monoovaSelected')?.setValue(false);
-  		this.form.get('primeTrustSelected')?.setValue(false);
-  		this.form.get('flashfxSelected')?.setValue(false);
+			this.form.get('paymentProviders')?.setValue([]);
   		this.form.get('auAccountName')?.setValue(undefined);
   		this.form.get('auAccountNumber')?.setValue(undefined);
   		this.form.get('auBsb')?.setValue(undefined);
@@ -211,29 +189,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   		data.eu = null;
   	}
 
-  	if(this.form.get('openpaydSelected')?.value === true){
-  		data.openpayd = this.form.get('openpaydSelected')?.value;
-  	}else{
-  		data.openpayd = false;
-  	}
-
-  	if(this.form.get('monoovaSelected')?.value === true){
-  		data.monoova = this.form.get('monoovaSelected')?.value;
-  	}else{
-  		data.monoova = false;
-  	}
-
-  	if(this.form.get('primeTrustSelected')?.value === true){
-  		data.primeTrust = this.form.get('primeTrustSelected')?.value;
-  	}else{
-  		data.primeTrust = false;
-  	}
-
-  	if(this.form.get('flashfxSelected')?.value === true){
-  		data.flashfx = this.form.get('flashfxSelected')?.value;
-  	}else{
-  		data.flashfx = false;
-  	}
+		data.paymentProviders = this.form.get('paymentProviders')?.value;
   	return data;
   }
 
@@ -256,6 +212,23 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
+	private getPaymentProviders(): void {
+  	this.providers = [];
+  	const data$ = this.adminService.getProviders()?.valueChanges;
+  	this.subscriptions.add(
+  		data$.subscribe(({ data }) => {
+  			const providers = data.getPaymentProviders as PaymentProvider[];
+  			this.providers = providers?.map((val) => new PaymentProviderView(val));
+				this.filteredProviders = getProviderList([PaymentInstrument.WireTransfer], this.providers, (provider) => {
+					if(provider.virtual){
+						return true;
+					}
+					return false;
+				});
+  		})
+  	);
+  }
+	
   private saveAccount(account: WireTransferBankAccount): void {
   	this.errorMessage = '';
   	this.saveInProgress = true;

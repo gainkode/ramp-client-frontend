@@ -173,6 +173,29 @@ export type BalanceStats = {
   volume?: Maybe<TransactionStatsVolume>;
 };
 
+export type BankDetailsObject = {
+  __typename?: 'BankDetailsObject';
+  accountName?: Maybe<Scalars['String']['output']>;
+  bankAccountHolderName?: Maybe<Scalars['String']['output']>;
+  bankAccountName?: Maybe<Scalars['String']['output']>;
+  bankAccountNumber?: Maybe<Scalars['String']['output']>;
+  bankAddress?: Maybe<Scalars['String']['output']>;
+  bankName?: Maybe<Scalars['String']['output']>;
+  beneficiaryAddress?: Maybe<Scalars['String']['output']>;
+  beneficiaryName?: Maybe<Scalars['String']['output']>;
+  bsb?: Maybe<Scalars['String']['output']>;
+  creditTo?: Maybe<Scalars['String']['output']>;
+  currency?: Maybe<Scalars['String']['output']>;
+  depositoryBankName?: Maybe<Scalars['String']['output']>;
+  iban?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  payInReference?: Maybe<Scalars['String']['output']>;
+  reference?: Maybe<Scalars['String']['output']>;
+  routingNumber?: Maybe<Scalars['String']['output']>;
+  sortCode?: Maybe<Scalars['String']['output']>;
+  swiftBic?: Maybe<Scalars['String']['output']>;
+};
+
 export type BaseStat = {
   abandoned?: Maybe<TransactionStatsVolume>;
   approved?: Maybe<TransactionStatsVolume>;
@@ -222,6 +245,7 @@ export type Callback = {
   callbackId?: Maybe<Scalars['ID']['output']>;
   created?: Maybe<Scalars['String']['output']>;
   error?: Maybe<Scalars['String']['output']>;
+  objectId?: Maybe<Scalars['String']['output']>;
   params?: Maybe<Scalars['String']['output']>;
   payload?: Maybe<Scalars['String']['output']>;
   response?: Maybe<Scalars['String']['output']>;
@@ -247,6 +271,18 @@ export enum CallbackStatus {
 }
 
 export enum CallbackType {
+  ExternalAu10tixCallback = 'externalAu10tixCallback',
+  ExternalCoriunderCallback = 'externalCoriunderCallback',
+  ExternalFibonatixCallback = 'externalFibonatixCallback',
+  ExternalFlashfxCallback = 'externalFlashfxCallback',
+  ExternalGetcoinsCallback = 'externalGetcoinsCallback',
+  ExternalMonoovaCallback = 'externalMonoovaCallback',
+  ExternalNppCallback = 'externalNppCallback',
+  ExternalOpenpaydCallback = 'externalOpenpaydCallback',
+  ExternalPrimetrustCallback = 'externalPrimetrustCallback',
+  ExternalSendgridCallback = 'externalSendgridCallback',
+  ExternalSuftiCallback = 'externalSuftiCallback',
+  ExternalSumsubCallback = 'externalSumsubCallback',
   TransactionStatusChanged = 'transactionStatusChanged',
   UserVerificationChanged = 'userVerificationChanged'
 }
@@ -2045,6 +2081,7 @@ export type PaymentProvider = {
   paymentProviderId?: Maybe<Scalars['ID']['output']>;
   transactionTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   userTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  virtual?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type PaymentProviderByInstrument = {
@@ -4871,15 +4908,9 @@ export type WireTransferBankAccount = {
   deleted?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   eu?: Maybe<Scalars['String']['output']>;
-  flashfx?: Maybe<Scalars['Boolean']['output']>;
-  flashfxObject?: Maybe<Scalars['String']['output']>;
-  monoova?: Maybe<Scalars['Boolean']['output']>;
-  monoovaObject?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  openpayd?: Maybe<Scalars['Boolean']['output']>;
-  openpaydObject?: Maybe<Scalars['String']['output']>;
-  primeTrust?: Maybe<Scalars['Boolean']['output']>;
-  primeTrustObject?: Maybe<Scalars['String']['output']>;
+  objectsDetails?: Maybe<Array<Maybe<BankDetailsObject>>>;
+  paymentProviders?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   uk?: Maybe<Scalars['String']['output']>;
 };
 
@@ -4888,11 +4919,8 @@ export type WireTransferBankAccountInput = {
   deleted?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   eu?: InputMaybe<Scalars['String']['input']>;
-  flashfx?: InputMaybe<Scalars['Boolean']['input']>;
-  monoova?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  openpayd?: InputMaybe<Scalars['Boolean']['input']>;
-  primeTrust?: InputMaybe<Scalars['Boolean']['input']>;
+  paymentProviders?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   uk?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -4908,15 +4936,9 @@ export type WireTransferBankAccountShort = {
   bankAccountId: Scalars['ID']['output'];
   description?: Maybe<Scalars['String']['output']>;
   eu?: Maybe<Scalars['String']['output']>;
-  flashfx?: Maybe<Scalars['Boolean']['output']>;
-  flashfxObject?: Maybe<Scalars['String']['output']>;
-  monoova?: Maybe<Scalars['Boolean']['output']>;
-  monoovaObject?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  openpayd?: Maybe<Scalars['Boolean']['output']>;
-  openpaydObject?: Maybe<Scalars['String']['output']>;
-  primeTrust?: Maybe<Scalars['Boolean']['output']>;
-  primeTrustObject?: Maybe<Scalars['String']['output']>;
+  objectsDetails?: Maybe<Array<Maybe<BankDetailsObject>>>;
+  paymentProviders?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   uk?: Maybe<Scalars['String']['output']>;
 };
 
