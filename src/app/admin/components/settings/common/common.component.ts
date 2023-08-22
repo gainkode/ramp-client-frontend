@@ -248,7 +248,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				this.form.get('cryptoWidgetPaymentTimeout')?.setValue(paymentTimeout / 1000);
 
 				// Core
-				const {coreData} = this.additionalSettings.core;
+				const coreData = this.additionalSettings.core;
 				let {
 					custodyProviders: {
 						Fireblocks: fireblocks,
@@ -515,7 +515,6 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		// CryptoWidget
 		this.additionalSettings.cryptoWidget.paymentTimeout = parseInt(this.form.get('cryptoWidgetPaymentTimeout')?.value ?? '600000') * 1000;
 		// --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 		return {
 			settingsCommonId: this.form.get('id')?.value,
 			liquidityProvider: this.form.get('liquidityProvider')?.value,
