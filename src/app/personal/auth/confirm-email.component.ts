@@ -51,9 +51,11 @@ export class PersonalConfirmEmailComponent implements OnDestroy, AfterViewInit {
     			this.auth.confirmEmail(this.token).subscribe(({ data }) => {
     				this.validated = true;
     				this.valid = true;
+						console.log(this.validated)
     			}, (error) => {
     				this.validated = true;
     				this.errorMessage = this.errorHandler.getError(error.message, 'Unable to validate email');
+						console.log(this.validated)
     			})
     		);
     	}
