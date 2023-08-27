@@ -51,9 +51,11 @@ export class MerchantConfirmDeviceComponent implements OnDestroy, AfterViewInit 
     			this.auth.confirmDevice(this.token).subscribe(({ data }) => {
     				this.validated = true;
     				this.valid = true;
+						console.log(this.validated)
     			}, (error) => {
     				this.validated = true;
     				this.errorMessage = this.errorHandler.getError(error.message, 'Unable to validate device');
+						console.log(this.validated)
     			})
     		);
     	}
