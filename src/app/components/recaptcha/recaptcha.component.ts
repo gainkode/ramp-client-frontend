@@ -43,6 +43,7 @@ export class RecaptchaComponent implements AfterViewInit, OnDestroy {
   siteKey = EnvService.recaptchaSiteKey;
   provider = EnvService.recaptchaProvider;
   scriptTag = undefined;
+	widgetId: string = '';
 
   constructor(
   	@Inject(DOCUMENT) private document: Document,
@@ -62,13 +63,14 @@ export class RecaptchaComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
   	if (this.scriptTag) {
   		// this.scriptTag.parentNode.removeChild(this.scriptTag);
+			window.turnstile.remove(this.widgetId);
   		this.renderer.removeChild(this.document.head, this.scriptTag);
   		this.scriptTag = undefined;
   	}
   }
   turnstileCaptchaRender(turnstileOptions: TurnstileOptions): void {
   	window[CALLBACK_NAME] = () => {
-  		window.turnstile.render('#recaptcha', turnstileOptions);
+  		this.widgetId = window.turnstile.render('#recaptcha', turnstileOptions);
   	};
   }
   includeScript(): void {
