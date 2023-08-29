@@ -113,6 +113,9 @@ export class NavService implements OnDestroy {
 			path: '/admin/notifications', icon: 'notifications', title: 'Notifications', type: 'link', code: 'NOTIFICATIONS'
 		},
 		{
+			path: '/admin/emails', icon: 'messages', title: 'Emails', type: 'link', code: 'EMAILS'
+		},
+		{
 			path: '/admin/risk-center', icon: 'bolt', title: 'Risk center', type: 'link', code: 'RISKS'
 		},
 		{

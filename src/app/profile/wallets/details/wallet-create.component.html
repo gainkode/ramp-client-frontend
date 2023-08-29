@@ -45,7 +45,7 @@
                         <div class="__form-separator"></div>
                     </div>
 
-                    <div *ngIf="(ethFlag===true || trxFlag===true) && !ethFlagDisabled && ethReadyWallets.length>0">
+                    <div *ngIf="(selectedCurrency.currencyBlockchain) && !blockchainFlagDisabled && ethReadyWallets.length>0">
                         <div class="__tool-bar-double-sided-data-box-top">
                             <div class="__tool-bar-block">
                                 <div class="__toggle-switch">

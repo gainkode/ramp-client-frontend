@@ -9,6 +9,7 @@ import { AdminCountryBlackListComponent } from './components/kyc/blacklist/count
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
+import { AdminMessagesComponent } from './components/message/messages.component';
 import { AdminRisksComponent } from './components/risks/risks.component';
 import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminCustomersComponent } from './components/users/customers/customers.component';
@@ -158,6 +159,11 @@ const routes: Routes = [
 				path: 'notifications',
 				component: AdminNotificationsComponent,
 				data: { header: 'Notifications' }
+			},
+			{
+				path: 'emails',
+				component: AdminMessagesComponent,
+				data: { header: 'Emails' }
 			},
 			{
 				path: 'costs',

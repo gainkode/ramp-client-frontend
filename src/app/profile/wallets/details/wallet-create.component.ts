@@ -4,7 +4,7 @@ import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShort, AssetAddressShortListResult, VaultAccount } from 'model/generated-models';
+import { AssetAddressShort, AssetAddressShortListResult, CurrencyBlockchain, VaultAccount } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
 import { WalletItem } from 'model/wallet.model';
@@ -35,9 +35,9 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     wallet: WalletItem | undefined = undefined;
     selectedCurrency: CurrencyView | undefined = undefined;
     currencyInit = false;
-    ethFlag = false;
-    trxFlag = false;
-    ethFlagDisabled = false;
+    blockchainFlagDisabled = false;
+		ethFlag = false;
+		trxFlag = false;
     ethExisting = false;
     createForm = this.formBuilder.group({
     	currency: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -67,15 +67,15 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     	this.subscriptions.add(
     		this.currencyField?.valueChanges.subscribe(val => {
     			this.currencyInit = true;
+					this.ethFlag = this.selectedCurrency.currencyBlockchain === CurrencyBlockchain.Ethereum;
+					this.trxFlag = this.selectedCurrency.currencyBlockchain === CurrencyBlockchain.Tron;
     			this.selectedCurrency = this.cryptoList.find(x => x.symbol === val);
-    			this.ethFlag = (this.selectedCurrency?.ethFlag === true);
-    			this.trxFlag = (this.selectedCurrency?.trxFlag === true);
     			this.useExistingEthWalletField?.setValue(false);
     			this.useExistingEthWalletField?.updateValueAndValidity();
     			this.ethExisting = false;
     			this.ethReadyWallets = [];
-    			if (this.ethFlag || this.trxFlag) {
-    				this.ethFlagDisabled = true;
+    			if (this.selectedCurrency.currencyBlockchain) {
+    				this.blockchainFlagDisabled = true;
     				if (!this.walletsLoaded) {
     					this.loadWallets();
     				} else {
@@ -159,7 +159,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     		this.useExistingEthWalletField?.setValue(true);
     		this.ethWalletField?.setValue(this.ethReadyWallets[0].id);
     	}
-    	this.ethFlagDisabled = false;
+    	this.blockchainFlagDisabled = false;
     }
 
     private getCurrency(asset: AssetAddressShort): CurrencyView | undefined {

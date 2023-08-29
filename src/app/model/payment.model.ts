@@ -4,7 +4,7 @@ import { CommonTargetValue } from './common.model';
 import {
 	PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
 	SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-	UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus, UserTransactionStatus, CryptoInvoice, CryptoInvoiceCreationResult, UserAction, UserActionType, UserActionResult
+	UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus, UserTransactionStatus, CryptoInvoice, CryptoInvoiceCreationResult, UserAction, UserActionType, UserActionResult, CurrencyBlockchain
 } from './generated-models';
 import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from './payment-base.model';
 
@@ -179,9 +179,8 @@ export class CurrencyView {
 	rateFactor = 0;
 	validateAsSymbol: string | null = null;
 	fiat = false;
-	ethFlag = false;
-	trxFlag = false;
 	stable = false;
+	currencyBlockchain = '';
 
 	get fullName(): string {
 		if (this.stable) {
@@ -193,16 +192,15 @@ export class CurrencyView {
 
 	constructor(data: SettingsCurrency) {
 		this.symbol = data.symbol;
-		this.ethFlag = data.ethFlag ?? false;
-		this.trxFlag = data.trxFlag ?? false;
 		this.code = data.symbol;
 		if (data.displaySymbol) {
 			this.code = data.displaySymbol;
 		}
-		if (this.ethFlag) {
+		this.currencyBlockchain = data.currencyBlockchain;
+		if (data.currencyBlockchain == CurrencyBlockchain.Ethereum) {
 			this.stable = true;
 			this.display = `${this.code} (ERC20)`;
-		} else if (this.trxFlag) {
+		} else if (data.currencyBlockchain == CurrencyBlockchain.Tron) {
 			this.stable = true;
 			this.display = `${this.code} (TRC20)`;
 		} else {

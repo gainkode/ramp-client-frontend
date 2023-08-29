@@ -13,8 +13,6 @@ export class NotificationItem {
 	title = '';
 	userNotificationTypeCode = '';
 	selected = false;
-	messageId = '';
-	messageStatus = '';
 
 	constructor(data: UserNotification | null) {
 		if (data !== null) {
@@ -30,8 +28,6 @@ export class NotificationItem {
 			this.title = data.title ?? 'Notification';
 			this.level = data.userNotificationLevel as string ?? '';
 			this.userNotificationTypeCode = data.userNotificationTypeCode;
-			this.messageId = data.messageId;
-			this.messageStatus = data.messageStatus;
 		}
 	}
 

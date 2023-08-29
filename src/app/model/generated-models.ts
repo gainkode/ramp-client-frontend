@@ -393,6 +393,17 @@ export type CryptoInvoiceListResult = {
   list?: Maybe<Array<CryptoInvoice>>;
 };
 
+export enum CurrencyBlockchain {
+  Avalanche = 'AVALANCHE',
+  Bsc = 'BSC',
+  Cardano = 'CARDANO',
+  Eos = 'EOS',
+  Ethereum = 'ETHEREUM',
+  Polkadot = 'POLKADOT',
+  Solana = 'SOLANA',
+  Tron = 'TRON'
+}
+
 export type CurrencyPairLiquidityProvider = {
   __typename?: 'CurrencyPairLiquidityProvider';
   currencyPairLiquidityProviderId: Scalars['String']['output'];
@@ -951,6 +962,43 @@ export type MerchantOrCustomerStats = BaseStat & {
   ratio?: Maybe<Scalars['Float']['output']>;
   refund?: Maybe<TransactionStatsVolume>;
 };
+
+export type Message = {
+  __typename?: 'Message';
+  created?: Maybe<Scalars['String']['output']>;
+  messageEmailId?: Maybe<Scalars['String']['output']>;
+  messageId: Scalars['ID']['output'];
+  messageStatus?: Maybe<Scalars['String']['output']>;
+  messageType?: Maybe<Scalars['String']['output']>;
+  objectId?: Maybe<Scalars['String']['output']>;
+  params?: Maybe<Scalars['String']['output']>;
+  user?: Maybe<User>;
+  userId?: Maybe<Scalars['String']['output']>;
+  userNotificationId?: Maybe<Scalars['String']['output']>;
+};
+
+export type MessageListResult = {
+  __typename?: 'MessageListResult';
+  count?: Maybe<Scalars['Int']['output']>;
+  list?: Maybe<Array<Message>>;
+};
+
+export enum MessageType {
+  AdminToUserNotification = 'ADMIN_TO_USER_NOTIFICATION',
+  BankDepositInvoice = 'BANK_DEPOSIT_INVOICE',
+  DeclinedTransactionAdminNotification = 'DECLINED_TRANSACTION_ADMIN_NOTIFICATION',
+  DeviceConfirmation = 'DEVICE_CONFIRMATION',
+  EmailConfirmationWithCode = 'EMAIL_CONFIRMATION_WITH_CODE',
+  EmailConfirmationWithLink = 'EMAIL_CONFIRMATION_WITH_LINK',
+  File = 'FILE',
+  KycStatusChanged = 'KYC_STATUS_CHANGED',
+  PasswordChangingConfirmation = 'PASSWORD_CHANGING_CONFIRMATION',
+  PasswordResetConfirmation = 'PASSWORD_RESET_CONFIRMATION',
+  SystemUserCredentialsConfirmation = 'SYSTEM_USER_CREDENTIALS_CONFIRMATION',
+  TransactionConfirmationCode = 'TRANSACTION_CONFIRMATION_CODE',
+  TransactionRedoRequest = 'TRANSACTION_REDO_REQUEST',
+  TransactionStatusChanged = 'TRANSACTION_STATUS_CHANGED'
+}
 
 export type MonoovaObject = {
   __typename?: 'MonoovaObject';
@@ -2162,6 +2210,8 @@ export type Query = {
   getLiquidityProviders: Array<LiquidityProviderEntity>;
   /** Get liquidity withdrawal potential fee */
   getLiquidityWithdrawalPotentialFeeInfo?: Maybe<LiquidityWithdrawalPotentialFeeInfo>;
+  /** Get messages */
+  getMessages?: Maybe<MessageListResult>;
   /** Get network fee */
   getNetworkFee?: Maybe<Scalars['Float']['output']>;
   /** Get notifications */
@@ -2455,6 +2505,14 @@ export type QueryGetLiquidityExchangeOrderStatusArgs = {
 export type QueryGetLiquidityWithdrawalPotentialFeeInfoArgs = {
   params: CreateTransferOrderParams;
   providerName?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetMessagesArgs = {
+  filter?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OrderBy>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -3143,12 +3201,13 @@ export enum SettingsCostTargetFilterType {
 
 export type SettingsCurrency = {
   __typename?: 'SettingsCurrency';
+  countryCode2?: Maybe<Scalars['String']['output']>;
+  currencyBlockchain?: Maybe<CurrencyBlockchain>;
   defaultBankTransferProvider?: Maybe<Scalars['String']['output']>;
   defaultCreditCardProvider?: Maybe<Scalars['String']['output']>;
   defaultWireTransferProvider?: Maybe<Scalars['String']['output']>;
   disabled?: Maybe<Scalars['String']['output']>;
   displaySymbol?: Maybe<Scalars['String']['output']>;
-  ethFlag?: Maybe<Scalars['Boolean']['output']>;
   explorerLink?: Maybe<Scalars['String']['output']>;
   fiat?: Maybe<Scalars['Boolean']['output']>;
   maskSymbol?: Maybe<Scalars['String']['output']>;
@@ -3158,7 +3217,6 @@ export type SettingsCurrency = {
   precision: Scalars['Int']['output'];
   rateFactor: Scalars['Float']['output'];
   symbol: Scalars['ID']['output'];
-  trxFlag?: Maybe<Scalars['Boolean']['output']>;
   validateAsSymbol?: Maybe<Scalars['String']['output']>;
 };
 
@@ -4215,6 +4273,7 @@ export enum UserActionType {
   PrimeTrustCreateWithdrawalFunds = 'primeTrustCreateWithdrawalFunds',
   PrimeTrustGetAccount = 'primeTrustGetAccount',
   PrimeTrustGetAssetByCurrency = 'primeTrustGetAssetByCurrency',
+  PrimeTrustGetAssetTotalById = 'primeTrustGetAssetTotalById',
   PrimeTrustGetAssetTotals = 'primeTrustGetAssetTotals',
   PrimeTrustGetAssetTransferInternal = 'primeTrustGetAssetTransferInternal',
   PrimeTrustGetAssetTransferMethod = 'primeTrustGetAssetTransferMethod',
@@ -4242,9 +4301,12 @@ export enum UserActionType {
 export type UserAddress = {
   __typename?: 'UserAddress';
   address?: Maybe<Scalars['ID']['output']>;
+  addressFormat?: Maybe<Scalars['String']['output']>;
   asset?: Maybe<Scalars['String']['output']>;
+  assetOriginalId?: Maybe<Scalars['String']['output']>;
   created?: Maybe<Scalars['DateTime']['output']>;
   details?: Maybe<Scalars['String']['output']>;
+  legacyAddress?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['String']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
   vaultId?: Maybe<Scalars['String']['output']>;
@@ -4458,8 +4520,6 @@ export type UserNotification = {
   created?: Maybe<Scalars['DateTime']['output']>;
   linkedId?: Maybe<Scalars['String']['output']>;
   linkedTable?: Maybe<Scalars['String']['output']>;
-  messageId?: Maybe<Scalars['String']['output']>;
-  messageStatus?: Maybe<Scalars['String']['output']>;
   params?: Maybe<Scalars['String']['output']>;
   text?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;

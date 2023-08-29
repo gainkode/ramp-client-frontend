@@ -6,16 +6,16 @@ import { Subscription } from 'rxjs';
 import { finalize, take } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
-import { NotificationItem } from 'model/notification.model';
 import { AuthService } from 'services/auth.service';
 import { UserRoleObjectCode } from 'model/generated-models';
+import { MessageItem } from 'model/message.model';
 
 @Component({
-	selector: 'app-admin-notifications',
-	templateUrl: 'notifications.component.html',
-	styleUrls: ['notifications.component.scss']
+	selector: 'app-admin-messages',
+	templateUrl: 'messages.component.html',
+	styleUrls: ['messages.component.scss']
 })
-export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AdminMessagesComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
@@ -25,18 +25,17 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   displayedColumns: string[] = [
   	'details',
   	'created',
-  	'viewed',
   	'user',
-  	'title',
-  	'code',
-  	'userNotificationLevel',
-  	'text',
+		'messageStatus',
+  	'messageType',
+  	'messageEmailId',
+  	'objectId',
   ];
   inProgress = false;
   permission = 0;
-  selectedMessage?: NotificationItem;
+  selectedMessage?: MessageItem;
   messageCount = 0;
-  messages: NotificationItem[] = [];
+  messages: MessageItem[] = [];
   pageSize = 50;
   pageIndex = 0;
   sortedField = 'created';
@@ -69,7 +68,7 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
 
   ngOnInit(): void {
   	this.loadCommonSettings();
-  	this.loadNotifications();
+  	this.loadMessages();
   }
 
   ngOnDestroy(): void {
@@ -81,23 +80,23 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   		this.sort.sortChange.subscribe(() => {
   			this.sortedDesc = (this.sort.direction === 'desc');
   			this.sortedField = this.sort.active;
-  			this.loadNotifications();
+  			this.loadMessages();
   		})
   	);
   }
 
   handleFilterApplied(filter: Filter): void {
   	this.filter = filter;
-  	this.loadNotifications();
+  	this.loadMessages();
   }
 
   handlePage(index: number): void {
   	this.pageIndex = index - 1;
-  	this.loadNotifications();
+  	this.loadMessages();
   }
 
-  showDetails(notification: NotificationItem, content: any): void {
-  	this.selectedMessage = notification;
+  showDetails(message: MessageItem, content: any): void {
+  	this.selectedMessage = message;
   	
   	this.modalService.open(content, {
   		backdrop: 'static',
@@ -113,10 +112,10 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   		}
   	}
   }
-  private loadNotifications(): void {
+  private loadMessages(): void {
   	this.inProgress = true;
 
-  	const listData$ = this.adminService.getNotifications(
+  	const listData$ = this.adminService.getMessages(
   		this.pageIndex,
   		this.pageSize,
   		this.sortedField,

@@ -63,6 +63,8 @@ import { AdminRisksComponent } from './components/risks/risks.component';
 import { AdminRiskDetailsComponent } from './components/risks/risk-details.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminNotificationDetailsComponent } from './components/notifications/notification-details.component';
+import { AdminMessagesComponent } from './components/message/messages.component';
+import { AdminMessageDetailsComponent } from './components/message/message-details.component';
 import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 import { AdminWidgetDetailsComponent } from './components/widgets/widget-details.component';
 import { AdminApiKeysComponent } from './components/settings/apikeys/apikeys.component';
@@ -162,6 +164,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminUserDevicesComponent, AdminDeviceDetailsComponent,
 		AdminUserActionsComponent, AdminActionDetailsComponent,
 		AdminNotificationsComponent, AdminNotificationDetailsComponent,
+		AdminMessagesComponent, AdminMessageDetailsComponent,
 		AdminRisksComponent, AdminRiskDetailsComponent,
 		AdminWidgetsComponent, AdminWidgetDetailsComponent,
 		AdminFeeSchemesComponent, AdminFeeSchemeDetailsComponent,

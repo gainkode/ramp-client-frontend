@@ -17,8 +17,7 @@ const GET_SETTINGS_CURRENCY = gql`
           rateFactor
           validateAsSymbol
           fiat
-          ethFlag
-          trxFlag
+          currencyBlockchain
           disabled
           displaySymbol
         }

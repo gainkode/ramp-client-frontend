@@ -55,7 +55,9 @@ import {
 	CurrencyPairLiquidityProvidersListResult,
 	QueryGetCurrencyPairLiquidityProviderArgs,
 	LiquidityProvider,
-	LiquidityProviderEntity
+	LiquidityProviderEntity,
+  MessageListResult,
+  QueryGetMessagesArgs
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -74,6 +76,7 @@ import { RiskAlertItem } from '../admin/model/risk-alert.model';
 import { ApiKeyItem } from 'model/apikey.model';
 import { CurrencyPairItem } from 'model/currencyPairs.model';
 import { LiquidityProviderEntityItem } from 'model/liquidity-provider.model';
+import { MessageItem } from 'model/message.model';
 
 /* region queries */
 
@@ -488,8 +491,38 @@ const GET_NOTIFICATIONS = gql`
         userNotificationLevel
         userNotificationTypeCode
         viewed
+      }
+    }
+  }
+`;
+
+const GET_MESSAGES = gql`
+  query GetMessages(
+    $skip: Int
+    $first: Int
+    $orderBy: [OrderBy!]
+    $filter: String
+  ) {
+    getMessages(
+      skip: $skip
+      first: $first
+      orderBy: $orderBy
+      filter: $filter
+    ) {
+      count
+      list {
         messageId
+        userNotificationId
+        userId
+        objectId
+        messageType
+        created
+        params
+        messageEmailId
         messageStatus
+        user {
+          email
+        }
       }
     }
   }
@@ -2752,6 +2785,41 @@ export class AdminDataService {
       query: GET_COUNTRY_BLACK_LIST,
       fetchPolicy: 'network-only'
     });
+  }
+
+  getMessages(
+    pageIndex: number,
+    takeItems: number,
+    orderField: string,
+    orderDesc: boolean,
+    filter?: Filter
+  ): Observable<{ list: Array<MessageItem>; count: number; }> {
+
+    const vars: QueryGetMessagesArgs = {
+      filter: filter?.search,
+      skip: pageIndex * takeItems,
+      first: takeItems,
+      orderBy: [{ orderBy: orderField, desc: orderDesc }]
+    };
+
+    return this.watchQuery<{ getMessages: MessageListResult }, QueryGetMessagesArgs>(
+      {
+        query: GET_MESSAGES,
+        variables: vars,
+        fetchPolicy: 'network-only'
+      }).pipe(map(result => {
+        if (result.data?.getMessages?.list && result.data?.getMessages?.count) {
+          return {
+            list: result.data.getMessages.list.map(val => new MessageItem(val)),
+            count: result.data.getMessages.count
+          };
+        } else {
+          return {
+            list: [],
+            count: 0
+          };
+        }
+      }));
   }
 
   getNotifications(
