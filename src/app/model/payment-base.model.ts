@@ -41,6 +41,7 @@ export class WidgetSettings {
 	amountFrom = 0;
 	minAmountFrom: number | undefined = undefined;
 	maxAmountFrom: number | undefined = undefined;
+	currencyAmounts: {currency: string, minAmount?: number, maxAmount?: number}[] = [];
 	allowToPayIfKycFailed = false;
 	fee: number | undefined = undefined;
 	showRate: boolean | undefined = undefined;

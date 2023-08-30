@@ -45,13 +45,22 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	'currency',
   	'destination'
   ];
+
+	displayedAmountColumns: string[] = [
+  	'details',
+  	'currency',
+  	'minAmount',
+		'maxAmount'
+  ];
   submitted = false;
   createNew = false;
   saveInProgress = false;
   deleteInProgress = false;
   errorMessage = '';
   currencyOptionsCrypto: CurrencyView[] = [];
+	currencyOptions: CurrencyView[] = [];
   currenciesTable: any = [];
+	currencyAmountsTable: any = [];
   currencyOptionsFiat: CurrencyView[] = [];
   paymentProviderOptions: PaymentProviderView[] = [];
   filteredProviders: PaymentProviderView[] = [];
@@ -228,7 +237,20 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	this.widgetAdditionalSettings.maxAmountFrom = formValue.maxAmountFrom;
   	this.widgetAdditionalSettings.minAmountFrom = formValue.minAmountFrom;
   	this.widgetAdditionalSettings.disclaimer = formValue.disclaimer;
-  	widget.additionalSettings = JSON.stringify(this.widgetAdditionalSettings);
+		
+		if(this.currencyAmountsTable._data._value && this.currencyAmountsTable._data._value.length > 0){
+			this.widgetAdditionalSettings.amounts = [];
+
+			for(const currency of this.currencyAmountsTable._data._value){
+				if(currency.currency && (currency.minAmount || currency.maxAmount)){
+					this.widgetAdditionalSettings.amounts.push({
+						currency: currency.currency,
+						minAmount: currency.minAmount,
+						maxAmount: currency.maxAmount
+					});
+				}
+			}
+		}
 
   	if(this.currenciesTable._data._value && this.currenciesTable._data._value.length > 0){
   		for(const cryptoCurrency of this.currenciesTable._data._value){
@@ -248,6 +270,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   		// widget.currenciesCrypto = formValue.currenciesCrypto;
   	}
     
+		widget.additionalSettings = JSON.stringify(this.widgetAdditionalSettings);
   	widget.currenciesFiat = formValue.currenciesFiat;
   	// widget.destinationAddress = formValue.destinationAddress;
   	widget.instruments = formValue.instruments;
@@ -298,7 +321,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   							// let currencyTable = this.currenciesTable.find(item => item.currency == currency.symbol);
                 
   							currenciesCrypto.push(new CurrencyView(currency));
-                
+								
   							if(widgetDestination){
   								this.currenciesTable.push(
   									{ currency: currency.symbol, destination: widgetDestination.destination, selected: true }
@@ -319,10 +342,19 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   						}else if(currency.fiat === true){
   							currenciesFiat.push(new CurrencyView(currency));
   						}
+
+							const widgetAmount = this.widgetAdditionalSettings?.amounts?.find(item => item.currency == currency.symbol);
+							if(widgetAmount){
+								this.currencyAmountsTable.push(
+									{currency: currency.symbol, minAmount: widgetAmount.minAmount, maxAmount: widgetAmount.maxAmount}
+								)
+							}
   					}
   					this.currencyOptionsCrypto = currenciesCrypto;
   					this.currencyOptionsFiat = currenciesFiat;
+						this.currencyOptions = this.currencyOptions.concat(currenciesCrypto, currenciesFiat);
   					this.currenciesTable = new MatTableDataSource(this.currenciesTable);
+						this.currencyAmountsTable = new MatTableDataSource(this.currencyAmountsTable);
   				}
   				// this.currencyOptionsCrypto = currencySettings.settingsCurrency.list?.
   				//   filter(x => x.fiat === false).
@@ -334,6 +366,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   				//     return {currency: item.symbol, destination: '', selected: false}
   				//   })
   			} else {
+					this.currencyAmountsTable = [];
   				this.currenciesTable = [];
   				this.currencyOptionsCrypto = [];
   				this.currencyOptionsFiat = [];
@@ -362,23 +395,6 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   			this.form.get('paymentProviders')?.value ?? [],
   			this.filteredProviders));
   	}
-  }
-
-  selectCurrency(row): void{
-  	row.selected = true;
-  } 
-
-  selectAllCurrencies(): void{
-  	this.currenciesTable._data._value = this.currenciesTable._data._value.map(item => {
-  		if(this.selectAll === true){
-  			item.selected = false;
-  		}else if(this.selectAll === false){
-  			item.selected = true;
-  		}
-  		return item;
-  	});
-
-  	this.selectAll = this.selectAll === true ? false : true;
   }
 
   getCountryFlag(code: string): string {
@@ -417,6 +433,21 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   		}
   	}
   	this.currenciesTable = new MatTableDataSource(currenciesTableDel);
+  }
+
+	addWidgetAmounts(): void{
+  	this.currencyAmountsTable._data._value.push({ currency: '', minAmount: '', maxAmount: '', selected: true });
+  	this.currencyAmountsTable = new MatTableDataSource(this.currencyAmountsTable._data._value);
+  }
+
+	delWidgetAmounts(element: any): void{
+  	const currencyAmountsTableDel: Record<string, any>[] = [];
+  	for(const item of this.currencyAmountsTable._data._value){
+  		if(item.currency != element.currency){
+  			currencyAmountsTableDel.push(item);
+  		}
+  	}
+  	this.currencyAmountsTable = new MatTableDataSource(currencyAmountsTableDel);
   }
 
   private onSave(): void {
