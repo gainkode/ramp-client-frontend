@@ -1,8 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk } from 'model/cost-scheme.model';
 import { BankDetailsObject } from 'model/generated-models';
-import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'model/payment-base.model';
+import { WireTransferPaymentCategoryItem } from 'model/payment-base.model';
 
 @Component({
 	selector: 'app-widget-wire-transfer-result',
@@ -17,8 +16,8 @@ export class WidgetWireTransferResultComponent {
     @Output() onComplete = new EventEmitter();
     @Output() onSendEmail = new EventEmitter();
 
-		fields: Record<string, any> = {};
-		Object = Object;
+    fields: Record<string, any> = {};
+    Object = Object;
 
     constructor(private clipboard: Clipboard) { }
 
@@ -32,21 +31,21 @@ export class WidgetWireTransferResultComponent {
     
     private loadData(val: WireTransferPaymentCategoryItem): void {
     	const bankDetails: BankDetailsObject = JSON.parse(val.data);
-			this.fields = {
-				'Reference ID': this.referenceId ?? '',
-				'Account Holder': bankDetails.bankAccountHolderName ?? '',
-				'Account Number': bankDetails.bankAccountNumber ?? '',
-				'Account Name': bankDetails.accountName ?? '',
-				'Sort Code': bankDetails.sortCode ?? '',
-				'Bank Address': bankDetails.bankAddress ?? '',
-				'Bank Name': bankDetails.bankAccountName ?? '',
-				'Beneficiary Address': bankDetails.beneficiaryAddress ?? '',
-				'Beneficiary Name': bankDetails.beneficiaryName ?? '',
-				'IBAN': bankDetails.iban ?? '',
-				'SWIFT / BIC': bankDetails.swiftBic ?? '',
-				'Routing Number': bankDetails.routingNumber ?? '',
-				'Credit To': bankDetails.creditTo ?? '',
-				'Reference': bankDetails.reference ?? ''
-			}
+    	this.fields = {
+    		'Reference ID': this.referenceId ?? '',
+    		'Account Holder': bankDetails.bankAccountHolderName ?? '',
+    		'Account Number': bankDetails.bankAccountNumber ?? '',
+    		'Account Name': bankDetails.accountName ?? '',
+    		'Sort Code': bankDetails.sortCode ?? '',
+    		'Bank Address': bankDetails.bankAddress ?? '',
+    		'Bank Name': bankDetails.bankAccountName ?? '',
+    		'Beneficiary Address': bankDetails.beneficiaryAddress ?? '',
+    		'Beneficiary Name': bankDetails.beneficiaryName ?? '',
+    		'IBAN': bankDetails.iban ?? '',
+    		'SWIFT / BIC': bankDetails.swiftBic ?? '',
+    		'Routing Number': bankDetails.routingNumber ?? '',
+    		'Credit To': bankDetails.creditTo ?? '',
+    		'Reference': bankDetails.reference ?? ''
+    	};
     }
 }
