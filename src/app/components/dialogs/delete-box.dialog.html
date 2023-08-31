@@ -4,7 +4,9 @@
     <button class="__outlined-button" type="button" (click)="onClose()">
         CANCEL
     </button>
-    <button class="__main-button __main-button-danger __button-wide-separator" [mat-dialog-close]="deleteAccept" cdkFocusInitial>
+    <button 
+        type="button" class="__main-button __main-button-danger __button-wide-separator" 
+        [mat-dialog-close]="deleteAccept" cdkFocusInitial>
         {{data.button}}
     </button>
 </mat-dialog-actions>

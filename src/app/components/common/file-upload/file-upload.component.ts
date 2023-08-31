@@ -1,6 +1,5 @@
-import { HttpClient, HttpEventType } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Subscription, finalize } from 'rxjs';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-file-upload',
@@ -9,35 +8,30 @@ import { Subscription, finalize } from 'rxjs';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadComponent {
-  @Input()
-  requiredFileType: string;
+  @Input() requiredFileType: string;
+  @Input() multiple = false;
+  @Output() fileSelected = new EventEmitter();
 
   fileName = 'Choose a file';
   uploadProgress: number;
   uploadSub: Subscription;
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
   onFileSelected(event): void {
-  	const file: File = event.target.files[0];
+  	const files: FileList = event.target.files;
 
-  	if (file) {
-  		this.fileName = file.name;
+  	if (files) {
   		const formData = new FormData();
-  		formData.append('thumbnail', file);
+  		const filesName = [];
 
-  		// const upload$ = this.http
-  		// 	.post('/api/thumbnail-upload', formData, {
-  		// 		reportProgress: true,
-  		// 		observe: 'events',
-  		// 	})
-  		// 	.pipe(finalize(() => this.reset()));
-
-  		// this.uploadSub = upload$.subscribe((event) => {
-  		// 	if (event.type === HttpEventType.UploadProgress) {
-  		// 		this.uploadProgress = Math.round(100 * (event.loaded / event.total));
-  		// 	}
-  		// });
+  		for (var i = 0; i < files.length; i++) {
+  			formData.append('files', files[i]);
+  			filesName.push(files.item(i).name);
+  		}
+		
+  		this.fileName = filesName.join(',');
+  		this.fileSelected.emit(formData);
   	}
   }
 }

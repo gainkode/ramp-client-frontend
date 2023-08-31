@@ -1,0 +1,100 @@
+<!-- eslint-disable @angular-eslint/template/no-inline-styles -->
+<!-- eslint-disable @angular-eslint/template/no-call-expression -->
+<div class="z-table-wrapper">
+
+	<div class="overflow flex-grow-1" [style.max-height]="maxHeight">
+		<table mat-table multiTemplateDataRows [dataSource]="dataSource" class="z-table w-100">
+			<ng-content></ng-content>
+
+			<ng-container *ngFor="let column of availableColumns">
+				<ng-container *ngIf="column.columnType !== columnTypes.custom">
+
+					<ng-container [matColumnDef]="column.prop">
+						<!-- Header Cell (with/without sorting) -->
+
+						<ng-container *ngIf="column.isSortable; else columnWithoutSort">
+							<th mat-header-cell *matHeaderCellDef [mat-sort-header]="column.prop">{{ column.name | emptyValue }}</th>
+						</ng-container>
+						<ng-template #columnWithoutSort>
+							<th mat-header-cell *matHeaderCellDef>{{ column.name | emptyValue }}</th>
+						</ng-template>
+						<td
+							mat-cell
+							*matCellDef="let element"
+						>
+							<ng-container *ngIf="column.columnType === columnTypes.simple">{{
+								getRowColumnValue(element, column) | emptyValue
+							}}</ng-container>
+
+							<ng-container *ngIf="column.columnType === columnTypes.number">
+								{{ getRowColumnValue(element, column) | number : '0.0-0' | emptyValue }}
+							</ng-container>
+
+							<ng-container *ngIf="column.columnType === columnTypes.shortDate">
+								{{ getRowColumnValue(element, column) | date : 'MM/dd/y' | emptyValue }}
+							</ng-container>
+
+							<ng-container *ngIf="column.columnType === columnTypes.fullDate">
+								{{ getRowColumnValue(element, column) | date : 'yyyy/MM/dd hh:mm:ss ' | emptyValue }}
+							</ng-container>
+
+							<ng-container *ngIf="column.columnType === columnTypes.priceWithCurrency">
+								{{ getRowColumnValue(element, column) | currency }}
+							</ng-container>
+
+							<ng-container *ngIf="column.columnType === columnTypes.percent">
+								{{ getRowColumnValue(element, column) | percent }}
+							</ng-container>
+
+							<ng-container *ngIf="column.columnType === columnTypes.boolean">
+								<span
+									*ngIf="!!getRowColumnValue(element, column); else falseBlock"
+									class="badge badge-pill badge-success badge-checkmark"
+								>
+									<i class="fas fa-check"></i>
+								</span>
+								<ng-template #falseBlock>
+									<span class="badge badge-pill badge-danger badge-checkmark">
+										<i class="fas fa-times"></i>
+									</span>
+								</ng-template>
+							</ng-container>
+
+							<ng-container *ngIf="column.appendUnits">
+								<span class="text-muted text-sm-80">{{ column.appendUnits }}</span>
+							</ng-container>
+						</td>
+					</ng-container>
+				</ng-container>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="tableColumns; sticky: isSticky"></tr>
+			<tr
+				*matRowDef="let row; columns: tableColumns"
+				[class.gray-out]="!!conditionForGrayOut ? conditionForGrayOut(row) : false"
+				[class.row-expanded]="expandedElement === row"
+				[class.row-with-action]="withRowAction"
+				[class.row-with-details]="withDetails"
+				(click)="onRowClick(row)"
+				mat-row
+			></tr>
+
+			<ng-container *ngIf="withTotal">
+				<tr mat-footer-row *matFooterRowDef="tableColumns; sticky: true"></tr>
+			</ng-container>
+
+			<ng-container *ngIf="withDetails">
+				<tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+			</ng-container>
+		</table>
+	</div>
+	<mat-paginator
+		[hidden]="dataSource.filteredData.length < pageSize"
+		[length]="dataSource.filteredData.length"
+		[class.z-paginator-sticky]="isSticky"
+		[pageSizeOptions]="pageSizeOptions"
+		[pageSize]="pageSize"
+		showFirstLastButtons
+		class="z-paginator"
+	></mat-paginator>
+</div>

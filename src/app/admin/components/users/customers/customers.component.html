@@ -311,34 +311,45 @@
           </ng-template>
 
           <ng-template #details_content let-modal>
-            <div class="modal-header">
+            <!-- <div class="modal-header">
               <h5 class="modal-title">Customer details</h5>
               <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
               </button>
-            </div>
-            <div class="modal-body">
+            </div> -->
+            <!-- <div class="modal-body">
               <app-admin-customer-details [permission]="permission" [customer]="selectedCustomer" [currencies]="currencyList"
                 (save)="onSaveCustomer()" (close)="modal.dismiss('Close')">
               </app-admin-customer-details>
-            </div>
-            <!-- <div class="modal-body">
-              <h5 class="modal-title">Customer details</h5>
+            </div> -->
+            <div class="modal-body tabs">
+              <!-- <h5 class="modal-title">Customer details</h5> -->
               <mat-tab-group>
                 <mat-tab label="Customer details">
-                  <app-admin-customer-details [permission]="permission" [customer]="selectedCustomer" [currencies]="currencyList"
-                    (save)="onSaveCustomer()" (close)="modal.dismiss('Close')">
-                  </app-admin-customer-details>
+                  <ng-template matTabContent>
+                    <app-admin-customer-details 
+                      [permission]="permission" 
+                      [customer]="selectedCustomer" 
+                      [currencies]="currencyList"
+                      (save)="onSaveCustomer()" 
+                      (close)="modal.dismiss('Close')">
+                    </app-admin-customer-details>
+                  </ng-template>
+                  
                 </mat-tab>
-                <mat-tab label="Customer Docs" disabled>
-                  <app-admin-customer-docs (close)="modal.dismiss('Close')">
-                  </app-admin-customer-docs>
+                <mat-tab label="Customer Docs">
+                  <ng-template matTabContent>
+                    <app-admin-customer-docs 
+                      [userId]="selectedCustomer.id" 
+                      (close)="modal.dismiss('Close')">
+                    </app-admin-customer-docs>
+                  </ng-template>
                 </mat-tab>
               </mat-tab-group>
               <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
               </button>
-            </div> -->
+            </div>
           </ng-template>
 
           <ng-template #message_content let-modal>

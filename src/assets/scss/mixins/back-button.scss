@@ -1,0 +1,27 @@
+@import 'constants/colors';
+@import 'constants/typography';
+
+@mixin back-button() {
+	font-family: 'Open Sans', sans-serif;
+	font-style: normal;
+	font-weight: $font-weight-normal;
+	font-size: $font-size-sm;
+	line-height: $line-height-sm;
+	color: $zesty-grey-reworked;
+
+	&:before {
+		content: '';
+		display: inline-block;
+		vertical-align: middle;
+		margin-right: 8px;
+		width: 13px;
+		height: 15px;
+		background: url('/assets/icons/arrow-left.svg') no-repeat center / contain;
+	}
+
+	&:hover,
+	&:focus {
+		color: $zesty-dark-blue;
+		box-shadow: none;
+	}
+}

@@ -1,5 +1,5 @@
 <div class="file-upload-wrapper">
-    <mat-mdc-form-field>
+    <mat-form-field>
         <mat-toolbar>
             <div class="file-input-wrapper">
                 <input matInput [(ngModel)]="fileName" readonly name="fileName" />
@@ -8,11 +8,12 @@
         </mat-toolbar>
           <input
             type="file"
+            [multiple]="multiple"
             #fileInput
             id="uploadFile"
             (change)="onFileSelected($event)"
             name="uploadFile"
             [accept]="requiredFileType"
           />
-    </mat-mdc-form-field>
+    </mat-form-field>
 </div>
