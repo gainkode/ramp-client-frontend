@@ -186,8 +186,12 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.widget.allowToPayIfKycFailed = data.allowToPayIfKycFailed ?? false;
   		let userParams: Record<string, any> = {};
   		if (data.additionalSettings) {
-  			//{"minAmountFrom":0,"maxAmountFrom":0,"fixedAmountFrom":0,"kycBeforePayment":false,"disclaimer":true}
+  	
   			const extraData = JSON.parse(data.additionalSettings);
+  			if (extraData.amounts && extraData.amounts.length !== 0){
+  				this.widget.currencyAmounts = extraData.amounts;
+  			}
+
   			this.widget.disclaimer = extraData.disclaimer ?? true;
   			this.widget.kycFirst = extraData.kycBeforePayment ?? false;
   			this.widget.minAmountFrom = extraData.minAmountFrom;
