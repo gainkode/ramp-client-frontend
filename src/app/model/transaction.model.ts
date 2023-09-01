@@ -754,7 +754,10 @@ function getPaymentData(
 		let senderName = '';
 		if (sourceVaultData?.name) {
 			senderName = sourceVaultData.name;
+		}else{
+			senderName = data.sourceVaultId ?? '';
 		}
+
 		if (senderName === '') {
 			cryptoImg = '';
 		}
@@ -774,6 +777,7 @@ function getPaymentData(
 		const cryptoImg = c !== '' ? `../../../assets/svg-crypto/${c}.svg` : '';
 		const destVaultData = JSON.parse(data.destVault ?? '{}');
 		let recipientName = data.destination ?? '';
+		
 		if (destVaultData?.name) {
 			recipientName = destVaultData.name;
 		}
@@ -836,7 +840,10 @@ function getPaymentData(
 		let senderName = '';
 		if (sourceVaultData?.name) {
 			senderName = sourceVaultData.name;
+		}else{
+			senderName = data.sourceVaultId ?? '';
 		}
+
 		if (senderName === '') {
 			cryptoImg = '';
 		}
