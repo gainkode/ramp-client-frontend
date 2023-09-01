@@ -71,8 +71,7 @@ $white: #eee;
 }
 
 @keyframes color {
-	100%,
-	0% {
+	0%, 100% {
 		stroke: $red;
 	}
 	40% {
@@ -81,8 +80,7 @@ $white: #eee;
 	66% {
 		stroke: $green;
 	}
-	80%,
-	90% {
+	80%, 90% {
 		stroke: $yellow;
 	}
 }
