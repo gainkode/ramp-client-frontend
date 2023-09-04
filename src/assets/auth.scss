@@ -11,6 +11,9 @@ $font_main: var(--font_main);
     padding: 0px;
 }
 
+.recaptcha-margin {
+    margin: 20px;
+}
 .__auth-body {
     background-color: $color_white;
     width: $widget_max_width + px;
