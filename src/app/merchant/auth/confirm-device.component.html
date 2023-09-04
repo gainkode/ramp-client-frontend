@@ -9,6 +9,8 @@
                 <div *ngIf="!validated">
                     <h2 class="__auth-title">Token validation</h2>
                     <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+
+                    <app-recaptcha class="recaptcha-margin" (completed)="capchaResult($event)"></app-recaptcha>
                 </div>
                 <div *ngIf="validated" class="__auth-disclaimer-area">
                     <div *ngIf="valid" class="__auth-disclaimer-container">
@@ -43,12 +45,3 @@
         </div>
     </div>
 </div>
-
-<ng-template #recaptcha let-modal>
-    <div class="modal-header">
-      <h5 class="modal-title">Recaptcha</h5>
-    </div>
-    <div class="modal-body">
-        <app-recaptcha (completed)="capchaResult($event)"></app-recaptcha>
-    </div>
-</ng-template>

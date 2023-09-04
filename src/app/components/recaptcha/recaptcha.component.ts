@@ -61,11 +61,15 @@ export class RecaptchaComponent implements AfterViewInit, OnDestroy {
   	this.includeScript();
   }
   ngOnDestroy(): void {
-  	if (this.scriptTag) {
-  		// this.scriptTag.parentNode.removeChild(this.scriptTag);
+		if(this.widgetId){
 			window.turnstile.remove(this.widgetId);
-  		this.renderer.removeChild(this.document.head, this.scriptTag);
+		}
+		
+  	if (this.scriptTag) {
+  		this.scriptTag.parentNode.removeChild(this.scriptTag);
+  		// this.renderer.removeChild(this.document.head, this.scriptTag);
   		this.scriptTag = undefined;
+			window.turnstile = undefined;
   	}
   }
   turnstileCaptchaRender(turnstileOptions: TurnstileOptions): void {
