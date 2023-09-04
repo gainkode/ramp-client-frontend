@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Validators, AbstractControl, UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LangDefinition, TranslocoService } from '@ngneat/transloco';
 import { TransactionType, SettingsCurrencyWithDefaults, Rate, UserState, AssetAddressShort } from 'model/generated-models';
 import { WidgetSettings } from 'model/payment-base.model';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'model/payment.model';
@@ -60,7 +61,9 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   @Output() onVerifyWhenPaidChanged = new EventEmitter<boolean>();
   @Output() onQuoteChanged = new EventEmitter<number>();
   @Output() onComplete = new EventEmitter<string>();
-
+  availableLangs: LangDefinition[];
+  activeLang: string;
+  
   logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
   logoAlt = EnvService.product;
 
@@ -212,13 +215,21 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   constructor(
+	public transloco: TranslocoService,
   	private router: Router,
   	private auth: AuthService,
   	private commonService: CommonDataService,
   	private paymentService: PaymentDataService,
   	private errorHandler: ErrorService,
   	private formBuilder: UntypedFormBuilder,
-  	public themeService: ThemeService) { }
+  	public themeService: ThemeService) {
+		this.availableLangs = <LangDefinition[]>transloco.getAvailableLangs();
+		const activeLangId = transloco.getActiveLang();
+		this.activeLang = this.availableLangs.find(l => l.id === activeLangId).label;
+
+		console.log(this.availableLangs)
+		console.log(this.activeLang)
+	 }
 
   ngOnInit(): void {
   	const settings = this.auth.getLocalSettingsCommon();
@@ -972,5 +983,10 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   onCancel(): void {
   	this.isSecondPartActive = false;
   	this.hideProceedButton = true;
+  }
+
+  onLangSelect(lang: LangDefinition): void {
+	this.transloco.setActiveLang(lang.id);
+	this.activeLang = lang.label;
   }
 }

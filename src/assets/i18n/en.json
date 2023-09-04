@@ -1,6 +1,5 @@
 {
-  "en-us": "English (US)",
-  "en-gb": "English (GB)",
+  "en": "English (US)",
   "recaptcha.title": "Recaptcha",
 
   "widget-internal.order-summary_title": "Order Summary",
