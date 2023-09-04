@@ -28,38 +28,34 @@ export class PersonalConfirmEmailComponent implements OnDestroy, AfterViewInit {
     	private errorHandler: ErrorService,
     	public router: Router,
     	public activeRoute: ActivatedRoute) {
-				// this.token = this.activeRoute.snapshot.params['token'];
-				// if (this.token !== undefined) {
-				// 	this.subscriptions.add(
-				// 		this.auth.confirmEmail(this.token).subscribe(({ data }) => {
-				// 			this.validated = true;
-				// 			this.valid = true;
-				// 		}, (error) => {
-				// 			this.validated = true;
-				// 			this.errorMessage = this.errorHandler.getError(error.message, 'Unable to validate email');
-				// 		})
-				// 	);
-				// }
-			}
+    }
 
-    capchaResult(event){
-    	this.recaptchaDialog?.close();
+    capchaResult(event: string): void{
     	localStorage.setItem('recaptchaId', event);
     	this.token = this.activeRoute.snapshot.params['token'];
-    	if (this.token !== undefined) {
-    		this.subscriptions.add(
-    			this.auth.confirmEmail(this.token).subscribe(({ data }) => {
-    				this.validated = true;
-    				this.valid = true;
-    			}, (error) => {
-    				this.validated = true;
-    				this.errorMessage = this.errorHandler.getError(error.message, 'Unable to validate email');
-    			})
-    		);
+    	this.validated = true;
+
+    	if (this.token) {
+    		const subscription = this.auth.confirmEmail(this.token)
+    			.subscribe({
+    				next: () => this.valid = true,
+    				error: (err) => {
+    					this.recaptchaDialog?.close();
+    					this.errorMessage = this.errorHandler.getError(err.message, 'Unable to validate email');
+    				},
+    				complete: () => {
+    					this.validated = true;
+    					this.recaptchaDialog?.close();
+    				}
+    			});
+			
+    		this.subscriptions.add(subscription);
+    	} else {
+    		this.recaptchaDialog?.close();
     	}
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
     	this.recaptchaDialog = this.modalService.open(this.recaptchaModalContent, {
     		backdrop: 'static',
     		windowClass: 'modalCusSty',
