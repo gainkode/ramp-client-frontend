@@ -1,8 +1,8 @@
-import { Component, ErrorHandler, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
 import { AccountStatus, KycStatus, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'model/payment.model';
@@ -11,6 +11,8 @@ import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ExchangeRateService } from 'services/rate.service';
 import { getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
+import { Filter } from 'admin/model/filter.model';
+import { CommonTargetValue } from 'model/common.model';
 
 @Component({
 	selector: 'app-admin-transaction-details',
@@ -112,6 +114,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	transactionStatus: [TransactionStatus.New, { validators: [Validators.required], updateOn: 'change' }],
   	kycStatus: [KycStatus.Unknown, { validators: [Validators.required], updateOn: 'change' }],
   	accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
+  	widgetId: [undefined],
   	transferHash: [undefined],
   	screeningAnswer: [undefined],
   	screeningRiskscore: [undefined],
@@ -120,6 +123,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	comment: [undefined]
   });
 
+  widgetOptions$: Observable<CommonTargetValue[]>;
   constructor(
   	private formBuilder: UntypedFormBuilder,
   	private router: Router,
@@ -142,6 +146,22 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			this.startExchangeRate();
   		})
   	);
+
+  	this.widgetOptions$ = this.getFilteredWidgets();
+  }
+
+  private getFilteredWidgets(): Observable<CommonTargetValue[]> {
+  	return this.adminService.getWidgets(0, 100, 'name', false, <Filter>{}).pipe(
+  		map(result => result.list.map(widget => ({
+  			id: widget.id,
+  			title: widget.name
+  		} as CommonTargetValue)))
+  	);
+  }
+  widgetSearchFn(term: string, item: CommonTargetValue): boolean {
+  	term = term.toLocaleLowerCase();
+  	return item.title.toLocaleLowerCase().indexOf(term) > -1 ||
+		item.id && item.id.toLocaleLowerCase().indexOf(term) > -1;
   }
 
   ngOnDestroy(): void {
@@ -202,7 +222,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.benchmarkTransferOrderBlockchainLink = val?.benchmarkTransferOrderBlockchainLink ?? '';
   	this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
   	if (this.data) {
-  		this.flag = this.data.flag == true;
+  		this.flag = this.data.flag === true;
   		this.form.get('address')?.setValue(this.data.address);
   		this.form.get('rate')?.setValue(this.data.rate);
   		this.form.get('fee')?.setValue(this.data.fees);
@@ -211,6 +231,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('currencyToReceive')?.setValue(this.data.currencyToReceive);
   		this.form.get('transactionStatus')?.setValue(this.data.status);
   		this.form.get('kycStatus')?.setValue(this.data.kycStatusValue);
+  		this.form.get('widgetId')?.setValue(this.data.widgetId);
   		this.form.get('accountStatus')?.setValue(this.data.accountStatusValue);
   		this.form.get('transferHash')?.setValue(this.data.transferOrderHash);
   		this.form.get('screeningAnswer')?.setValue(this.data.screeningAnswer);
@@ -261,7 +282,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
-  getTransactionToUpdate(){
+  getTransactionToUpdate(): Transaction {
   	const currentRateValue = this.form.get('rate')?.value;
   	let currentRate: number | undefined = undefined;
   	if (currentRateValue !== undefined) {
@@ -276,6 +297,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		rate: currentRate,
   		feeFiat: parseFloat(this.form.get('fee')?.value ?? '0'),
   		status: this.form.get('transactionStatus')?.value,
+  		widgetId: this.form.get('widgetId')?.value,
   		kycStatus: this.form.get('kycStatus')?.value,
   		accountStatus: this.form.get('accountStatus')?.value,
   		transferOrder: {
@@ -451,7 +473,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onRefunded(content: any): void {
-    this.fastStatusChange(TransactionStatus.Refund, content);
+  	this.fastStatusChange(TransactionStatus.Refund, content);
   }
   
   fastStatusChange(newStatus: TransactionStatus, content: any): void {

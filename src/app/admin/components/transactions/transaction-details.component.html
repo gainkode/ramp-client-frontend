@@ -43,8 +43,24 @@
         <app-admin-details-item label="Country" [value]="data?.user?.country"></app-admin-details-item>
         <app-admin-details-item label="IP Address" [value]="data?.ip"></app-admin-details-item>
         <app-admin-details-item label="Customer ID" [value]="data?.accountId"></app-admin-details-item>
-        <app-admin-details-item label="Widget ID" [value]="data?.widgetId"></app-admin-details-item>
-          
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Widget ID
+            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+          </label>
+          <ng-select [items]="widgetOptions$ | async" 
+            bindLabel="title" bindValue="id" 
+            formControlName="widgetId"
+            [searchFn]="widgetSearchFn"
+            [clearable]=false [clearOnBackspace]=false required>
+            <ng-template ng-option-tmp let-item="item">
+							{{item.title}} <br />
+							<small>{{item.id}}</small>
+						</ng-template>
+          </ng-select>
+        </div>
+        
         <app-admin-details-item *ngIf="(transactionType!==TRANSACTION_TYPE.Deposit && transactionType!==TRANSACTION_TYPE.Withdrawal) || editableDestination===false"
           label="Wallet address" [value]="data?.address"></app-admin-details-item>
         <div *ngIf="(transactionType!==TRANSACTION_TYPE.Deposit && transactionType!==TRANSACTION_TYPE.Withdrawal) && editableDestination===true"
