@@ -5,14 +5,14 @@
                 <img class="__auth-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160"
                     (click)="router.navigateByUrl('/')">
             </div>
-            <div class="__auth-data-container">
-                <div *ngIf="!validated">
+            <app-recaptcha *ngIf="validated === undefined" class="recaptcha-margin" (completed)="capchaResult($event)"></app-recaptcha>
+
+            <div class="__auth-data-containe margin-class">
+                <div *ngIf="validated === false">
                     <h2 class="__auth-title">Token validation</h2>
                     <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-
-                    <app-recaptcha class="recaptcha-margin" (completed)="capchaResult($event)"></app-recaptcha>
                 </div>
-                <div *ngIf="validated" class="__auth-disclaimer-area">
+                <div *ngIf="validated === true" class="__auth-disclaimer-area">
                     <div *ngIf="valid" class="__auth-disclaimer-container">
                         <h2 class="__auth-title">Validation complete</h2>
                         <span class="__auth-disclaimer-line">
@@ -34,14 +34,14 @@
                             Make sure you're using the latest received confirmation email.
                         </span>
                     </div>
+
+                    <!-- Errors -->
+                    <div *ngIf="errorMessage" class="__auth-error-area">
+                        <span class="__auth-error-line">
+                            {{errorMessage}}
+                        </span>
+                    </div>
                 </div>
-                <!-- Errors -->
-                <div *ngIf="errorMessage!==''" class="__auth-error-area">
-                    <span class="__auth-error-line">
-                        {{errorMessage}}
-                    </span>
-                </div>
-            </div>
         </div>
     </div>
 </div>
