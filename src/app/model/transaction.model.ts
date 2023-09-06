@@ -185,8 +185,8 @@ export class TransactionItemFull {
 			this.currencyFiat = paymentData.currencyFiat;
 			this.amountToSpend = paymentData.amountToSpend;
 			this.fees = paymentData.fees;
-			this.sender = paymentData.sender.title;
-			this.recipient = paymentData.recipient.title;
+			this.sender = data.senderName;
+			this.recipient = data.recipientName;
 			this.amountToReceive = paymentData.amountToReceive;
 			this.rate = data.rate ?? data.initialRate;
 
@@ -667,311 +667,77 @@ function getPaymentData(
 	result.currencyToReceive = data.currencyToReceive ?? '';
 	result.amountToSpend = data.amountToSpend ?? 0;
 	result.amountToReceive = data.amountToReceiveWithoutFee ?? data.initialAmountToReceiveWithoutFee ?? 0;
-
+	let recepientImg = '';
+	let senderImg = '';
 	if (data.type === TransactionType.Buy) {
 		result.currencyFiat = result.currencyToSpend;
 		result.currencyCrypto = result.currencyToReceive;
-		const c = getCryptoSymbol(result.currencyToReceive);
-		const cryptoImg =
-      c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
-		const destVaultData = JSON.parse(data.destVault ?? '{}');
-		let recipientName = `Default Vault ${c}`;
-		if (data.destination) {
-			recipientName = data.destination;
-		}
-		if (destVaultData?.name) {
-			recipientName = destVaultData.name;
-		}
-		result.recipient = {
-			id: '',
-			title: recipientName,
-			imgClass: '',
-			imgSource: cryptoImg,
-		};
-		if (
-			data.instrument === PaymentInstrument.Apm ||
-      data.instrument === PaymentInstrument.WireTransfer
-		) {
-			result.sender = {
-				id: '',
-				title:
-          PaymentInstrumentList.find((x) => x.id === data.instrument)?.name ??
-          '',
-				imgSource: '',
-				imgClass: '',
-			} as CommonTargetValue;
-		} else if (data.instrument === PaymentInstrument.CreditCard) {
-			if (data.paymentOrder) {
-				if (data.paymentOrder.paymentInfo) {
-					let payment = JSON.parse(data.paymentOrder.paymentInfo);
-					// sometimes it comes as a string with escape symbols.
-					//  In this case parse returns a stringified JSON, which has to be parsed again
-					if (typeof payment === 'string') {
-						payment = JSON.parse(payment);
-					}
-					const card = new CardView();
-					card.setPaymentInfo(JSON.stringify(payment));
-					if (card.cardInfo) {
-						result.sender = card.cardInfo;
-						if (result.sender) {
-							result.sender.title = card.secureCardNumber;
-						}
-					}
-				}
-			}
-		} else if (data.instrument === PaymentInstrument.FiatVault) {
-			result.sender = {
-				id: '',
-				title: `${data.currencyToSpend} Wallet`,
-				imgSource: '',
-				imgClass: '',
-			} as CommonTargetValue;
-		}
 		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
+		result.typeIcon = 'account_balance';
+		const c = getCryptoSymbol(result.currencyToReceive);
+		recepientImg = c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
+
 		if (result.networkFee < 0) {
 			result.networkFee = 0;
 		}
-		result.typeIcon = 'account_balance';
 	} else if (data.type === TransactionType.Transfer) {
 		result.currencyFiat = result.currencyToReceive;
 		result.currencyCrypto = result.currencyToSpend;
-		result.recipient = {
-			id: '',
-			title: data.destination ?? '',
-			imgClass: '',
-			imgSource: '',
-		};
-		const c = getCryptoSymbol(result.currencyToSpend);
-		let cryptoImg =
-      c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
-		let sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
-		// sometimes it comes as a string with escape symbols.
-		//  In this case parse returns a stringified JSON, which has to be parsed again
-		if (typeof sourceVaultData === 'string') {
-			sourceVaultData = JSON.parse(sourceVaultData);
-		}
-		let senderName = '';
-		if (sourceVaultData?.name) {
-			senderName = sourceVaultData.name;
-		}else{
-			senderName = data.sourceVaultId ?? '';
-		}
-
-		if (senderName === '') {
-			cryptoImg = '';
-		}
-		result.sender = {
-			id: '',
-			title: senderName,
-			imgClass: '__profile-transactions-table-cell-sender-icon',
-			imgSource: cryptoImg,
-		};
 		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'file_upload';
+		const c = getCryptoSymbol(result.currencyToSpend);
+		senderImg = c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
 	} else if (data.type === TransactionType.Receive) {
 		result.currencyFiat = result.currencyToSpend;
 		result.currencyCrypto = result.currencyToReceive;
-		const c = getCryptoSymbol(result.currencyToReceive).toLowerCase();
-		const cryptoImg = c !== '' ? `../../../assets/svg-crypto/${c}.svg` : '';
-		const destVaultData = JSON.parse(data.destVault ?? '{}');
-		let recipientName = data.destination ?? '';
-		
-		if (destVaultData?.name) {
-			recipientName = destVaultData.name;
-		}
-		result.recipient = {
-			id: '',
-			title: recipientName,
-			imgClass: '',
-			imgSource: cryptoImg,
-		};
 		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'file_download';
-		let senderName = 'External';
-		const transferDetails = data.transferOrder?.transferDetails;
-		if (transferDetails) {
-			let transferDetailsData = JSON.parse(transferDetails);
-			// sometimes it comes as a string with escape symbols.
-			//  In this case parse returns a stringified JSON, which has to be parsed again
-			if (typeof transferDetailsData === 'string') {
-				transferDetailsData = JSON.parse(transferDetailsData);
-			}
-			if (transferDetailsData.data) {
-				const sourceData = JSON.parse(transferDetailsData.data);
-				senderName = `${sourceData?.source?.name ?? ''} ${
-					sourceData?.sourceAddress ?? 'External'
-				}`;
-			}
-		}
-		result.sender = {
-			id: '',
-			title:
-        data.sourceAddress && data.sourceAddress != ''
-        	? data.sourceAddress
-        	: 'External',
-			imgSource: '',
-			imgClass: '',
-		} as CommonTargetValue;
+		const c = getCryptoSymbol(result.currencyToReceive).toLowerCase();
+		recepientImg = c !== '' ? `../../../assets/svg-crypto/${c}.svg` : '';
 	} else if (data.type === TransactionType.Sell) {
 		result.currencyFiat = result.currencyToReceive;
 		result.currencyCrypto = result.currencyToSpend;
-		const c = getCryptoSymbol(result.currencyToSpend);
-		let cryptoImg =
-      c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
-		if (data.instrument == PaymentInstrument.FiatVault) {
-			result.recipient = {
-				id: '',
-				title: `${data.currencyToReceive} Wallet`,
-				imgClass: '',
-				imgSource: '',
-			};
-		} else {
-			result.recipient = {
-				id: '',
-				title: 'Wire transfer',
-				imgClass: '',
-				imgSource: '',
-			};
-		}
-		const sourceVaultData = JSON.parse(data.sourceVault ?? '{}');
-		let senderName = '';
-		if (sourceVaultData?.name) {
-			senderName = sourceVaultData.name;
-		}else{
-			senderName = data.sourceVaultId ?? '';
-		}
-
-		if (senderName === '') {
-			cryptoImg = '';
-		}
-		result.sender = {
-			id: '',
-			title: senderName,
-			imgClass: '__profile-transactions-table-cell-sender-icon',
-			imgSource: cryptoImg,
-		};
 		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'account_balance';
+		const c = getCryptoSymbol(result.currencyToSpend);
+		senderImg = c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
 	} else if (data.type === TransactionType.Deposit) {
 		result.currencyFiat = result.currencyToReceive;
 		result.currencyCrypto = '';
-		
-		const destVaultData = JSON.parse(data.destVault ?? '{}');
-		let recipientName = data.destination ?? `${result.currencyFiat} Wallet`;
-		if (destVaultData?.name) {
-			recipientName = destVaultData.name;
-		}
-		result.recipient = {
-			id: '',
-			title: recipientName,
-			imgClass: '',
-			imgSource: '',
-		};
 		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'monetization_on';
-		let senderName = '';
-		const transferDetails = data.transferOrder?.transferDetails;
-		if (transferDetails) {
-			let transferDetailsData = JSON.parse(transferDetails);
-			// sometimes it comes as a string with escape symbols.
-			//  In this case parse returns a stringified JSON, which has to be parsed again
-			if (typeof transferDetailsData === 'string') {
-				transferDetailsData = JSON.parse(transferDetailsData);
-			}
-			if (transferDetailsData.data) {
-				const sourceData = JSON.parse(transferDetailsData.data);
-				senderName = `${sourceData?.source?.name ?? ''} ${
-					sourceData?.sourceAddress ?? ''
-				}`;
-			}
-		}
-		if (senderName === '') {
-			senderName = 'Wire Transfer';
-		}
-		result.sender = {
-			id: '',
-			title: senderName,
-			imgSource: '',
-			imgClass: '',
-		} as CommonTargetValue;
 	} else if (data.type === TransactionType.Withdrawal) {
 		result.currencyFiat = result.currencyToReceive;
 		result.currencyCrypto = '';
-
-		const recipientName = 'Wire Transfer';
-		result.recipient = {
-			id: '',
-			title: recipientName,
-			imgClass: '',
-			imgSource: '',
-		};
 		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'monetization_on';
-		let senderName = '';
-		const transferDetails = data.transferOrder?.transferDetails;
-		if (transferDetails) {
-			let transferDetailsData = JSON.parse(transferDetails);
-			// sometimes it comes as a string with escape symbols.
-			//  In this case parse returns a stringified JSON, which has to be parsed again
-			if (typeof transferDetailsData === 'string') {
-				transferDetailsData = JSON.parse(transferDetailsData);
-			}
-			if (transferDetailsData.data) {
-				const sourceData = JSON.parse(transferDetailsData.data);
-				senderName = `${sourceData?.source?.name ?? ''} ${
-					sourceData?.sourceAddress ?? ''
-				}`;
-			}
-		}
-		if (senderName === '') {
-			senderName = `${result.currencyFiat} Wallet`;
-		}
-		result.sender = {
-			id: '',
-			title: senderName,
-			imgSource: '',
-			imgClass: '',
-		} as CommonTargetValue;
 	} else if (data.type === TransactionType.MerchantBuy) {
 		result.currencyFiat = result.currencyToReceive;
 		result.currencyCrypto = '';
-		let recipientName = 'Wire Transfer';
-		const instrumentDetails = data.instrumentDetails;
-		if (instrumentDetails) {
-			let instrumentDetailsData = JSON.parse(instrumentDetails);
-			// sometimes it comes as a string with escape symbols.
-			//  In this case parse returns a stringified JSON, which has to be parsed again
-			if (typeof instrumentDetailsData === 'string') {
-				instrumentDetailsData = JSON.parse(instrumentDetailsData);
-			}
-			const transactions: any[] = instrumentDetailsData.transactions;
-			if (transactions) {
-				const addresses = transactions.map((x) => x.address as string);
-				recipientName = addresses.join(', ');
-			}
-		}
-		result.recipient = {
-			id: '',
-			title: recipientName,
-			imgClass: '',
-			imgSource: '',
-		};
 		result.fees = (data.feeFiat as number) ?? 0;
 		result.networkFee = data.approxNetworkFee ?? 0;
 		result.typeIcon = 'monetization_on';
-		result.sender = {
-			id: '',
-			title: `${data.sourceVaultId ?? ''}`,
-			imgSource: '',
-			imgClass: '',
-		} as CommonTargetValue;
 	}
+
+	result.recipient = {
+		id: '',
+		title: data.recipientName,
+		imgClass: '',
+		imgSource: recepientImg,
+	};
+	
+	result.sender = {
+		id: '',
+		title: data.senderName,
+		imgSource: senderImg ? '__profile-transactions-table-cell-sender-icon' : '',
+		imgClass: senderImg,
+	} as CommonTargetValue;
 	return result;
 }
 

@@ -336,6 +336,9 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   	if (this.fields.includes('search')) {
   		controlsConfig.search = [''];
   	}
+		if (this.fields.includes('from')) {
+  		controlsConfig.from = [''];
+  	}
   	if (this.fields.includes('verifyWhenPaid')) {
   		controlsConfig.verifyWhenPaid = [false];
   	}
@@ -353,6 +356,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 
   	if (this.filterData?.search) {
   		this.filterForm.controls.search.setValue(this.filterData.search);
+  	}
+
+		if (this.filterData?.from) {
+  		this.filterForm.controls.from.setValue(this.filterData.from);
   	}
 
   	if (this.filterData?.createdDateInterval) {
@@ -478,7 +485,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   		if (this.fields.includes('transactionCount')) {
   			this.filterForm.controls.transactionCountOver.setValue(0);
   		}
-  		if (this.fields.includes('search')) {
+  		if (this.fields.includes('from')) {
+  			this.filterForm.controls.from.setValue('');
+  		}
+			if (this.fields.includes('search')) {
   			this.filterForm.controls.search.setValue('');
   		}
   		if (this.fields.includes('verifyWhenPaid')) {

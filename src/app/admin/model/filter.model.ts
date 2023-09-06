@@ -33,6 +33,7 @@ export class Filter {
   public totalBuyVolumeOver?: number;
   public transactionCountOver?: number;
   public search?: string;
+	public from?: string;
   public verifyWhenPaid?: boolean;
   public transactionFlag?: boolean;
   public preauthFlag?: boolean;
@@ -177,6 +178,10 @@ export class Filter {
 
 		if (filterValues.search) {
 			this.search = filterValues.search;
+		}
+
+		if (filterValues.from) {
+			this.from = filterValues.from;
 		}
 
 		if (filterValues.verifyWhenPaid) {

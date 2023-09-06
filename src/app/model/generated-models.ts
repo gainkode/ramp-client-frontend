@@ -2667,6 +2667,7 @@ export type QueryGetTransactionsArgs = {
   filter?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   flag?: InputMaybe<Scalars['Boolean']['input']>;
+  from?: InputMaybe<Scalars['String']['input']>;
   kycStatusesOnly?: InputMaybe<Array<TransactionKycStatus>>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   paymentInstrumentsOnly?: InputMaybe<Array<PaymentInstrument>>;
@@ -3622,6 +3623,7 @@ export type Transaction = {
   instrument?: Maybe<PaymentInstrument>;
   instrumentDetails?: Maybe<Scalars['String']['output']>;
   kycStatus?: Maybe<TransactionKycStatus>;
+  lifelineId?: Maybe<Scalars['String']['output']>;
   liquidityOrder?: Maybe<LiquidityExchangeOrder>;
   liquidityOrderId?: Maybe<Scalars['String']['output']>;
   liquidityProvider?: Maybe<LiquidityProvider>;
@@ -3635,6 +3637,7 @@ export type Transaction = {
   paymentProvider?: Maybe<Scalars['String']['output']>;
   rate?: Maybe<Scalars['Float']['output']>;
   rateFiatToEur?: Maybe<Scalars['Float']['output']>;
+  recipientName?: Maybe<Scalars['String']['output']>;
   requestParams?: Maybe<Scalars['String']['output']>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
   requiredUserTierId?: Maybe<Scalars['String']['output']>;
@@ -3644,6 +3647,7 @@ export type Transaction = {
   screeningData?: Maybe<Scalars['String']['output']>;
   screeningRiskscore?: Maybe<Scalars['Float']['output']>;
   screeningStatus?: Maybe<Scalars['String']['output']>;
+  senderName?: Maybe<Scalars['String']['output']>;
   source?: Maybe<TransactionSource>;
   sourceAddress?: Maybe<Scalars['String']['output']>;
   sourceVault?: Maybe<Scalars['String']['output']>;
@@ -3706,6 +3710,32 @@ export enum TransactionKycStatus {
   KycApproved = 'KycApproved',
   KycRejected = 'KycRejected',
   KycWaiting = 'KycWaiting'
+}
+
+export type TransactionLifelineStatus = {
+  __typename?: 'TransactionLifelineStatus';
+  created?: Maybe<Scalars['DateTime']['output']>;
+  lifelineId?: Maybe<Scalars['String']['output']>;
+  resultFailureParams?: Maybe<Scalars['String']['output']>;
+  resultStatusParams?: Maybe<Scalars['String']['output']>;
+  resultSuccessParams?: Maybe<Scalars['String']['output']>;
+  transactionId?: Maybe<Scalars['String']['output']>;
+  transactionLifelineStatusId?: Maybe<Scalars['ID']['output']>;
+  transactionStatus?: Maybe<TransactionStatus>;
+  transactionStatusResult?: Maybe<TransactionLifelineStatusResult>;
+  userId?: Maybe<Scalars['String']['output']>;
+};
+
+export type TransactionLifelineStatusListResult = {
+  __typename?: 'TransactionLifelineStatusListResult';
+  count?: Maybe<Scalars['Int']['output']>;
+  list?: Maybe<Array<TransactionLifelineStatus>>;
+};
+
+export enum TransactionLifelineStatusResult {
+  Failure = 'FAILURE',
+  Success = 'SUCCESS',
+  Unknown = 'UNKNOWN'
 }
 
 export type TransactionListResult = {
@@ -3798,12 +3828,14 @@ export type TransactionShort = {
   instrument?: Maybe<PaymentInstrument>;
   instrumentDetails?: Maybe<Scalars['String']['output']>;
   kycStatus?: Maybe<TransactionKycStatus>;
+  lifelineId?: Maybe<Scalars['String']['output']>;
   liquidityOrder?: Maybe<LiquidityExchangeOrder>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   paymentOrder?: Maybe<PaymentOrder>;
   paymentProvider?: Maybe<Scalars['String']['output']>;
   rate?: Maybe<Scalars['Float']['output']>;
   rateFiatToEur?: Maybe<Scalars['Float']['output']>;
+  recipientName?: Maybe<Scalars['String']['output']>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
   requiredUserTierId?: Maybe<Scalars['String']['output']>;
   risk: RiskLevel;
@@ -3812,6 +3844,7 @@ export type TransactionShort = {
   screeningData?: Maybe<Scalars['String']['output']>;
   screeningRiskscore?: Maybe<Scalars['Float']['output']>;
   screeningStatus?: Maybe<Scalars['String']['output']>;
+  senderName?: Maybe<Scalars['String']['output']>;
   source?: Maybe<TransactionSource>;
   sourceAddress?: Maybe<Scalars['String']['output']>;
   sourceVault?: Maybe<Scalars['String']['output']>;
@@ -3893,10 +3926,15 @@ export type TransactionStatusDescriptor = {
   adminStatus: AdminTransactionStatus;
   canBeCancelled: Scalars['Boolean']['output'];
   description: Scalars['String']['output'];
+  failureFinalStatus?: Maybe<TransactionStatus>;
   hasToBeRefunded: Scalars['Boolean']['output'];
   level: TransactionStatusLevel;
+  newNodeOnLifeline: Scalars['Boolean']['output'];
   notifyUser: Scalars['Boolean']['output'];
+  processingStatus?: Maybe<Array<TransactionStatus>>;
   repeatFromStatus?: Maybe<TransactionStatus>;
+  statusType: TransactionStatusType;
+  successFinalStatus?: Maybe<TransactionStatus>;
   updateWhenOwnLiquidityProvider?: Maybe<Scalars['Boolean']['output']>;
   userStatus: UserTransactionStatus;
 };
@@ -3933,6 +3971,13 @@ export type TransactionStatusHistoryListResult = {
 export enum TransactionStatusLevel {
   Error = 'error',
   Info = 'info'
+}
+
+export enum TransactionStatusType {
+  Cancelation = 'Cancelation',
+  Error = 'Error',
+  Final = 'Final',
+  Processing = 'Processing'
 }
 
 export enum TransactionSubStatus {

@@ -87,6 +87,8 @@ const GET_MY_TRANSACTIONS = gql`
         type
         userId
         userIp
+        senderName
+        recipientName
       }
     }
   }

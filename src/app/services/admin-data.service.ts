@@ -641,6 +641,7 @@ const GET_TRANSACTIONS = gql`
     $transactionIdsOnly: [String!]
     $userIdsOnly: [String!]
     $sourcesOnly: [TransactionSource!]
+    $from: String
     $widgetIdsOnly: [String!]
     $countriesOnly: [String!]
     $countryCodeType: CountryCodeType
@@ -668,6 +669,7 @@ const GET_TRANSACTIONS = gql`
       transactionIdsOnly: $transactionIdsOnly
       userIdsOnly: $userIdsOnly
       sourcesOnly: $sourcesOnly
+      from: $from,
       widgetIdsOnly: $widgetIdsOnly
       countriesOnly: $countriesOnly
       countryCodeType: $countryCodeType
@@ -813,6 +815,8 @@ const GET_TRANSACTIONS = gql`
         canBeCancelled
         hasToBeRefunded
         canBeReviewed
+        senderName
+        recipientName
       }
     }
   }
@@ -3005,6 +3009,7 @@ export class AdminDataService {
       countriesOnly: filter?.countries,
       countryCodeType: CountryCodeType.Code3,
       sourcesOnly: filter?.sources,
+      from: filter?.from,
       userIdsOnly: filter?.users,
       widgetIdsOnly: widgetIds,
       flag: filter?.transactionFlag,

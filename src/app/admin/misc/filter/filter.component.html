@@ -313,6 +313,13 @@
                                             <input class="form-control" type="text" formControlName="search"
                                                 placeholder="Type plain search text">
                                         </div>
+                                        <div *ngIf="field === 'from'" class="form-group">
+                                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                                                From
+                                            </label>
+                                            <input class="form-control" type="text" formControlName="from"
+                                                placeholder="Type plain search text">
+                                        </div>
                                         <div *ngIf="field === 'verifyWhenPaid'" class="form-group">
                                             <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                                 Verify When Paid

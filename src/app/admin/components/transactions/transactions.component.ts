@@ -30,6 +30,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
     'users',
     'widgetName',
     'search',
+		'from',
     'source',
     'createdDate',
     'completedDate',
