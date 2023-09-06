@@ -2049,6 +2049,7 @@ mutation UpdateTransaction(
   $transferOrder: TransactionUpdateTransferOrderChanges
   $benchmarkTransferOrder: TransactionUpdateTransferOrderChanges
   $comment: String
+  $widgetId: String
   $flag: Boolean
 ) {
   updateTransaction(
@@ -2063,6 +2064,7 @@ mutation UpdateTransaction(
       feeFiat: $feeFiat
       destination: $destination
       status: $status
+      widgetId: $widgetId
       kycStatus: $kycStatus
       accountStatus: $accountStatus
       launchAfterUpdate: $launchAfterUpdate
@@ -3349,7 +3351,7 @@ export class AdminDataService {
     orderField: string,
     orderDesc: boolean,
     filter: Filter
-  ): Observable<{ list: WidgetItem[], count: number }> {
+  ): Observable<{ list: WidgetItem[]; count: number; }> {
     const orderFields = [{ orderBy: orderField, desc: orderDesc }];
     const vars = {
       userIdsOnly: filter.users,
@@ -3359,7 +3361,7 @@ export class AdminDataService {
       first: takeItems,
       orderBy: orderFields
     };
-    return this.watchQuery<{ getWidgets: WidgetListResult }, QueryGetWidgetsArgs>({
+    return this.watchQuery<{ getWidgets: WidgetListResult; }, QueryGetWidgetsArgs>({
       query: GET_WIDGETS,
       variables: vars,
       fetchPolicy: 'network-only'
@@ -3367,9 +3369,7 @@ export class AdminDataService {
       map(result => {
         if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
           return {
-            list: result.data.getWidgets.list.map(w => {
-              return new WidgetItem(w);
-            }),
+            list: result.data.getWidgets.list.map(w => new WidgetItem(w)),
             count: result.data.getWidgets.count
           };
         } else {
@@ -4132,7 +4132,8 @@ export class AdminDataService {
       transferOrder: transfer,
       benchmarkTransferOrder: benchmark,
       recalculate: recalculateAmounts,
-      flag: data.flag
+      flag: data.flag,
+      widgetId: data.widgetId,
     };
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,

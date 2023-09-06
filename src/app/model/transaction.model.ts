@@ -102,10 +102,10 @@ export class TransactionItemFull {
 	declineReason = '';
 	declineReasonExtra = '';
 	vaultIds: string[] = [];
-	flag: boolean = false;
-	canBeCancelled: boolean = false;
-	hasToBeRefunded: boolean = false;
-	canBeReviewed: boolean = false;
+	flag = false;
+	canBeCancelled = false;
+	hasToBeRefunded = false;
+	canBeReviewed = false;
 
 	constructor(data: Transaction | TransactionShort | null) {
 		if (data !== null) {
