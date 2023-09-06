@@ -1,10 +1,9 @@
 {
-  "en": "English (US)",
+  "en": "EN",
   "recaptcha.title": "Recaptcha",
 
   "widget-internal.order-summary_title": "Order Summary",
   "widget-internal.order-summary_subtitle": "Transactions History",
-  "widget-internal.order-summary_subt": "Transactions History",
 
   "widget-internal-overview.theme_hint-light":"Switch to dark mode",
   "widget-internal-overview.theme_hint-dark":"Switch to light mode",

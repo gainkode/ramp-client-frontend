@@ -1,11 +1,10 @@
 {
-  "fr": "Français (France)",
+  "fr": "FR",
   "fr-ca": "Français (Canada)",
   "recaptcha.title": "Recaptcha",
 
   "widget-internal.order-summary_title": "Récapitulatif de la comman  de",
   "widget-internal.order-summary_subtitle": "Historique des transactions",
-  "widget-internal.order-summary_subt": "Historique des transactions",
 
   "widget-internal-overview.theme_hint-light": "Passer en mode sombre",
   "widget-internal-overview.theme_hint-dark": "Passer en mode clair",

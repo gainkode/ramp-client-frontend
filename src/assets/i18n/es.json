@@ -1,12 +1,11 @@
 {
-  "es": "Español (España)",
+  "es": "ES",
   "es-mx": "Español (México)",
   
   "recaptcha.title": "Recaptcha",
 
   "widget-internal.order-summary_title": "Resumen del pedido",
   "widget-internal.order-summary_subtitle": "Historial de transacciones",
-  "widget-internal.order-summary_subt": "Historial de transacciones",
 
   "widget-internal-overview.theme_hint-light": "Cambiar a modo oscuro",
   "widget-internal-overview.theme_hint-dark": "Cambiar a modo claro",

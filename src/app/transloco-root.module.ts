@@ -10,7 +10,6 @@ import {
 import { Injectable, NgModule } from '@angular/core';
 import { TranslocoPersistLangModule, TRANSLOCO_PERSIST_LANG_STORAGE } from '@ngneat/transloco-persist-lang';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
@@ -19,13 +18,7 @@ export class TranslocoHttpLoader implements TranslocoLoader {
 	) {}
 
 	getTranslation(lang: string): Observable<Translation> {
-		return this.getAgGridTranslation(lang).pipe(
-			switchMap(x => this.http.get<Translation>(`/assets/i18n/${lang}.json?v=${Date.now()}`))
-		);
-	}
-
-	getAgGridTranslation(lang: string): Observable<Translation> {
-		return this.http.get<Translation>(`/assets/i18n/${lang}-grid.json?v=${Date.now()}`);
+		return this.http.get<Translation>(`/assets/i18n/${lang}.json?v=${Date.now()}`);
 	}
 }
 
@@ -61,10 +54,10 @@ export function getLangFn({
 			provide: TRANSLOCO_CONFIG,
 			useValue: translocoConfig({
 				availableLangs: [
-					{ id: 'en', label: 'English (US)' },
-					{ id: 'es', label: 'Español (España)' },
-					{ id: 'de', label: 'Deutsch (Deutschland)' },
-					{ id: 'fr', label: 'Français (France)' }
+					{ id: 'en', label: 'EN' },
+					{ id: 'es', label: 'ES' },
+					{ id: 'de', label: 'DE' },
+					{ id: 'fr', label: 'FR' }
 				],
 				defaultLang: 'en',
 				fallbackLang: 'en',

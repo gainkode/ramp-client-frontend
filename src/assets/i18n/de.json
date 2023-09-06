@@ -1,11 +1,10 @@
 {
-  "de": "Deutsch (Deutschland)",
+  "de": "DE",
   "de-at": "Deutsch (Österreich)",
   "recaptcha.title": "Recaptcha",
 
   "widget-internal.order-summary_title": "Bestellübersicht",
   "widget-internal.order-summary_subtitle": "Transaktionsverlauf",
-  "widget-internal.order-summary_subt": "Transaktionsverlauf",
 
   "widget-internal-overview.theme_hint-light": "Wechseln Sie in den Dunkelmodus",
   "widget-internal-overview.theme_hint-dark": "Wechseln Sie in den Hellmodus",

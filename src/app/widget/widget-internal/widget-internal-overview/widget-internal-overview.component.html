@@ -10,7 +10,7 @@
                 <button 
                   type="button" 
                   mat-icon-button 
-                  [title]="theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+                  [title]="theme === 'light' ? ('widget-internal-overview.theme_hint-light' | transloco) : ('widget-internal-overview.theme_hint-dark' | transloco) "
                   [ngClass]="{'moon': theme === 'dark', 'sun': theme === 'light'}"
                   (click)="themeService.toggleTheme()">
                   <mat-icon>
@@ -19,18 +19,20 @@
                 </button>
               </ng-container>
 
-
-              <div class="navbar__item">
-                    <a class="navbar__item-group-link">{{activeLang}}
-                        <i class="fa fa-caret-down" aria-hidden="true"></i></a>
-                    <ul class="navbar__item-group navbar__item-group--left">
-                        <li *ngFor="let lang of availableLangs" class="navbar__subitem">
-                            <a class="navbar__link navlink" (click)="onLangSelect(lang)">
-                                {{lang.label}}
-                            </a>
-                        </li>
-                    </ul>
+                <div class="navbar">
+                    <div class="navbar__item">
+                        <a class="navbar__item-group-link">{{activeLang}}
+                            <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+                        <ul class="navbar__item-group navbar__item-group--left">
+                            <li *ngFor="let lang of availableLangs" class="navbar__subitem">
+                                <a class="navbar__link navlink" (click)="onLangSelect(lang)">
+                                    {{lang.label}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+              
             </div>
 
             <div class="order-details__content-header-buttons" 
@@ -38,11 +40,12 @@
                 <div class="order-details__content-header-button" 
                     (click)="toggleTransationType(TRANSACTION_TYPE.Buy)"
                     [class.order-details__content-header-button--active]="currentTransaction === TRANSACTION_TYPE.Buy">
-                    Buy</div>
+                    {{'widget-internal-overview.transaction-type_button-buy' | transloco}}
+                </div>
                 <div class="order-details__content-header-button"
                     (click)="toggleTransationType(TRANSACTION_TYPE.Sell)"
                     [class.order-details__content-header-button--active]="currentTransaction === TRANSACTION_TYPE.Sell">
-                    Sell
+                    {{'widget-internal-overview.transaction-type_button-sell' | transloco}}
                     <div class="order-details__content-header-button-blink"
                         [class.order-details__content-header-button-blink--active]="currentTransaction === TRANSACTION_TYPE.Buy">
                     </div>

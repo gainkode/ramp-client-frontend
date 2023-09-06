@@ -70,6 +70,7 @@ import {
 import { WidgetEmbeddedOverviewComponent } from './widget-internal/widget-internal-overview/widget-internal-overview.component';
 import { WidgetEmbeddedComponent } from './widget-internal/widget-internal.component';
 import { SpinnerModule } from 'shared/spinner/spinner.module';
+import { TranslocoRootModule } from 'transloco-root.module';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -109,6 +110,7 @@ export class MaterialModule {}
 		MaterialModule,
 		QRCodeModule,
 		SpinnerModule,
+		TranslocoRootModule
 	],
 	declarations: [
 		WidgetIframeComponent,

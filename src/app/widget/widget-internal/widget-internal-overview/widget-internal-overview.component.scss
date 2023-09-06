@@ -30,6 +30,9 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            .__widget-title-logo-container {
+                align-items: center;
+            }
             &-buttons {
                 background: var(--white);
                 display: flex;
@@ -333,4 +336,87 @@ app-form-textbox {
 
 .sun {
     color: #f39c12;
+}
+
+
+
+$color_1: #444;
+$color_2: #00a2f8;
+$border-color_1: #444;
+
+.navbar {
+	display: flex;
+	justify-content: center;
+	margin-top: 3px;
+    padding: 0;
+	.navbar__item {
+		box-sizing: border-box;
+		position: relative;
+		cursor: pointer;
+		border-bottom: 2px solid transparent;
+		transition: all 0.2s;
+		.navbar__item-group-link {
+			text-decoration: none;
+			display: block;
+			color: $color_1;
+			cursor: pointer;
+            font-size: 13px;
+		}
+		.navbar__item-group {
+			width: auto;
+			list-style: none;
+			padding: 0;
+			position: absolute;
+			left: 0;
+			top: 25px;
+			z-index: 22;
+			max-height: 0;
+			overflow: hidden;
+			-webkit-transform: perspective(400px) rotate3d(1, 0, 0, -90deg);
+			-webkit-transform-origin: 50% 0;
+			-webkit-transition: 350ms;
+			-moz-transition: 350ms;
+			-o-transition: 350ms;
+			transition: 350ms;
+			background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+			.navbar__subitem {
+				text-decoration: none;
+				.navbar__link {
+					color: $color_1;
+					display: block;
+					font-size: 13px;
+					line-height: 1;
+					padding: 8px 10px;
+					text-decoration: none;
+					white-space: nowrap;
+					&:hover {
+						color: $color_2;
+					}
+				}
+			}
+		}
+		.navbar__item-group--left {
+			right: 0;
+			left: auto;
+		}
+		&:hover {
+			.navbar__item-group {
+				display: block;
+				max-height: 1000px;
+				-webkit-transform: perspective(400px) rotate3d(0, 0, 0, 0);
+				opacity: 0.97;
+				border-bottom-right-radius: 3px;
+				border-bottom-left-radius: 3px;
+			}
+		}
+		&:after {
+			.navbar__item-group {
+				clear: both;
+			}
+		}
+	}
+	.navbar__item--active {
+		border-color: $border-color_1;
+	}
 }

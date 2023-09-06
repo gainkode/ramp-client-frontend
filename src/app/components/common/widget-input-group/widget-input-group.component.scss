@@ -207,28 +207,28 @@
     padding: 7px 5px;
 }
 
-/* Border */
-.mat-mdc-form-field-appearance-outline 
-.mat-mdc-form-field-outline {
-    color: white !important;
-  }
+// /* Border */
+// .mat-mdc-form-field-appearance-outline 
+// .mat-mdc-form-field-outline {
+//     color: white !important;
+//   }
 
-/* Font color */
-input.mat-mdc-input-element {
-    color: white !important;
-}
+// /* Font color */
+// input.mat-mdc-input-element {
+//     color: white !important;
+// }
 
-$color-outline: red;
+// $color-outline: red;
 
-mat-mdc-form-field {
-    &.border-red {
-       // to change border color
-       .mat-mdc-form-field-outline {
-            color: $color-outline !important;
-       }
-       // to change label color
-       .mat-mdc-form-field-label {
-            color: $color-outline !important;
-       }
-    }
- }
+// mat-mdc-form-field {
+//     &.border-red {
+//        // to change border color
+//        .mat-mdc-form-field-outline {
+//             color: $color-outline !important;
+//        }
+//        // to change label color
+//        .mat-mdc-form-field-label {
+//             color: $color-outline !important;
+//        }
+//     }
+//  }
