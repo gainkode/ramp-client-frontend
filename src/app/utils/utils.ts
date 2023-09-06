@@ -80,7 +80,7 @@ export function getCryptoSymbol(symbol: string): string {
 
 export function shortenString(val: string, limit: number): string {
 	let result = val;
-	if (val.length > limit) {
+	if (val && val.length > limit) {
 		result = `${val.slice(0, limit - 1)}...`;
 	}
 	return result;
