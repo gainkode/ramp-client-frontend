@@ -10,10 +10,24 @@
     </h5>
     <app-admin-details-item label="Account Id" [value]="userData?.referralCode">
     </app-admin-details-item>
-    <app-admin-details-item label="Widget" [value]="userData?.widgetId">
-    </app-admin-details-item>
-    <app-admin-details-item label="Widget Code" [value]="userData?.widgetCode">
-    </app-admin-details-item>
+    
+    <div *ngIf="dataForm.controls.widgetId.value" class="form-group">
+      <label class="main-content-label tx-11 tx-medium tx-gray-600">
+        Widget ID
+        <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+      </label>
+      <ng-select [items]="widgetOptions$ | async" 
+        bindLabel="title" bindValue="id" 
+        formControlName="widgetId"
+        [searchFn]="widgetSearchFn"
+        [clearable]=false [clearOnBackspace]=false required>
+        <ng-template ng-option-tmp let-item="item">
+          {{item.title}} <br />
+          <small>{{item.id}}</small>
+        </ng-template>
+      </ng-select>
+    </div>
+
     <app-admin-details-item label="Widgets" [value]="'Related widgets'" [linkUrl]="'/admin/widgets/'+ userData?.id">
     </app-admin-details-item>
     <app-admin-details-item label="Affiliate" [value]="userData?.affiliateId">
