@@ -44,7 +44,7 @@
         <app-admin-details-item label="IP Address" [value]="data?.ip"></app-admin-details-item>
         <app-admin-details-item label="Customer ID" [value]="data?.accountId"></app-admin-details-item>
 
-        <div class="form-group">
+        <div *ngIf="form.controls.widgetId.value" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Widget ID
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>

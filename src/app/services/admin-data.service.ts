@@ -1812,6 +1812,7 @@ mutation UpdateUser(
   $comment: String
   $flag: Boolean
   $companyName: String
+  $widgetId: String
 ) {
   updateUser(
     userId: $userId
@@ -1842,6 +1843,7 @@ mutation UpdateUser(
       comment: $comment
       flag: $flag
       companyName: $companyName
+      widgetId: $widgetId
     }
   ) {
     userId
@@ -3880,7 +3882,8 @@ export class AdminDataService {
           kycProvider: customer.kycProvider,
           comment: customer.comment,
           flag: customer.flag,
-          companyName: customer.companyName
+          companyName: customer.companyName,
+          widgetId: customer.widgetId
         }
       }).pipe(tap(() => {
         this.snackBar.open(`User was updated`, undefined, { duration: 5000 });
