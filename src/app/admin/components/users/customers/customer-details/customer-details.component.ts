@@ -14,7 +14,7 @@ import {
 	NgbDateStruct,
 	NgbModal,
 } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import { finalize, take } from 'rxjs/operators';
 import { DateFormatAdapter } from 'admin/misc/date-range/date-format.adapter';
 import { DateParserFormatter } from 'admin/misc/date-range/date.formatter';
@@ -38,6 +38,7 @@ import { GenderList, UserItem } from 'model/user.model';
 import { AuthService } from 'services/auth.service';
 import { getFormattedUtcDate } from 'utils/utils';
 import { ErrorService } from 'services/error.service';
+import { Filter } from 'admin/model/filter.model';
 
 @Component({
 	selector: 'app-admin-customer-details',
@@ -136,7 +137,9 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   	crypto: ['', { validators: [Validators.required], updateOn: 'change' }],
   	comment: ['', { validators: [], updateOn: 'change' }],
   	company: ['', { validators: [], updateOn: 'change' }],
+		widgetId: [undefined]
   });
+	widgetOptions$: Observable<CommonTargetValue[]>;
 
   constructor(
   	private formBuilder: UntypedFormBuilder,
@@ -149,12 +152,27 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
   	this.loadCommonSettings();
+		this.widgetOptions$ = this.getFilteredWidgets();
   }
 
   ngOnDestroy(): void {
   	this.subscriptions.unsubscribe();
   }
 
+	private getFilteredWidgets(): Observable<CommonTargetValue[]> {
+  	return this.adminService.getWidgets(0, 100, 'name', false, <Filter>{}).pipe(
+  		map(result => result.list.map(widget => ({
+  			id: widget.id,
+  			title: widget.name
+  		} as CommonTargetValue)))
+  	);
+  }
+  widgetSearchFn(term: string, item: CommonTargetValue): boolean {
+  	term = term.toLocaleLowerCase();
+  	return item.title.toLocaleLowerCase().indexOf(term) > -1 ||
+		item.id && item.id.toLocaleLowerCase().indexOf(term) > -1;
+  }
+	
   private setCurrencies(list: CurrencyView[]): void {
   	if (this.userData) {
   		this.fiatCurrencies = list.filter((x) => x.fiat === true);
@@ -186,6 +204,10 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   		this.dataForm.get('id')?.setValue(data?.id);
   		this.dataForm.get('email')?.setValue(data?.email);
   		this.dataForm.get('comment')?.setValue(data.comment);
+
+			if(data.widgetId) {
+				this.dataForm.get('widgetId')?.setValue(data.widgetId);
+			}
   		if (data.userType?.id === UserType.Merchant) {
   			this.dataForm.get('company')?.setValue(data?.company);
   			this.dataForm.get('firstName')?.setValue(data?.company);
@@ -231,6 +253,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   		this.dataForm.get('firstName')?.setValue('');
   		this.dataForm.get('lastName')?.setValue('');
   		this.dataForm.get('birthday')?.setValue(undefined);
+			this.dataForm.get('widgetId')?.setValue(undefined);
   		this.dataForm.get('gender')?.setValue(undefined);
   		this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
   		this.dataForm.get('accountStatus')?.setValue(AccountStatus.Closed);
@@ -338,6 +361,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   		comment: this.dataForm.get('comment')?.value,
   		companyName: this.dataForm.get('company')?.value,
   		flag: this.flag,
+			widgetId: this.dataForm.get('widgetId')?.value
   	} as UserInput;
   	return data;
   }
