@@ -10,7 +10,7 @@
             formControlName="password" [errorMessages]="passwordErrorMessages" [separator]="true">
         </app-form-password>
 
-        <app-recaptcha (completed)="capchaResult($event)"></app-recaptcha>
+        <app-recaptcha *ngIf="isWidget === false" (completed)="capchaResult($event)"></app-recaptcha>
         
         <!-- Errors -->
         <div *ngIf="errorMessage!==''">
