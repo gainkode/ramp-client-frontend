@@ -22,6 +22,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
 		this.userMail = val;
 		this.emailField?.setValue(this.userMail);
 	}
+		@Input() isWidget = false;
     @Input() userTypeSection = 'personal';
     @Input() socialButtons = false;
     @Input() wizardButtons = false;
@@ -219,7 +220,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     onSubmit(): void {
     	this.registerError('');
 
-    	if (this.loginForm.valid && this.recaptcha) {
+    	if (this.loginForm.valid && (this.recaptcha || this.isWidget)) {
     		this.done = true;
     		const login = this.emailField?.value;
     		try {
