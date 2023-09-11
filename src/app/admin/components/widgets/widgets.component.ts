@@ -193,6 +193,6 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   copyParameter(value: string): void {
   	this.clipboard.copy(value);
-  	this._snackBar.open('Destination copied!');
+  	this._snackBar.open('Destination copied.', null, {duration: 2000});
   }
 }

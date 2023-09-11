@@ -52,13 +52,14 @@ export class RecaptchaComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
+		this.includeScript();
+
   	const turnstileOptions: TurnstileOptions = {
   		sitekey: this.siteKey,
   		appearance: 'always',
   		callback: (token: string) => this.capchaResult(token),
   	};
   	this.turnstileCaptchaRender(turnstileOptions);
-  	this.includeScript();
   }
   ngOnDestroy(): void {
 		if(this.widgetId){
@@ -69,7 +70,6 @@ export class RecaptchaComponent implements AfterViewInit, OnDestroy {
   		this.scriptTag.parentNode.removeChild(this.scriptTag);
   		// this.renderer.removeChild(this.document.head, this.scriptTag);
   		this.scriptTag = undefined;
-			window.turnstile = undefined;
   	}
   }
   turnstileCaptchaRender(turnstileOptions: TurnstileOptions): void {
