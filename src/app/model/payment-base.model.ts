@@ -1,4 +1,4 @@
-import { TransactionType, TransactionSource } from './generated-models';
+import { TransactionType, TransactionSource, WireTransferPaymentCategory } from './generated-models';
 
 export enum PaymentWidgetType {
 	None = 'None',
@@ -9,16 +9,6 @@ export enum PaymentWidgetType {
 	Transfer = 'Transfer',
 	Deposit = 'Deposit',
 	Withdrawal = 'Withdrawal',
-}
-
-export enum WireTransferPaymentCategory {
-	AU = 'AU',
-	UK = 'UK',
-	EU = 'EU',
-	OPENPAYD = 'OPENPAYD',
-	MONOOVA = 'MONOOVA',
-	PRIMETRUST = 'PRIMETRUST',
-	FLASHFX = 'FLASHFX'
 }
 
 export class WidgetSettings {
@@ -81,7 +71,7 @@ export class PaymentErrorDetails {
 }
 
 export class WireTransferPaymentCategoryItem {
-	id: WireTransferPaymentCategory | string = WireTransferPaymentCategory.AU;
+	id: WireTransferPaymentCategory | string = WireTransferPaymentCategory.Au;
 	bankAccountId = '';
 	title = '';
 	data = '';

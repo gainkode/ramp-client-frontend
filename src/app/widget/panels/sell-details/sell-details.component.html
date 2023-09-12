@@ -9,7 +9,7 @@
     </mat-radio-group>
     <div class="__form-separator"></div>
 
-    <form *ngIf="selectedCategory===PAYMENT_CATEGORY.AU" [formGroup]="auDataForm">
+    <form *ngIf="selectedCategory===PAYMENT_CATEGORY.Au" [formGroup]="auDataForm">
         <!-- Account name -->
         <app-form-textbox [label]="'Account name'" [maxlength]="100" formControlName="accountName"
             [errorMessages]="formErrorMessages" [separator]="true">
@@ -23,7 +23,7 @@
             [separator]="true">
         </app-form-textbox>
     </form>
-    <form *ngIf="selectedCategory===PAYMENT_CATEGORY.EU" [formGroup]="euDataForm">
+    <form *ngIf="selectedCategory===PAYMENT_CATEGORY.Eu" [formGroup]="euDataForm">
         <!-- Bank address -->
         <app-form-textbox [label]="'Bank address'" [maxlength]="100" formControlName="bankAddress"
             [errorMessages]="formErrorMessages" [separator]="false">
@@ -49,7 +49,7 @@
             [errorMessages]="formErrorMessages" [separator]="false">
         </app-form-textbox>
     </form>
-    <form *ngIf="selectedCategory===PAYMENT_CATEGORY.UK" [formGroup]="ukDataForm">
+    <form *ngIf="selectedCategory===PAYMENT_CATEGORY.Uk" [formGroup]="ukDataForm">
         <!-- Account name -->
         <app-form-textbox [label]="'Account name'" [maxlength]="100" formControlName="accountName"
             [errorMessages]="formErrorMessages" [separator]="true">

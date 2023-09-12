@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { WireTransferUserSelection } from 'model/cost-scheme.model';
-import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'model/payment-base.model';
+import { WireTransferPaymentCategory } from 'model/generated-models';
+import { WireTransferPaymentCategoryItem } from 'model/payment-base.model';
 
 @Component({
 	selector: 'app-widget-wire-transfer',

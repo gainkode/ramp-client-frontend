@@ -5,8 +5,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
 import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountItem, WireTransferBankAccountUk } from 'model/cost-scheme.model';
-import { PaymentInstrument, PaymentProvider, WireTransferBankAccount } from 'model/generated-models';
-import { WireTransferPaymentCategory } from 'model/payment-base.model';
+import { PaymentInstrument, PaymentProvider, WireTransferBankAccount, WireTransferPaymentCategory } from 'model/generated-models';
 import { PaymentProviderView, WireTransferPaymentCategoryList } from 'model/payment.model';
 import { AuthService } from 'services/auth.service';
 import { getProviderList } from 'utils/utils';
@@ -76,9 +75,9 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 		this.getPaymentProviders();
-  	this.auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.AU);
-  	this.ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.UK);
-  	this.euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.EU);
+  	this.auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Au);
+  	this.ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Uk);
+  	this.euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Eu);
   }
 
   ngOnDestroy(): void {

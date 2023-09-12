@@ -1,9 +1,9 @@
 import { CommonTargetValue } from './common.model';
 import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
-	SettingsCost, PaymentInstrument, TransactionType, SettingsCostTargetFilterType, WireTransferBankAccount
+	SettingsCost, PaymentInstrument, TransactionType, SettingsCostTargetFilterType, WireTransferBankAccount, WireTransferPaymentCategory
 } from './generated-models';
-import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from './payment-base.model';
+import { WireTransferPaymentCategoryItem } from './payment-base.model';
 import {
 	PaymentInstrumentList, CostTargetFilterList, TransactionTypeList
 } from './payment.model';
@@ -222,7 +222,7 @@ export class WireTransferBankAccountEu {
 export class WireTransferUserSelection {
 	id = '';
 	selected: WireTransferPaymentCategoryItem = {
-		id: WireTransferPaymentCategory.AU,
+		id: WireTransferPaymentCategory.Au,
 		bankAccountId: '',
 		title: '',
 		data: ''

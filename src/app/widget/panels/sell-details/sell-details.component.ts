@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk } from 'model/cost-scheme.model';
-import { WireTransferPaymentCategoryItem, WireTransferPaymentCategory } from 'model/payment-base.model';
+import { WireTransferPaymentCategory } from 'model/generated-models';
+import { WireTransferPaymentCategoryItem } from 'model/payment-base.model';
 import { CheckoutSummary } from 'model/payment.model';
 
 @Component({
@@ -43,11 +44,11 @@ export class WidgetSellDetailsComponent {
 
     get currentFormValid(): boolean {
     	let valid = false;
-    	if (this.selectedCategory === WireTransferPaymentCategory.AU) {
+    	if (this.selectedCategory === WireTransferPaymentCategory.Au) {
     		valid = this.auDataForm.valid;
-    	} else if (this.selectedCategory === WireTransferPaymentCategory.EU) {
+    	} else if (this.selectedCategory === WireTransferPaymentCategory.Eu) {
     		valid = this.euDataForm.valid;
-    	} else if (this.selectedCategory === WireTransferPaymentCategory.UK) {
+    	} else if (this.selectedCategory === WireTransferPaymentCategory.Uk) {
     		valid = this.ukDataForm.valid;
     	}
     	return valid;
@@ -59,19 +60,19 @@ export class WidgetSellDetailsComponent {
     	const eu = new WireTransferBankAccountEu();
     	const uk = new WireTransferBankAccountUk();
     	this.bankCategories.push({
-    		id: WireTransferPaymentCategory.AU,
+    		id: WireTransferPaymentCategory.Au,
     		bankAccountId: '',
     		title: 'Australia',
     		data: JSON.stringify(au)
     	});
     	this.bankCategories.push({
-    		id: WireTransferPaymentCategory.EU,
+    		id: WireTransferPaymentCategory.Eu,
     		bankAccountId: '',
     		title: 'EU',
     		data: JSON.stringify(eu)
     	});
     	this.bankCategories.push({
-    		id: WireTransferPaymentCategory.UK,
+    		id: WireTransferPaymentCategory.Uk,
     		bankAccountId: '',
     		title: 'UK',
     		data: JSON.stringify(uk)
@@ -80,7 +81,7 @@ export class WidgetSellDetailsComponent {
     }
 
     private setFormData(): void {
-    	const auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.AU);
+    	const auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Au);
     	if (auCategory) {
     		const auData = JSON.parse(auCategory.data);
     		if (auData) {
@@ -89,7 +90,7 @@ export class WidgetSellDetailsComponent {
     			this.auDataForm.get('bsb')?.setValue(auData.bsb);
     		}
     	}
-    	const euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.EU);
+    	const euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Eu);
     	if (euCategory) {
     		const euData = JSON.parse(euCategory.data);
     		if (euData) {
@@ -101,7 +102,7 @@ export class WidgetSellDetailsComponent {
     			this.euDataForm.get('swiftBic')?.setValue(euData.swiftBic);
     		}
     	}
-    	const ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.UK);
+    	const ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Uk);
     	if (ukCategory) {
     		const ukData = JSON.parse(ukCategory.data);
     		if (ukData) {
@@ -114,14 +115,14 @@ export class WidgetSellDetailsComponent {
 
     onSubmit(): void {
     	let paymentData = '';
-    	if (this.selectedCategory === WireTransferPaymentCategory.AU && this.auDataForm.valid) {
+    	if (this.selectedCategory === WireTransferPaymentCategory.Au && this.auDataForm.valid) {
     		const data: WireTransferBankAccountAu = {
     			accountName: this.auDataForm.get('accountName')?.value,
     			accountNumber: this.auDataForm.get('accountNumber')?.value,
     			bsb: this.auDataForm.get('bsb')?.value
     		};
     		paymentData = JSON.stringify(data);
-    	} else if (this.selectedCategory === WireTransferPaymentCategory.EU && this.euDataForm.valid) {
+    	} else if (this.selectedCategory === WireTransferPaymentCategory.Eu && this.euDataForm.valid) {
     		const data: WireTransferBankAccountEu = {
     			bankAddress: this.euDataForm.get('bankAddress')?.value,
     			bankName: this.euDataForm.get('bankName')?.value,
@@ -131,7 +132,7 @@ export class WidgetSellDetailsComponent {
     			swiftBic: this.euDataForm.get('swiftBic')?.value
     		};
     		paymentData = JSON.stringify(data);
-    	} else if (this.selectedCategory === WireTransferPaymentCategory.UK && this.ukDataForm.valid) {
+    	} else if (this.selectedCategory === WireTransferPaymentCategory.Uk && this.ukDataForm.valid) {
     		const data: WireTransferBankAccountUk = {
     			accountName: this.ukDataForm.get('accountName')?.value,
     			accountNumber: this.ukDataForm.get('accountNumber')?.value,

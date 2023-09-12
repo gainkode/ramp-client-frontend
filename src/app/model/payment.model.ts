@@ -4,9 +4,9 @@ import { CommonTargetValue } from './common.model';
 import {
 	PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
 	SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-	UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus, UserTransactionStatus, CryptoInvoice, CryptoInvoiceCreationResult, UserAction, UserActionType, UserActionResult, CurrencyBlockchain
+	UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus, UserTransactionStatus, WireTransferPaymentCategory, CryptoInvoiceCreationResult, UserActionType, UserActionResult, CurrencyBlockchain
 } from './generated-models';
-import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from './payment-base.model';
+import { WireTransferPaymentCategoryItem } from './payment-base.model';
 
 export class PaymentInstrumentView {
 	id!: PaymentInstrument;
@@ -300,9 +300,9 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
 ];
 
 export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryItem> = [
-	{ id: WireTransferPaymentCategory.AU, bankAccountId: '', title: 'Australian Bank', data: '' },
-	{ id: WireTransferPaymentCategory.UK, bankAccountId: '', title: 'UK Bank', data: '' },
-	{ id: WireTransferPaymentCategory.EU, bankAccountId: '', title: 'SEPA / SWIFT', data: '' }
+	{ id: WireTransferPaymentCategory.Au, bankAccountId: '', title: 'Australian Bank', data: '' },
+	{ id: WireTransferPaymentCategory.Uk, bankAccountId: '', title: 'UK Bank', data: '' },
+	{ id: WireTransferPaymentCategory.Eu, bankAccountId: '', title: 'SEPA / SWIFT', data: '' }
 ];
 
 export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = [

@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget } from 'model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { finalize, take } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { ExchangeRateService } from 'services/rate.service';
 import { CommonDialogBox } from '../components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from '../model/cost-scheme.model';
 import { completeDataDefault, disclaimerDataDefault } from '../model/custom-data.model';
-import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
+import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { WalletItem } from '../model/wallet.model';
 import { CommonDataService } from '../services/common-data.service';
 import { EnvService } from '../services/env.service';
@@ -69,7 +69,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   bankAccountId = '';
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
-  	id: WireTransferPaymentCategory.AU,
+  	id: WireTransferPaymentCategory.Au,
   	bankAccountId: '',
   	title: '',
   	data: ''
@@ -1134,6 +1134,11 @@ export class WidgetComponent implements OnInit, OnDestroy {
   						this.summary.transactionId = order.transactionId as string;
 
   						if (instrument === PaymentInstrument.WireTransfer) {
+								if(order.instrumentDetails) {
+									const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
+									this.selectedWireTransfer.data = instrumentDetails.accountType.data;
+								}
+								
   							this.nextStage('wire_transfer_result', 'Payment', 5, false);
   						} else {
   							this.startPayment();

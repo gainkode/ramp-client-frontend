@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShort, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserContactListResult } from 'model/generated-models';
+import { AssetAddressShort, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserContactListResult, WireTransferPaymentCategory } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
@@ -11,7 +11,7 @@ import { ExchangeRateService } from 'services/rate.service';
 import { environment } from '@environments/environment';
 import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from 'model/cost-scheme.model';
-import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategoryItem, WireTransferPaymentCategory, PaymentWidgetType } from 'model/payment-base.model';
+import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategoryItem, PaymentWidgetType } from 'model/payment-base.model';
 import { WalletItem } from 'model/wallet.model';
 import { AuthService } from 'services/auth.service';
 import { NotificationService } from 'services/notification.service';
@@ -45,7 +45,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   bankAccountId = '';
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
-  	id: WireTransferPaymentCategory.AU,
+  	id: WireTransferPaymentCategory.Au,
   	bankAccountId: '',
   	title: '',
   	data: ''

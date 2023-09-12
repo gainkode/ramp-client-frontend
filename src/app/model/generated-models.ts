@@ -190,10 +190,12 @@ export type BankDetailsObject = {
   iban?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   payInReference?: Maybe<Scalars['String']['output']>;
+  provider?: Maybe<Scalars['Boolean']['output']>;
   reference?: Maybe<Scalars['String']['output']>;
   routingNumber?: Maybe<Scalars['String']['output']>;
   sortCode?: Maybe<Scalars['String']['output']>;
   swiftBic?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
 };
 
 export type BaseStat = {
@@ -661,15 +663,6 @@ export enum FireblocksTransactionStatus {
   Submitted = 'SUBMITTED'
 }
 
-export type FlashfxObject = {
-  __typename?: 'FlashfxObject';
-  accountNumber?: Maybe<Scalars['String']['output']>;
-  beneficiaryAddress?: Maybe<Scalars['String']['output']>;
-  beneficiaryName?: Maybe<Scalars['String']['output']>;
-  bsb?: Maybe<Scalars['String']['output']>;
-  currency?: Maybe<Scalars['String']['output']>;
-};
-
 export enum Gender {
   F = 'F',
   M = 'M',
@@ -999,13 +992,6 @@ export enum MessageType {
   TransactionRedoRequest = 'TRANSACTION_REDO_REQUEST',
   TransactionStatusChanged = 'TRANSACTION_STATUS_CHANGED'
 }
-
-export type MonoovaObject = {
-  __typename?: 'MonoovaObject';
-  bankAccountName?: Maybe<Scalars['String']['output']>;
-  bankAccountNumber?: Maybe<Scalars['String']['output']>;
-  bsb?: Maybe<Scalars['String']['output']>;
-};
 
 export type MonoovaProviderBalance = {
   __typename?: 'MonoovaProviderBalance';
@@ -1958,21 +1944,6 @@ export type Openpayd = {
   paymentProviderId?: Maybe<Scalars['ID']['output']>;
 };
 
-export type OpenpaydObject = {
-  __typename?: 'OpenpaydObject';
-  accountNumber?: Maybe<Scalars['String']['output']>;
-  bankAccountHolderName?: Maybe<Scalars['String']['output']>;
-  bankAddress?: Maybe<Scalars['String']['output']>;
-  bankName?: Maybe<Scalars['String']['output']>;
-  beneficiaryAddress?: Maybe<Scalars['String']['output']>;
-  beneficiaryName?: Maybe<Scalars['String']['output']>;
-  currency?: Maybe<Scalars['String']['output']>;
-  iban?: Maybe<Scalars['String']['output']>;
-  payInReference?: Maybe<Scalars['String']['output']>;
-  sortCode?: Maybe<Scalars['String']['output']>;
-  swiftBic?: Maybe<Scalars['String']['output']>;
-};
-
 export type OpenpaydProviderBalance = {
   __typename?: 'OpenpaydProviderBalance';
   balance?: Maybe<Scalars['Float']['output']>;
@@ -2117,6 +2088,7 @@ export type PaymentPreauthResultShort = {
 
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
+  allowAutoExchange?: Maybe<Scalars['Boolean']['output']>;
   countriesCode2?: Maybe<Array<Scalars['String']['output']>>;
   currencies?: Maybe<Array<Scalars['String']['output']>>;
   default?: Maybe<Scalars['Boolean']['output']>;
@@ -2155,17 +2127,6 @@ export type PostAddress = {
   street?: InputMaybe<Scalars['String']['input']>;
   subStreet?: InputMaybe<Scalars['String']['input']>;
   town?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type PrimeTrustObject = {
-  __typename?: 'PrimeTrustObject';
-  accountNumber?: Maybe<Scalars['String']['output']>;
-  bankAddress?: Maybe<Scalars['String']['output']>;
-  beneficiaryAddress?: Maybe<Scalars['String']['output']>;
-  creditTo?: Maybe<Scalars['String']['output']>;
-  depositoryBankName?: Maybe<Scalars['String']['output']>;
-  reference?: Maybe<Scalars['String']['output']>;
-  routingNumber?: Maybe<Scalars['String']['output']>;
 };
 
 export type Query = {
@@ -5046,6 +5007,12 @@ export type WireTransferBankAccountShort = {
   paymentProviders?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   uk?: Maybe<Scalars['String']['output']>;
 };
+
+export enum WireTransferPaymentCategory {
+  Au = 'AU',
+  Eu = 'EU',
+  Uk = 'UK'
+}
 
 export type LiquidityProviderBalance = {
   __typename?: 'liquidityProviderBalance';

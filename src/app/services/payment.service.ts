@@ -120,26 +120,10 @@ query MySettingsFee(
         bankAccountId
         name
         description
+        paymentProviders
         objectsDetails{
           id
-          currency
-          bankAddress
-          accountName
-          bankName
-          iban
-          beneficiaryAddress
-          beneficiaryName
-          swiftBic
-          payInReference
-          bankAccountHolderName
-          sortCode
-          bsb
-          bankAccountNumber
-          bankAccountName
-          depositoryBankName
-          reference
-          creditTo
-          routingNumber
+          title
         }
       }
     },
@@ -311,6 +295,7 @@ mutation CreateTransaction(
     feeMinFiat,
     approxNetworkFee,
     data,
+    instrumentDetails
     userTier {
       name
       amount

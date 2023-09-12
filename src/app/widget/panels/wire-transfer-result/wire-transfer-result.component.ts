@@ -1,8 +1,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk } from 'model/cost-scheme.model';
 import { BankDetailsObject } from 'model/generated-models';
-import { WireTransferPaymentCategory, WireTransferPaymentCategoryItem } from 'model/payment-base.model';
+import { WireTransferPaymentCategoryItem } from 'model/payment-base.model';
 
 @Component({
 	selector: 'app-widget-wire-transfer-result',
@@ -31,7 +30,7 @@ export class WidgetWireTransferResultComponent {
     }
     
     private loadData(val: WireTransferPaymentCategoryItem): void {
-    	const bankDetails: BankDetailsObject = JSON.parse(val.data);
+    	const bankDetails: BankDetailsObject = typeof val.data == 'string' ? JSON.parse(val.data) : val.data;
 			this.fields = {
 				'Reference ID': this.referenceId ?? '',
 				'Account Holder': bankDetails.bankAccountHolderName ?? '',

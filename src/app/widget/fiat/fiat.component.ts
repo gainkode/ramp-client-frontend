@@ -3,8 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from 'model/cost-scheme.model';
-import { TransactionType, PaymentInstrument, SettingsCurrencyWithDefaults, TransactionSource, TransactionShort } from 'model/generated-models';
-import { WidgetSettings, PaymentCompleteDetails, PaymentErrorDetails, WireTransferPaymentCategoryItem, WireTransferPaymentCategory, PaymentWidgetType } from 'model/payment-base.model';
+import { TransactionType, PaymentInstrument, SettingsCurrencyWithDefaults, TransactionSource, TransactionShort, WireTransferPaymentCategory } from 'model/generated-models';
+import { WidgetSettings, PaymentCompleteDetails, PaymentErrorDetails, WireTransferPaymentCategoryItem, PaymentWidgetType } from 'model/payment-base.model';
 import { CheckoutSummary, CurrencyView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { CommonDataService } from 'services/common-data.service';
@@ -41,7 +41,7 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   bankAccountId = '';
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
-  	id: WireTransferPaymentCategory.AU,
+  	id: WireTransferPaymentCategory.Au,
   	bankAccountId: '',
   	title: '',
   	data: ''

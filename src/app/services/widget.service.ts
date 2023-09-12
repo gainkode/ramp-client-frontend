@@ -210,7 +210,7 @@ export class WidgetService {
 							if(accountData.objectsDetails?.length != 0){
 								for(let object of accountData.objectsDetails){
 									wireTransferList.push({
-										title: object.id,
+										title: object.title,
 										id: object.id,
 										data: JSON.stringify(object),
 										bankAccountId: accountData.bankAccountId
