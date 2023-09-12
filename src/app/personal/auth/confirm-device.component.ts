@@ -45,9 +45,9 @@ export class PersonalConfirmDeviceComponent implements OnDestroy {
 					},
 					complete: () => {
 						this.validated = true;
+						this.cdr.detectChanges();
 					}
 				});
-			this.cdr.detectChanges();
 			this.subscriptions.add(subscription);
 		}
 	}
