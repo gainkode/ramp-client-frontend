@@ -376,6 +376,25 @@ mutation PreAuth(
 }
 `;
 
+const CREATE_APM_PAYMENT = gql`
+mutation CreateApmPayment(
+  $transactionId: String!,
+  $instrument: PaymentInstrument!,
+) {
+  createApmPayment(
+    orderParams: {
+      transactionId: $transactionId
+      instrument: $instrument
+    }
+  ) {
+    type
+    referenceCode
+    externalUrl
+    payId
+  }
+}
+`;
+
 const PRE_AUTH_CARD = gql`
 mutation PreAuth(
   $transactionId: String!,
@@ -731,6 +750,16 @@ export class PaymentDataService {
 				transactionId: id,
 				instrument: paymentInstrument,
 				paymentProvider
+			}
+		});
+	}
+
+  createApmPayment(id: string, paymentInstrument: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: CREATE_APM_PAYMENT,
+			variables: {
+				transactionId: id,
+				instrument: paymentInstrument,
 			}
 		});
 	}

@@ -1,5 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { PaymentApmResult } from 'model/generated-models';
 import { InstantpayDetails } from 'model/payment-base.model';
 
 @Component({
@@ -9,18 +10,18 @@ import { InstantpayDetails } from 'model/payment-base.model';
 })
 export class WidgetProcessingInstantpayComponent {
   @Input() errorMessage = '';
-  @Input() set details(val: string) {
-  	this.data = JSON.parse(val);
+  @Input() set details(val: PaymentApmResult) {
+  	this.data = val;
   }
   @Output() onComplete = new EventEmitter();
 
-  data: InstantpayDetails | undefined = undefined;
+  data: PaymentApmResult | undefined = undefined;
 
   constructor(private clipboard: Clipboard) {}
   
   copyReference(): void {
   	if (this.data) {
-  		this.clipboard.copy(`${this.data.uniqueReference}`);
+  		this.clipboard.copy(`${this.data.referenceCode}`);
   	}
   }
 

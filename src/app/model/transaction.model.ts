@@ -281,7 +281,7 @@ export class TransactionItemFull {
 			}
 
 			if (data.paymentOrder) {
-				this.paymentOrderPreauth = data.paymentOrder.preauth;
+				this.paymentOrderPreauth = data.paymentOrder.preauth && data.paymentOrder.status == 'AUTOREJECTED';
 				if (data.paymentOrder.paymentInfo) {
 					let payment = JSON.parse(data.paymentOrder.paymentInfo);
 					// sometimes it comes as a string with escape symbols.

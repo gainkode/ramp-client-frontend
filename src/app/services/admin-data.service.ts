@@ -754,6 +754,7 @@ const GET_TRANSACTIONS = gql`
           preauthOperationSn
           refundOperationSn
           statusReason
+          status
         }
         paymentProvider
         rate

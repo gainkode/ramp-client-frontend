@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShort, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserContactListResult, WireTransferPaymentCategory } from 'model/generated-models';
+import { AssetAddressShort, PaymentApmResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserContactListResult, WireTransferPaymentCategory } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
@@ -52,7 +52,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   };
   requestKyc = false;
   iframeContent = '';
-  instantpayDetails = '';
+	apmResult: PaymentApmResult = undefined;
   paymentComplete = false;
   notificationStarted = false;
 
@@ -549,17 +549,12 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
 
   private completeInstantpayTransaction(transactionId: string, provider: string, instrument: PaymentInstrument): void {
   	this.inProgress = true;
-  	this.instantpayDetails = '';
   	const transactionData$ = this.dataService.preAuth(transactionId, instrument, provider);
   	this.pSubscriptions.add(
   		transactionData$.subscribe(
   			({ data }) => {
-  				const preAuthResult = data.preauth as PaymentPreauthResultShort;
-  				const order = preAuthResult.order;
-  				this.summary.setPaymentInfo(instrument, order?.paymentInfo as string);
-  				if (preAuthResult.details) {
-  					this.instantpayDetails = preAuthResult.details as string;
-  				}
+  				const preAuthResult = data.createApmPayment as PaymentApmResult;
+  				this.apmResult = preAuthResult;
   				this.inProgress = false;
   				this.nextStage('processing-instantpay', 'Payment', this.pager.step, false);
   			}, (error) => {

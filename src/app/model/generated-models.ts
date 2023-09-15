@@ -1044,6 +1044,7 @@ export type Mutation = {
   confirmUserEmail: Scalars['Boolean']['output'];
   /** Create account if not exists */
   createAccount?: Maybe<Scalars['String']['output']>;
+  createApmPayment: PaymentApmResult;
   /** This endpoint can be used to create an order to withdraw from custody provider */
   createCustodyWithdrawalOrder?: Maybe<TransferOrder>;
   /** This endpoint can be used to create a crypto invoice */
@@ -1343,6 +1344,11 @@ export type MutationConfirmUserEmailArgs = {
 export type MutationCreateAccountArgs = {
   custodyProviderName: Scalars['String']['input'];
   userId: Scalars['String']['input'];
+};
+
+
+export type MutationCreateApmPaymentArgs = {
+  orderParams: PaymentApmInput;
 };
 
 
@@ -1954,6 +1960,24 @@ export type OrderBy = {
   desc: Scalars['Boolean']['input'];
   orderBy: Scalars['String']['input'];
 };
+
+export type PaymentApmInput = {
+  instrument: PaymentInstrument;
+  transactionId: Scalars['String']['input'];
+};
+
+export type PaymentApmResult = {
+  __typename?: 'PaymentApmResult';
+  externalUrl?: Maybe<Scalars['String']['output']>;
+  payId?: Maybe<Scalars['String']['output']>;
+  referenceCode?: Maybe<Scalars['String']['output']>;
+  type: PaymentApmType;
+};
+
+export enum PaymentApmType {
+  External = 'external',
+  PayId = 'payId'
+}
 
 export type PaymentCaptureInput = {
   instrument: PaymentInstrument;

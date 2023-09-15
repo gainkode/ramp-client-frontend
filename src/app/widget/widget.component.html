@@ -127,7 +127,7 @@
       [completed]="paymentComplete" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
       (onComplete)="processingComplete()">
     </app-widget-processing-frame>
-    <app-widget-processing-instantpay *ngSwitchCase="'processing-instantpay'" [details]="instantpayDetails"
+    <app-widget-processing-instantpay *ngSwitchCase="'processing-instantpay'" [details]="apmResult"
       [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onComplete)="processingComplete()">
     </app-widget-processing-instantpay>
     <!-- Complete -->
