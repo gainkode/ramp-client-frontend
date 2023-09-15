@@ -3,7 +3,9 @@
         <iframe id="iframe" class="__widget-external-frame-box" (load)="onLoadFrame()"></iframe>
     </div>
     <div class="__widget-buttons-area">
-        <button class="__main-button" type="button" [disabled]="!completed" (click)="onComplete.emit()">next</button>
+        <button class="__main-button" type="button" [disabled]="!completed" (click)="onComplete.emit()">
+            {{'global.widget_btn-next' | transloco}}
+        </button>
     </div>
 
     <div class="__widget-data-error">

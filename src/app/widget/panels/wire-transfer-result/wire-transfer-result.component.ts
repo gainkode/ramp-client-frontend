@@ -32,20 +32,20 @@ export class WidgetWireTransferResultComponent {
     private loadData(val: WireTransferPaymentCategoryItem): void {
     	const bankDetails: BankDetailsObject = JSON.parse(val.data);
     	this.fields = {
-    		'Reference ID': this.referenceId ?? '',
-    		'Account Holder': bankDetails.bankAccountHolderName ?? '',
-    		'Account Number': bankDetails.bankAccountNumber ?? '',
-    		'Account Name': bankDetails.accountName ?? '',
-    		'Sort Code': bankDetails.sortCode ?? '',
-    		'Bank Address': bankDetails.bankAddress ?? '',
-    		'Bank Name': bankDetails.bankAccountName ?? '',
-    		'Beneficiary Address': bankDetails.beneficiaryAddress ?? '',
-    		'Beneficiary Name': bankDetails.beneficiaryName ?? '',
-    		'IBAN': bankDetails.iban ?? '',
-    		'SWIFT / BIC': bankDetails.swiftBic ?? '',
-    		'Routing Number': bankDetails.routingNumber ?? '',
-    		'Credit To': bankDetails.creditTo ?? '',
-    		'Reference': bankDetails.reference ?? ''
+    		'widget-wire-transfer-result.field_referenceId': this.referenceId ?? '',
+    		'widget-wire-transfer-result.field_bankAccountHolderName': bankDetails.bankAccountHolderName ?? '',
+    		'widget-wire-transfer-result.field_bankAccountNumber': bankDetails.bankAccountNumber ?? '',
+    		'widget-wire-transfer-result.field_accountName': bankDetails.accountName ?? '',
+    		'widget-wire-transfer-result.field_sortCode': bankDetails.sortCode ?? '',
+    		'widget-wire-transfer-result.field_bankAddress': bankDetails.bankAddress ?? '',
+    		'widget-wire-transfer-result.field_bankAccountName': bankDetails.bankAccountName ?? '',
+    		'widget-wire-transfer-result.field_beneficiaryAddress': bankDetails.beneficiaryAddress ?? '',
+    		'widget-wire-transfer-result.field_beneficiaryName': bankDetails.beneficiaryName ?? '',
+    		'widget-wire-transfer-result.field_iban': bankDetails.iban ?? '',
+    		'widget-wire-transfer-result.field_swift': bankDetails.swiftBic ?? '',
+    		'widget-wire-transfer-result.field_routingNumber': bankDetails.routingNumber ?? '',
+    		'widget-wire-transfer-result.field_creditTo': bankDetails.creditTo ?? '',
+    		'widget-wire-transfer-result.field_reference': bankDetails.reference ?? ''
     	};
     }
 }

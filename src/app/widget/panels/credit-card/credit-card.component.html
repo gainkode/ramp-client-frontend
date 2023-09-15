@@ -1,12 +1,12 @@
 <div class="__widget-data-box">
     <form [formGroup]="cardForm" (ngSubmit)="onSubmit()">
         <!-- Card number -->
-        <app-form-cardbox [label]="'Card number'" [placeholder]="'...'" [maxlength]="cardNumberLength"
+        <app-form-cardbox [label]="'widget-credit-card.field_card'" [placeholder]="'...'" [maxlength]="cardNumberLength"
             [img]="currentCardType" formControlName="card" [errorMessages]="cardNumberErrorMessages" [separator]="true">
         </app-form-cardbox>
 
         <!-- Card holder -->
-        <app-form-textbox [label]="'Name on the card'" [boxType]="'text'" [placeholder]="'...'" [maxlength]="45"
+        <app-form-textbox [label]="'widget-credit-card.field_holder'" [boxType]="'text'" [placeholder]="'...'" [maxlength]="45"
             formControlName="holder" [upperCase]="true" [errorMessages]="cardHolderErrorMessages" [separator]="true">
         </app-form-textbox>
 
@@ -14,7 +14,7 @@
             <!-- Expiry date -->
             <div class="__widget-double-field-left-box">
                 <div class="__form-label">
-                    Expiry date
+                    {{'widget-credit-card.field_expiry' | transloco}}
                 </div>
                 <div class="__form-textbox-border">
                     <input [ngClass]="expiredField?.valid && !expiredCard ? '__form-text-box' : '__form-text-box-error'"
@@ -28,20 +28,20 @@
                     </div>
                 </div>
                 <div *ngIf="expiredField?.hasError('pattern')" class="__form-assist __form-assist-error">
-                    Invalid format
+                    {{'widget-credit-card.field_expiry-error-invalid' | transloco}}
                 </div>
                 <div *ngIf="expiredField?.hasError('required') && expiredInit"
                     class="__form-assist __form-assist-error">
-                    Required date
+                    {{'widget-credit-card.field_expiry-error-empty' | transloco}}
                 </div>
                 <div *ngIf="expiredField?.valid && expiredCard" class="__form-assist __form-assist-error">
-                    Card is expired
+                    {{'widget-credit-card.field_expiry-error-expired' | transloco}}
                 </div>
             </div>
             <!-- CVV -->
             <div class="__widget-double-field-right-box">
                 <div class="__form-label">
-                    Security code
+                    {{'widget-credit-card.field_cvv' | transloco}}
                 </div>
                 <div class="__form-textbox-border">
                     <input [ngClass]="codeField?.valid ? '__form-text-box' : '__form-text-box-error'" type="text"
@@ -53,10 +53,10 @@
                     </div>
                 </div>
                 <div *ngIf="codeField?.hasError('minlength')" class="__form-assist __form-assist-error">
-                    Invalid code
+                    {{'widget-credit-card.field_cvv-error-invalid' | transloco}}
                 </div>
                 <div *ngIf="codeField?.hasError('required') && codeInit" class="__form-assist __form-assist-error">
-                    Required code
+                    {{'widget-credit-card.field_cvv-error-empty' | transloco}}
                 </div>
             </div>
         </div>
@@ -64,10 +64,9 @@
 
         <!-- Buttons -->
         <div class="__widget-buttons-area">
-            <button class="__outlined-button" type="button" (click)="onBack.emit()">BACK</button>
-            <!-- <button class="__main-button __button-wide-separator" type="submit">pay now</button> -->
+            <button class="__outlined-button" type="button" (click)="onBack.emit()">{{'global.widget_btn-back' | transloco}}</button>
             <button class="__main-button __button-wide-separator" type="submit"
-                [disabled]="!cardForm.valid || processing">pay now</button>
+                [disabled]="!cardForm.valid || processing">{{'widget-wire-transfer.btn-pay_label' | transloco}}</button>
         </div>
     </form>
 

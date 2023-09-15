@@ -1,13 +1,13 @@
 <div *ngIf="!complete" class="widget-required-info">
     <h2 class="__auth-title">
-        Please, specify your company data
+        {{'widget-company-level-verification.title' | transloco}}
     </h2>
     <form [formGroup]="infoForm" (ngSubmit)="onSubmit()">
         <div class="__form-separator"></div>
         
         <!-- Company name (Merchant) -->
         <div>
-            <app-form-textbox [label]="'Company Name'" [boxType]="'text'" [placeholder]="'Company Name'" [maxlength]="80"
+            <app-form-textbox [label]="'widget-company-level-verification.field_company'" [boxType]="'text'" [placeholder]="'Company Name'" [maxlength]="80"
                 formControlName="companyName" [errorMessages]="companyNameErrorMessages" [asterisk]="true" [separator]="true">
             </app-form-textbox>
         </div>
@@ -17,7 +17,7 @@
                 {{buttonTitle}}
             </button>
             <button *ngIf="showBack" class="__main-button" type="button" (click)="done.emit()">
-                back
+                {{'global.widget_btn-back' | transloco}}
             </button>
         </div>
     
@@ -39,14 +39,14 @@
         <div class="__widget-disclaimer-container">
             <div >
                 <h1 class="__widget-title">
-                    Your data is being verified...
+                    {{'widget-company-level-verification.verified' | transloco}}
                 </h1>
             </div>
         </div>
 
         <div class="__widget-buttons-area">
             <button class="__main-button" type="button" (click)="done.emit()">
-                done
+                {{'global.widget_btn-done' | transloco}}
             </button>
         </div>
     </div>

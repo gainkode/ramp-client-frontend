@@ -2,7 +2,7 @@
     <div class="widget-input__container" [ngClass]="{'widget-input__container-error': invalidForm}">
       <div class="widget-input__item">
         <div>
-          <div class="widget-input__item-label"> {{label}}</div>
+          <div class="widget-input__item-label"> {{label | transloco}}</div>
           <input
             class="widget-input__item-input"
             type="text"
@@ -25,7 +25,7 @@
       </div>
       <div class="widget-input__error-message" 
         [ngClass]="{'__form-assist': true, '__form-assist-disabled': !active, '__form-assist-error error-show': invalidForm}">
-        {{invalidForm ? errorAssist : assist}}
+        {{invalidForm ? (errorAssist | transloco) : ''}}
       </div>
     </div>
 </div>
@@ -34,7 +34,7 @@
     <div class="widget-list__header">
       <div class="widget-list__header-search">
           <mat-form-field appearance="outline" class="border-red">
-            <mat-label>Find your currency</mat-label>
+            <mat-label>{{'widget-input-group.search-placeholder' | transloco}}</mat-label>
             <input matInput [formControl]="searchCurrencyControl">
           </mat-form-field>
       </div>

@@ -27,7 +27,7 @@
 
     <div class="__widget-buttons-area">
         <button *ngIf="showRestartButton" class="__main-button" type="button" (click)="onFinish.emit()">
-            done
+            {{'global.widget_btn-done' | transloco}}
         </button>
         <button *ngIf="!showRestartButton && finishLink!==''" class="__main-button" type="button" (click)="onFinish.emit()">
             return

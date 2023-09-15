@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Validators, AbstractControl, UntypedFormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LangDefinition, TranslocoService } from '@ngneat/transloco';
+import { HashMap, LangDefinition, TranslateParams, TranslocoService } from '@ngneat/transloco';
 import { TransactionType, SettingsCurrencyWithDefaults, Rate, UserState, AssetAddressShort } from 'model/generated-models';
 import { WidgetSettings } from 'model/payment-base.model';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'model/payment.model';
@@ -114,21 +114,21 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   userAdditionalSettings: Record<string, any> = {};
 
   emailErrorMessages: { [key: string]: string; } = {
-  	['pattern']: 'Email is not valid',
-  	['required']: 'Email is required'
+  	['pattern']: 'widget-internal-overview.field_email-error-pattern',
+  	['required']: 'widget-internal-overview.field-email-error-required'
   };
   amountSpendErrorMessages: { [key: string]: string; } = {
-  	['required']: 'Amount is required',
-  	['pattern']: 'Amount must be a valid number',
-  	['min']: 'Minimal amount',
-  	['max']: 'Maximal amount'
+  	['required']: 'widget-internal-overview.field_receive-error-required',
+  	['pattern']: 'widget-internal-overview.field_receive-error-pattern',
+  	['min']: 'widget-internal-overview.field_spend-error-min',
+  	['max']: 'widget-internal-overview.field_spend-error-max'
   };
   amountReceiveErrorMessages: { [key: string]: string; } = {
-  	['required']: 'Amount is required',
-  	['pattern']: 'Amount must be a valid number',
+  	['required']: 'widget-internal-overview.field_receive-error-required',
+  	['pattern']: 'widget-internal-overview.field_receive-error-pattern',
   };
   walletErrorMessages: { [key: string]: string; } = {
-  	['required']: 'Address is required'
+  	['required']: 'widget-internal-overview.field_wallet-error-required'
   };
 
   dataForm = this.formBuilder.group({
@@ -214,8 +214,10 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	return this.amountSpendField.valid && this.amountSpendField.value;
   }
 
+  public t: <T = string>(key: TranslateParams, params?: HashMap, lang?: string) => T;
+  
   constructor(
-	public transloco: TranslocoService,
+  	public transloco: TranslocoService,
   	private router: Router,
   	private auth: AuthService,
   	private commonService: CommonDataService,
@@ -223,13 +225,12 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	private errorHandler: ErrorService,
   	private formBuilder: UntypedFormBuilder,
   	public themeService: ThemeService) {
-		this.availableLangs = <LangDefinition[]>transloco.getAvailableLangs();
-		const activeLangId = transloco.getActiveLang();
-		this.activeLang = this.availableLangs.find(l => l.id === activeLangId).label;
-
-		console.log(this.availableLangs)
-		console.log(this.activeLang)
-	 }
+  	this.availableLangs = <LangDefinition[]>transloco.getAvailableLangs();
+  	const activeLangId = transloco.getActiveLang();
+  	this.activeLang = this.availableLangs.find(l => l.id === activeLangId).label;
+	
+	this.t = transloco.translate.bind(transloco);
+  }
 
   ngOnInit(): void {
   	const settings = this.auth.getLocalSettingsCommon();
@@ -626,7 +627,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		}
   	}
 
-  	this.amountSpendErrorMessages['min'] = `Min. amount ${minAmountDisplay} ${currencyDisplay}`;
+	this.amountSpendErrorMessages['min'] = this.t(this.amountSpendErrorMessages['min'],{ value: `${minAmountDisplay} ${currencyDisplay}` });
 
   	let validators = [
 	  Validators.required,
@@ -637,9 +638,9 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	if(!maxAmount || maxAmount === 0){
   		if (maxValid !== undefined) {
   			if (maxValid > 0) {
-  				this.amountSpendErrorMessages['max'] = `Max. amount ${maxValid} ${currencyDisplay}`;
+  				this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` });
   			} else {
-  				this.amountSpendErrorMessages['max'] = 'Current wallet is empty';
+  				this.amountSpendErrorMessages['max'] = 'widget-internal-overview.spend-max-empty';
   			}
   			validators = [
   				...validators,
@@ -647,7 +648,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			];
   		}
   	} else {
-  		this.amountSpendErrorMessages['max'] = `Max. amount ${maxAmountDisplay} ${currencyDisplay}`;
+		this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
   		validators = [
   			...validators,
   			Validators.max(maxAmount)
@@ -661,8 +662,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   private setReceiveValidators(): void {
-  	this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`;
-  	
+  	this.amountReceiveErrorMessages['min'] = this.t(this.amountReceiveErrorMessages['min'],{ value: `${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}` });
+
   	if(!this.initValidators){
   		this.amountReceiveField?.setValidators([
   			Validators.required,
@@ -675,16 +676,16 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   private setAmountTitles(): void {
   	if (this.currentTransaction === TransactionType.Buy) {
   		if(this.quickCheckout){
-  			this.spendTitle = 'Pay';
-  			this.receiveTitle = 'Receive';
+  			this.spendTitle = 'widget-internal-overview.buy-spend-title';
+  			this.receiveTitle = 'widget-internal-overview.buy-receive-title';
   		} else {
-  			this.spendTitle = 'Amount to Buy';
-  			this.receiveTitle = 'Amount to Receive';
+  			this.spendTitle = 'widget-internal-overview.buy-spend-q-title';
+  			this.receiveTitle = 'widget-internal-overview.buy-receive-q-title';
   		}
       
   	} else if (this.currentTransaction === TransactionType.Sell) {
-  		this.spendTitle = 'Amount to Sell';
-  		this.receiveTitle = 'Amount to Receive';
+  		this.spendTitle = 'widget-internal-overview.sell-spend-title';
+  		this.receiveTitle = 'widget-internal-overview.sell-receive-title';
   	}
   }
 
@@ -986,7 +987,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   onLangSelect(lang: LangDefinition): void {
-	this.transloco.setActiveLang(lang.id);
-	this.activeLang = lang.label;
+  	this.transloco.setActiveLang(lang.id);
+  	this.activeLang = lang.label;
   }
 }

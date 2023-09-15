@@ -1,7 +1,7 @@
 <div class="__widget-data-box">
     <div *ngIf="!success">
         <span class="__widget-page-header">
-            Please, type your data to register a new account
+           {{'widget-registration.title' | transloco}}
         </span>
         <app-signup-panel [widget]="true" [userType]="userType" [userName]="email" [wizardButtons]="true"
             [errorMessage]="errorMessage" (error)="registerError($event)" (progressChange)="onProgress.emit($event)"
@@ -12,20 +12,22 @@
     <div *ngIf="success" class="__auth-disclaimer-area">
         <div class="__auth-disclaimer-container">
             <span class="__auth-disclaimer-line">
-                Thank you for your registration.
+                {{'widget-registration.success_title' | transloco}}
             </span>
         </div>
         <div class="__auth-disclaimer-container">
             <span class="__auth-disclaimer-line">
-                Confirmation letter was sent to your email <span class="__widget-fake-link">{{email}}</span>.
+                {{'widget-registration.success_msg-1' | transloco}} <span class="__widget-fake-link">{{email}}</span>.
             </span>
             <br>
             <span class="__auth-disclaimer-line">
-                Please, follow the link in the letter to complete your registration.
+                {{'widget-registration.success_msg-2' | transloco}}
             </span>
         </div>
     </div>
     <div *ngIf="success" class="__widget-buttons-area">
-        <button class="__main-button" type="button" (click)="onComplete.emit(email)">next</button>
+        <button class="__main-button" type="button" (click)="onComplete.emit(email)">
+            {{'global.widget_btn-next' | transloco}}
+        </button>
     </div>
 </div>

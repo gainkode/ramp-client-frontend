@@ -1,19 +1,19 @@
 <div class="__widget-data-box">
     <div class="__widget-page-header">
-        We have just sent you an email to
+        {{'widget-code-auth.title_part-1' | transloco}}
         <span class="__widget-fake-link">
             {{email}}
         </span>
-        with the code to confirm your identity.
+        {{'widget-code-auth.title_part-2' | transloco}}
         <br>
-        Please enter it here.
+        {{'widget-code-auth.title_part-3' | transloco}}
     </div>
 
     <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
-        <div *ngIf="codeLength===5">
+        <div *ngIf="codeLength === 5">
             <!-- Code (5 digits) -->
             <div class="__form-label">
-                Confirmation code
+                {{'widget-code-auth.confirmation-title' | transloco}}
             </div>
             <div class="__widget-code-container">
                 <input #code1input class="__form-text-box-plain" type="text" formControlName="code1" mask="0"
@@ -29,16 +29,15 @@
             </div>
             
             <div class="__form-separator"></div>
-            <!-- <app-recaptcha (completed)="capchaResult($event)"></app-recaptcha> -->
 
             <div *ngIf="!codeField?.valid && init===true" class="__form-assist __form-assist-error">
-                Code is required
+                {{'widget-code-auth.code-required' | transloco}}
             </div>
             <div class="__form-separator"></div>
         </div>
         <div *ngIf="codeLength!==5">
             <!-- Code (not 5 digits) -->
-            <app-form-textbox #codeinput [label]="'Confirmation code'" [maxlength]="codeLength" formControlName="code"
+            <app-form-textbox #codeinput [label]="'widget-code-auth.field_code'" [maxlength]="codeLength" formControlName="code"
                 [numberField]="true" [inputMode]="'numeric'" [errorMessages]="codeErrorMessages" [separator]="true">
             </app-form-textbox>
         </div>
@@ -49,14 +48,6 @@
             <button class="__main-button __button-wide-separator" type="submit" [disabled]="done || !validData">next</button>
         </div>
 
-        <!-- <div class="__widget-disclaimer-container">
-            <span class="__widget-disclaimer-line">
-                Don't have a wallet?
-            </span>
-            <a [routerLink]="" (click)="registerAccount()">
-                Create an account
-            </a>
-        </div> -->
     </form>
 
     <div class="__widget-data-error">
