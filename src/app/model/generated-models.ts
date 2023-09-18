@@ -1062,7 +1062,6 @@ export type Mutation = {
   createPaymentProviderRefund: Scalars['Boolean']['output'];
   /** This endpoint can be used to create a transaction */
   createTransaction?: Maybe<TransactionShort>;
-  createTransactionWithWidgetUserParams?: Maybe<Scalars['String']['output']>;
   createUser?: Maybe<User>;
   createUserApiKey?: Maybe<ApiKeySecret>;
   /** This endpoint can be used to create a transaction in behalf of a user */
@@ -1399,12 +1398,6 @@ export type MutationCreatePaymentProviderRefundArgs = {
 
 export type MutationCreateTransactionArgs = {
   transaction?: InputMaybe<TransactionInput>;
-};
-
-
-export type MutationCreateTransactionWithWidgetUserParamsArgs = {
-  transactionInput?: InputMaybe<TransactionInput>;
-  widgetId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2237,6 +2230,8 @@ export type Query = {
   getSystemBalanceMany?: Maybe<Scalars['String']['output']>;
   /** Get common settings */
   getTextPages?: Maybe<Array<Maybe<TextPage>>>;
+  /** This endpoint can be used to get all transaction life lines with their description. */
+  getTransactionLifeLines?: Maybe<TransactionHistory>;
   /** Get transaction history with filters */
   getTransactionStatusHistory: TransactionStatusHistoryListResult;
   /** This endpoint can be used to get all transaction statuses with their description */
@@ -2625,6 +2620,15 @@ export type QueryGetSupportTicketsArgs = {
   orderBy?: InputMaybe<Array<OrderBy>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetTransactionLifeLinesArgs = {
+  filter?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OrderBy>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  transactionId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3672,6 +3676,11 @@ export enum TransactionConfirmationMode {
   PerWidget = 'PER_WIDGET'
 }
 
+export type TransactionHistory = {
+  __typename?: 'TransactionHistory';
+  lifeline?: Maybe<TransactionLifelineStatusListResult>;
+};
+
 export type TransactionInput = {
   amountToSpend: Scalars['Float']['input'];
   currencyToReceive?: InputMaybe<Scalars['String']['input']>;
@@ -3711,10 +3720,16 @@ export type TransactionLifelineStatus = {
   userId?: Maybe<Scalars['String']['output']>;
 };
 
+export type TransactionLifelineStatusItem = {
+  __typename?: 'TransactionLifelineStatusItem';
+  lifeLineStatus?: Maybe<Array<TransactionLifelineStatus>>;
+  lifelineId?: Maybe<Scalars['String']['output']>;
+};
+
 export type TransactionLifelineStatusListResult = {
   __typename?: 'TransactionLifelineStatusListResult';
   count?: Maybe<Scalars['Int']['output']>;
-  list?: Maybe<Array<TransactionLifelineStatus>>;
+  list?: Maybe<Array<TransactionLifelineStatusItem>>;
 };
 
 export enum TransactionLifelineStatusResult {
