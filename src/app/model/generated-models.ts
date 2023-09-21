@@ -2146,6 +2146,11 @@ export type PostAddress = {
   town?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type PreSettingsCommon = {
+  __typename?: 'PreSettingsCommon';
+  allowMercahntSignUp?: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   /** Check or create destination address */
@@ -2202,6 +2207,8 @@ export type Query = {
   getOneToManyRatesMerchant?: Maybe<Array<Maybe<Rate>>>;
   /** Get payment providers */
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  /** Get common settings */
+  getPreSettingsCommon?: Maybe<PreSettingsCommon>;
   /** Get the exchange rate of several currencies to one */
   getRates?: Maybe<Array<Rate>>;
   /** Get receive wallets for users */
@@ -3204,6 +3211,7 @@ export type SettingsCurrency = {
   maxAmount: Scalars['Float']['output'];
   minAmount: Scalars['Float']['output'];
   name?: Maybe<Scalars['String']['output']>;
+  originalSymbol?: Maybe<Scalars['String']['output']>;
   precision: Scalars['Int']['output'];
   rateFactor: Scalars['Float']['output'];
   symbol: Scalars['ID']['output'];
@@ -4332,6 +4340,7 @@ export enum UserActionType {
   Signup = 'signup',
   System = 'system',
   Transfer = 'transfer',
+  UnbenchmarkInsufficient = 'unbenchmarkInsufficient',
   UnbenchmarkTransaction = 'unbenchmarkTransaction',
   UpdateCostSettings = 'updateCostSettings',
   UpdateFeeSettings = 'updateFeeSettings',
