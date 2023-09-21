@@ -121,6 +121,14 @@ const LOGIN_WIDGET = gql`
     }
 `;
 
+const GET_PRE_SETTINGS_COMMON = gql`
+  query {
+		getPreSettingsCommon{
+			allowMercahntSignUp
+		}
+	}
+`;
+
 const REFRESH_TOKEN = gql`
   mutation RefreshToken { refreshToken }
 `;
@@ -702,6 +710,12 @@ export class AuthService {
 		} else {
 			throw 'Cookie consent is rejected. Allow cookie in order to have access';
 		}
+	}
+
+	getPreSettingsCommon(): Observable<any> {
+		return this.apollo.mutate({
+			mutation: GET_PRE_SETTINGS_COMMON
+		});
 	}
 
 	confirmName(

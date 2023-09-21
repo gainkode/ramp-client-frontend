@@ -1040,6 +1040,7 @@ export type Mutation = {
   generateDefaultTokenWhenKycSent: LoginResult;
   get2faQRCode: Scalars['String']['output'];
   login: LoginResult;
+  loginWidget: LoginResult;
   logout: Scalars['Boolean']['output'];
   makeNotificationsViewed?: Maybe<Array<UserNotification>>;
   preauth: PaymentPreauthResultShort;
@@ -1580,6 +1581,15 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationLoginWidgetArgs = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  oAuthProvider?: InputMaybe<OAuthProvider>;
+  oAuthToken?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  widgetId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationMakeNotificationsViewedArgs = {
   notificationIds?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
@@ -2022,6 +2032,7 @@ export type PaymentPreauthResultShort = {
 
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
+  allowAutoExchange?: Maybe<Scalars['Boolean']['output']>;
   countriesCode2?: Maybe<Array<Scalars['String']['output']>>;
   currencies?: Maybe<Array<Scalars['String']['output']>>;
   default?: Maybe<Scalars['Boolean']['output']>;
@@ -2058,6 +2069,11 @@ export type PostAddress = {
   street?: InputMaybe<Scalars['String']['input']>;
   subStreet?: InputMaybe<Scalars['String']['input']>;
   town?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PreSettingsCommon = {
+  __typename?: 'PreSettingsCommon';
+  allowMercahntSignUp?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type PrimeTrustObject = {
@@ -2125,6 +2141,8 @@ export type Query = {
   getOneToManyRatesMerchant?: Maybe<Array<Maybe<Rate>>>;
   /** Get payment providers */
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  /** Get common settings */
+  getPreSettingsCommon?: Maybe<PreSettingsCommon>;
   /** Get the exchange rate of several currencies to one */
   getRates?: Maybe<Array<Rate>>;
   /** Get receive wallets for users */
@@ -2676,6 +2694,7 @@ export type QueryGetVaultAccountArgs = {
 
 
 export type QueryGetVaultAccountListForUsersArgs = {
+  admin?: InputMaybe<Scalars['Boolean']['input']>;
   custodyProviderName: Scalars['String']['input'];
   userIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
@@ -3105,6 +3124,7 @@ export type SettingsCurrency = {
   maxAmount: Scalars['Float']['output'];
   minAmount: Scalars['Float']['output'];
   name?: Maybe<Scalars['String']['output']>;
+  originalSymbol?: Maybe<Scalars['String']['output']>;
   precision: Scalars['Int']['output'];
   rateFactor: Scalars['Float']['output'];
   symbol: Scalars['ID']['output'];
@@ -4178,6 +4198,7 @@ export enum UserActionType {
   Signup = 'signup',
   System = 'system',
   Transfer = 'transfer',
+  UnbenchmarkInsufficient = 'unbenchmarkInsufficient',
   UnbenchmarkTransaction = 'unbenchmarkTransaction',
   UpdateCostSettings = 'updateCostSettings',
   UpdateFeeSettings = 'updateFeeSettings',
@@ -4836,6 +4857,7 @@ export type WidgetUpdateInput = {
 export type WidgetUserParams = {
   __typename?: 'WidgetUserParams';
   created: Scalars['DateTime']['output'];
+  executed?: Maybe<Scalars['DateTime']['output']>;
   params?: Maybe<Scalars['String']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
   widgetId?: Maybe<Scalars['String']['output']>;
