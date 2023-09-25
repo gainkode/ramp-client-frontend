@@ -120,6 +120,16 @@ query GetTransactionStatuses {
       userStatus
       level
       adminStatus
+      statusType
+      processingStatus
+      successFinalStatus
+      failureFinalStatus
+      buyLifeline {
+        seqNo
+        newNode
+        statusName
+        statusDescription
+      }
     }
   }    
 }

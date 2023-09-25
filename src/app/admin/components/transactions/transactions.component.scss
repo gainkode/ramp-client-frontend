@@ -49,9 +49,14 @@
   background-color: rgb(253, 253, 230);
 }
 
-.ng-pagination-nav-icons {
+.ng-pagination-nav-icons,
+.align-center {
   display: flex;
   justify-content: center;
   align-items: center;
+  
+}
+
+.ng-pagination-nav-icons {
   margin-top: 12px;
 }

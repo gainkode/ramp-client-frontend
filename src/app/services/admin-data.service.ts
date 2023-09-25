@@ -26,6 +26,7 @@ import {
 	QueryGetUsersArgs,
 	QueryGetUserStateArgs,
 	QueryGetWalletsArgs,
+  QueryGetTransactionLifeLinesArgs,
 	QueryGetWidgetsArgs, RiskAlertResultList,
 	SettingsCommon,
 	SettingsFeeListResult, SettingsKycLevelListResult,
@@ -47,17 +48,16 @@ import {
 	WidgetListResult,
 	WireTransferBankAccount,
 	TransactionStatusHistoryListResult,
-	TransactionStatusHistory,
+	TransactionHistory,
 	QueryGetTransactionStatusHistoryArgs,
 	PaymentProviderPayoutType,
 	TransactionInput,
-	CurrencyPairLiquidityProvider,
 	CurrencyPairLiquidityProvidersListResult,
 	QueryGetCurrencyPairLiquidityProviderArgs,
-	LiquidityProvider,
 	LiquidityProviderEntity,
   MessageListResult,
-  QueryGetMessagesArgs
+  QueryGetMessagesArgs,
+  TransactionLifelineStatusItem
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -1149,6 +1149,27 @@ const GET_USER_STATE = gql`
       kycProviderLink
       vaults {
         totalBalanceEur
+      }
+    }
+  }
+`;
+
+const GET_TRANSACTION_LIFELINE = gql`
+  query GetTransactionLifeLines($transactionId: String){
+    getTransactionLifeLines(transactionId: $transactionId){
+      lifeline
+      {
+        list{
+          lifelineId,
+          lifeLineStatus{
+            resultStatusParams
+            resultFailureParams
+            resultSuccessParams
+            transactionLifelineStatusId
+            transactionStatus
+            transactionStatusResult
+          }
+        }
       }
     }
   }
@@ -3050,6 +3071,16 @@ export class AdminDataService {
         };
       }
     }));
+  }
+
+  getTransactionLifeline(transactionId: string): Observable<TransactionLifelineStatusItem[] | undefined> {
+    return this.watchQuery<{ getTransactionLifeLines: TransactionHistory; }, QueryGetTransactionLifeLinesArgs>({
+			query: GET_TRANSACTION_LIFELINE,
+			variables: { transactionId },
+			fetchPolicy: 'network-only',
+    })
+      .pipe(map(res => res?.data?.getTransactionLifeLines.lifeline.list || undefined)
+      );
   }
 
   getTransactionStatusHistory(

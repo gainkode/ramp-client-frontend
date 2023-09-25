@@ -39,12 +39,8 @@ import { AdminHeaderComponent } from './layout/header/header.component';
 import { AdminSidebarComponent } from './layout/sidebar/sidebar.component';
 import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminSwitcherComponent } from './layout/switcher/switcher.component';
-import { AdminTransactionsComponent } from './components/transactions/transactions.component';
-import { AdminTransactionStatusHistoryComponent } from './components/transactionStatusHistory/transaction-status-history.component';
 import { AdminPageHeaderComponent } from './layout/page-header/page-header.component';
 import { AdminDataService } from '../services/admin-data.service';
-import { AdminTransactionDetailsComponent } from './components/transactions/transaction-details.component';
-import { AdminTransactionCreateComponent } from './components/transactions/transaction-create.component';
 import { AdminFilterComponent } from './misc/filter/filter.component';
 import { AdminDetailsItemComponent } from './misc/details-item/details-item.component';
 import { AdminDateRangeComponent } from './misc/date-range/date-range.component';
@@ -97,6 +93,15 @@ import { CustomerDocsFacadeService } from './components/users/customers/services
 import { CustomerDocsStateService } from './components/users/customers/services/customer-docs.state';
 import { TableModule } from 'components/data-list/table/table.module';
 import { SpinnerModule } from 'shared/spinner/spinner.module';
+import { 
+	AdminTransactionsComponent, 
+	AdminTransactionDetailsComponent, 
+	AdminTransactionStatusHistoryComponent, 
+	AdminTransactionCreateComponent,
+	TransactionLifelineComponent
+} from './components/transactions';
+import { JobStatusPipe } from 'pipes/job-status/job-status.pipe';
+import { MatStepperModule } from '@angular/material/stepper';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -136,6 +141,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		MatProgressBarModule,
 		DragDropModule,
 		MatToolbarModule,
+		MatStepperModule,
 		MatSnackBarModule,
 		ColorPickerModule,
 		PerfectScrollbarModule,
@@ -155,6 +161,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminDateRangeComponent,
 		AdminFilterComponent,
 		AdminDashboardComponent,
+		TransactionLifelineComponent,
 		AdminTransactionsComponent, AdminTransactionDetailsComponent, AdminTransactionStatusHistoryComponent, AdminTransactionCreateComponent,
 		AdminFiatWalletsComponent, AdminFiatWalletDetailsComponent,
 		AdminCryptoWalletsComponent, AdminCryptoWalletDetailsComponent,
@@ -176,7 +183,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminBankAccountsComponent, AdminBankAccountDetailsComponent,
 		AdminCommonSettingsComponent, AdminWithdrawalAddressComponent,
 		AdminApiKeysComponent, AdminApiKeyDetailsComponent, 
-		AdminCurrencyPairsComponent, AdminCurrencyPairDetailsComponent
+		AdminCurrencyPairsComponent, AdminCurrencyPairDetailsComponent,
+		JobStatusPipe
 	],
 	providers: [
 		AdminGuard,

@@ -11,7 +11,6 @@ import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminMessagesComponent } from './components/message/messages.component';
 import { AdminRisksComponent } from './components/risks/risks.component';
-import { AdminTransactionsComponent } from './components/transactions/transactions.component';
 import { AdminCustomersComponent } from './components/users/customers/customers.component';
 import { AdminSystemUsersComponent } from './components/users/system/users.component';
 import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
@@ -23,7 +22,7 @@ import { AdminCommonSettingsComponent } from './components/settings/common/commo
 import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
 import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 import { AdminUserActionsComponent } from './components/users/actions/actions.component';
-import { AdminTransactionStatusHistoryComponent } from './components/transactionStatusHistory/transaction-status-history.component';
+import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, TransactionLifelineComponent } from './components/transactions';
 
 const routes: Routes = [
 	{
@@ -54,6 +53,11 @@ const routes: Routes = [
 						data: { header: 'Transactions' }
 					}
 				]
+			},
+			{
+				path: 'transaction-lifeline',
+				component: TransactionLifelineComponent,
+				data: { header: 'Transaction Lifeline' }
 			},
 			{
 				path: 'transaction-status-history',
