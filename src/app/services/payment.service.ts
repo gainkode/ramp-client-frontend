@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
-import { KycProvider, PaymentInstrument, PaymentPreauthInput, TransactionSource, TransactionType } from '../model/generated-models';
+import { KycProvider, PaymentInstrument, PaymentPreauthInput, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -308,6 +308,7 @@ mutation CreateTransaction(
       originalLevelName
       originalFlowName
     }
+    requiredFields
   }
 }
 `;
@@ -596,34 +597,20 @@ export class PaymentDataService {
 		});
 	}
 
-	createTransaction(
-		transactionType: TransactionType,
-		transactionSource: TransactionSource,
-		sourceVault: string,
-		currencyToSpend: string,
-		currencyToReceive: string,
-		amount: number,
-		instrument: PaymentInstrument | undefined,
-		instrumentDetails: string,
-		providerName: string,
-		userParamsId: string,
-		walletAddress: string,
-		verifyWhenPaid: boolean): Observable<any> {
-		const wallet = (walletAddress === '') ? undefined : walletAddress;
-		const transactionSourceVaultId = (sourceVault === '') ? undefined : sourceVault;
+	createTransaction(transactionInput: TransactionInput): Observable<any> {
 		const vars = {
-			transactionType,
-			source: transactionSource,
-			sourceVaultId: transactionSourceVaultId,
-			currencyToSpend,
-			currencyToReceive: (currencyToReceive !== '') ? currencyToReceive : undefined,
-			amountToSpend: amount,
-			instrument,
-			instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
-			paymentProvider: (providerName !== '') ? providerName : undefined,
-			widgetUserParamsId: (userParamsId !== '') ? userParamsId : undefined,
-			destination: wallet,
-			verifyWhenPaid
+			transactionType: transactionInput.type,
+			source: transactionInput.source,
+			sourceVaultId: transactionInput.sourceVaultId,
+			currencyToSpend: transactionInput.currencyToSpend,
+			currencyToReceive: transactionInput.currencyToReceive,
+			amountToSpend: transactionInput.amountToSpend,
+			instrument: transactionInput.instrument,
+			instrumentDetails: transactionInput.instrumentDetails,
+			paymentProvider: transactionInput.paymentProvider,
+			widgetUserParamsId: transactionInput.widgetUserParamsId,
+			destination: transactionInput.destination,
+			verifyWhenPaid: transactionInput.verifyWhenPaid
 		};
 		return this.apollo.mutate({
 			mutation: CREATE_TRANSACTION,

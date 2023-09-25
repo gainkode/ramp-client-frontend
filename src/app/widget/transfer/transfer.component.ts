@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShort, PaymentApmResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionShort, TransactionSource, TransactionType, UserContactListResult, WireTransferPaymentCategory } from 'model/generated-models';
+import { AssetAddressShort, PaymentApmResult, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionInput, TransactionShort, TransactionSource, TransactionType, UserContactListResult, WireTransferPaymentCategory } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
@@ -55,6 +55,8 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
 	apmResult: PaymentApmResult = undefined;
   paymentComplete = false;
   notificationStarted = false;
+	transactionInput: TransactionInput | undefined = undefined;
+	requiredFields: string[] = [];
 
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
@@ -427,38 +429,57 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   		this.selectProvider(this.paymentProviders[0]);
   	}
   }
+
+	requiredFieldsComplete(): void {
+		this.createTransactionInternal();
+  	// this.widgetService.getWireTransferSettings(this.summary, this.widget);
+  }
   // ====================
 
+	private userInfoRequired(requiredFields: string[]): void {
+  	this.requiredFields = requiredFields;
+		this.nextStage('wire_transfer_info_required', 'Payment info', this.pager.step, true);
+  }
+
   private createTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string): void {
-  	this.errorMessage = '';
+		this.transactionInput = {
+			type: this.summary.transactionType,
+			source: TransactionSource.Wallet,
+			sourceVaultId: this.summary.vaultId,
+			currencyToSpend: this.summary.currencyFrom,
+			currencyToReceive: (this.summary.currencyTo !== '') ? this.summary.currencyTo : undefined,
+			amountToSpend: this.summary.amountFrom ?? 0,
+			instrument,
+			instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
+			paymentProvider: (instrument === PaymentInstrument.WireTransfer) ? '' : providerId,
+			widgetUserParamsId: '',
+			destination: this.summary.address,
+			verifyWhenPaid: this.summary.transactionType == TransactionType.Buy ? this.summary.verifyWhenPaid : false
+		}
+  	
+		this.createTransactionInternal();
+  }
+
+	private createTransactionInternal(): void {
+		this.errorMessage = '';
   	this.inProgress = true;
   	const tempStageId = this.pager.swapStage('initialization');
   	this.initMessage = 'Processing...';
   	if (this.summary) {
-  		const destination = this.summary.address;
   		this.pSubscriptions.add(
-  			this.dataService.createTransaction(
-  				this.summary.transactionType,
-  				TransactionSource.Wallet,
-  				this.summary.vaultId,
-  				this.summary.currencyFrom,
-  				this.summary.currencyTo,
-  				this.summary.amountFrom ?? 0,
-  				instrument,
-  				instrumentDetails,
-  				(instrument === PaymentInstrument.WireTransfer) ? '' : providerId,
-  				'',
-  				destination,
-  				this.summary.verifyWhenPaid
-  			).subscribe(({ data }) => {
+  			this.dataService.createTransaction(this.transactionInput).subscribe(({ data }) => {
   				if (!this.notificationStarted) {
   					this.startNotificationListener();
   				}
   				const order = data.createTransaction as TransactionShort;
   				this.inProgress = false;
+					if(order.requiredFields && order.requiredFields.length != 0) {
+						this.userInfoRequired(order.requiredFields);
+						return;
+					}
   				if (order.code) {
-  					this.summary.instrument = instrument;
-  					this.summary.providerView = this.paymentProviders.find(x => x.id === providerId);
+  					this.summary.instrument = this.transactionInput.instrument;
+  					this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
   					this.summary.orderId = order.code ?? '';
   					this.summary.fee = order.feeFiat ?? 0;
   					this.summary.feeMinFiat = order.feeMinFiat ?? 0;
@@ -466,7 +487,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   					this.summary.networkFee = order.approxNetworkFee ?? 0;
   					this.summary.transactionDate = new Date().toLocaleString();
   					this.summary.transactionId = order.transactionId as string;
-  					if (instrument === PaymentInstrument.WireTransfer) {
+  					if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
   						this.nextStage('wire_transfer_result', 'Payment', 5, false);
   					} else {
   						this.startPayment();
@@ -497,7 +518,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   			})
   		);
   	}
-  }
+	}
 
   private startPayment(): void {
   	if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {

@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from 'model/cost-scheme.model';
-import { TransactionType, PaymentInstrument, SettingsCurrencyWithDefaults, TransactionSource, TransactionShort, WireTransferPaymentCategory } from 'model/generated-models';
+import { TransactionType, PaymentInstrument, SettingsCurrencyWithDefaults, TransactionSource, TransactionShort, WireTransferPaymentCategory, TransactionInput } from 'model/generated-models';
 import { WidgetSettings, PaymentCompleteDetails, PaymentErrorDetails, WireTransferPaymentCategoryItem, PaymentWidgetType } from 'model/payment-base.model';
 import { CheckoutSummary, CurrencyView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
@@ -40,6 +40,7 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
   cryptoList: CurrencyView[] = [];
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   bankAccountId = '';
+	transactionInput: TransactionInput | undefined = undefined;
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
   	id: WireTransferPaymentCategory.Au,
   	bankAccountId: '',
@@ -166,7 +167,8 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
   }
 
   requiredFieldsComplete(): void {
-  	this.widgetService.getWireTransferSettings(this.summary, this.widgetSettings);
+		this.createTransactionInternal();
+  	// this.widgetService.getWireTransferSettings(this.summary, this.widgetSettings);
   }
 
   private onAuthRequired(email: string): void {
@@ -224,27 +226,37 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
   }
 
   private createTransaction(instrument: PaymentInstrument | undefined, instrumentDetails: string): void {
-  	this.errorMessage = '';
+		this.transactionInput = {
+			type: this.summary.transactionType,
+			source: TransactionSource.Wallet,
+			sourceVaultId: undefined,
+			currencyToSpend: this.summary.currencyTo,
+			currencyToReceive: this.summary.currencyTo,
+			amountToSpend: this.summary.amountFrom ?? 0,
+			instrument,
+			instrumentDetails,
+			paymentProvider: undefined,
+			widgetUserParamsId: undefined,
+			destination: undefined,
+			verifyWhenPaid: false
+		}
+  	
+		this.createTransactionInternal();
+  }
+
+	private createTransactionInternal(): void {
+		this.errorMessage = '';
   	this.inProgress = true;
   	this.pSubscriptions.add(
-  		this.dataService.createTransaction(
-  			this.summary.transactionType,
-  			TransactionSource.Wallet,
-  			'',
-  			this.summary.currencyTo,
-  			this.summary.currencyTo,
-  			this.summary.amountTo ?? 0,
-  			instrument,
-  			instrumentDetails,
-  			'',
-  			'',
-  			'',
-  			false
-  		).subscribe(({ data }) => {
+  		this.dataService.createTransaction(this.transactionInput).subscribe(({ data }) => {
   			const order = data.createTransaction as TransactionShort;
   			this.inProgress = false;
+				if(order.requiredFields && order.requiredFields.length != 0) {
+					this.userInfoRequired(order.requiredFields);
+					return;
+				}
   			if (order.code) {
-  				this.summary.instrument = instrument;
+  				this.summary.instrument = this.transactionInput.instrument;
   				this.summary.orderId = order.code ?? '';
   				this.summary.fee = order.feeFiat ?? 0;
   				this.summary.feeMinFiat = order.feeMinFiat ?? 0;
@@ -254,8 +266,15 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
   				this.summary.transactionId = order.transactionId as string;
   				this.initMessage = '';
   				if (this.summary.transactionType === TransactionType.Deposit) {
-  					this.stageId = 'transfer_result';
-  					this.title = 'Transfer Result';
+						if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
+							if(order.instrumentDetails) {
+								const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
+								this.selectedWireTransfer.data = instrumentDetails.accountType.data;
+							}
+							
+							this.stageId = 'transfer_result';
+  						this.title = 'Transfer Result';
+						}
   				} else {
   					this.stageId = 'complete';
   					this.title = 'Complete';
@@ -284,5 +303,5 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
   			}
   		})
   	);
-  }
+	}
 }

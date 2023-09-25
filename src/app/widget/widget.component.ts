@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionInput, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { finalize, take } from 'rxjs/operators';
@@ -87,6 +87,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   completeTextData = completeDataDefault;
   transactionIdConfirmationCode = '';
   kycSubscribeResult: boolean | undefined = undefined;
+	transactionInput: TransactionInput | undefined = undefined;
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
   private externalKycProvideNotificationsSubscription: Subscription | undefined = undefined;
@@ -748,7 +749,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		accountType: instrumentDetails
   	};
   	const settingsData = JSON.stringify(settings);
-  	this.createSellTransaction(settingsData, this.summary.providerView?.id ?? '', PaymentInstrument.WireTransfer);
+		this.createTransaction(this.summary.providerView?.id ?? '', PaymentInstrument.WireTransfer, settingsData);
   }
   // =======================
 
@@ -868,13 +869,13 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   			this.startPayment();
   		} else {
-  			this.createBuyTransaction(provider, provider.instrument, '');
+  			this.createTransaction(provider.id, provider.instrument, '');
   		}
   	} else {
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
   			this.nextStage('sell_details', 'Bank details', 2, true);
   		} else {
-  			this.createSellTransaction('', provider.id, provider.instrument);
+  			this.createTransaction(provider.id, provider.instrument, '');
   		}
   	}
     
@@ -897,7 +898,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		accountType: data.selected
   	};
   	const settingsData = JSON.stringify(settings);
-  	this.createBuyTransaction(this.summary.providerView, PaymentInstrument.WireTransfer, settingsData);
+		this.createTransaction(this.summary.providerView.id, PaymentInstrument.WireTransfer, settingsData);
   }
 
   sendWireTransaferMessageResult(): void {
@@ -922,7 +923,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   // == Payment ===========
   requiredFieldsComplete(): void {
-  	this.widgetService.getWireTransferSettings(this.summary, this.widget);
+		this.createTransactionInternal();
+  	// this.widgetService.getWireTransferSettings(this.summary, this.widget);
   }
 
   processingComplete(): void {
@@ -1044,45 +1046,55 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private createBuyTransaction(provider: PaymentProviderInstrumentView, instrument: PaymentInstrument, instrumentDetails: string): void {
+	private createTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string,) {
+		const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
+		const destination = this.summary.transactionType == TransactionType.Buy ? this.summary.address : '';
+		this.transactionInput = {
+			type: this.summary.transactionType,
+			source: this.widget.source,
+			sourceVaultId: transactionSourceVaultId,
+			currencyToSpend: this.summary.currencyFrom,
+			currencyToReceive: (this.summary.currencyTo !== '') ? this.summary.currencyTo : undefined,
+			amountToSpend: this.summary.amountFrom ?? 0,
+			instrument,
+			instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
+			paymentProvider: (providerId !== '') ? providerId : undefined,
+			widgetUserParamsId: (this.userParamsId !== '') ? this.userParamsId : undefined,
+			destination: destination,
+			verifyWhenPaid: this.summary.transactionType == TransactionType.Buy ? this.summary.verifyWhenPaid : false
+		}
+		this.createTransactionInternal();
+	}
+
+  private createTransactionInternal(): void {
   	this.errorMessage = '';
   	this.inProgress = true;
   	const tempStageId = this.pager.swapStage('initialization');
   	this.initMessage = 'Processing...';
-  	if (this.summary) {
-  		const destination = this.summary.address;
-			this.pSubscriptions.add(
-				this.dataService.createTransaction(
-					this.summary.transactionType,
-					this.widget.source,
-					this.summary.vaultId,
-					this.summary.currencyFrom,
-					this.summary.currencyTo,
-					this.summary.amountFrom ?? 0,
-					instrument,
-					instrumentDetails,
-					provider.id,
-					this.userParamsId,
-					destination,
-					this.summary.verifyWhenPaid
-				).subscribe(({ data }) => {
-					if (!this.notificationStarted) {
-						this.startNotificationListener();
-					}
-					const order = data.createTransaction as TransactionShort;
-					this.inProgress = false;
-					if (order.code) {
-						this.summary.instrument = instrument;
-						this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
-						this.summary.orderId = order.code as string;
-						this.summary.fee = order.feeFiat as number ?? 0;
-						this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
-						this.summary.feePercent = order.feePercent as number ?? 0;
-						this.summary.networkFee = order.approxNetworkFee ?? 0;
-						this.summary.transactionDate = new Date().toLocaleString();
-						this.summary.transactionId = order.transactionId as string;
-
-						if (instrument === PaymentInstrument.WireTransfer) {
+  	this.pSubscriptions.add(
+			this.dataService.createTransaction(this.transactionInput).subscribe(({ data }) => {
+				if (!this.notificationStarted) {
+					this.startNotificationListener();
+				}
+				const order = data.createTransaction as TransactionShort;
+				this.inProgress = false;
+				if(order.requiredFields && order.requiredFields.length != 0) {
+					this.userInfoRequired(order.requiredFields);
+					return;
+				}
+				if (order.code) {
+					this.summary.orderId = order.code as string;
+					this.summary.fee = order.feeFiat as number ?? 0;
+					this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
+					this.summary.feePercent = order.feePercent as number ?? 0;
+					this.summary.networkFee = order.approxNetworkFee ?? 0;
+					this.summary.transactionDate = new Date().toLocaleString();
+					this.summary.transactionId = order.transactionId as string;
+					
+					if(this.transactionInput.type == TransactionType.Buy){
+						this.summary.instrument = this.transactionInput.instrument;
+						this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
+						if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
 							if(order.instrumentDetails) {
 								const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
 								this.selectedWireTransfer.data = instrumentDetails.accountType.data;
@@ -1092,119 +1104,61 @@ export class WidgetComponent implements OnInit, OnDestroy {
 						} else {
 							this.startPayment();
 						}
+					} else if(this.transactionInput.type == TransactionType.Sell){
+						this.processingComplete();
+					}
+				} else {
+					this.errorMessage = 'Order code is invalid';
+					if (this.widget.embedded) {
+						this.onError.emit({
+							errorMessage: this.errorMessage
+						} as PaymentErrorDetails);
 					} else {
-						this.errorMessage = 'Order code is invalid';
-						if (this.widget.embedded) {
-							this.onError.emit({
-								errorMessage: this.errorMessage
-							} as PaymentErrorDetails);
+						if (tempStageId === 'verification') {
+							this.pager.goBack();
 						} else {
-							if (tempStageId === 'verification') {
-								this.pager.goBack();
-							} else {
-								if(order.transactionId && order.transactionId){
-									this.summary.instrument = instrument;
-									this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
-									this.transactionIdConfirmationCode = order.transactionId;
-									this.nextStage('code_auth', 'Authorization', 3, true);
-								}else{
+							if(order.transactionId && order.transactionId){
+								if(this.transactionInput.type == TransactionType.Buy){
+									this.summary.instrument = this.transactionInput.instrument;
+									this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
+								}
+								this.transactionIdConfirmationCode = order.transactionId;
+								this.nextStage('code_auth', 'Authorization', 3, true);
+							}else{
+								if(this.transactionInput.type == TransactionType.Buy) {
 									this.pager.swapStage(tempStageId);
+								}else if(this.transactionInput.type == TransactionType.Sell) {
+									this.setError('Transaction handling failed', this.errorMessage, 'createSellTransaction order');
 								}
 							}
 						}
 					}
-				}, (error) => {
-					this.inProgress = false;
-					if (tempStageId === 'verification') {
-						this.pager.goBack();
+				}
+			}, (error) => {
+				this.inProgress = false;
+				if (tempStageId === 'verification') {
+					this.pager.goBack();
+				} else {
+					this.pager.swapStage(tempStageId);
+				}
+				
+				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+					this.handleAuthError();
+				} else {
+					const msg = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+					this.errorMessage = msg;
+					if (this.widget.embedded) {
+						this.onError.emit({
+							errorMessage: msg
+						} as PaymentErrorDetails);
 					} else {
-						this.pager.swapStage(tempStageId);
+						setTimeout(() => {
+							this.setError('Transaction handling failed', msg, 'createBuyTransaction');
+						}, 100);
 					}
-					if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-						this.handleAuthError();
-					} else {
-						const msg = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
-						this.errorMessage = msg;
-						if (this.widget.embedded) {
-							this.onError.emit({
-								errorMessage: msg
-							} as PaymentErrorDetails);
-						} else {
-							setTimeout(() => {
-								this.setError('Transaction handling failed', msg, 'createBuyTransaction');
-							}, 100);
-						}
-					}
-				})
-			);
-  	}
-  }
-  
-  private createSellTransaction(instrumentDetails: string, providerId: string, instrument: PaymentInstrument): void {
-  	this.errorMessage = '';
-  	this.inProgress = true;
-  	this.initMessage = 'Processing...';
-  	if (this.summary) {
-  		this.pSubscriptions.add(
-  			this.dataService.createTransaction(
-  				TransactionType.Sell,
-  				this.widget.source,
-  				this.summary.vaultId,
-  				this.summary.currencyFrom,
-  				this.summary.currencyTo,
-  				this.summary.amountFrom ?? 0,
-  				instrument,
-  				instrumentDetails,
-  				providerId,
-  				this.userParamsId,
-  				'',
-  				false
-  			).subscribe(({ data }) => {
-  				const order = data.createTransaction as TransactionShort;
-  				this.inProgress = false;
-  				if (order.code) {
-  					this.summary.orderId = order.code as string;
-  					this.summary.fee = order.feeFiat as number ?? 0;
-  					this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
-  					this.summary.feePercent = order.feePercent as number ?? 0;
-  					this.summary.networkFee = order.approxNetworkFee ?? 0;
-  					this.summary.transactionDate = new Date().toLocaleString();
-  					this.summary.transactionId = order.transactionId as string;
-  					this.processingComplete();
-  				} else {
-  					this.errorMessage = 'Order code is invalid';
-  					if (this.widget.embedded) {
-  						this.onError.emit({
-  							errorMessage: this.errorMessage
-  						} as PaymentErrorDetails);
-  					} else {
-  						if(order.transactionId && order.transactionId){
-  							this.transactionIdConfirmationCode = order.transactionId;
-  							this.nextStage('code_auth', 'Authorization', 3, true);
-  						}else{
-  							this.setError('Transaction handling failed', this.errorMessage, 'createSellTransaction order');
-  						}
-  					}
-  				}
-  			}, (error) => {
-  				this.inProgress = false;
-  				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-  					this.handleAuthError();
-  				} else {
-  					this.errorMessage = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
-  					if (this.widget.embedded) {
-  						this.onError.emit({
-  							errorMessage: this.errorMessage
-  						} as PaymentErrorDetails);
-  					} else {
-  						setTimeout(() => {
-  							this.setError('Transaction handling failed', this.errorMessage, 'createSellTransaction');
-  						}, 100);
-  					}
-  				}
-  			})
-  		);
-  	}
+				}
+			})
+		);
   }
  
   private startPayment(): void {

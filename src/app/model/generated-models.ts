@@ -3636,6 +3636,7 @@ export type Transaction = {
   rateFiatToEur?: Maybe<Scalars['Float']['output']>;
   recipientName?: Maybe<Scalars['String']['output']>;
   requestParams?: Maybe<Scalars['String']['output']>;
+  requiredFields?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
   requiredUserTierId?: Maybe<Scalars['String']['output']>;
   risk: RiskLevel;
@@ -3844,6 +3845,7 @@ export type TransactionShort = {
   rate?: Maybe<Scalars['Float']['output']>;
   rateFiatToEur?: Maybe<Scalars['Float']['output']>;
   recipientName?: Maybe<Scalars['String']['output']>;
+  requiredFields?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
   requiredUserTierId?: Maybe<Scalars['String']['output']>;
   risk: RiskLevel;
@@ -3932,17 +3934,20 @@ export enum TransactionStatus {
 export type TransactionStatusDescriptor = {
   __typename?: 'TransactionStatusDescriptor';
   adminStatus: AdminTransactionStatus;
+  buyLifeline?: Maybe<TransactionStatusLifelineDescriptor>;
   canBeCancelled: Scalars['Boolean']['output'];
   description: Scalars['String']['output'];
   failureFinalStatus?: Maybe<TransactionStatus>;
   hasToBeRefunded: Scalars['Boolean']['output'];
   level: TransactionStatusLevel;
-  newNodeOnLifeline: Scalars['Boolean']['output'];
   notifyUser: Scalars['Boolean']['output'];
   processingStatus?: Maybe<Array<TransactionStatus>>;
+  receiveLifeline?: Maybe<TransactionStatusLifelineDescriptor>;
   repeatFromStatus?: Maybe<TransactionStatus>;
+  sellLifeline?: Maybe<TransactionStatusLifelineDescriptor>;
   statusType: TransactionStatusType;
   successFinalStatus?: Maybe<TransactionStatus>;
+  transferLifeline?: Maybe<TransactionStatusLifelineDescriptor>;
   updateWhenOwnLiquidityProvider?: Maybe<Scalars['Boolean']['output']>;
   userStatus: UserTransactionStatus;
 };
@@ -3980,6 +3985,14 @@ export enum TransactionStatusLevel {
   Error = 'error',
   Info = 'info'
 }
+
+export type TransactionStatusLifelineDescriptor = {
+  __typename?: 'TransactionStatusLifelineDescriptor';
+  newNode: Scalars['Boolean']['output'];
+  seqNo?: Maybe<Scalars['Int']['output']>;
+  statusDescription?: Maybe<Scalars['String']['output']>;
+  statusName?: Maybe<Scalars['String']['output']>;
+};
 
 export enum TransactionStatusType {
   Cancelation = 'Cancelation',
