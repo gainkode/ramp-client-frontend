@@ -577,17 +577,18 @@ export class PaymentDataService {
 	}
 
 	getAppropriateSettingsKycTiers(
-		amountVal: number,
-		currencyVal: string,
-		sourceVal: TransactionSource,
-		kycProvider: KycProvider,
+		amount: number,
+		currency: string,
+		source: TransactionSource,
+		targetKycProvider: KycProvider,
 		widgetId: string): QueryRef<any, EmptyObject> {
 		const widget = (widgetId !== '') ? widgetId : undefined;
+    
 		const vars = {
-			amount: amountVal,
-			currency: currencyVal,
-			targetKycProvider: kycProvider,
-			source: sourceVal,
+			amount,
+			currency,
+			targetKycProvider,
+			source,
 			widgetId: widget
 		};
 		return this.apollo.watchQuery<any>({
@@ -598,23 +599,14 @@ export class PaymentDataService {
 	}
 
 	createTransaction(transactionInput: TransactionInput): Observable<any> {
-		const vars = {
-			transactionType: transactionInput.type,
-			source: transactionInput.source,
-			sourceVaultId: transactionInput.sourceVaultId,
-			currencyToSpend: transactionInput.currencyToSpend,
-			currencyToReceive: transactionInput.currencyToReceive,
-			amountToSpend: transactionInput.amountToSpend,
-			instrument: transactionInput.instrument,
-			instrumentDetails: transactionInput.instrumentDetails,
-			paymentProvider: transactionInput.paymentProvider,
-			widgetUserParamsId: transactionInput.widgetUserParamsId,
-			destination: transactionInput.destination,
-			verifyWhenPaid: transactionInput.verifyWhenPaid
-		};
+    const { type, ...otherParams } = transactionInput;
+
 		return this.apollo.mutate({
 			mutation: CREATE_TRANSACTION,
-			variables: vars
+			variables: {
+				transactionType: type,
+        ...otherParams
+      }
 		});
 	}
 
