@@ -8,17 +8,47 @@
 <ng-container *ngIf=" transactionLifelineStatusItems$ | async as liflinesStatusItems; else loading">
   <mat-card class="mb-3">
     <mat-card-content>
-      Creating: {{ creatingTransactionStatus.lifelineId }}
+      Creating: {{ liflinesStatusItems[0].lifelineId }}
 
       <mat-stepper [linear]="false" #stepper labelPosition="bottom">
         <mat-step
-          *ngFor="let lifeLineStatus of creatingFinalTransactionStatuses" 
-          [editable]="lifeLineStatus.value['transactionLifelineStatusId']">
-          <form>
-            <ng-template matStepLabel>{{ lifeLineStatus['statusName'] || lifeLineStatus.key }}</ng-template>
-            <p>{{ lifeLineStatus.value['transactionLifelineStatusId'] }}</p>
-          </form>
+          *ngFor="let status of liflinesStatusItems[0].lifelineStatus" 
+          [editable]="status.transactionLifelineStatusId"
+          [aria-labelledby]="!status.transactionLifelineStatusId ? 'disabled_af' : null"
+          [state]="status.transactionLifelineStatusId ? 'success' : 'number'">
+          <ng-template matStepLabel>
+            {{ status.lifelineStatusDescriptor.statusName || status.transactionStatus }}
+          </ng-template>
+    
+          <mat-list class="transactionLifelineStatus__list">
+            <mat-list-item>
+              <span matListItemTitle>ID:</span>
+              <span matListItemLine class="transactionLifelineStatus__list-matListItemLine">
+                {{ status.transactionLifelineStatusId }} 
+                <mat-icon class="mat-icon-copy" (click)="copyParameter(status.transactionLifelineStatusId)">file_copy</mat-icon></span>
+
+
+            </mat-list-item>
+            <mat-list-item>
+              <span matListItemTitle>Created:</span>
+              <span matListItemLine>{{ status.created | date : 'yyyy-MM-dd hh:mm:ss ' }}</span>
+            </mat-list-item>
+
+          </mat-list>
         </mat-step>
+
+        <ng-template matStepperIcon="edit">
+          <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+        </ng-template>
+
+        <ng-template matStepperIcon="done">
+          <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+        </ng-template>
+
+        <ng-template matStepperIcon="success">
+          <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+        </ng-template>
+        
       </mat-stepper>
     </mat-card-content>
   </mat-card>
@@ -28,15 +58,15 @@
       Updating
 
       <mat-vertical-stepper [linear]="false" #stepper>
-        <mat-step *ngFor="let item of updatingTransactionStatuses">
-          <ng-template matStepLabel>{{
-            item.lifelineId
-          }}</ng-template>
+        <mat-step *ngFor="let status of liflinesStatusItems.slice(1);">
+          <ng-template matStepLabel>
+            {{ status.lifelineId}}
+          </ng-template>
           <mat-stepper [linear]="false" #stepper labelPosition="bottom">
-            <mat-step *ngFor="let lifeLineStatus of updatingFinalTransactionStatuses">
+            <mat-step *ngFor="let item of status.lifelineStatus">
               <form>
-                <ng-template matStepLabel>{{ lifeLineStatus['statusName'] || lifeLineStatus.key }}</ng-template>
-                <p>{{ lifeLineStatus.value["transactionLifelineStatusId"] }}</p>
+                <ng-template matStepLabel> {{ item.lifelineStatusDescriptor.statusName || item.transactionStatus }}</ng-template>
+                <p>{{ item.transactionLifelineStatusId }}</p>
               </form>
             </mat-step>
           </mat-stepper>

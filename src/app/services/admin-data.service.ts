@@ -26,7 +26,7 @@ import {
 	QueryGetUsersArgs,
 	QueryGetUserStateArgs,
 	QueryGetWalletsArgs,
-  QueryGetTransactionLifeLinesArgs,
+  QueryGetTransactionLifelinesArgs,
 	QueryGetWidgetsArgs, RiskAlertResultList,
 	SettingsCommon,
 	SettingsFeeListResult, SettingsKycLevelListResult,
@@ -57,7 +57,8 @@ import {
 	LiquidityProviderEntity,
   MessageListResult,
   QueryGetMessagesArgs,
-  TransactionLifelineStatusItem
+  TransactionLifelineStatusItem,
+  TransactionLifelineStatusListResult
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -1155,19 +1156,26 @@ const GET_USER_STATE = gql`
 `;
 
 const GET_TRANSACTION_LIFELINE = gql`
-  query GetTransactionLifeLines($transactionId: String){
-    getTransactionLifeLines(transactionId: $transactionId){
+  query GetTransactionLifelines($transactionId: String){
+    getTransactionLifelines(transactionId: $transactionId){
       lifeline
       {
         list{
-          lifelineId,
-          lifeLineStatus{
+          lifelineId
+          lifelineStatus{
+            created
             resultStatusParams
             resultFailureParams
             resultSuccessParams
             transactionLifelineStatusId
             transactionStatus
             transactionStatusResult
+            lifelineStatusDescriptor{
+              newNode
+              seqNo
+              statusDescription
+              statusName
+            }
           }
         }
       }
@@ -3073,13 +3081,13 @@ export class AdminDataService {
     }));
   }
 
-  getTransactionLifeline(transactionId: string): Observable<TransactionLifelineStatusItem[] | undefined> {
-    return this.watchQuery<{ getTransactionLifeLines: TransactionHistory; }, QueryGetTransactionLifeLinesArgs>({
+  getTransactionLifeline(transactionId: string): Observable<TransactionLifelineStatusItem[]> {
+    return this.watchQuery<{ getTransactionLifelines: TransactionHistory; }, QueryGetTransactionLifelinesArgs>({
 			query: GET_TRANSACTION_LIFELINE,
 			variables: { transactionId },
 			fetchPolicy: 'network-only',
     })
-      .pipe(map(res => res?.data?.getTransactionLifeLines.lifeline.list || undefined)
+      .pipe(map(res => res?.data?.getTransactionLifelines.lifeline.list)
       );
   }
 

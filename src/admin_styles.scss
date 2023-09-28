@@ -291,9 +291,17 @@ ngb-alert .btn-close {
 	padding: 20px 5px !important;
 }
 
+.mat-step-header .mat-step-icon {
+  background: lightgrey;
+}
+
 .country-selector {
   opacity: 1 !important;
   bottom: 8px !important;
+}
+
+.disabled {
+  pointer-events: none !important;
 }
 
 app-advanced-forms telephone-input input:not(.country-search) {
