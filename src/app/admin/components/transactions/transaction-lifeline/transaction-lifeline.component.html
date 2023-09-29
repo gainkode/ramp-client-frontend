@@ -5,7 +5,7 @@
 >
 </app-admin-page-header>
 
-<ng-container *ngIf=" transactionLifelineStatusItems$ | async as liflinesStatusItems; else loading">
+<ng-container *ngIf="transactionLifelineStatusItems$ | async as liflinesStatusItems; else loading">
   <mat-card class="mb-3">
     <mat-card-content>
       Creating: {{ liflinesStatusItems[0].lifelineId }}
@@ -57,18 +57,57 @@
     <mat-card-content>
       Updating
 
+<!-- 
+  IF transactionStatusResult = "SUCCESS" resultSuccessParams
+  IF transactionStatusResult = 'FAILED'
+  IF UNKNOW - resultStatusParams = resultFailureParams 
+-->
+
       <mat-vertical-stepper [linear]="false" #stepper>
-        <mat-step *ngFor="let status of liflinesStatusItems.slice(1);">
+        <mat-step *ngFor="let statusItem of liflinesStatusItems.slice(1);">
           <ng-template matStepLabel>
-            {{ status.lifelineId}}
+            {{ statusItem.lifelineId}}
           </ng-template>
-          <mat-stepper [linear]="false" #stepper labelPosition="bottom">
-            <mat-step *ngFor="let item of status.lifelineStatus">
-              <form>
-                <ng-template matStepLabel> {{ item.lifelineStatusDescriptor.statusName || item.transactionStatus }}</ng-template>
-                <p>{{ item.transactionLifelineStatusId }}</p>
-              </form>
+          <mat-stepper [linear]="false" #stepperw labelPosition="bottom">
+            <mat-step
+              *ngFor="let lineStatus of statusItem.lifelineStatus" 
+              [editable]="lineStatus.transactionLifelineStatusId"
+              [aria-labelledby]="!lineStatus.transactionLifelineStatusId ? 'disabled_af' : null"
+              [state]="lineStatus.transactionLifelineStatusId ? 'success' : 'number'">
+
+              <ng-template matStepLabel>
+                {{ lineStatus.lifelineStatusDescriptor.statusName || lineStatus.transactionStatus }}
+              </ng-template>
+
+              <mat-list class="transactionLifelineStatus__list">
+                <mat-list-item>
+                  <span matListItemTitle>ID:</span>
+                  <span matListItemLine class="transactionLifelineStatus__list-matListItemLine">
+                    {{ lineStatus.transactionLifelineStatusId }} 
+                    <mat-icon class="mat-icon-copy" (click)="copyParameter(lineStatus.transactionLifelineStatusId)">file_copy</mat-icon></span>
+    
+    
+                </mat-list-item>
+                <mat-list-item>
+                  <span matListItemTitle>Created:</span>
+                  <span matListItemLine>{{ lineStatus.created | date : 'yyyy-MM-dd hh:mm:ss ' }}</span>
+                </mat-list-item>
+    
+              </mat-list>
             </mat-step>
+
+          <ng-template matStepperIcon="edit">
+            <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+          </ng-template>
+  
+          <ng-template matStepperIcon="done">
+            <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+          </ng-template>
+  
+          <ng-template matStepperIcon="success">
+            <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+          </ng-template>
+          
           </mat-stepper>
         </mat-step>
       </mat-vertical-stepper>
