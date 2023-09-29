@@ -17,3 +17,18 @@
         cursor: pointer;
     }
 }
+
+.view-json {
+    min-width: 60px;
+    min-height: 26px;
+    padding: 0 10px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, .54);
+    background: transparent;
+    border-color: transparent;
+    text-decoration: underline;
+
+    &:disabled {
+        opacity: 0.5;
+    }
+}

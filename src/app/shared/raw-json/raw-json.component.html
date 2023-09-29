@@ -1,0 +1,18 @@
+<div class="raw-json-modal__backdrop animated fadeIn" *ngIf="isModal">
+	<div class="raw-json-modal__wrapper">
+		<div class="raw-json-modal">
+			<div class="raw-json-modal__header">
+				<h3 class="raw-json-modal__title">Raw Json</h3>
+			</div>
+			<div class="raw-json-modal__content">
+				<ngx-json-viewer [json]="data" [depth]="2"></ngx-json-viewer>
+			</div>
+			<div class="raw-json-modal__actions">
+				<button type="button" class="raw-json-modal__close" (click)="closeEvent()">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<ngx-json-viewer *ngIf="!isModal" [json]="data" [depth]="2"></ngx-json-viewer>

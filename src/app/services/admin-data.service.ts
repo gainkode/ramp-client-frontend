@@ -3087,7 +3087,7 @@ export class AdminDataService {
 			variables: { transactionId },
 			fetchPolicy: 'network-only',
     })
-      .pipe(map(res => res?.data?.getTransactionLifelines.lifeline.list)
+      .pipe(map(res => res?.data?.getTransactionLifelines?.lifeline.list || [])
       );
   }
 

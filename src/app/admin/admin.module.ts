@@ -102,6 +102,7 @@ import {
 } from './components/transactions';
 import { JobStatusPipe } from 'pipes/job-status/job-status.pipe';
 import { MatStepperModule } from '@angular/material/stepper';
+import { RawJsonModule } from 'shared/raw-json/raw-json.module';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -130,6 +131,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		MatPaginatorModule,
 		MatProgressSpinnerModule,
 		SpinnerModule,
+		RawJsonModule,
 		MatSortModule,
 		MatButtonModule,
 		MatFormFieldModule,
