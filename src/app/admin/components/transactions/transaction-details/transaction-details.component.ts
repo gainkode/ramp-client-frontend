@@ -1,8 +1,8 @@
-import { Component, ErrorHandler, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, map } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
 import { AccountStatus, KycStatus, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'model/payment.model';
@@ -11,14 +11,17 @@ import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ExchangeRateService } from 'services/rate.service';
 import { getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
+import { Filter } from 'admin/model/filter.model';
+import { CommonTargetValue } from 'model/common.model';
 
 @Component({
 	selector: 'app-admin-transaction-details',
 	templateUrl: 'transaction-details.component.html',
-	styleUrls: ['transaction-details.component.scss', '../../assets/scss/_validation.scss']
+	styleUrls: ['transaction-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
+  @Input() activeTab = 'info';
   @Input() set transaction(val: TransactionItemFull | undefined) {
   	this.setFormData(val);
   	this.pStatusHash = val?.statusHash ?? 0;
@@ -69,6 +72,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   submitted = false;
   saveInProgress = false;
+  flagInProgress = false;
   cancelInProgress = false;
   errorMessage = '';
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
@@ -78,6 +82,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   transactionStatuses: TransactionStatusView[] = [];
   removable = false;
   transactionId = '';
+  scriningData = '';
   transactionType: TransactionType = TransactionType.System;
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];
@@ -97,9 +102,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   systemFeeTitle = 'Fee, EUR';
   editableDestination = false;
   destroyed = false;
+  flag = false;
 
   form = this.formBuilder.group({
-  	address: ['', { validators: [Validators.required], updateOn: 'change' }],
+  	address: [undefined],
   	currencyToSpend: [undefined, { validators: [Validators.required], updateOn: 'change' }],
   	currencyToReceive: [undefined, { validators: [Validators.required], updateOn: 'change' }],
   	amountToSpend: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
@@ -108,13 +114,18 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	transactionStatus: [TransactionStatus.New, { validators: [Validators.required], updateOn: 'change' }],
   	kycStatus: [KycStatus.Unknown, { validators: [Validators.required], updateOn: 'change' }],
   	accountStatus: [AccountStatus.Closed, { validators: [Validators.required], updateOn: 'change' }],
+  	widgetId: [undefined],
   	transferHash: [undefined],
+  	screeningAnswer: [undefined],
+  	screeningRiskscore: [undefined],
+  	screeningStatus: [undefined],
   	benchmarkTransferHash: [undefined],
   	comment: [undefined]
   });
 
+  widgetOptions$: Observable<CommonTargetValue[]>;
   constructor(
-  	private formBuilder: FormBuilder,
+  	private formBuilder: UntypedFormBuilder,
   	private router: Router,
   	private auth: AuthService,
   	private modalService: NgbModal,
@@ -135,6 +146,22 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			this.startExchangeRate();
   		})
   	);
+
+  	this.widgetOptions$ = this.getFilteredWidgets();
+  }
+
+  private getFilteredWidgets(): Observable<CommonTargetValue[]> {
+  	return this.adminService.getWidgets(0, 100, 'name', false, <Filter>{}).pipe(
+  		map(result => result.list.map(widget => ({
+  			id: widget.id,
+  			title: widget.name
+  		} as CommonTargetValue)))
+  	);
+  }
+  widgetSearchFn(term: string, item: CommonTargetValue): boolean {
+  	term = term.toLocaleLowerCase();
+  	return item.title.toLocaleLowerCase().indexOf(term) > -1 ||
+		item.id && item.id.toLocaleLowerCase().indexOf(term) > -1;
   }
 
   ngOnDestroy(): void {
@@ -143,7 +170,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
-  	//this.rateErrorMessage = error;
   	if (rate) {
   		this.currentRate = rate.depositRate;
   	}
@@ -196,6 +222,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.benchmarkTransferOrderBlockchainLink = val?.benchmarkTransferOrderBlockchainLink ?? '';
   	this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
   	if (this.data) {
+  		this.flag = this.data.flag === true;
   		this.form.get('address')?.setValue(this.data.address);
   		this.form.get('rate')?.setValue(this.data.rate);
   		this.form.get('fee')?.setValue(this.data.fees);
@@ -204,9 +231,16 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('currencyToReceive')?.setValue(this.data.currencyToReceive);
   		this.form.get('transactionStatus')?.setValue(this.data.status);
   		this.form.get('kycStatus')?.setValue(this.data.kycStatusValue);
+  		this.form.get('widgetId')?.setValue(this.data.widgetId);
   		this.form.get('accountStatus')?.setValue(this.data.accountStatusValue);
   		this.form.get('transferHash')?.setValue(this.data.transferOrderHash);
+  		this.form.get('screeningAnswer')?.setValue(this.data.screeningAnswer);
+  		this.form.get('screeningRiskscore')?.setValue(this.data.screeningRiskscore);
+  		this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
   		this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
+  		if(this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
+  			this.scriningData = JSON.stringify(this.data?.screeningData?.paymentChecks[0], null, 4);
+  		}
   		this.form.get('comment')?.setValue(this.data.comment);
   		this.transactionStatus = this.data.status;
   		if (this.transactionStatuses.length > 0) {
@@ -248,6 +282,73 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
+  getTransactionToUpdate(): Transaction {
+  	const currentRateValue = this.form.get('rate')?.value;
+  	let currentRate: number | undefined = undefined;
+  	if (currentRateValue !== undefined) {
+  		currentRate = parseFloat(currentRateValue);
+  	}
+  	const transactionToUpdate = {
+  		transactionId: this.transactionId,
+  		destination: this.form.get('address')?.value,
+  		currencyToSpend: this.form.get('currencyToSpend')?.value,
+  		currencyToReceive: this.form.get('currencyToReceive')?.value,
+  		amountToSpend: parseFloat(this.form.get('amountToSpend')?.value ?? '0'),
+  		rate: currentRate,
+  		feeFiat: parseFloat(this.form.get('fee')?.value ?? '0'),
+  		status: this.form.get('transactionStatus')?.value,
+  		widgetId: this.form.get('widgetId')?.value,
+  		kycStatus: this.form.get('kycStatus')?.value,
+  		accountStatus: this.form.get('accountStatus')?.value,
+  		transferOrder: {
+  			orderId: this.data?.transferOrderId,
+  			transferHash: this.form.get('transferHash')?.value ?? ''
+  		},
+  		benchmarkTransferOrder: {
+  			orderId: this.data?.benchmarkTransferOrderId,
+  			transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
+  		},
+  		comment: this.form.get('comment')?.value ?? '',
+  		flag: this.flag
+  	} as Transaction;
+
+  	return transactionToUpdate;
+  }
+
+  flagText(): String {
+  	return this.flag == true ? 'Unflag' : 'Flag';
+  }
+
+  activeTabInfo(): void{
+  	this.activeTab = 'info';
+  }
+
+  activeTabInfoScreening(): void{
+  	this.activeTab = 'infoScreening';
+  }
+
+  flagValue(): void {
+  	this.flagInProgress = true;
+  	this.saveInProgress = true;
+  	this.flag = this.flag != true;
+    
+  	const requestData$ = this.adminService.updateTransactionFlag(this.flag, this.transactionId);
+  	this.subscriptions.add(
+  		requestData$.subscribe(({ data }) => {
+  			this.saveInProgress = false;
+  			this.flagInProgress = false;
+  			this.save.emit();
+  		}, (error) => {
+  			this.saveInProgress = false;
+  			this.flagInProgress = false;
+  			this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
+  			if (this.auth.token === '') {
+  				void this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
+  }
+
   updateRate(): void {
   	if (this.currentRate) {
   		this.form.get('rate')?.setValue(this.currentRate);
@@ -263,12 +364,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.subscriptions.add(
   		requestData$.subscribe(({ data }) => {
   			this.saveInProgress = false;
+  			this.flagInProgress = false;
   			this.save.emit();
   		}, (error) => {
   			this.saveInProgress = false;
+  			this.flagInProgress = false;
   			this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -277,41 +380,43 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   onSubmit(content: any): void {
   	this.submitted = true;
   	if (this.form.valid) {
-  		const currentRateValue = this.form.get('rate')?.value;
-  		let currentRate: number | undefined = undefined;
-  		if (currentRateValue !== undefined) {
-  			currentRate = parseFloat(currentRateValue);
-  		}
-  		// if (currentRate === this.pDefaultRate) {
-  		//   currentRate = undefined;
+  		this.transactionToUpdate = this.getTransactionToUpdate();
+  		// const currentRateValue = this.form.get('rate')?.value;
+  		// let currentRate: number | undefined = undefined;
+  		// if (currentRateValue !== undefined) {
+  		//   currentRate = parseFloat(currentRateValue);
   		// }
-  		this.transactionToUpdate = {
-  			transactionId: this.transactionId,
-  			destination: this.form.get('address')?.value,
-  			currencyToSpend: this.form.get('currencyToSpend')?.value,
-  			currencyToReceive: this.form.get('currencyToReceive')?.value,
-  			amountToSpend: parseFloat(this.form.get('amountToSpend')?.value ?? '0'),
-  			rate: currentRate,
-  			feeFiat: parseFloat(this.form.get('fee')?.value ?? '0'),
-  			status: this.form.get('transactionStatus')?.value,
-  			kycStatus: this.form.get('kycStatus')?.value,
-  			accountStatus: this.form.get('accountStatus')?.value,
-  			transferOrder: {
-  				orderId: this.data?.transferOrderId,
-  				transferHash: this.form.get('transferHash')?.value ?? ''
-  			},
-  			benchmarkTransferOrder: {
-  				orderId: this.data?.benchmarkTransferOrderId,
-  				transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
-  			},
-  			comment: this.form.get('comment')?.value ?? ''
-  		} as Transaction;
+  		// // if (currentRate === this.pDefaultRate) {
+  		// //   currentRate = undefined;
+  		// // }
+  		// this.transactionToUpdate = {
+  		//   transactionId: this.transactionId,
+  		//   destination: this.form.get('address')?.value,
+  		//   currencyToSpend: this.form.get('currencyToSpend')?.value,
+  		//   currencyToReceive: this.form.get('currencyToReceive')?.value,
+  		//   amountToSpend: parseFloat(this.form.get('amountToSpend')?.value ?? '0'),
+  		//   rate: currentRate,
+  		//   feeFiat: parseFloat(this.form.get('fee')?.value ?? '0'),
+  		//   status: this.form.get('transactionStatus')?.value,
+  		//   kycStatus: this.form.get('kycStatus')?.value,
+  		//   accountStatus: this.form.get('accountStatus')?.value,
+  		//   transferOrder: {
+  		//     orderId: this.data?.transferOrderId,
+  		//     transferHash: this.form.get('transferHash')?.value ?? ''
+  		//   },
+  		//   benchmarkTransferOrder: {
+  		//     orderId: this.data?.benchmarkTransferOrderId,
+  		//     transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
+  		//   },
+  		//   comment: this.form.get('comment')?.value ?? '',
+  		//   flag: this.flag
+  		// } as Transaction;
   		const statusHash = getTransactionStatusHash(
   			this.transactionToUpdate.status,
   			this.transactionToUpdate.kycStatus ?? TransactionKycStatus.KycWaiting,
   			this.transactionToUpdate.accountStatus ?? AccountStatus.Closed);
   		const amountHash = getTransactionAmountHash(
-  			currentRate ?? this.pDefaultRate,
+  			this.transactionToUpdate.rate ?? this.pDefaultRate,
   			this.transactionToUpdate.amountToSpend ?? 0,
   			this.transactionToUpdate.feeFiat ?? 0);
   		this.statusChanged = this.pStatusHash !== statusHash;
@@ -334,7 +439,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			this.errorMessage = error;
   			this.cancelInProgress = false;
   			if (this.auth.token === '') {
-  				this.router.navigateByUrl('/');
+  				void this.router.navigateByUrl('/');
   			}
   		})
   	);
@@ -365,6 +470,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   onDeclined(content: any): void {
   	this.fastStatusChange(TransactionStatus.PaymentDeclined, content);
+  }
+
+  onRefunded(content: any): void {
+  	this.fastStatusChange(TransactionStatus.Refund, content);
   }
   
   fastStatusChange(newStatus: TransactionStatus, content: any): void {

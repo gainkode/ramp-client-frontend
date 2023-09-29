@@ -28,7 +28,7 @@ const requiredTransactionTypes = [
 @Component({
 	selector: 'app-admin-transaction-create',
 	templateUrl: 'transaction-create.component.html',
-	styleUrls: ['transaction-create.component.scss', '../../assets/scss/_validation.scss','../../../../assets/menu.scss']
+	styleUrls: ['transaction-create.component.scss', '../../../assets/scss/_validation.scss','../../../../../assets/menu.scss']
 })
 export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
@@ -224,7 +224,6 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   
   private onFilterPaymentProviders(instrument: PaymentInstrument): void {
   	if (instrument && instrument.length > 0 && !instrument.includes(PaymentInstrument.WireTransfer)) {
-  		console.log(this.providers, instrument);
   		this.filteredProviders = getProviderList([instrument], this.providers);
   		this.showPaymentProvider = this.filteredProviders.length > 0;
   		this.form.get('provider')?.setValue(
@@ -313,7 +312,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
 
   private usersSearch(): void {
   	let searchItems:CommonTargetValue[] = [];
-  	if(this.usersPreset && this.usersPreset.length != 0){
+  	if(this.usersPreset && this.usersPreset.length !== 0){
   		searchItems = this.usersPreset;
   	}
   	this.usersOptions$ = concat(

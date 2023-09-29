@@ -1,0 +1,120 @@
+<app-admin-page-header
+  [title]="'Transaction Lifeline'"
+  [items]="['Home', 'Transactions']"
+  [active_item]="'Transaction (ID) '"
+>
+</app-admin-page-header>
+
+<ng-container *ngIf="transactionLifelineStatusItems$ | async as liflinesStatusItems; else loading">
+  <mat-card class="mb-3">
+    <mat-card-content>
+      Creating: {{ liflinesStatusItems[0].lifelineId }}
+
+      <mat-stepper [linear]="false" #stepper labelPosition="bottom">
+        <mat-step
+          *ngFor="let status of liflinesStatusItems[0].lifelineStatus" 
+          [editable]="status.transactionLifelineStatusId"
+          [aria-labelledby]="!status.transactionLifelineStatusId ? 'disabled_af' : null"
+          [state]="status.transactionLifelineStatusId ? 'success' : 'number'">
+          <ng-template matStepLabel>
+            {{ status.lifelineStatusDescriptor.statusName || status.transactionStatus }}
+          </ng-template>
+    
+          <mat-list class="transactionLifelineStatus__list">
+            <mat-list-item>
+              <span matListItemTitle>ID:</span>
+              <span matListItemLine class="transactionLifelineStatus__list-matListItemLine">
+                {{ status.transactionLifelineStatusId }} 
+                <mat-icon class="mat-icon-copy" (click)="copyParameter(status.transactionLifelineStatusId)">file_copy</mat-icon></span>
+
+
+            </mat-list-item>
+            <mat-list-item>
+              <span matListItemTitle>Created:</span>
+              <span matListItemLine>{{ status.created | date : 'yyyy-MM-dd hh:mm:ss ' }}</span>
+            </mat-list-item>
+
+          </mat-list>
+        </mat-step>
+
+        <ng-template matStepperIcon="edit">
+          <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+        </ng-template>
+
+        <ng-template matStepperIcon="done">
+          <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+        </ng-template>
+
+        <ng-template matStepperIcon="success">
+          <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+        </ng-template>
+        
+      </mat-stepper>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-content>
+      Updating
+
+<!-- 
+  IF transactionStatusResult = "SUCCESS" resultSuccessParams
+  IF transactionStatusResult = 'FAILED'
+  IF UNKNOW - resultStatusParams = resultFailureParams 
+-->
+
+      <mat-vertical-stepper [linear]="false" #stepper>
+        <mat-step *ngFor="let statusItem of liflinesStatusItems.slice(1);">
+          <ng-template matStepLabel>
+            {{ statusItem.lifelineId}}
+          </ng-template>
+          <mat-stepper [linear]="false" #stepperw labelPosition="bottom">
+            <mat-step
+              *ngFor="let lineStatus of statusItem.lifelineStatus" 
+              [editable]="lineStatus.transactionLifelineStatusId"
+              [aria-labelledby]="!lineStatus.transactionLifelineStatusId ? 'disabled_af' : null"
+              [state]="lineStatus.transactionLifelineStatusId ? 'success' : 'number'">
+
+              <ng-template matStepLabel>
+                {{ lineStatus.lifelineStatusDescriptor.statusName || lineStatus.transactionStatus }}
+              </ng-template>
+
+              <mat-list class="transactionLifelineStatus__list">
+                <mat-list-item>
+                  <span matListItemTitle>ID:</span>
+                  <span matListItemLine class="transactionLifelineStatus__list-matListItemLine">
+                    {{ lineStatus.transactionLifelineStatusId }} 
+                    <mat-icon class="mat-icon-copy" (click)="copyParameter(lineStatus.transactionLifelineStatusId)">file_copy</mat-icon></span>
+    
+    
+                </mat-list-item>
+                <mat-list-item>
+                  <span matListItemTitle>Created:</span>
+                  <span matListItemLine>{{ lineStatus.created | date : 'yyyy-MM-dd hh:mm:ss ' }}</span>
+                </mat-list-item>
+    
+              </mat-list>
+            </mat-step>
+
+          <ng-template matStepperIcon="edit">
+            <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+          </ng-template>
+  
+          <ng-template matStepperIcon="done">
+            <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+          </ng-template>
+  
+          <ng-template matStepperIcon="success">
+            <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+          </ng-template>
+          
+          </mat-stepper>
+        </mat-step>
+      </mat-vertical-stepper>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
+
+<ng-template #loading>
+  <app-spinner></app-spinner>
+</ng-template>

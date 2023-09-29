@@ -1,0 +1,19 @@
+::ng-deep .mat-step-header[aria-labelledby="disabled_af"] {
+    pointer-events: none !important;
+    cursor: not-allowed;
+    opacity: 0.6
+}
+
+.transactionLifelineStatus__list {
+    margin-left: -30px;
+    margin-top: -20px;
+    &-matListItemLine {
+        display: flex;
+        align-items: center;
+    }
+    .mat-icon-copy {
+        margin-left: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+}

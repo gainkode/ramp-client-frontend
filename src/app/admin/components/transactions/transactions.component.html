@@ -6,19 +6,7 @@
     <div class="card">
       <div class="card-body">
         <div class="table-responsive">
-          <!-- <div class="table-button-container">
-            <button (click)="refresh()" class="btn btn-primary me-2">
-              Refresh
-            </button>
-            <button (click)="export(export_content)" class="btn btn-outline-secondary">
-              Export
-            </button>
-            <button (click)="unbenchmark(settle_content)" style="float: right;" class="btn btn-danger me-2"
-              [disabled]="!selectedForUnbenchmark">
-              Settle
-            </button>
-          </div> -->
-          <div style="overflow: hidden;">
+          <div class="overflow-hidden">
             <div class="table-button-container">
               <button type="button" (click)="refresh()" class="btn btn-primary me-2">
                 Refresh
@@ -41,9 +29,9 @@
           <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
 
           <div class="table-button-container m-2">
-            <button (click)="selectAll()" class="btn btn-secondary btn-sm mt-2">
-              <div style="display: flex; flex-direction: row;justify-content: center;align-items: center;">
-                <i class="material-icons" style="font-size: 20px;margin-right: 4px;">
+            <button type="button" (click)="selectAll()" class="btn btn-secondary btn-sm mt-2">
+              <div class="align-center">
+                <i class="material-icons tx-20 me-2">
                   library_add_check
                 </i>
                 Select all on the page
@@ -58,34 +46,40 @@
               <ng-container matColumnDef="details" sticky>
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListSelectorColumnStyle">
-                  <input style="margin-right: 4px;" [checked]="element.selected" type="checkbox"
+                  <input class="me-2" [checked]="element.selected" type="checkbox"
                     (change)="onTransactionSelected(element)">
-                  <button mat-icon-button class="row-button" (click)="showDetails(element, details_content, 'info')"
+                  <button type="button" mat-icon-button class="row-button" (click)="showDetails(element, details_content, 'info')"
                     [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedTransaction"
                     matTooltip="Transaction details" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">wysiwyg</i>
+                    <i class="material-icons tx-20">wysiwyg</i>
                   </button>
-                  <button *ngIf="element.screeningAnswer" mat-icon-button class="row-button" (click)="showDetails(element, details_content, 'infoScreening')"
+                    <button type="button" mat-icon-button class="row-button"
+                    [routerLink]="'/admin/transaction-lifeline'"
+                    [queryParams]="{transactionId: element.id}"
+                    matTooltip="Transaction lifeline" matTooltipClass="info-tooltip">
+                    <i class="material-icons tx-20">timeline</i>
+                  </button>
+                  <button type="button" *ngIf="element.screeningAnswer" mat-icon-button class="row-button" (click)="showDetails(element, details_content, 'infoScreening')"
                     [attr.aria-label]="'Transaction screening details'" [attr.aria-pressed]="!!selectedTransaction"
                     matTooltip="Transaction screening details" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;" [ngStyle]="{'color': element.screeningAnswer == 'RED' ? '#c90000' : '#6af16a'}">fact_check</i>
+                    <i class="material-icons tx-20" [ngStyle]="{'color': element.screeningAnswer == 'RED' ? '#c90000' : '#6af16a'}">fact_check</i>
                   </button>
-                  <button *ngIf="element.vaultIds.length>0" mat-icon-button class="row-button"
+                  <button type="button" *ngIf="element.vaultIds.length > 0" mat-icon-button class="row-button"
                     (click)="showWallets(element.id)" [attr.aria-label]="'Transaction wallet'"
                     [matTooltip]="'Transaction wallet'" matTooltipClass="info-tooltip">
                     <i class="material-icons tx-20">
                       account_balance_wallet
                     </i>
                   </button>
-                  <button *ngIf="element.paymentOrderPreauth == true" mat-icon-button class="row-button" [attr.aria-label]="'PreAuth'" 
+                  <button type="button" *ngIf="element.paymentOrderPreauth" mat-icon-button class="row-button" [attr.aria-label]="'PreAuth'" 
                   [matTooltip]="'PreAuth'" matTooltipClass="info-tooltip">
                     <i class="material-icons tx-20">
                       update
                     </i>
                   </button>
-                  <button *ngIf="element.flag == true" mat-icon-button class="row-button" [attr.aria-label]="'Flaged Transaction'" 
+                  <button type="button" *ngIf="element.flag" mat-icon-button class="row-button" [attr.aria-label]="'Flaged Transaction'" 
                   [matTooltip]="'Flaged Transaction'" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="color:#c90000; font-size: 20px;">
+                    <i class="material-icons tx-20 color_brown">
                       flag
                     </i>
                   </button>
@@ -310,13 +304,11 @@
               </button>
             </div>
             <div class="modal-body">
-              <h4 style="text-align: center;">
+              <h4 class="text-center">
                 Exported list of transactions has been sent to your email.
               </h4>
-              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-                <button class="btn btn-primary pd-x-50 mg-t-5" (click)="modal.dismiss('OK')">
-                  OK
-                </button>
+              <div class="align-center">
+                <button type="button" class="btn btn-primary pd-x-50 mg-t-5" (click)="modal.dismiss('OK')">OK</button>
               </div>
             </div>
           </ng-template>
@@ -329,15 +321,15 @@
               </button>
             </div>
             <div class="modal-body">
-              <h4 style="text-align: center;">
+              <h4 class="text-center">
                 You are going to update transaction data. Confirm operation.
               </h4>
-              <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+              <div class="align-center">
                 <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
                   (click)="modal.dismiss('Reject')">
                   Reject
                 </button>
-                <button class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
+                <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
                   Confirm
                 </button>
               </div>

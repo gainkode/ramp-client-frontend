@@ -2238,7 +2238,7 @@ export type Query = {
   /** Get common settings */
   getTextPages?: Maybe<Array<Maybe<TextPage>>>;
   /** This endpoint can be used to get all transaction life lines with their description. */
-  getTransactionLifeLines?: Maybe<TransactionHistory>;
+  getTransactionLifelines?: Maybe<TransactionHistory>;
   /** Get transaction history with filters */
   getTransactionStatusHistory: TransactionStatusHistoryListResult;
   /** This endpoint can be used to get all transaction statuses with their description */
@@ -2630,7 +2630,7 @@ export type QueryGetSupportTicketsArgs = {
 };
 
 
-export type QueryGetTransactionLifeLinesArgs = {
+export type QueryGetTransactionLifelinesArgs = {
   filter?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<OrderBy>>;
@@ -3719,6 +3719,7 @@ export type TransactionLifelineStatus = {
   __typename?: 'TransactionLifelineStatus';
   created?: Maybe<Scalars['DateTime']['output']>;
   lifelineId?: Maybe<Scalars['String']['output']>;
+  lifelineStatusDescriptor?: Maybe<TransactionStatusLifelineDescriptor>;
   resultFailureParams?: Maybe<Scalars['String']['output']>;
   resultStatusParams?: Maybe<Scalars['String']['output']>;
   resultSuccessParams?: Maybe<Scalars['String']['output']>;
@@ -3726,13 +3727,14 @@ export type TransactionLifelineStatus = {
   transactionLifelineStatusId?: Maybe<Scalars['ID']['output']>;
   transactionStatus?: Maybe<TransactionStatus>;
   transactionStatusResult?: Maybe<TransactionLifelineStatusResult>;
+  updated?: Maybe<Scalars['DateTime']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type TransactionLifelineStatusItem = {
   __typename?: 'TransactionLifelineStatusItem';
-  lifeLineStatus?: Maybe<Array<TransactionLifelineStatus>>;
   lifelineId?: Maybe<Scalars['String']['output']>;
+  lifelineStatus?: Maybe<Array<TransactionLifelineStatus>>;
 };
 
 export type TransactionLifelineStatusListResult = {
@@ -3945,6 +3947,7 @@ export type TransactionStatusDescriptor = {
   receiveLifeline?: Maybe<TransactionStatusLifelineDescriptor>;
   repeatFromStatus?: Maybe<TransactionStatus>;
   sellLifeline?: Maybe<TransactionStatusLifelineDescriptor>;
+  status?: Maybe<TransactionStatus>;
   statusType: TransactionStatusType;
   successFinalStatus?: Maybe<TransactionStatus>;
   transferLifeline?: Maybe<TransactionStatusLifelineDescriptor>;

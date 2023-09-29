@@ -287,13 +287,21 @@ ngb-alert .btn-close {
   border-bottom: 1px solid rgba(255, 255, 255, .15) !important;
 }
 
+.mat-step-header {
+	padding: 20px 5px !important;
+}
 
-
-// ng-mat-int-tel-input
+.mat-step-header .mat-step-icon {
+  background: lightgrey;
+}
 
 .country-selector {
   opacity: 1 !important;
   bottom: 8px !important;
+}
+
+.disabled {
+  pointer-events: none !important;
 }
 
 app-advanced-forms telephone-input input:not(.country-search) {
