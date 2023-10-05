@@ -3132,6 +3132,7 @@ export type SettingsCommon = {
   settingsCommonId?: Maybe<Scalars['String']['output']>;
   stoppedForServicing?: Maybe<Scalars['Boolean']['output']>;
   textPages?: Maybe<Array<Maybe<TextPage>>>;
+  transactionTypeSettings?: Maybe<Array<Maybe<TransactionTypeSetting>>>;
   userAdditionalSettings?: Maybe<Scalars['String']['output']>;
 };
 
@@ -4041,6 +4042,7 @@ export type TransactionUpdateInput = {
   status?: InputMaybe<TransactionStatus>;
   subStatus?: InputMaybe<Scalars['String']['input']>;
   transferOrderChanges?: InputMaybe<TransactionUpdateTransferOrderChanges>;
+  type?: InputMaybe<TransactionType>;
   widgetId?: InputMaybe<Scalars['String']['input']>;
   widgetUserParamsId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5082,4 +5084,10 @@ export type LiquidityProviderBalance = {
   __typename?: 'liquidityProviderBalance';
   balance?: Maybe<Scalars['Float']['output']>;
   currency?: Maybe<Scalars['String']['output']>;
+};
+
+export type TransactionTypeSetting = {
+  __typename?: 'transactionTypeSetting';
+  allowChange?: Maybe<Scalars['Boolean']['output']>;
+  transactionType?: Maybe<TransactionType>;
 };

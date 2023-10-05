@@ -1372,7 +1372,11 @@ query {
       stoppedForServicing,
       additionalSettings,
       adminAdditionalSettings,
-      userAdditionalSettings
+      userAdditionalSettings,
+      transactionTypeSettings{
+        transactionType
+        allowChange
+      }
     }
   }
 `;
@@ -2114,6 +2118,7 @@ mutation UpdateTransaction(
   $comment: String
   $widgetId: String
   $flag: Boolean
+  $type: TransactionType
 ) {
   updateTransaction(
     transactionId: $transactionId
@@ -2135,6 +2140,7 @@ mutation UpdateTransaction(
       benchmarkTransferOrderChanges: $benchmarkTransferOrder
       comment: $comment
       flag: $flag
+      type: $type
     }
   ) {
     transactionId
@@ -4232,6 +4238,7 @@ export class AdminDataService {
       recalculate: recalculateAmounts,
       flag: data.flag,
       widgetId: data.widgetId,
+      type: data.type
     };
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,

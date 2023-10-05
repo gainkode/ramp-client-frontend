@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription, map } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
-import { AccountStatus, KycStatus, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType } from 'model/generated-models';
-import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, UserStatusList } from 'model/payment.model';
+import { AccountStatus, KycStatus, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting } from 'model/generated-models';
+import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, TransactionTypeList, UserStatusList } from 'model/payment.model';
 import { TransactionItemFull } from 'model/transaction.model';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
@@ -70,6 +70,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   private amountDialogContent: any;
   private subscriptions: Subscription = new Subscription();
 
+	transactionTypes = TransactionTypeList;
   submitted = false;
   saveInProgress = false;
   flagInProgress = false;
@@ -103,6 +104,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   editableDestination = false;
   destroyed = false;
   flag = false;
+	transactionTypeSetting: TransactionTypeSetting = undefined;
 
   form = this.formBuilder.group({
   	address: [undefined],
@@ -120,7 +122,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	screeningRiskscore: [undefined],
   	screeningStatus: [undefined],
   	benchmarkTransferHash: [undefined],
-  	comment: [undefined]
+  	comment: [undefined],
+		transactionType: [undefined]
   });
 
   widgetOptions$: Observable<CommonTargetValue[]>;
@@ -223,6 +226,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
   	if (this.data) {
   		this.flag = this.data.flag === true;
+			this.form.get('transactionType')?.setValue(this.data.type);
   		this.form.get('address')?.setValue(this.data.address);
   		this.form.get('rate')?.setValue(this.data.rate);
   		this.form.get('fee')?.setValue(this.data.fees);
@@ -278,6 +282,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
   			const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
   			this.editableDestination = additionalSettings.admin?.editTransactionDestination ?? false;
+				
+				if(settingsCommon.transactionTypeSettings && settingsCommon.transactionTypeSettings.length != 0){
+					this.transactionTypeSetting = settingsCommon.transactionTypeSettings.find(item => item.transactionType == this.transactionType);
+					this.transactionTypes = this.transactionTypes.filter(item => 
+						settingsCommon.transactionTypeSettings.find(settingType => settingType.transactionType == item.id && settingType.allowChange == true)
+					)
+				}
+				
   		})
   	);
   }
@@ -308,6 +320,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			orderId: this.data?.benchmarkTransferOrderId,
   			transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
   		},
+			type: this.form.get('transactionType')?.value ?? undefined,
   		comment: this.form.get('comment')?.value ?? '',
   		flag: this.flag
   	} as Transaction;
