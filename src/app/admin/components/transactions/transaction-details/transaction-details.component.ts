@@ -247,7 +247,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
   		this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
   		if(this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
-  			this.scriningData = JSON.stringify(this.data?.screeningData?.paymentChecks[0], null, 4);
+  			this.scriningData = this.data?.screeningData?.paymentChecks[0]
   		}
   		this.form.get('comment')?.setValue(this.data.comment);
   		this.transactionStatus = this.data.status;
