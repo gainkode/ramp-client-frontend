@@ -3132,6 +3132,7 @@ export type SettingsCommon = {
   settingsCommonId?: Maybe<Scalars['String']['output']>;
   stoppedForServicing?: Maybe<Scalars['Boolean']['output']>;
   textPages?: Maybe<Array<Maybe<TextPage>>>;
+  transactionTypeSettings?: Maybe<Array<Maybe<TransactionTypeSetting>>>;
   userAdditionalSettings?: Maybe<Scalars['String']['output']>;
 };
 
@@ -4035,14 +4036,20 @@ export type TransactionUpdateInput = {
   flag?: InputMaybe<Scalars['Boolean']['input']>;
   kycStatus?: InputMaybe<TransactionKycStatus>;
   launchAfterUpdate?: InputMaybe<Scalars['Boolean']['input']>;
+  paymentOrderChanges?: InputMaybe<TransactionUpdatePaymentOrderChanges>;
   rate?: InputMaybe<Scalars['Float']['input']>;
   requestParams?: InputMaybe<Scalars['String']['input']>;
   sourceVaultId?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<TransactionStatus>;
   subStatus?: InputMaybe<Scalars['String']['input']>;
   transferOrderChanges?: InputMaybe<TransactionUpdateTransferOrderChanges>;
+  type?: InputMaybe<TransactionType>;
   widgetId?: InputMaybe<Scalars['String']['input']>;
   widgetUserParamsId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TransactionUpdatePaymentOrderChanges = {
+  originalOrderId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TransactionUpdateTransferOrderChanges = {
@@ -5082,4 +5089,10 @@ export type LiquidityProviderBalance = {
   __typename?: 'liquidityProviderBalance';
   balance?: Maybe<Scalars['Float']['output']>;
   currency?: Maybe<Scalars['String']['output']>;
+};
+
+export type TransactionTypeSetting = {
+  __typename?: 'transactionTypeSetting';
+  allowChange?: Maybe<Scalars['Boolean']['output']>;
+  transactionType?: Maybe<TransactionType>;
 };

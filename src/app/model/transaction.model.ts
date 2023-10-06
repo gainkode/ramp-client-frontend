@@ -162,7 +162,7 @@ export class TransactionItemFull {
 			}
 
 			this.comment = transactionData.comment ?? '';
-			this.paymentOrderId = transactionData.paymentOrderId ?? '-';
+			this.paymentOrderId = transactionData.paymentOrderId ?? '';
 			this.transferOrderId = data.transferOrder?.orderId ?? '';
 			this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
 			this.transferOrderHash = data.transferOrder?.transferHash ?? '';
