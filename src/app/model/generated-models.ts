@@ -4036,6 +4036,7 @@ export type TransactionUpdateInput = {
   flag?: InputMaybe<Scalars['Boolean']['input']>;
   kycStatus?: InputMaybe<TransactionKycStatus>;
   launchAfterUpdate?: InputMaybe<Scalars['Boolean']['input']>;
+  paymentOrderChanges?: InputMaybe<TransactionUpdatePaymentOrderChanges>;
   rate?: InputMaybe<Scalars['Float']['input']>;
   requestParams?: InputMaybe<Scalars['String']['input']>;
   sourceVaultId?: InputMaybe<Scalars['String']['input']>;
@@ -4045,6 +4046,10 @@ export type TransactionUpdateInput = {
   type?: InputMaybe<TransactionType>;
   widgetId?: InputMaybe<Scalars['String']['input']>;
   widgetUserParamsId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TransactionUpdatePaymentOrderChanges = {
+  originalOrderId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TransactionUpdateTransferOrderChanges = {

@@ -58,7 +58,9 @@ import {
   MessageListResult,
   QueryGetMessagesArgs,
   TransactionLifelineStatusItem,
-  TransactionLifelineStatusListResult
+  TransactionLifelineStatusListResult,
+  TransactionUpdatePaymentOrderChanges,
+  TransactionUpdateInput
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -707,6 +709,7 @@ const GET_TRANSACTIONS = gql`
           transferHash
           originalOrderId
         }
+        widgetUserParams
         benchmarkTransferOrderBlockchainLink
         code
         comment
@@ -2119,6 +2122,7 @@ mutation UpdateTransaction(
   $widgetId: String
   $flag: Boolean
   $type: TransactionType
+  $paymentOrderChanges: TransactionUpdatePaymentOrderChanges
 ) {
   updateTransaction(
     transactionId: $transactionId
@@ -2141,6 +2145,7 @@ mutation UpdateTransaction(
       comment: $comment
       flag: $flag
       type: $type
+      paymentOrderChanges: $paymentOrderChanges
     }
   ) {
     transactionId
@@ -4204,42 +4209,14 @@ export class AdminDataService {
     }));
   }
 
-  updateTransaction(data: Transaction, restartTransaction: boolean, recalculateAmounts: boolean): Observable<any> {
-    let benchmark: TransactionUpdateTransferOrderChanges | undefined = undefined;
-    let transfer: TransactionUpdateTransferOrderChanges | undefined = undefined;
-    if (data.transferOrder?.orderId !== '' && data.transferOrder?.transferHash !== '') {
-      transfer = {
-        orderId: data.transferOrder?.orderId,
-        hash: data.transferOrder?.transferHash
-      };
-    }
-    if (data.benchmarkTransferOrder?.orderId !== '' && data.benchmarkTransferOrder?.transferHash !== '') {
-      benchmark = {
-        orderId: data.benchmarkTransferOrder?.orderId,
-        hash: data.benchmarkTransferOrder?.transferHash
-      };
-    }
+  updateTransaction(transactionId: string, data: TransactionUpdateInput, restartTransaction: boolean, recalculateAmounts: boolean): Observable<any> {
     const vars = {
-      transactionId: data.transactionId,
-      currencyToSpend: data.currencyToSpend,
-      currencyToReceive: data.currencyToReceive,
-      amountToSpend: data.amountToSpend,
-      amountToReceive: data.amountToReceive,
-      rate: data.rate,
-      feeFiat: data.feeFiat,
-      destination: data.destination,
-      status: data.status,
-      kycStatus: data.kycStatus,
-      accountStatus: data.accountStatus,
-      comment: data.comment,
+      transactionId: transactionId,
       launchAfterUpdate: restartTransaction,
-      transferOrder: transfer,
-      benchmarkTransferOrder: benchmark,
       recalculate: recalculateAmounts,
-      flag: data.flag,
-      widgetId: data.widgetId,
-      type: data.type
+      ...data
     };
+    console.log(vars)
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
       variables: vars

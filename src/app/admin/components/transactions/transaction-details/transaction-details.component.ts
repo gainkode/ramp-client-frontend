@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription, map } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
-import { AccountStatus, KycStatus, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting } from 'model/generated-models';
+import { AccountStatus, KycStatus, PaymentOrder, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput } from 'model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, TransactionTypeList, UserStatusList } from 'model/payment.model';
 import { TransactionItemFull } from 'model/transaction.model';
 import { AuthService } from 'services/auth.service';
@@ -58,16 +58,19 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   private pAmountHash = 0;
   private statusChanged = false;
   private amountChanged = false;
+	private originalOrderIdChanged = false;
   private restartTransaction = false;
   private recalculateAmounts = false;
-  private transactionToUpdate: Transaction | undefined = undefined;
+  private transactionToUpdate: TransactionUpdateInput | undefined = undefined;
   private pDefaultRate = 0;
   private pCurrencies: CurrencyView[] = [];
   private deleteDialog?: NgbModalRef;
   private updateDialog?: NgbModalRef;
   private statusDialog?: NgbModalRef;
   private amountDialog?: NgbModalRef;
+	private originalOrderDialog?: NgbModalRef;
   private amountDialogContent: any;
+	private originalOrderIdDialogContent: any;
   private subscriptions: Subscription = new Subscription();
 
 	transactionTypes = TransactionTypeList;
@@ -105,6 +108,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   destroyed = false;
   flag = false;
 	transactionTypeSetting: TransactionTypeSetting = undefined;
+	originalOrderId = undefined;
 
   form = this.formBuilder.group({
   	address: [undefined],
@@ -294,14 +298,13 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
-  getTransactionToUpdate(): Transaction {
+  getTransactionToUpdate(): TransactionUpdateInput {
   	const currentRateValue = this.form.get('rate')?.value;
   	let currentRate: number | undefined = undefined;
   	if (currentRateValue !== undefined) {
   		currentRate = parseFloat(currentRateValue);
   	}
-  	const transactionToUpdate = {
-  		transactionId: this.transactionId,
+  	const transactionToUpdate: TransactionUpdateInput = {
   		destination: this.form.get('address')?.value,
   		currencyToSpend: this.form.get('currencyToSpend')?.value,
   		currencyToReceive: this.form.get('currencyToReceive')?.value,
@@ -312,18 +315,18 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		widgetId: this.form.get('widgetId')?.value,
   		kycStatus: this.form.get('kycStatus')?.value,
   		accountStatus: this.form.get('accountStatus')?.value,
-  		transferOrder: {
+  		transferOrderChanges: {
   			orderId: this.data?.transferOrderId,
-  			transferHash: this.form.get('transferHash')?.value ?? ''
+  			hash: this.form.get('transferHash')?.value ?? ''
   		},
-  		benchmarkTransferOrder: {
+  		benchmarkTransferOrderChanges: {
   			orderId: this.data?.benchmarkTransferOrderId,
-  			transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
+  			hash: this.form.get('benchmarkTransferHash')?.value ?? ''
   		},
 			type: this.form.get('transactionType')?.value ?? undefined,
   		comment: this.form.get('comment')?.value ?? '',
   		flag: this.flag
-  	} as Transaction;
+  	};
 
   	return transactionToUpdate;
   }
@@ -371,7 +374,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   updateTransaction(): void {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.updateTransaction(
-  		this.transactionToUpdate as Transaction,
+			this.transactionId,
+  		this.transactionToUpdate,
   		this.restartTransaction,
   		this.recalculateAmounts);
   	this.subscriptions.add(
@@ -434,6 +438,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			this.transactionToUpdate.feeFiat ?? 0);
   		this.statusChanged = this.pStatusHash !== statusHash;
   		this.amountChanged = this.pAmountHash !== amountHash;
+			
   		this.updateDialog = this.modalService.open(content, {
   			backdrop: 'static',
   			windowClass: 'modalCusSty',
@@ -491,26 +496,25 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   
   fastStatusChange(newStatus: TransactionStatus, content: any): void {
   	this.transactionToUpdate = {
-  		transactionId: this.transactionId,
   		status: newStatus,
   		destination: this.data?.address ?? '',
   		feeFiat: this.data?.fees ?? 0,
   		rate: undefined,
-  		currencyToSpend: this.data?.currencyToSpend ?? 0,
-  		currencyToReceive: this.data?.currencyToReceive ?? 0,
+  		currencyToSpend: this.data?.currencyToSpend ?? '',
+  		currencyToReceive: this.data?.currencyToReceive ?? '',
   		amountToSpend: this.data?.amountToSpend ?? 0,
   		kycStatus: this.data?.kycStatusValue ?? TransactionKycStatus.KycApproved,
   		accountStatus: this.data?.accountStatusValue ?? AccountStatus.Live,
-  		benchmarkTransferOrder: {
+  		benchmarkTransferOrderChanges: {
   			orderId: this.data?.benchmarkTransferOrderId,
-  			transferHash: this.data?.benchmarkTransferOrderHash
+  			hash: this.data?.benchmarkTransferOrderHash
   		},
   		comment: this.data?.comment ?? '',
-  		transferOrder: {
+  		transferOrderChanges: {
   			orderId: this.data?.transferOrderId,
-  			transferHash: this.data?.transferOrderHash
+  			hash: this.data?.transferOrderHash
   		},
-  	} as Transaction;
+  	};
   	this.amountChanged = false;
   	this.statusChanged = true;
   	this.updateDialog = this.modalService.open(content, {
@@ -530,10 +534,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-  onConfirmUpdate(statusContent: any, amountContent: any): void {
+  onConfirmUpdate(statusContent: any, amountContent: any, originalOrderIdContent: any): void {
   	this.amountDialogContent = amountContent;
+		this.originalOrderIdDialogContent = originalOrderIdContent;
   	if (this.updateDialog) {
   		this.updateDialog.close('');
+
   		if (this.statusChanged) {
   			this.statusDialog = this.modalService.open(statusContent, {
   				backdrop: 'static',
@@ -552,17 +558,38 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
+	onChangeOriginaOrderlIdConfirm(): void {
+		if(this.originalOrderDialog){
+			this.originalOrderDialog.close('');
+		}
+
+		if(this.originalOrderId){
+			this.transactionToUpdate.paymentOrderChanges = {
+				originalOrderId: this.originalOrderId
+			};
+			this.originalOrderIdChanged = true;
+			this.onChangeTransactionStatusConfirm(Number(this.restartTransaction));
+		}
+	}
+
   onChangeTransactionStatusConfirm(restartTransaction: number): void {
   	this.restartTransaction = (restartTransaction === 1);
   	if (this.statusDialog) {
   		this.statusDialog.close('');
   	}
-  	if (this.amountChanged) {
-  		this.amountDialog = this.modalService.open(this.amountDialogContent, {
+		if ((!this.data.paymentOrderId || this.data.paymentOrderId == '') && !this.originalOrderIdChanged) {
+			if(this.transactionToUpdate.status == TransactionStatus.Paid) {
+				this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
+					backdrop: 'static',
+					windowClass: 'modalCusSty',
+				});
+			}
+		}else if(this.amountChanged) {
+			this.amountDialog = this.modalService.open(this.amountDialogContent, {
   			backdrop: 'static',
   			windowClass: 'modalCusSty',
   		});
-  	} else {
+		} else {
   		this.updateTransaction();
   	}
   }

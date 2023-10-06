@@ -452,8 +452,31 @@
         Reject
       </button>
       <button class="btn btn-primary pd-x-30 mg-t-5"
-        (click)="onConfirmUpdate(status_confirm_content, amount_confirm_content)">
+        (click)="onConfirmUpdate(status_confirm_content, amount_confirm_content, originalorderid_confirm_content)">
         Confirm
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #originalorderid_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Update transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+      Original order Id
+      <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+    </label>
+    <input class="form-control" type="text"
+    [(ngModel)]="originalOrderId" required>
+
+    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+      <button class="btn btn-primary pd-x-30 mg-t-5" [disabled]="!originalOrderId" (click)="onChangeOriginaOrderlIdConfirm()">
+        Save
       </button>
     </div>
   </div>
