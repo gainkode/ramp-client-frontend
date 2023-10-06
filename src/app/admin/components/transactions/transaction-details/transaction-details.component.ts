@@ -86,7 +86,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   transactionStatuses: TransactionStatusView[] = [];
   removable = false;
   transactionId = '';
-  scriningData = '';
+  scriningData = {};
   transactionType: TransactionType = TransactionType.System;
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];

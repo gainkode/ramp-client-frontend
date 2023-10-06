@@ -349,9 +349,9 @@
       </form>
     </ng-template>
   </mat-tab>
-  <mat-tab *ngIf="data?.screeningAnswer" label="Transaction screeneng info">
+  <mat-tab *ngIf="data?.screeningAnswer" label="Transaction screening info">
     <ng-template matTabContent>
-     {{scriningData}}
+     <app-raw-json [data]="scriningData"></app-raw-json>
      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
       <h4 class="card-title2 mg-b-20 color_brown">
         {{errorMessage}}
