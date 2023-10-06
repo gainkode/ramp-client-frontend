@@ -316,21 +316,13 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   flagText(): String {
-  	return this.flag == true ? 'Unflag' : 'Flag';
-  }
-
-  activeTabInfo(): void{
-  	this.activeTab = 'info';
-  }
-
-  activeTabInfoScreening(): void{
-  	this.activeTab = 'infoScreening';
+  	return this.flag ? 'Unflag' : 'Flag';
   }
 
   flagValue(): void {
   	this.flagInProgress = true;
   	this.saveInProgress = true;
-  	this.flag = this.flag != true;
+  	this.flag = this.flag !== true;
     
   	const requestData$ = this.adminService.updateTransactionFlag(this.flag, this.transactionId);
   	this.subscriptions.add(
@@ -381,36 +373,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.submitted = true;
   	if (this.form.valid) {
   		this.transactionToUpdate = this.getTransactionToUpdate();
-  		// const currentRateValue = this.form.get('rate')?.value;
-  		// let currentRate: number | undefined = undefined;
-  		// if (currentRateValue !== undefined) {
-  		//   currentRate = parseFloat(currentRateValue);
-  		// }
-  		// // if (currentRate === this.pDefaultRate) {
-  		// //   currentRate = undefined;
-  		// // }
-  		// this.transactionToUpdate = {
-  		//   transactionId: this.transactionId,
-  		//   destination: this.form.get('address')?.value,
-  		//   currencyToSpend: this.form.get('currencyToSpend')?.value,
-  		//   currencyToReceive: this.form.get('currencyToReceive')?.value,
-  		//   amountToSpend: parseFloat(this.form.get('amountToSpend')?.value ?? '0'),
-  		//   rate: currentRate,
-  		//   feeFiat: parseFloat(this.form.get('fee')?.value ?? '0'),
-  		//   status: this.form.get('transactionStatus')?.value,
-  		//   kycStatus: this.form.get('kycStatus')?.value,
-  		//   accountStatus: this.form.get('accountStatus')?.value,
-  		//   transferOrder: {
-  		//     orderId: this.data?.transferOrderId,
-  		//     transferHash: this.form.get('transferHash')?.value ?? ''
-  		//   },
-  		//   benchmarkTransferOrder: {
-  		//     orderId: this.data?.benchmarkTransferOrderId,
-  		//     transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
-  		//   },
-  		//   comment: this.form.get('comment')?.value ?? '',
-  		//   flag: this.flag
-  		// } as Transaction;
+  		
   		const statusHash = getTransactionStatusHash(
   			this.transactionToUpdate.status,
   			this.transactionToUpdate.kycStatus ?? TransactionKycStatus.KycWaiting,

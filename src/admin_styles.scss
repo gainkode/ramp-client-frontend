@@ -295,6 +295,14 @@ ngb-alert .btn-close {
   background: lightgrey;
 }
 
+.mat-stepper-vertical-line::before {
+  border-left-width: 0px !important;
+}
+
+.mat-vertical-content-container {
+  margin-left: 10px !important;
+}
+
 .country-selector {
   opacity: 1 !important;
   bottom: 8px !important;

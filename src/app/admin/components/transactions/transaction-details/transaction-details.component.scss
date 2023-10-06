@@ -1,4 +1,10 @@
 ::ng-deep{
+    .mat-mdc-tab.mdc-tab {
+        padding: 0 10px !important;
+        .mdc-tab__text-label {
+            font-size: 14px !important;
+        }
+    }
     .__info-tab-container {
         display: flex;
         flex-direction: row;
@@ -126,3 +132,4 @@
         z-index: 0 !important;
     }
 }
+

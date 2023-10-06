@@ -1,7 +1,7 @@
 <app-admin-page-header
   [title]="'Transaction Lifeline'"
   [items]="['Home', 'Transactions']"
-  [active_item]="'Transaction (ID) '"
+  [active_item]="'Transaction: ' + transactionId"
 >
 </app-admin-page-header>
 
@@ -13,8 +13,8 @@
   </mat-card>
   <mat-card class="mb-3" *ngIf="liflinesStatusItems.length">
     <mat-card-content>
-      Creating: {{ liflinesStatusItems[0].lifelineId }}
-
+      Creating: <span class="lifeLine-label">{{ liflinesStatusItems[0].lifelineId }}</span> 
+ 
       <mat-stepper [linear]="false" #stepper labelPosition="bottom">
         <mat-step
           *ngFor="let status of liflinesStatusItems[0].lifelineStatus" 
@@ -25,40 +25,335 @@
             {{ status.lifelineStatusDescriptor.statusName || status.transactionStatus }}
           </ng-template>
 
-          <mat-list class="transactionLifelineStatus__list">
-            <mat-list-item>
-              <span matListItemTitle>ID:</span>
-              <span matListItemLine class="transactionLifelineStatus__list-matListItemLine">
-                {{ status.transactionLifelineStatusId }} 
-                <mat-icon class="mat-icon-copy" (click)="copyParameter(status.transactionLifelineStatusId)">file_copy</mat-icon></span>
-            </mat-list-item>
-            <mat-list-item>
-              <span matListItemTitle>Created:</span>
-              <span matListItemLine>{{ status.created | date : 'yyyy-MM-dd hh:mm:ss ' }}</span>
-            </mat-list-item>
+          <mat-tab-group animationDuration="300ms" mat-stretch-tabs="false">
+            <mat-tab label="General Details">
+              <div class="overview__wrapper">
+                <div class="overview__data">
+                  <div class="overview__container">
+                    <p>
+                      ID: 
+                      <span> 
+                        {{ status.transactionLifelineStatusId }} 
+                        <mat-icon class="mat-icon-copy" (click)="copyParameter(status.transactionLifelineStatusId)">file_copy</mat-icon>
+                      </span>
+                    </p>
+                    <p>
+                      Created: <span>{{ status.created | date : 'yyyy-MM-dd hh:mm:ss ' }}</span>
+                    </p>
+                    <p>
+                      Status Result: <span>
+                        {{ status.transactionStatusResult}}
 
-            <mat-list-item>
-              <span matListItemTitle>Status Result:</span>
-              <span matListItemLine>{{ status.transactionStatusResult }} 
-                <button type="button" [disabled]="isJsonRowButtonDisabled(status)" (click)="onOpenJsonParameter(status)" class="view-json">
-                  View Raw JSON
-                </button>
-              </span>
-            </mat-list-item>
+                        <button type="button" (click)="onOpenJsonParameter(status)" class="view-json">
+                          View Raw JSON
+                        </button>
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+            <ng-container *ngIf="status?.['transactionStatusResultParsed']?.details?.paymentOrder as paymentOrder">
 
-          </mat-list>
+              <mat-tab label="Payment Order">
+                <div class="overview__wrapper">
+                  <div class="overview__data">
+                    <div class="overview__container">
+                      <h4 class="overview__title">Order Details</h4>
+                      <p>
+                        Provider: <span>{{ paymentOrder.provider }}</span>
+                      </p>
+                      <p>
+                        Original Order Id: <span>{{ paymentOrder.originalOrderId }}</span>
+                      </p>
+                      <p>
+                        Created: <span>{{ paymentOrder.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Status: <span>{{ paymentOrder.status }}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="overview__data">
+                    <div class="overview__container">
+                      <h4 class="overview__title">Payment Details</h4>
+                      <p>
+                        Bank Name: <span>{{ paymentOrder.paymentBankName || 'N/A' }}</span>
+                      </p>
+                      <p>
+                        Card Holder Name: <span>{{ paymentOrder.paymentCardHolderName || 'N/A'}}</span>
+                      </p>
+                      <p>
+                        Card Type: <span>{{ paymentOrder.paymentCardType || 'N/A' }}</span>
+                      </p>
+                      <p>
+                        Processor Name: <span>{{ paymentOrder.paymentProcessorName || 'N/A' }}</span>
+                      </p>
+                      <p>
+                        Bin: <span>{{ paymentOrder.paymentBin || 'N/A' }}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="overview__data" *ngIf="paymentOrder.preauthOperationSn">
+                    <div class="overview__container">
+                      <h4 class="overview__title">Preauth Operation</h4>
+                      <p>
+                        Original Order Id: <span>{{ paymentOrder.preauthOperation?.originalOrderId }}</span>
+                      </p>
+                      <p>
+                        Created: <span>{{ paymentOrder.preauthOperation?.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Status: <span>{{ paymentOrder.preauthOperation?.status + (paymentOrder.preauthOperation?.statusReason) }}</span>
+                      </p>
+                      <p>
+                        Errors: <span>{{ paymentOrder.preauthOperation?.errorMessage }}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="overview__data" *ngIf="paymentOrder.captureOperationSn">
+                    <div class="overview__container">
+                      <h4 class="overview__title">Capture Operation</h4>
+                      <p>
+                        Errors: <span>{{ paymentOrder.captureOperationSn?.errorMessage }}</span>
+                      </p>
+                      <p>
+                        Original Order Id: <span>{{ paymentOrder.captureOperationSn?.originalOrderId }}</span>
+                      </p>
+                      <p>
+                        Created: <span>{{ paymentOrder.captureOperationSn?.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Status: <span>{{ paymentOrder.captureOperationSn?.status || paymentOrder.captureOperationSn?.statusReason }}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="overview__data" *ngIf="paymentOrder.refundOperationSn">
+                    <div class="overview__container">
+                      <h4 class="overview__title">Refund Operation</h4>
+                      <p>
+                        Errors: <span>{{ paymentOrder.refundOperationSn?.errorMessage }}</span>
+                      </p>
+                      <p>
+                        Original Order Id: <span>{{ paymentOrder.refundOperationSn?.originalOrderId }}</span>
+                      </p>
+                      <p>
+                        Created: <span>{{ paymentOrder.refundOperationSn?.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Status: <span>{{ paymentOrder.refundOperationSn?.status || paymentOrder.refundOperationSn?.statusReason }}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+            
+            </ng-container>
+
+            <ng-container *ngIf="status?.['transactionStatusResultParsed']?.details?.liquidityOrder as liquidityOrder">
+
+              <mat-tab label="Liquidity Order">
+                <div class="overview__wrapper">
+                  <div class="overview__data">
+                    <div class="overview__container">
+                      <h4 class="overview__title">Order Details</h4>
+                      <p>
+                        Provider: <span>{{ liquidityOrder.provider }}</span>
+                      </p>
+                      <p>
+                        Original Order Id: <span>{{ liquidityOrder.originalOrderId }}</span>
+                      </p>
+                      <p>
+                        Created: <span>{{ liquidityOrder.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Published: <span>{{ liquidityOrder.published | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Executed: <span>{{ liquidityOrder.executed | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Status: <span>{{ liquidityOrder.status }}</span>
+                      </p>
+                      <p>
+                        State: <span>{{ liquidityOrder.state }}</span>
+                      </p>
+                      <p>
+                        Symbol: <span>{{ liquidityOrder.symbol }}</span>
+                      </p>
+                      <p>
+                        Side: <span>{{ liquidityOrder.side }}</span>
+                      </p>
+                      <p>
+                        Type: <span>{{ liquidityOrder.type }}</span>
+                      </p>
+                      <p>
+                        Price: <span>{{ liquidityOrder.price }}</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+            
+            </ng-container>
+
+            <!-- <mat-icon>update</mat-icon> -->
+
+
+            <ng-container *ngIf="status?.['transactionStatusResultParsed']?.details?.benchmarkTransferOrder as benchmarkTransferOrder">
+
+              <mat-tab label="Benchmark Transfer Order">
+                <div class="overview__wrapper">
+                  <div class="overview__data">
+                    <div class="overview__container">
+                      <h4 class="overview__title">Order Details</h4>
+                      <p>
+                        Provider: <span>{{ benchmarkTransferOrder.provider }}</span>
+                      </p>
+                      <p>
+                        Original Order ID: <span>{{ benchmarkTransferOrder.originalOrderId }}</span>
+                      </p>
+                      <p>
+                        Created: <span>{{ benchmarkTransferOrder.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Published: <span>{{ benchmarkTransferOrder.published | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Executed: <span>{{ benchmarkTransferOrder.executed | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Type: <span>{{ benchmarkTransferOrder.type }}</span>
+                      </p>
+                      <p>
+                        Status: <span>{{ benchmarkTransferOrder.status }}</span>
+                      </p>
+                      <p>
+                        Sub-Status: <span>{{ benchmarkTransferOrder.subStatus }}</span>
+                      </p>
+                 
+                      <p>
+                        Destination: <span>{{ benchmarkTransferOrder.destination }}</span>
+                      </p>
+                      <p>
+                        Source Vault ID: <span>{{ benchmarkTransferOrder.sourceVaultId }}</span>
+                      </p>
+                      <p>
+                        Transfer Hash: <span>{{ benchmarkTransferOrder.transferHash }}</span>
+                      </p>
+                      <p>
+                        Fee Currency: <span>{{ benchmarkTransferOrder.feeCurrency || 'N/A' }}</span>
+                      </p>
+                      <p>
+                        Crypto Invoice Name: <span>{{ benchmarkTransferOrder.cryptoInvoiceName }}</span>
+                      </p>
+                      <p>
+                        Screening Answer: <span>{{ benchmarkTransferOrder.screeningAnswer }}</span>
+                      </p>
+                      <p>
+                        Screening Risk Score: <span>{{ benchmarkTransferOrder.screeningRiskscore }}</span>
+                      </p>
+                      <p>
+                        Screening Status: <span>{{ benchmarkTransferOrder.screeningStatus }}</span>
+                      </p>
+                      <p>
+                        Final Benchmark Amount: <span>{{ benchmarkTransferOrder.finalBenchmarkAmount }}</span>
+                      </p>
+                      <p>
+                        Benchmark Amount: <span>{{ benchmarkTransferOrder.benchmarkAmount }}</span>
+                      </p>
+                      <p>
+                        Benchmark Amount to Remain: <span>{{ benchmarkTransferOrder.benchmarkAmountToRemain }}</span>
+                      </p>
+                      <p>
+                        Liquidity Provider Balance: <span>{{ benchmarkTransferOrder.liquidityProviderBalance }}</span>
+                      </p>
+
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+            </ng-container>
+
+            <ng-container *ngIf="status?.['transactionStatusResultParsed']?.details?.transferOrder as transferOrder">
+
+              <mat-tab label="Transfer Order">
+                <div class="overview__wrapper">
+                  <div class="overview__data">
+                    <div class="overview__container">
+                      <h4 class="overview__title">Order Details</h4>
+                      <p>
+                        Provider: <span>{{ transferOrder.provider }}</span>
+                      </p>
+                      <p>
+                        Original Order ID: <span>{{ transferOrder.originalOrderId }}</span>
+                      </p>
+                      <p>
+                        Created: <span>{{ transferOrder.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Published: <span>{{ transferOrder.published | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Executed: <span>{{ transferOrder.executed | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                      </p>
+                      <p>
+                        Type: <span>{{ transferOrder.type }}</span>
+                      </p>
+                      <p>
+                        Status: <span>{{ transferOrder.status }}</span>
+                      </p>
+                      <p>
+                        Sub-Status: <span>{{ transferOrder.subStatus }}</span>
+                      </p>
+                      <p>
+                        Destination: <span>{{ transferOrder.destination }}</span>
+                      </p>
+                      <p>
+                        Source Vault ID: <span>{{ transferOrder.sourceVaultId }}</span>
+                      </p>
+                      <p>
+                        Transfer Hash: <span>{{ transferOrder.transferHash }}</span>
+                      </p>
+                      <p>
+                        Fee Currency: <span>{{ transferOrder.feeCurrency || 'N/A' }}</span>
+                      </p>
+                      <p>
+                        Crypto Invoice Name: <span>{{ transferOrder.cryptoInvoiceName }}</span>
+                      </p>
+                      <p>
+                        Screening Answer: <span>{{ transferOrder.screeningAnswer }}</span>
+                      </p>
+                      <p>
+                        Screening Risk Score: <span>{{ transferOrder.screeningRiskscore }}</span>
+                      </p>
+                      <p>
+                        Screening Status: <span>{{ transferOrder.screeningStatus }}</span>
+                      </p>
+
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+            </ng-container>
+
+          </mat-tab-group>
         </mat-step>
 
         <ng-template matStepperIcon="edit">
-          <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+          <mat-icon class="tx-success tx-xs-bold">check_circle</mat-icon>
         </ng-template>
 
         <ng-template matStepperIcon="done">
-          <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+          <mat-icon class="tx-success tx-xs-bold">check_circle</mat-icon>
         </ng-template>
 
         <ng-template matStepperIcon="success">
-          <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
+          <mat-icon class="tx-success tx-xs-bold">check_circle</mat-icon>
         </ng-template>
         
       </mat-stepper>
@@ -69,12 +364,12 @@
     <mat-card-content>
       Updating
 
-      <mat-vertical-stepper [linear]="false" #stepper>
+      <mat-vertical-stepper [linear]="false">
         <mat-step *ngFor="let statusItem of liflinesStatusItems.slice(1);">
           <ng-template matStepLabel>
-            {{ statusItem.lifelineId}}
+            <span class="lifeLine-label">{{ statusItem.lifelineId}}</span> 
           </ng-template>
-          <mat-stepper [linear]="false" #stepperw labelPosition="bottom">
+          <mat-stepper [linear]="false" #updatingStepper labelPosition="bottom" animationDuration="300">
             <mat-step
               *ngFor="let lineStatus of statusItem.lifelineStatus" 
               [editable]="lineStatus.transactionLifelineStatusId"
@@ -85,39 +380,333 @@
                 {{ lineStatus.lifelineStatusDescriptor.statusName || lineStatus.transactionStatus }}
               </ng-template>
 
-              <mat-list class="transactionLifelineStatus__list">
-                <mat-list-item>
-                  <span matListItemTitle>ID:</span>
-                  <span matListItemLine class="transactionLifelineStatus__list-matListItemLine">
-                    {{ lineStatus.transactionLifelineStatusId }} 
-                    <mat-icon class="mat-icon-copy" (click)="copyParameter(lineStatus.transactionLifelineStatusId)">file_copy</mat-icon></span>
-                </mat-list-item>
-                <mat-list-item>
-                  <span matListItemTitle>Created:</span>
-                  <span matListItemLine>{{ lineStatus.created | date : 'yyyy-MM-dd hh:mm:ss ' }}</span>
-                </mat-list-item>
-                <mat-list-item>
-                  <span matListItemTitle>Status Result:</span>
-                  <span matListItemLine>{{ lineStatus.transactionStatusResult }} 
-                    <button type="button" [disabled]="isJsonRowButtonDisabled(lineStatus)" (click)="onOpenJsonParameter(lineStatus)" class="view-json">
-                      View Raw JSON
-                    </button>
-                  </span>
-                </mat-list-item>
-              </mat-list>
+              <mat-tab-group animationDuration="300ms" mat-stretch-tabs="false">
+                <mat-tab label="General Details">
+                  <div class="overview__wrapper">
+                    <div class="overview__data">
+                      <div class="overview__container">
+                        <p>
+                          ID: 
+                          <span> 
+                            {{ lineStatus.transactionLifelineStatusId }} 
+                            <mat-icon class="mat-icon-copy" (click)="copyParameter(lineStatus.transactionLifelineStatusId)">file_copy</mat-icon>
+                          </span>
+                        </p>
+                        <p>
+                          Created: <span>{{ lineStatus.created | date : 'yyyy-MM-dd hh:mm:ss ' }}</span>
+                        </p>
+                        <p>
+                          Status Result: <span>
+                            {{ lineStatus.transactionStatusResult}}
+    
+                            <button type="button" (click)="onOpenJsonParameter(lineStatus)" class="view-json">
+                              View Raw JSON
+                            </button>
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </mat-tab>
+                <ng-container *ngIf="lineStatus?.['transactionStatusResultParsed']?.details?.paymentOrder as paymentOrder">
+    
+                  <mat-tab label="Payment Order">
+                    <div class="overview__wrapper">
+                      <div class="overview__data">
+                        <div class="overview__container">
+                          <h4 class="overview__title">Order Details</h4>
+                          <p>
+                            Provider: <span>{{ paymentOrder.provider }}</span>
+                          </p>
+                          <p>
+                            Original Order Id: <span>{{ paymentOrder.originalOrderId }}</span>
+                          </p>
+                          <p>
+                            Created: <span>{{ paymentOrder.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Status: <span>{{ paymentOrder.status }}</span>
+                          </p>
+                        </div>
+                      </div>
+    
+                      <div class="overview__data">
+                        <div class="overview__container">
+                          <h4 class="overview__title">Payment Details</h4>
+                          <p>
+                            Bank Name: <span>{{ paymentOrder.paymentBankName || 'N/A' }}</span>
+                          </p>
+                          <p>
+                            Card Holder Name: <span>{{ paymentOrder.paymentCardHolderName || 'N/A'}}</span>
+                          </p>
+                          <p>
+                            Card Type: <span>{{ paymentOrder.paymentCardType || 'N/A' }}</span>
+                          </p>
+                          <p>
+                            Processor Name: <span>{{ paymentOrder.paymentProcessorName || 'N/A' }}</span>
+                          </p>
+                          <p>
+                            Bin: <span>{{ paymentOrder.paymentBin || 'N/A' }}</span>
+                          </p>
+                        </div>
+                      </div>
+    
+                      <div class="overview__data" *ngIf="paymentOrder.preauthOperationSn">
+                        <div class="overview__container">
+                          <h4 class="overview__title">Preauth Operation</h4>
+                          <p>
+                            Original Order Id: <span>{{ paymentOrder.preauthOperation?.originalOrderId }}</span>
+                          </p>
+                          <p>
+                            Created: <span>{{ paymentOrder.preauthOperation?.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Status: <span>{{ paymentOrder.preauthOperation?.status + (paymentOrder.preauthOperation?.statusReason) }}</span>
+                          </p>
+                          <p>
+                            Errors: <span>{{ paymentOrder.preauthOperation?.errorMessage }}</span>
+                          </p>
+                        </div>
+                      </div>
+    
+                      <div class="overview__data" *ngIf="paymentOrder.captureOperationSn">
+                        <div class="overview__container">
+                          <h4 class="overview__title">Capture Operation</h4>
+                          <p>
+                            Errors: <span>{{ paymentOrder.captureOperationSn?.errorMessage }}</span>
+                          </p>
+                          <p>
+                            Original Order Id: <span>{{ paymentOrder.captureOperationSn?.originalOrderId }}</span>
+                          </p>
+                          <p>
+                            Created: <span>{{ paymentOrder.captureOperationSn?.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Status: <span>{{ paymentOrder.captureOperationSn?.status || paymentOrder.captureOperationSn?.statusReason }}</span>
+                          </p>
+                        </div>
+                      </div>
+    
+                      <div class="overview__data" *ngIf="paymentOrder.refundOperationSn">
+                        <div class="overview__container">
+                          <h4 class="overview__title">Refund Operation</h4>
+                          <p>
+                            Errors: <span>{{ paymentOrder.refundOperationSn?.errorMessage }}</span>
+                          </p>
+                          <p>
+                            Original Order Id: <span>{{ paymentOrder.refundOperationSn?.originalOrderId }}</span>
+                          </p>
+                          <p>
+                            Created: <span>{{ paymentOrder.refundOperationSn?.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Status: <span>{{ paymentOrder.refundOperationSn?.status || paymentOrder.refundOperationSn?.statusReason }}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </mat-tab>
+                
+                </ng-container>
+    
+                <ng-container *ngIf="lineStatus?.['transactionStatusResultParsed']?.details?.liquidityOrder as liquidityOrder">
+    
+                  <mat-tab label="Liquidity Order">
+                    <div class="overview__wrapper">
+                      <div class="overview__data">
+                        <div class="overview__container">
+                          <h4 class="overview__title">Order Details</h4>
+                          <p>
+                            Provider: <span>{{ liquidityOrder.provider }}</span>
+                          </p>
+                          <p>
+                            Original Order Id: <span>{{ liquidityOrder.originalOrderId }}</span>
+                          </p>
+                          <p>
+                            Created: <span>{{ liquidityOrder.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Published: <span>{{ liquidityOrder.published | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Executed: <span>{{ liquidityOrder.executed | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Status: <span>{{ liquidityOrder.status }}</span>
+                          </p>
+                          <p>
+                            State: <span>{{ liquidityOrder.state }}</span>
+                          </p>
+                          <p>
+                            Symbol: <span>{{ liquidityOrder.symbol }}</span>
+                          </p>
+                          <p>
+                            Side: <span>{{ liquidityOrder.side }}</span>
+                          </p>
+                          <p>
+                            Type: <span>{{ liquidityOrder.type }}</span>
+                          </p>
+                          <p>
+                            Price: <span>{{ liquidityOrder.price }}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </mat-tab>
+                
+                </ng-container>
+    
+                <ng-container *ngIf="lineStatus?.['transactionStatusResultParsed']?.details?.benchmarkTransferOrder as benchmarkTransferOrder">
+    
+                  <mat-tab label="Benchmark Transfer Order">
+                    <div class="overview__wrapper">
+                      <div class="overview__data">
+                        <div class="overview__container">
+                          <h4 class="overview__title">Order Details</h4>
+                          <p>
+                            Provider: <span>{{ benchmarkTransferOrder.provider }}</span>
+                          </p>
+                          <p>
+                            Original Order ID: <span>{{ benchmarkTransferOrder.originalOrderId }}</span>
+                          </p>
+                          <p>
+                            Created: <span>{{ benchmarkTransferOrder.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Published: <span>{{ benchmarkTransferOrder.published | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Executed: <span>{{ benchmarkTransferOrder.executed | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Type: <span>{{ benchmarkTransferOrder.type }}</span>
+                          </p>
+                          <p>
+                            Status: <span>{{ benchmarkTransferOrder.status }}</span>
+                          </p>
+                          <p>
+                            Sub-Status: <span>{{ benchmarkTransferOrder.subStatus }}</span>
+                          </p>
+                     
+                          <p>
+                            Destination: <span>{{ benchmarkTransferOrder.destination }}</span>
+                          </p>
+                          <p>
+                            Source Vault ID: <span>{{ benchmarkTransferOrder.sourceVaultId }}</span>
+                          </p>
+                          <p>
+                            Transfer Hash: <span>{{ benchmarkTransferOrder.transferHash }}</span>
+                          </p>
+                          <p>
+                            Fee Currency: <span>{{ benchmarkTransferOrder.feeCurrency || 'N/A' }}</span>
+                          </p>
+                          <p>
+                            Crypto Invoice Name: <span>{{ benchmarkTransferOrder.cryptoInvoiceName }}</span>
+                          </p>
+                          <p>
+                            Screening Answer: <span>{{ benchmarkTransferOrder.screeningAnswer }}</span>
+                          </p>
+                          <p>
+                            Screening Risk Score: <span>{{ benchmarkTransferOrder.screeningRiskscore }}</span>
+                          </p>
+                          <p>
+                            Screening Status: <span>{{ benchmarkTransferOrder.screeningStatus }}</span>
+                          </p>
+                          <p>
+                            Final Benchmark Amount: <span>{{ benchmarkTransferOrder.finalBenchmarkAmount }}</span>
+                          </p>
+                          <p>
+                            Benchmark Amount: <span>{{ benchmarkTransferOrder.benchmarkAmount }}</span>
+                          </p>
+                          <p>
+                            Benchmark Amount to Remain: <span>{{ benchmarkTransferOrder.benchmarkAmountToRemain }}</span>
+                          </p>
+                          <p>
+                            Liquidity Provider Balance: <span>{{ benchmarkTransferOrder.liquidityProviderBalance }}</span>
+                          </p>
+    
+                        </div>
+                      </div>
+                    </div>
+                  </mat-tab>
+                </ng-container>
+    
+                <ng-container *ngIf="lineStatus?.['transactionStatusResultParsed']?.details?.transferOrder as transferOrder">
+    
+                  <mat-tab label="Transfer Order">
+                    <div class="overview__wrapper">
+                      <div class="overview__data">
+                        <div class="overview__container">
+                          <h4 class="overview__title">Order Details</h4>
+                          <p>
+                            Provider: <span>{{ transferOrder.provider }}</span>
+                          </p>
+                          <p>
+                            Original Order ID: <span>{{ transferOrder.originalOrderId }}</span>
+                          </p>
+                          <p>
+                            Created: <span>{{ transferOrder.created | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Published: <span>{{ transferOrder.published | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Executed: <span>{{ transferOrder.executed | date : 'yyyy-MM-dd hh:mm:ss' }}</span>
+                          </p>
+                          <p>
+                            Type: <span>{{ transferOrder.type }}</span>
+                          </p>
+                          <p>
+                            Status: <span>{{ transferOrder.status }}</span>
+                          </p>
+                          <p>
+                            Sub-Status: <span>{{ transferOrder.subStatus }}</span>
+                          </p>
+                          <p>
+                            Destination: <span>{{ transferOrder.destination }}</span>
+                          </p>
+                          <p>
+                            Source Vault ID: <span>{{ transferOrder.sourceVaultId }}</span>
+                          </p>
+                          <p>
+                            Transfer Hash: <span>{{ transferOrder.transferHash }}</span>
+                          </p>
+                          <p>
+                            Fee Currency: <span>{{ transferOrder.feeCurrency || 'N/A' }}</span>
+                          </p>
+                          <p>
+                            Crypto Invoice Name: <span>{{ transferOrder.cryptoInvoiceName }}</span>
+                          </p>
+                          <p>
+                            Screening Answer: <span>{{ transferOrder.screeningAnswer }}</span>
+                          </p>
+                          <p>
+                            Screening Risk Score: <span>{{ transferOrder.screeningRiskscore }}</span>
+                          </p>
+                          <p>
+                            Screening Status: <span>{{ transferOrder.screeningStatus }}</span>
+                          </p>
+    
+                        </div>
+                      </div>
+                    </div>
+                  </mat-tab>
+                </ng-container>
+    
+              </mat-tab-group>
             </mat-step>
 
-          <ng-template matStepperIcon="edit">
-            <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
-          </ng-template>
-  
-          <ng-template matStepperIcon="done">
-            <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
-          </ng-template>
-  
-          <ng-template matStepperIcon="success">
-            <mat-icon class="tx-success tx-xs-bold">done</mat-icon>
-          </ng-template>
+            <ng-template matStepperIcon="edit">
+              <mat-icon class="tx-success tx-xs-bold">check_circle</mat-icon>
+            </ng-template>
+    
+            <ng-template matStepperIcon="done">
+              <mat-icon class="tx-success tx-xs-bold">check_circle</mat-icon>
+            </ng-template>
+    
+            <ng-template matStepperIcon="success">
+              <mat-icon class="tx-success tx-xs-bold">check_circle</mat-icon>
+            </ng-template>
           
           </mat-stepper>
         </mat-step>

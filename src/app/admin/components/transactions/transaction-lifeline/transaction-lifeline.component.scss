@@ -1,21 +1,39 @@
-::ng-deep .mat-step-header[aria-labelledby="disabled_af"] {
+@import "colors";
+
+:host ::ng-deep .mat-step-header[aria-labelledby="disabled_af"] {
     pointer-events: none !important;
     cursor: not-allowed;
     opacity: 0.6
 }
 
-.transactionLifelineStatus__list {
-    margin-left: -30px;
-    margin-top: -20px;
-    &-matListItemLine {
-        display: flex;
-        align-items: center;
-    }
-    .mat-icon-copy {
-        margin-left: 5px;
-        font-size: 16px;
-        cursor: pointer;
-    }
+:host ::ng-deep .mat-horizontal-content-container {
+    background-color: #e8edf2;
+}
+
+:host ::ng-deep .mat-step-label-selected {
+    color: $color_main_blue_800 !important;
+}
+
+:host ::ng-deep .mat-step-icon-state-selected,
+:host ::ng-deep .mat-step-icon-state-done,
+:host ::ng-deep .mat-step-icon-state-edit,
+:host ::ng-deep .mat-step-icon-state-success {
+  background: transparent !important;
+
+  .mat-icon {
+    font-size: 24px !important;
+    height: 24px !important;
+    width: 24px !important;
+  }
+}
+
+.mat-icon-copy {
+    position: relative;
+    top: 10px;
+    color: rgba(0, 0, 0, 0.54);
+    margin-left: 5px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .view-json {
@@ -31,4 +49,61 @@
     &:disabled {
         opacity: 0.5;
     }
+}
+
+.lifeLine-label {
+    color: rgba(0, 0, 0, 0.54); 
+    font-weight: 400;
+    font-size: 13px;
+}
+
+.overview {
+	&__wrapper {
+		display: grid;
+		grid-template-columns: auto auto auto auto auto 1fr;
+		grid-gap: 15px;
+		padding: 15px 0;
+	}
+
+	&__data {
+		& p {
+			margin-bottom: 3px;
+            font-size: 14px;
+            span {
+                font-size: 14px;
+            }
+		}
+	}
+
+	&__container {
+		height: 100%;
+		padding: 15px;
+		background: #f6f7f9;
+		border-radius: 5px;
+
+		a {
+			letter-spacing: normal;
+		}
+	}
+
+	&__title {
+		font-size: 16px;
+		color: #001f38;
+        font-weight: 500;
+        margin-bottom: 5px;
+	}
+
+}
+
+@media all and (max-width: 991px) {
+	.overview {
+		&__wrapper {
+			grid-template-columns: 1fr;
+			grid-gap: 0;
+		}
+
+		&__data {
+			display: flex;
+		}
+	}
 }

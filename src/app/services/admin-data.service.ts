@@ -810,6 +810,7 @@ const GET_TRANSACTIONS = gql`
         verifyWhenPaid        
         widget
         widgetId
+        widgetUserParams
         screeningAnswer
         screeningRiskscore
         screeningStatus
