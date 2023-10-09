@@ -28,7 +28,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   	'users'
   ];
   displayedColumns: string[] = [
-  	'transactionCode', 'created', 'userEmail', 'changedBy', 'newStatus', 'oldStatus', 'newStatusReason', 'transactionId'
+  	'transactionCode', 'created', 'userEmail', 'changedBy', 'oldStatus', 'newStatus', 'newStatusReason', 'transactionId'
   ];
   inProgress = false;
   permission = 0;

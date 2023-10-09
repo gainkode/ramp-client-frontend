@@ -7,7 +7,7 @@
       <div class="card-body">
         <div class="table-responsive">
           <div class="table-button-container">
-            <button (click)="refresh()" class="btn btn-primary me-2">
+            <button type="button" (click)="refresh()" class="btn btn-primary me-2">
               Refresh
             </button>
           </div>
@@ -55,28 +55,24 @@
                   {{element.user_email}} </td>
               </ng-container>
 
-              <!-- Email Column -->
-              <ng-container matColumnDef="newStatus">
-                <th mat-header-cell *matHeaderCellDef>New Status</th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
-                  {{element.newStatus}} </td>
-              </ng-container>
-
-              <!-- Account Status Column -->
               <ng-container matColumnDef="oldStatus">
                 <th mat-header-cell *matHeaderCellDef>Old Status</th>
                 <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
                   {{element.oldStatus}} </td>
               </ng-container>
 
-              <!-- Transaction Type Column -->
+              <ng-container matColumnDef="newStatus">
+                <th mat-header-cell *matHeaderCellDef>New Status</th>
+                <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
+                  {{element.newStatus}} </td>
+              </ng-container>
+
               <ng-container matColumnDef="newStatusReason">
                 <th mat-header-cell mat-sort-header *matHeaderCellDef>Status Reason</th>
                 <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
                   {{element.newStatusReason}} </td>
               </ng-container>
 
-              <!-- Sender Column -->
               <ng-container matColumnDef="transactionId">
                 <th mat-header-cell *matHeaderCellDef>Transaction Id</th>
                 <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListDataColumnStyle">
