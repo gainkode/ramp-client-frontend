@@ -22,33 +22,34 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   @ViewChild(MatSort) sort!: MatSort;
 
   filterFields = [
-    'accountType',
-    'accountMode',
-    'country',
-    'tier',
-    'transactionKycStatus',
-    'users',
-    'widgetName',
-    'search',
-		'from',
-    'source',
-    'createdDate',
-    'completedDate',
-    'paymentInstrument',
-    'transactionIds',
-    'transactionType',
-    'transactionStatus',
-    'walletAddress',
-    'fiatCurrency',
-    'verifyWhenPaid',
-    'transactionFlag',
-    'preauthFlag'
+  	'accountType',
+  	'accountMode',
+  	'country',
+  	'tier',
+  	'transactionKycStatus',
+  	'users',
+  	'widgetName',
+  	'search',
+  	'from',
+  	'source',
+  	'createdDate',
+  	'completedDate',
+  	'paymentInstrument',
+  	'transactionIds',
+  	'transactionType',
+  	'transactionStatus',
+  	'walletAddress',
+  	'fiatCurrency',
+  	'verifyWhenPaid',
+  	'transactionFlag',
+  	'preauthFlag'
   ];
   displayedColumns: string[] = [
   	'details', 'code', 'created', 'accountName', 'email', 'accountStatus', 'type', 'widgetName', 'from', 'to',
   	'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
   	'address', 'instrument', 'paymentProvider', 'status', 'userType', 'source', 'kycStatus', 'id'
   ];
+  isScreeningInfo = false;
   inProgress = false;
   permission = 0;
   unbenchmarkDialog?: NgbModalRef;
@@ -63,7 +64,6 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
-  activeTab = 'info';
   adminAdditionalSettings: Record<string, any> = {};
   fiatCurrencies: Array<CurrencyView> = [];
 
@@ -143,9 +143,10 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   	}
   }
 
-  showDetails(transaction: TransactionItemFull, content: any, activeTab: string): void {
+  showDetails(transaction: TransactionItemFull, content: any, isScreening: boolean = false): void {
   	this.selectedTransaction = transaction;
-  	this.activeTab = activeTab;
+  	this.isScreeningInfo = isScreening;
+	
   	this.detailsDialog = this.modalService.open(content, {
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
@@ -230,26 +231,26 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   private loadCurrencies(): void {
-    this.inProgress = true;
-    this.currencyOptions = [];
-    this.subscriptions.add(
-      this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-        const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-        if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-          this.currencyOptions = currencySettings.settingsCurrency.list
-            ?.map((val) => new CurrencyView(val)) as CurrencyView[];
-          this.fiatCurrencies = this.currencyOptions.filter(item => item.fiat == true);
-        } else {
-          this.currencyOptions = [];
-        }
-        this.loadTransactions();
-      }, (error) => {
-        this.inProgress = false;
-        if (this.auth.token === '') {
-          this.router.navigateByUrl('/');
-        }
-      })
-    );
+  	this.inProgress = true;
+  	this.currencyOptions = [];
+  	this.subscriptions.add(
+  		this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+  			const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+  			if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+  				this.currencyOptions = currencySettings.settingsCurrency.list
+  					?.map((val) => new CurrencyView(val)) as CurrencyView[];
+  				this.fiatCurrencies = this.currencyOptions.filter(item => item.fiat == true);
+  			} else {
+  				this.currencyOptions = [];
+  			}
+  			this.loadTransactions();
+  		}, (error) => {
+  			this.inProgress = false;
+  			if (this.auth.token === '') {
+  				void this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 
   showWallets(transactionId: string): void {
@@ -257,7 +258,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   	if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
   		void this.router.navigateByUrl(`/admin/fiat-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
   	} else {
-		void this.router.navigateByUrl(`/admin/crypto-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+  		void this.router.navigateByUrl(`/admin/crypto-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
   	}
   }
 

@@ -1,4 +1,4 @@
-<mat-tab-group mat-stretch-tabs="false">
+<mat-tab-group mat-stretch-tabs="false" [selectedIndex]="selectedTabIndex">
   <mat-tab label="Transaction info">
     <ng-template matTabContent>
       <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(update_confirm_content)">

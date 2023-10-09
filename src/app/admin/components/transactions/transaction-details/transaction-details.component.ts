@@ -21,7 +21,7 @@ import { CommonTargetValue } from 'model/common.model';
 })
 export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
-  @Input() activeTab = 'info';
+  @Input() isScreeningInfo = false;
   @Input() set transaction(val: TransactionItemFull | undefined) {
   	this.setFormData(val);
   	this.pStatusHash = val?.statusHash ?? 0;
@@ -58,7 +58,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   private pAmountHash = 0;
   private statusChanged = false;
   private amountChanged = false;
-	private originalOrderIdChanged = false;
+  private originalOrderIdChanged = false;
   private restartTransaction = false;
   private recalculateAmounts = false;
   private transactionToUpdate: TransactionUpdateInput | undefined = undefined;
@@ -68,12 +68,13 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   private updateDialog?: NgbModalRef;
   private statusDialog?: NgbModalRef;
   private amountDialog?: NgbModalRef;
-	private originalOrderDialog?: NgbModalRef;
+  private originalOrderDialog?: NgbModalRef;
   private amountDialogContent: any;
-	private originalOrderIdDialogContent: any;
+  private originalOrderIdDialogContent: any;
   private subscriptions: Subscription = new Subscription();
 
-	transactionTypes = TransactionTypeList;
+  selectedTabIndex: number;
+  transactionTypes = TransactionTypeList;
   submitted = false;
   saveInProgress = false;
   flagInProgress = false;
@@ -107,8 +108,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   editableDestination = false;
   destroyed = false;
   flag = false;
-	transactionTypeSetting: TransactionTypeSetting = undefined;
-	originalOrderId = undefined;
+  transactionTypeSetting: TransactionTypeSetting = undefined;
+  originalOrderId = undefined;
 
   form = this.formBuilder.group({
   	address: [undefined],
@@ -127,7 +128,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	screeningStatus: [undefined],
   	benchmarkTransferHash: [undefined],
   	comment: [undefined],
-		transactionType: [undefined]
+  	transactionType: [undefined]
   });
 
   widgetOptions$: Observable<CommonTargetValue[]>;
@@ -155,6 +156,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	);
 
   	this.widgetOptions$ = this.getFilteredWidgets();
+
+  	if (this.isScreeningInfo) {
+  		this.selectedTabIndex = 1;
+  	}
   }
 
   private getFilteredWidgets(): Observable<CommonTargetValue[]> {
@@ -230,7 +235,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
   	if (this.data) {
   		this.flag = this.data.flag === true;
-			this.form.get('transactionType')?.setValue(this.data.type);
+  		this.form.get('transactionType')?.setValue(this.data.type);
   		this.form.get('address')?.setValue(this.data.address);
   		this.form.get('rate')?.setValue(this.data.rate);
   		this.form.get('fee')?.setValue(this.data.fees);
@@ -287,12 +292,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
   			this.editableDestination = additionalSettings.admin?.editTransactionDestination ?? false;
 				
-				if(settingsCommon.transactionTypeSettings && settingsCommon.transactionTypeSettings.length != 0){
-					this.transactionTypeSetting = settingsCommon.transactionTypeSettings.find(item => item.transactionType == this.transactionType);
-					this.transactionTypes = this.transactionTypes.filter(item => 
-						settingsCommon.transactionTypeSettings.find(settingType => settingType.transactionType == item.id && settingType.allowChange == true)
-					)
-				}
+  			if(settingsCommon.transactionTypeSettings && settingsCommon.transactionTypeSettings.length != 0){
+  				this.transactionTypeSetting = settingsCommon.transactionTypeSettings.find(item => item.transactionType == this.transactionType);
+  				this.transactionTypes = this.transactionTypes.filter(item => 
+  					settingsCommon.transactionTypeSettings.find(settingType => settingType.transactionType == item.id && settingType.allowChange == true)
+  				)
+  			}
 				
   		})
   	);
@@ -323,7 +328,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			orderId: this.data?.benchmarkTransferOrderId,
   			hash: this.form.get('benchmarkTransferHash')?.value ?? ''
   		},
-			type: this.form.get('transactionType')?.value ?? undefined,
+  		type: this.form.get('transactionType')?.value ?? undefined,
   		comment: this.form.get('comment')?.value ?? '',
   		flag: this.flag
   	};
@@ -366,7 +371,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   updateTransaction(): void {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.updateTransaction(
-			this.transactionId,
+  		this.transactionId,
   		this.transactionToUpdate,
   		this.restartTransaction,
   		this.recalculateAmounts);
@@ -499,7 +504,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   onConfirmUpdate(statusContent: any, amountContent: any, originalOrderIdContent: any): void {
   	this.amountDialogContent = amountContent;
-		this.originalOrderIdDialogContent = originalOrderIdContent;
+  	this.originalOrderIdDialogContent = originalOrderIdContent;
   	if (this.updateDialog) {
   		this.updateDialog.close('');
 
@@ -521,38 +526,38 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-	onChangeOriginaOrderlIdConfirm(): void {
-		if(this.originalOrderDialog){
-			this.originalOrderDialog.close('');
-		}
+  onChangeOriginaOrderlIdConfirm(): void {
+  	if(this.originalOrderDialog){
+  		this.originalOrderDialog.close('');
+  	}
 
-		if(this.originalOrderId){
-			this.transactionToUpdate.paymentOrderChanges = {
-				originalOrderId: this.originalOrderId
-			};
-			this.originalOrderIdChanged = true;
-			this.onChangeTransactionStatusConfirm(Number(this.restartTransaction));
-		}
-	}
+  	if(this.originalOrderId){
+  		this.transactionToUpdate.paymentOrderChanges = {
+  			originalOrderId: this.originalOrderId
+  		};
+  		this.originalOrderIdChanged = true;
+  		this.onChangeTransactionStatusConfirm(Number(this.restartTransaction));
+  	}
+  }
 
   onChangeTransactionStatusConfirm(restartTransaction: number): void {
   	this.restartTransaction = (restartTransaction === 1);
   	if (this.statusDialog) {
   		this.statusDialog.close('');
   	}
-		if ((!this.data.paymentOrderId || this.data.paymentOrderId == '') && !this.originalOrderIdChanged) {
-			if(this.transactionToUpdate.status == TransactionStatus.Paid) {
-				this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
-					backdrop: 'static',
-					windowClass: 'modalCusSty',
-				});
-			}
-		}else if(this.amountChanged) {
-			this.amountDialog = this.modalService.open(this.amountDialogContent, {
+  	if ((!this.data.paymentOrderId || this.data.paymentOrderId == '') && !this.originalOrderIdChanged) {
+  		if(this.transactionToUpdate.status == TransactionStatus.Paid) {
+  			this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
+  				backdrop: 'static',
+  				windowClass: 'modalCusSty',
+  			});
+  		}
+  	}else if(this.amountChanged) {
+  		this.amountDialog = this.modalService.open(this.amountDialogContent, {
   			backdrop: 'static',
   			windowClass: 'modalCusSty',
   		});
-		} else {
+  	} else {
   		this.updateTransaction();
   	}
   }
