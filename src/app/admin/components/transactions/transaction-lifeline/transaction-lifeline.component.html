@@ -20,7 +20,7 @@
           *ngFor="let status of liflinesStatusItems[0].lifelineStatus" 
           [editable]="status.transactionLifelineStatusId"
           [aria-labelledby]="!status.transactionLifelineStatusId ? 'disabled_af' : null"
-          [state]="status.transactionLifelineStatusId ? 'success' : 'number'">
+          [state]="status?.transactionStatusResult === 'FAILURE' ? 'cancel' :  status?.transactionStatusResult === 'SUCCESS' ? 'success' : 'number'" [completed]="false">
           <ng-template matStepLabel>
             {{ status.lifelineStatusDescriptor.statusName || status.transactionStatus }}
           </ng-template>
@@ -345,7 +345,11 @@
         </mat-step>
 
         <ng-template matStepperIcon="edit">
-          <mat-icon class="tx-success tx-xs-bold">check_circle</mat-icon>
+          <mat-icon class="tx-edit tx-xs-bold">edit</mat-icon>
+        </ng-template>
+        
+        <ng-template matStepperIcon="cancel">
+          <mat-icon class="tx-danger tx-xs-bold">cancel</mat-icon>
         </ng-template>
 
         <ng-template matStepperIcon="done">
@@ -371,10 +375,10 @@
           </ng-template>
           <mat-stepper [linear]="false" #updatingStepper labelPosition="bottom" animationDuration="300">
             <mat-step
-              *ngFor="let lineStatus of statusItem.lifelineStatus" 
+              *ngFor="let lineStatus of statusItem.lifelineStatus"
               [editable]="lineStatus.transactionLifelineStatusId"
               [aria-labelledby]="!lineStatus.transactionLifelineStatusId ? 'disabled_af' : null"
-              [state]="lineStatus.transactionLifelineStatusId ? 'success' : 'number'">
+              [state]="lineStatus?.transactionStatusResult === 'FAILURE' ? 'cancel' :  lineStatus?.transactionStatusResult === 'SUCCESS' ? 'success' : 'number'" [completed]="false">
 
               <ng-template matStepLabel>
                 {{ lineStatus.lifelineStatusDescriptor.statusName || lineStatus.transactionStatus }}
@@ -510,7 +514,7 @@
                 </ng-container>
     
                 <ng-container *ngIf="lineStatus?.['transactionStatusResultParsed']?.details?.liquidityOrder as liquidityOrder">
-    
+                  
                   <mat-tab label="Liquidity Order">
                     <div class="overview__wrapper">
                       <div class="overview__data">
@@ -697,9 +701,13 @@
             </mat-step>
 
             <ng-template matStepperIcon="edit">
-              <mat-icon class="tx-success tx-xs-bold">check_circle</mat-icon>
+              <mat-icon class="tx-edit tx-xs-bold">edit</mat-icon>
             </ng-template>
-    
+            
+            <ng-template matStepperIcon="cancel">
+              <mat-icon class="tx-danger tx-xs-bold">cancel</mat-icon>
+            </ng-template>
+
             <ng-template matStepperIcon="done">
               <mat-icon class="tx-success tx-xs-bold">check_circle</mat-icon>
             </ng-template>
