@@ -6,6 +6,10 @@
     opacity: 0.6
 }
 
+ ::ng-deep .mat-step-green .tx-edit {
+    color: lightgray !important; 
+ }
+
 :host ::ng-deep .mat-horizontal-content-container {
     background-color: #e8edf2;
 }
