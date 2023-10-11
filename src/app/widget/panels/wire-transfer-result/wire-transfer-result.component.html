@@ -1,12 +1,12 @@
 <div class="__widget-data-box">
     <h3 class="__widget-summary-title">
-        Transfer Details
+        {{'widget-wire-transfer-result.title' | transloco}}
     </h3>
     <div class="__widget-details-container">
         <div *ngFor="let field of fields | keyvalue" class="__widget-details-container-field">
             <div *ngIf="field.value" class="__widget-details-title">
                 <div class="__widget-details-title-item">
-                    {{field.key}}:
+                    {{field.key | transloco}}:
                 </div>
                 <button class="__tool-button" type="button" (click)="copyParameter(field.key)">
                     <i class="material-icons">
@@ -20,26 +20,13 @@
 
         </div>
 
-        <!-- <div *ngIf="field12Title!=='' && field12Value!==''" class="__widget-details-title">
-            <div class="__widget-details-title-item">
-                {{field6Title}}:
-            </div>
-            <button class="__tool-button" type="button" (click)="copyParameter(12)">
-                <i class="material-icons" style="font-size: 16px;margin-top: 6px;">
-                    content_copy
-                </i>
-            </button>
-        </div>
-        <div *ngIf="field12Title!=='' && field12Value!==''" class="__widget-details-item">
-            {{field12Value}}
-        </div> -->
     </div>
 
     <!-- Buttons -->
     <div class="__widget-buttons-area">
-        <button class="__outlined-button" type="button" (click)="onSendEmail.emit()">SEND EMAIL</button>
+        <button class="__outlined-button" type="button" (click)="onSendEmail.emit()">{{'widget-wire-transfer-result.btn-pay_label' | transloco}}</button>
         <button class="__main-button __button-wide-separator" type="button" (click)="onComplete.emit()">
-            done
+            {{'global.widget_btn-done' | transloco}}
         </button>
     </div>
 </div>

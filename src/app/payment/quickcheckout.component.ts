@@ -4,7 +4,7 @@ import { environment } from '@environments/environment';
 import { WidgetSettings } from '../model/payment-base.model';
 import { EnvService } from '../services/env.service';
 import { Subscription } from 'rxjs';
-import { NotificationService } from 'services/notification.service';
+import { ThemeService } from 'services/theme-service';
 
 @Component({
 	templateUrl: 'quickcheckout.component.html',
@@ -25,7 +25,7 @@ export class QuickCheckoutComponent {
 
 	constructor(
 		private route: ActivatedRoute,
-		private notification: NotificationService
+		public themeService: ThemeService
 	) {
 
 		this.userParamsId = this.route.snapshot.params['userParamsId'] ?? '';

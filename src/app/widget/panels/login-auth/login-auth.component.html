@@ -1,6 +1,6 @@
 <div class="__widget-data-box">
     <div *ngIf="!requiredExtraData" class="__widget-page-header">
-        Your account seems to be registered. Please, authenticate
+        {{'widget-login-auth.title' | transloco}}
     </div>
 
     <app-login-panel [socialButtons]="false" [wizardButtons]="true" [userName]="email" [widgetId]="widget.widgetId" [isWidget]="true"

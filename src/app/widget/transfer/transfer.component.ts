@@ -31,7 +31,6 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   errorMessage = '';
   rateErrorMessage = '';
   inProgress = false;
-  internalPayment = false;
   initState = true;
   showSummary = true;
   mobileSummary = false;

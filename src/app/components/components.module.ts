@@ -74,6 +74,8 @@ import {
 	FormEditBoxComponent
 } from './common/controls';
 import { FileUploadComponent } from './common/file-upload/file-upload.component';
+import { WidgetInputGroupComponent } from './common/widget-input-group/widget-input-group.component';
+import { TranslocoRootModule } from 'transloco-root.module';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -136,6 +138,7 @@ const formControlComponents = [
 		MaterialModule,
 		DirectiveModule,
 		QRCodeModule,
+		TranslocoRootModule
 	],
 	declarations: [
 		[...kycComponents],
@@ -168,6 +171,7 @@ const formControlComponents = [
 		WalletsFilterBarComponent,
 		ContactsFilterBarComponent,
 		NotificationsFilterBarComponent,
+		WidgetInputGroupComponent
 	],
 	exports: [
 		[...kycComponents],
@@ -200,6 +204,7 @@ const formControlComponents = [
 		WalletsFilterBarComponent,
 		ContactsFilterBarComponent,
 		NotificationsFilterBarComponent,
+		WidgetInputGroupComponent
 	],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

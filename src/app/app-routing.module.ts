@@ -27,7 +27,6 @@ const routes: Routes = [
 	},
 	{ path: 'terms/:id', component: TermsComponent },
 	{ path: 'terms', component: TermsComponent },
-	//{ path: '', component: IntroComponent },
 	{ path: '**', redirectTo: '/personal/auth/login' }
 ];
 

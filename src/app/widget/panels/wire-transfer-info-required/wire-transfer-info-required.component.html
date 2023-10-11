@@ -1,28 +1,28 @@
 <div class="widget-required-info">
     <h2 class="__auth-title">
-        Please, specify your personal data
+        {{'widget-wire-transfer-info.title' | transloco}}
     </h2>
     <form [formGroup]="infoForm" (ngSubmit)="onSubmit()">
         <div class="__form-separator"></div>
         
         <!-- Full name (Personal) -->
         <div *ngIf="requireUserFirstName">
-            <app-form-textbox [label]="'First Name'" [boxType]="'text'" [placeholder]="'User first name'" [maxlength]="80"
+            <app-form-textbox [label]="'widget-wire-transfer-info.field_firstName'" [boxType]="'text'" [maxlength]="80"
                 formControlName="firstName" [errorMessages]="firstNameErrorMessages" [asterisk]="true" [separator]="true">
             </app-form-textbox>
-            <app-form-textbox [label]="'Last Name'" [boxType]="'text'" [placeholder]="'User last name'" [maxlength]="80"
+            <app-form-textbox [label]="'widget-wire-transfer-info.field_lastName'" [boxType]="'text'" [maxlength]="80"
                 formControlName="lastName" [errorMessages]="lastNameErrorMessages" [asterisk]="true" [separator]="true">
             </app-form-textbox>
         </div>
 
         <div *ngIf="requireUserCompanyName">
-            <app-form-textbox [label]="'Company Name'" [boxType]="'text'" [placeholder]="'Company Name'" [maxlength]="80"
+            <app-form-textbox [label]="'widget-wire-transfer-info.field_companyName'" [boxType]="'text'" [maxlength]="80"
                 formControlName="companyName" [errorMessages]="companyNameErrorMessages" [asterisk]="true" [separator]="true">
             </app-form-textbox>
         </div>
 
         <div *ngIf="requireUserPhone">
-            <app-form-textbox [label]="'Phone'" [boxType]="'text'" [placeholder]="'+385'" [maxlength]="80"
+            <app-form-textbox [label]="'widget-wire-transfer-info.field_phone'" [boxType]="'text'" [placeholder]="'+385'" [maxlength]="80"
                 formControlName="phone" [errorMessages]="phoneErrorMessages" [asterisk]="true" [separator]="true">
             </app-form-textbox>
         </div>
@@ -30,7 +30,8 @@
         <!-- Birthday -->
         <div *ngIf="requireUserBirthday">
             <div class="__form-label">
-                Birthday <span class="__form-assist-error">*</span>
+                {{'widget-wire-transfer-info.field_birthday' | transloco}}
+                 <span class="__form-assist-error">*</span>
             </div>
             <div class="__form-textbox-border">
                 <input
@@ -44,17 +45,17 @@
                 </div>
             </div>
             <div *ngIf="!infoForm.controls.birthday?.valid" class="__form-assist __form-assist-error">
-                Please specify your birthday
+                {{'widget-wire-transfer-info.field_birthday-error' | transloco}}
             </div>
             <div class="__form-separator"></div>
         </div>
     
         <!-- Address -->
         <div *ngIf="requireUserAddress">
-            <app-form-textbox [label]="'City'" [boxType]="'text'" [placeholder]="'City'" [maxlength]="30"
+            <app-form-textbox [label]="'widget-wire-transfer-info.field_city'" [boxType]="'text'" [maxlength]="30"
                 formControlName="town" [errorMessages]="townErrorMessages" [asterisk]="true" [separator]="true">
             </app-form-textbox>
-            <app-form-textbox [label]="'Street'" [boxType]="'text'" [placeholder]="'Street'" [maxlength]="50"
+            <app-form-textbox [label]="'widget-wire-transfer-info.field_street'" [boxType]="'text'" [maxlength]="50"
                 formControlName="street" [errorMessages]="streetErrorMessages" [asterisk]="true" [separator]="true">
             </app-form-textbox>
         </div>

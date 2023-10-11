@@ -21,7 +21,6 @@ import { WalletValidator } from 'utils/wallet.validator';
 })
 export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() initialized = false;
-  @Input() internalPayment = true;
   @Input() quickCheckout = false;
   @Input() set errorMessage(val: string) {
   	if (val !== '') {
@@ -544,9 +543,9 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   		if (this.walletField?.valid && this.showWallet) {
   			data.address = this.walletField?.value;
   		}
-  		//if (this.quoteExceedHidden) {
+  
   		data.quoteLimit = this.quoteLimit;
-  		//}
+
   		this.onDataUpdated.emit(data);
   	}
   }

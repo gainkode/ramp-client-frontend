@@ -31,11 +31,11 @@
     
     <div class="__widget-buttons-area">
         <button *ngIf="backButton" class="__outlined-button" type="button" (click)="onBack.emit()">
-            BACK
+            {{'global.widget_btn-back' | transloco}}
         </button>
         <button class="__main-button __button-wide-separator" type="button" [disabled]="done || !agreementChecked"
             (click)="done=true;onNext.emit()">
-            next
+            {{'global.widget_btn-next' | transloco}}
         </button>
     </div>
 

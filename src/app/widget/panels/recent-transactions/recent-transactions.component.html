@@ -4,7 +4,7 @@
             <mat-icon>west</mat-icon>
         </button>
         <h1 class="__widget-data-list-title">
-            Transactions History
+            {{'widget-recent-transactions.title' | transloco}}
         </h1>
     </div>
     <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
@@ -34,7 +34,7 @@
                     {{item.amountSent}}
                 </span>
                 <span class="__widget-data-list-item-label">
-                    from
+                    {{'widget-recent-transactions.label_from' | transloco}}
                 </span>
                 <span class="__widget-data-list-item-status-text">
                     {{item.sender?.title}}
@@ -45,7 +45,7 @@
                     {{item.amountReceived}}
                 </span>
                 <span class="__widget-data-list-item-label">
-                    to
+                    {{'widget-recent-transactions.label_to' | transloco}}
                 </span>
                 <span class="__widget-data-list-item-status-text">
                     {{item.recipient?.title}}

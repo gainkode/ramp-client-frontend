@@ -214,6 +214,8 @@ export class CurrencyView {
 		this.fiat = data.fiat as boolean;
 		if (!this.fiat) {
 			this.img = `assets/svg-crypto/${getCryptoSymbol(this.code).toLowerCase()}.svg`;
+		} else {
+			this.img = `assets/svg-fiat/${getCryptoSymbol(this.code).toLowerCase()}.svg`;
 		}
 	}
 }
@@ -633,12 +635,7 @@ export class CheckoutSummary {
 	}
 
 	get transactionFee(): string {
-		const val = this.fee;
-		if (val !== 0) {
-			return `${val}`;
-		} else {
-			return '';
-		}
+		return this.fee !== 0 ? `${this.fee}` : '';
 	}
 
 	get transactionFeeTitle(): string {

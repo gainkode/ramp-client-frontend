@@ -281,7 +281,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	widget.allowToPayIfKycFailed = formValue.allowToPayIfKycFailed;
   	widget.fee = formValue.fee;
   	widget.newVaultPerTransaction = formValue.newVaultPerTransaction;
-		widget.masked = formValue.masked;
+  	widget.masked = formValue.masked;
   	// widget.destinationAddress = this.widgetDestinationAddress;
 
   	return widget;

@@ -35,9 +35,9 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     validData = false;
     init = false;
     done = false;
-		recaptcha = undefined;
+	recaptcha = undefined;
     codeErrorMessages: { [key: string]: string; } = {
-    	['required']: 'Confirmation code is required'
+    	['required']: 'widget-code-auth.code-required'
     };
 
     dataForm = this.formBuilder.group({

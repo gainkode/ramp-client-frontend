@@ -1,0 +1,63 @@
+<div *ngIf="!showCurrencyList">
+    <div class="widget-input__container" [ngClass]="{'widget-input__container-error': invalidForm}">
+      <div class="widget-input__item">
+        <div>
+          <div class="widget-input__item-label"> {{label | transloco}}</div>
+          <input
+            class="widget-input__item-input"
+            type="text"
+            inputmode="decimal"
+            placeholder="0.00"
+            [formControlName]="boxFieldName"
+            maxlength="14"
+          />
+        </div>
+        <button type="button" class="widget-input__item-select" (click)="showCurrencyList = true">
+            <div class="widget-input__item-select-img">
+                <img 
+                    [hidden]="!selectedComboValue?.img" 
+                    [src]="selectedComboValue?.img" 
+                    alt="Currency icon">
+            </div>
+            <span class="widget-input__item-select-label">{{selectedComboValue?.display}}</span>
+            <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+      </div>
+      <div class="widget-input__error-message" 
+        [ngClass]="{'__form-assist': true, '__form-assist-disabled': !active, '__form-assist-error error-show': invalidForm}">
+        {{invalidForm ? (errorAssist | transloco) : ''}}
+      </div>
+    </div>
+</div>
+
+<div class="widget-list__container" *ngIf="showCurrencyList">
+    <div class="widget-list__header">
+      <div class="widget-list__header-search">
+          <mat-form-field appearance="outline" class="border-red">
+            <mat-label>{{'widget-input-group.search-placeholder' | transloco}}</mat-label>
+            <input matInput [formControl]="searchCurrencyControl">
+          </mat-form-field>
+      </div>
+      <!-- <h3 class="widget-list__header-title">Available Currencies: </h3> -->
+      <button class="widget-list__header-button" (click)="showCurrencyList = false" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="widget-list__item">
+        <div *ngFor="let item of filteredItems | async">
+            <button type="button" class="widget-list__item-row" (click)="onCurrencySelect(item.symbol)">
+                <div class="widget-list__item-column">
+                  <div>
+                    <img [class.crypto-img]="!item.fiat" alt="Currency" [src]="item.img">
+                  </div>
+                  <div class="widget-list__item-column-item">
+                    <div class="widget-list__item-column-label">
+                      <span>{{item.display}}</span>
+                    </div>
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                  </div>
+                </div>
+            </button>
+        </div>     
+    </div>     
+</div>

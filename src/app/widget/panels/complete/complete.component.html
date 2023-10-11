@@ -25,58 +25,9 @@
         </div>
     </div>
 
-
-
-
-    
-    <!-- <h1 *ngIf="transaction===TRANSACTION_TYPE.Buy" class="__widget-title">
-        Payment completed
-    </h1>
-    <h1 *ngIf="transaction===TRANSACTION_TYPE.Sell" class="__widget-title">
-        Transaction completed
-    </h1>
-    <div class="__widget-disclaimer-container">
-        <span class="__widget-disclaimer-line">
-            Dear Customer,
-        </span>
-        <br>
-        <span class="__widget-disclaimer-line">
-            Your Order has been successfully received in {{productName}}.
-        </span>
-        <br>
-        <span class="__widget-disclaimer-line">
-            Our team is working to complete it as fast as possible!
-        </span>
-        <br>
-        <span class="__widget-disclaimer-line">
-            Please feel free to contact us with any inquiries you may have: <a [href]="supportEmailLink">{{supportEmail}}</a>.
-        </span>
-    </div>
-    <h3 class="__widget-summary-title">
-        What's next?
-    </h3>
-    <div class="__widget-disclaimer-area">
-        <div class="__widget-disclaimer-container">
-            <span class="__widget-disclaimer-line">
-                We are working to complete your order, once completed you will receive an email confirmation.
-            </span>
-        </div>
-    </div>
-    <h3 class="__widget-summary-title">
-        How long does it take?
-    </h3>
-    <div class="__widget-disclaimer-area">
-        <div class="__widget-disclaimer-container">
-            <span class="__widget-disclaimer-line">
-                Order confirmation is typically received within 60 minutes of your payment, this time may
-                vary depending on your selected crypto-currency and network overloads.
-            </span>
-        </div>
-    </div> -->
-
     <div class="__widget-buttons-area">
         <button *ngIf="showRestartButton" class="__main-button" type="button" (click)="onFinish.emit()">
-            done
+            {{'global.widget_btn-done' | transloco}}
         </button>
         <button *ngIf="!showRestartButton && finishLink!==''" class="__main-button" type="button" (click)="onFinish.emit()">
             return

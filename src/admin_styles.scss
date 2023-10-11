@@ -7,41 +7,8 @@
 /* Importing Bootstrap SCSS file. */
 @import 'node_modules/bootstrap/scss/bootstrap.scss';
 
-// leaflet
-//@import '~leaflet/dist/leaflet.css';
-// chartlist
-//@import '~chartist/dist/chartist.css';
-
-// animate css
-//@import "~animate.css/animate.min.css";
-
 // ng-select
 @import "~@ng-select/ng-select/themes/default.theme.css";
-
-// ngx data table
-// @import '~@swimlane/ngx-datatable/index.css';
-// @import '~@swimlane/ngx-datatable/themes/material.scss';
-// @import '~@swimlane/ngx-datatable/themes/bootstrap.scss';
-// @import '~@swimlane/ngx-datatable/themes/dark.scss';
-// @import '~@swimlane/ngx-datatable/assets/icons.css';
-
-// ngx-toastr
-//@import '~ngx-toastr/toastr.css';
-
-// angular-archwizard
-//@import '~angular-archwizard/styles/archwizard.css';
-
-// quill
-//@import '~quill/dist/quill.core.css';
-//@import '~quill/dist/quill.bubble.css';
-//@import '~quill/dist/quill.snow.css';
-
-// .owl-carousel
-//@import "~ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css";
-//@import "~ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css";
-
-// angular material
-//@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 // custom-css import
 @import './assets/css/icons.css';
@@ -469,10 +436,6 @@ button:focus:not(:focus-visible) {
     color: #eee;
   }
 }
-
-// .dark-theme.light-menu.horizontal .horizontal-main .main-sidemenu .side-menu .slide .slide-menu .slide-item {
-//   color: inherit !important;
-// }
 
 .rtl {
 

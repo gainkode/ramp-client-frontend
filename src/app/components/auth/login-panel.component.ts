@@ -15,7 +15,7 @@ import { take } from 'rxjs/operators';
 @Component({
 	selector: 'app-login-panel',
 	templateUrl: 'login-panel.component.html',
-	styleUrls: ['../../../assets/text-control.scss', '../../../assets/auth.scss']
+	styleUrls: ['../../../assets/auth.scss']
 })
 export class LoginPanelComponent implements OnInit, OnDestroy {
 	@Input() set userName(val: string) {

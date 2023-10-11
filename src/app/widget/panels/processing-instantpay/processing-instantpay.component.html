@@ -3,10 +3,10 @@
     <div class="__widget-data-box-extra-internal">
         <div class="__widget-disclaimer-line">
             <title class="__widget-data-item-title">
-                Make a bank transfer to the following Email PayID (Not compatible with RTGS).
+                {{'widget-processing-instapay.title' | transloco}}
             </title>
             <div class="__widget-data-item-value">
-                Most transactions are instant, however some banks will hold your first payment for 24 Hours.
+                {{'widget-processing-instapay.subtitle' | transloco}}
             </div>
         </div>
     </div>
@@ -14,7 +14,7 @@
     <div *ngIf="data?.payId" class="__widget-data-box-rounded-container">
         <div class="__widget-data-box-rounded-border">
             <title class="__widget-data-item-title">
-                PayID:
+                {{'widget-processing-instapay.field_creditTo' | transloco}}
             </title>
             <input class="__text-box-noborder" type="text" readonly [value]="data?.payId" />
         </div>
@@ -29,7 +29,7 @@
         <div class="__widget-data-box-rounded-border">
             <div *ngIf="data?.referenceCode">
                 <title class="__widget-data-item-title">
-                    Reference code:
+                    {{'widget-processing-instapay.field_reference' | transloco}}
                 </title>
                 <div class="__widget-data-item-value">
                     {{data?.referenceCode}}
@@ -44,7 +44,9 @@
     </div>
 
     <div class="__widget-buttons-area">
-        <button class="__main-button" type="button" (click)="onComplete.emit()">next</button>
+        <button class="__main-button" type="button" (click)="onComplete.emit()">
+            {{'global.widget_btn-next' | transloco}}
+        </button>
     </div>
 
     <div class="__widget-data-error">

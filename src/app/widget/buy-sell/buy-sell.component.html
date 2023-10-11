@@ -18,13 +18,13 @@
     </div>
 
     <div *ngIf="widgetVisible && selectedWidgetType !== WIDGET_TYPE.Buy" class="__widget-embedded-data-container">
-        <app-widget [internal]="false" [settings]="widgetSettings" (onComplete)="widgetComplete($event)"
+        <app-widget [settings]="widgetSettings" (onComplete)="widgetComplete($event)"
             (onError)="widgetError($event)">
         </app-widget>
     </div>
 
     <div *ngIf="widgetVisible && selectedWidgetType !== WIDGET_TYPE.Sell" class="__widget-embedded-data-container">
-        <app-widget [internal]="false" [settings]="widgetSettings" (onComplete)="widgetComplete($event)"
+        <app-widget [settings]="widgetSettings" (onComplete)="widgetComplete($event)"
             (onError)="widgetError($event)">
         </app-widget>
     </div>

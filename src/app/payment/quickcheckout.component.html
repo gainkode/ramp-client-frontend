@@ -1,13 +1,21 @@
-<div class="__widget-frame-box">
-  <app-widget 
-    ngClass="widget-size-qc" 
+<div class="__widget-frame-box" [ngClass]="{'__widget-frame-box--dark': (themeService.theme$ | async) === 'dark'}">
+  
+  <!-- <app-widget 
+    ngClass="widget-size-qc"
     [ngStyle]="{'margin': '0 auto', 'letter-spacing': '.1em', 'min-width': !widgetSize ? '100%' : ''}" 
-    [internal]="true" 
     [settings]="settings" 
     [userParamsId]="userParamsId" 
     (onIFramePay)="iframePay($event)"
     [quickCheckout]=true>
-  </app-widget>
+  </app-widget> -->
+
+  <app-widget-internal
+    [ngStyle]="{'margin': '0 auto', 'letter-spacing': '.1em', 'min-width': !widgetSize ? '100%' : ''}" 
+    [settings]="settings" 
+    [userParamsId]="userParamsId" 
+    (onIFramePay)="iframePay($event)"
+    [quickCheckout]=true>
+  </app-widget-internal>
 </div>
 
 <div *ngIf="!prodMode" style="grid-column: 3;grid-row: 1;padding: 12px;color: #1A68AD;height: 48px;z-index: 333;">

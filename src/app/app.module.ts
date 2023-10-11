@@ -29,6 +29,7 @@ import { WidgetService } from './services/widget.service';
 import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/env.service';
 import { shareReplay } from 'rxjs/operators';
 import { TableModule } from 'components/data-list/table/table.module';
+import { TranslocoRootModule } from 'transloco-root.module';
 
 function socialConfigFactory(): SocialAuthServiceConfig {
 	EnvServiceFactory.call(undefined);
@@ -54,6 +55,7 @@ function socialConfigFactory(): SocialAuthServiceConfig {
 		BrowserAnimationsModule,
 		SocialLoginModule,
 		DirectiveModule,
+		TranslocoRootModule,
 		TableModule
 	],
 	providers: [

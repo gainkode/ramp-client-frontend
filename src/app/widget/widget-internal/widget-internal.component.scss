@@ -1,0 +1,49 @@
+.widget-iframe {
+	height: 100vh;
+    max-height: 100vh;
+    width: 100%;
+    background: transparent;
+}
+
+.widget__wrapper { 
+    width: 900px;
+    height: 590px;
+    justify-content: center;  
+    display: flex; 
+    &--single {
+        width: 400px;
+        .widget__container-2 {
+            width: 400px;
+        }
+    }
+}
+
+.widget__container-1 {
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    width: 400px;
+    height: 590px;
+    background: white;
+    border-radius: 8px;
+    // padding: 24px 0;
+    // padding-top: 10px;
+}
+
+.widget__container-2 {
+    flex: 1 1;
+    background: white;
+    padding: 10px;
+    margin-left: 3px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 500px;
+    height: 590px;
+}
+
+.widget__wrapper--dark {
+    background-color: black;
+}
