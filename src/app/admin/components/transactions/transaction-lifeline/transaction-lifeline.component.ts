@@ -99,7 +99,7 @@ export class TransactionLifelineComponent {
   	this.clipboard.copy(value);
   	this._snackBar.open('ID copied.', null, { duration: 2000 });
   }
-
+	
   onOpenJsonParameter(data: TransactionLifelineStatus): void {
   	if (data['transactionStatusResultParsed']) {
   		this.currentResultStatus = data['transactionStatusResultParsed'];
