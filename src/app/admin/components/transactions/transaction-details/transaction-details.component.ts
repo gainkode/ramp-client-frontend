@@ -541,25 +541,32 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onChangeTransactionStatusConfirm(restartTransaction: number): void {
+		let continueCurrentChange = true;
   	this.restartTransaction = (restartTransaction === 1);
   	if (this.statusDialog) {
   		this.statusDialog.close('');
   	}
+
   	if ((!this.data.paymentOrderId || this.data.paymentOrderId == '') && !this.originalOrderIdChanged) {
   		if(this.transactionToUpdate.status == TransactionStatus.Paid) {
+				continueCurrentChange = false;
   			this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
   				backdrop: 'static',
   				windowClass: 'modalCusSty',
   			});
   		}
-  	}else if(this.amountChanged) {
-  		this.amountDialog = this.modalService.open(this.amountDialogContent, {
-  			backdrop: 'static',
-  			windowClass: 'modalCusSty',
-  		});
-  	} else {
-  		this.updateTransaction();
   	}
+		
+		if(continueCurrentChange){
+			if(this.amountChanged) {
+				this.amountDialog = this.modalService.open(this.amountDialogContent, {
+					backdrop: 'static',
+					windowClass: 'modalCusSty',
+				});
+			} else {
+				this.updateTransaction();
+			}
+		}
   }
 
   onChangeTransactionAmountConfirm(recalcTransaction: number): void {
