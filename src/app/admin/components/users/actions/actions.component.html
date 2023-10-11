@@ -48,22 +48,19 @@
 
               <ng-container matColumnDef="result">
                 <th mat-header-cell *matHeaderCellDef>Result</th>
-                <td mat-cell *matCellDef="let element" class="action-list-data-result">
+                <td mat-cell *matCellDef="let element" class="action-list-data-result"
+                [ngClass]="{ 
+                  'tx-success': element?.result?.name === 'Succeeded', 
+                  'tx-danger':element?.result?.name === 'Failed'
+                }">
                   {{element?.result?.name}}
                 </td>
               </ng-container>
 
               <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef>Status</th>
-                <td mat-cell *matCellDef="let element" class="action-list-data-status">
+                <td mat-cell *matCellDef="let element" class="action-list-data-status" >
                   {{element.status}}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="info">
-                <th mat-header-cell *matHeaderCellDef>Info</th>
-                <td mat-cell *matCellDef="let element" class="action-list-data-info">
-                  {{element.info}}
                 </td>
               </ng-container>
 
@@ -100,18 +97,25 @@
           </div>
 
           <ng-template #details_content let-modal>
-            <div class="modal-header">
-              <h5 class="modal-title">
-                Action details
-              </h5>
+            <div class="modal-body tabs">
+              <mat-tab-group>
+                <mat-tab label="Action Details">
+                  <ng-template matTabContent>
+                    <app-admin-action-details [permission]="permission" [message]="selectedAction"
+                    (close)="modal.dismiss('Close')">
+                  </app-admin-action-details>
+                  </ng-template>
+                  
+                </mat-tab>
+                <mat-tab *ngIf="selectedAction.info" label="Action Info">
+                  <ng-template matTabContent>
+                    <app-raw-json [data]="selectedAction.info"></app-raw-json>
+                  </ng-template>
+                </mat-tab>
+              </mat-tab-group>
               <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
               </button>
-            </div>
-            <div class="modal-body">
-              <app-admin-action-details [permission]="permission" [message]="selectedAction"
-                (close)="modal.dismiss('Close')">
-              </app-admin-action-details>
             </div>
           </ng-template>
         </div>

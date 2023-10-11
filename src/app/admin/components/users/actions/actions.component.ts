@@ -30,7 +30,6 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   	'actionType',
   	'result',
   	'status',
-  	'info'
   ];
   inProgress = false;
   permission = 0;

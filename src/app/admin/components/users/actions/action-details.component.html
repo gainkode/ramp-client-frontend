@@ -1,14 +1,13 @@
-<div class="row">
+<div class="row m-0">
   <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
     <div class="card card-body pd-20 pd-md-40 border shadow-none">
       <app-admin-details-item label="Date" [value]="message?.date"></app-admin-details-item>
       <app-admin-details-item label="Status" [value]="message?.status"></app-admin-details-item>
       <app-admin-details-item label="Viewed" [value]="message?.actionType?.name"></app-admin-details-item>
       <app-admin-details-item label="Viewed" [value]="message?.result?.name"></app-admin-details-item>
-      <app-admin-details-item label="Action info" [value]="message?.info"></app-admin-details-item>
       <app-admin-details-item label="User identifier" [value]="message?.userId"></app-admin-details-item>
       <app-admin-details-item label="Object identifier" [value]="message?.objectId"></app-admin-details-item>
-      <app-admin-details-item label="Object identifier" [value]="message?.linkedIds"></app-admin-details-item>
+      <app-admin-details-item label="Linked ID's" [value]="message?.linkedIds"></app-admin-details-item>
     </div>
     <div style="display: flex; justify-content: flex-end;">
       <button class="btn btn-outline-primary pd-x-30" type="button" (click)="close.emit()">

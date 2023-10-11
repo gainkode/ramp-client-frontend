@@ -57,13 +57,13 @@ export class TransactionLifelineComponent {
   					take(1),
   					map((transactionLifelineStatusItems) => {
   						return transactionLifelineStatusItems.map((statusItem) => {
+  							const newCreated = statusItem.lifelineStatus.find(status => status.created)?.created;
   							const updatedLifelineStatus = statusItem.lifelineStatus.map(
   								(status) => {
   									const param = resultParamMapping[status.transactionStatusResult];
   									if (param && status[param]) {
   										try {
   											const parsed = JSON.parse(status[param]);
-											console.log(parsed)
   											return {
   												...status,
   												transactionStatusResultParsed: parsed,
@@ -76,7 +76,8 @@ export class TransactionLifelineComponent {
   									return status;
   								}
   							);
-  							return { ...statusItem, lifelineStatus: updatedLifelineStatus };
+
+  							return { ...statusItem, lifelineStatus: updatedLifelineStatus, newCreated };
   						});
   					}),
   					tap((transactionLifelineStatusItems) => {

@@ -167,7 +167,6 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   	this.subscriptions.add(
   		listData$.subscribe(({ list, count }) => {
   			this.transactionStatusHistory = list;
-  			console.log(this.transactionStatusHistory );
   			this.transactionCount = count;
   			this.inProgress = false;
   		}, (error) => {

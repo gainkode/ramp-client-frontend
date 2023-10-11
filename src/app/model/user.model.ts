@@ -497,7 +497,7 @@ export class UserActionItem {
 	date = '';
 	objectId = '';
 	linkedIds: any = [];
-	info = '';
+	info = {};
 	status = '';
 	actionType: UserActionTypeView | null = null;
 	result: UserActionResultView | null = null;
@@ -511,7 +511,7 @@ export class UserActionItem {
 		this.date = datepipe.transform(data?.date, 'dd MMM YYYY HH:mm:ss') ?? '';
 		this.objectId = data?.objectId ?? '';
 		this.linkedIds = data?.linkedIds ?? [];
-		this.info = data?.info ?? '';
+		this.info = data?.info ? JSON.parse(data?.info) : undefined;
 		this.status = data?.status ?? '';
 		this.actionType = UserActionTypeList.find((x) => x.id === data?.actionType) as UserActionTypeView;
 		this.result = UserActionResultList.find((x) => x.id === data?.result) as UserActionResultView;
