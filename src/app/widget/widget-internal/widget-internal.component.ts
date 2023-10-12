@@ -182,7 +182,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   	if (data) {
   		this.widget.allowToPayIfKycFailed = data.allowToPayIfKycFailed ?? false;
-  		let userParams: Record<string, any> = {};
+  		const userParams: Record<string, any> = {};
   		if (data.additionalSettings) {
   	
   			const extraData = JSON.parse(data.additionalSettings);
@@ -208,30 +208,21 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
 		
   		if (data.currentUserParams) {
-  			userParams = JSON.parse(data.currentUserParams);
-  			if (userParams.params) {
-  				if (userParams.params.amount) {
-  					this.widget.amountFrom = userParams.params.amount;
-  					this.summary.amountFrom = this.widget.amountFrom;
-  				}
-  				if (userParams.params.currency) {
-  					this.widget.currencyFrom = userParams.params.currency;
-  					this.summary.currencyFrom = this.widget.currencyFrom;
-  		
-  				}
-  				if (userParams.params.convertedCurrency) {
-  					this.widget.currencyTo = userParams.params.convertedCurrency;
-  					this.summary.currencyTo = this.widget.currencyTo;
-  				}
-  				if (userParams.params.transactionType) {
-  					userTransaction = userParams.params.transactionType;
-  				}
-  				if (userParams.params.destination) {
-  					presetAddress = true;
-  				}
-  				if(userParams.params.redirectUrl){
-  					this.redirectUrl = userParams.params.redirectUrl;
-  				}
+  			const params = JSON.parse(data.currentUserParams).params;
+		
+  			if (params) {
+  				this.widget.amountFrom = params.amount || this.widget.amountFrom;
+  				this.summary.amountFrom = this.widget.amountFrom;
+		
+  				this.widget.currencyFrom = params.currency || this.widget.currencyFrom;
+  				this.summary.currencyFrom = this.widget.currencyFrom;
+		
+  				this.widget.currencyTo = params.convertedCurrency || this.widget.currencyTo;
+  				this.summary.currencyTo = this.widget.currencyTo;
+		
+  				userTransaction = params.transactionType || userTransaction;
+  				presetAddress = !!params.destination;
+  				this.redirectUrl = params.redirectUrl || this.redirectUrl;
   			}
   		}
       
@@ -249,29 +240,24 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		}
 
   		this.widget.transaction = undefined;
-  		if (data.currenciesCrypto) {
-  			if (data.currenciesCrypto.length > 0) {
-  				this.widget.cryptoList = data.currenciesCrypto.map(val => val);
-  			}
+
+  		if (data.currenciesCrypto?.length > 0) {
+  			this.widget.cryptoList = data.currenciesCrypto.map(val => val);
   		}
-  		if (data.currenciesFiat) {
-  			if (data.currenciesFiat.length > 0) {
-  				this.widget.fiatList = data.currenciesFiat.map(val => val);
-  			}
+  		if (data.currenciesFiat?.length > 0) {
+  			this.widget.fiatList = data.currenciesFiat.map(val => val);
   		}
   		if (userTransaction) {
   			this.widget.transaction = userTransaction;
   		} else {
-  			if (data.transactionTypes) {
-  				if (data.transactionTypes.length > 0) {
-  					const apropriateTransactions = data.transactionTypes.
-  						filter(x => x === TransactionType.Buy || x === TransactionType.Sell);
-  					if (apropriateTransactions.length > 0) {
-  						this.widget.transaction = apropriateTransactions[0];
-  					} else {
-  						this.widget.transaction = data.transactionTypes[0];
-  					}
-  				}
+  			if (data.transactionTypes?.length > 0) {
+  				const appropriateTransactions = data.transactionTypes.filter(x => 
+  					x === TransactionType.Buy || x === TransactionType.Sell
+  				);
+			
+  				this.widget.transaction = appropriateTransactions.length > 0
+  					? appropriateTransactions[0]
+  					: data.transactionTypes[0];
   			}
   		}
   		this.widget.source = (this.quickCheckout) ? TransactionSource.QuickCheckout : TransactionSource.Widget;
@@ -284,30 +270,15 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			//temp
   			this.widget.source = TransactionSource.QuickCheckout;
   		}
-  		if (this.widget.amountFrom !== 0) {
-  			this.summary.amountFrom = this.widget.amountFrom;
-  		}
-  		if (this.widget.currencyFrom !== '') {
-  			this.summary.currencyFrom = this.widget.currencyFrom;
-  		}
-  		if (this.widget.currencyTo !== '') {
-  			this.summary.currencyTo = this.widget.currencyTo;
-  		}
+
+  		this.summary.amountFrom = this.widget.amountFrom ?? this.summary.amountFrom;
+  		this.summary.currencyFrom = this.widget.currencyFrom || this.summary.currencyFrom;
+  		this.summary.currencyTo = this.widget.currencyTo || this.summary.currencyTo;
   	}
-  	if (!this.widget.disclaimer) {
-  		this.summary.agreementChecked = true;
-  	}
-  	if (this.widget.email) {
-  		this.summary.email = this.widget.email;
-  	} else {
-  		const user = this.auth.user;
-  		if (user) {
-  			this.summary.email = this.auth?.user?.email ?? '';
-  		}
-  	}
-  	if (this.widget.transaction) {
-  		this.summary.transactionType = this.widget.transaction;
-  	}
+
+  	this.summary.agreementChecked = !this.widget.disclaimer || this.summary.agreementChecked;
+  	this.summary.email = this.widget.email || this.auth?.user?.email || '';
+  	this.summary.transactionType = this.widget.transaction || this.summary.transactionType;
     
   	this.startExchangeRate();
   }
@@ -486,7 +457,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.isSingleOrderDetailsCompleted = false;
   		}
   	}
-    
   }
 
   capchaResult(event): void {
