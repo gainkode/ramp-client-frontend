@@ -1087,56 +1087,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 				  return;
 			  }
 			  if (order.code) {
-				  this.summary.orderId = order.code as string;
-				  this.summary.fee = order.feeFiat as number ?? 0;
-				  this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
-				  this.summary.feePercent = order.feePercent as number ?? 0;
-				  this.summary.networkFee = order.approxNetworkFee ?? 0;
-				  this.summary.transactionDate = new Date().toLocaleString();
-				  this.summary.transactionId = order.transactionId as string;
-				  
-				  if(this.transactionInput.type === TransactionType.Buy){
-					  this.summary.instrument = this.transactionInput.instrument;
-					  this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
-					  if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
-						  if(order.instrumentDetails) {
-							  const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
-							  this.selectedWireTransfer.data = instrumentDetails.accountType.data;
-						  }
-						  
-						  this.nextStage('wire_transfer_result', 'Payment', 5, false);
-					  } else {
-						  this.startPayment();
-					  }
-				  } else if(this.transactionInput.type === TransactionType.Sell){
-					  this.processingComplete();
-				  }
+				  this.transactionWithCodeHandler(order);
 			  } else {
-				  this.errorMessage = 'Order code is invalid';
-				  if (this.widget.embedded) {
-					  this.onError.emit({
-						  errorMessage: this.errorMessage
-					  } as PaymentErrorDetails);
-				  } else {
-					  if (tempStageId === 'verification') {
-						  this.pager.goBack();
-					  } else {
-						  if(order.transactionId && order.transactionId){
-							  if(this.transactionInput.type === TransactionType.Buy){
-								  this.summary.instrument = this.transactionInput.instrument;
-								  this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
-							  }
-							  this.transactionIdConfirmationCode = order.transactionId;
-							  this.nextStage('code_auth', 'Authorization', 3, true);
-						  } else {
-							  if(this.transactionInput.type === TransactionType.Buy) {
-								  this.pager.swapStage(tempStageId);
-							  } else if(this.transactionInput.type === TransactionType.Sell) {
-								  this.setError('Transaction handling failed', this.errorMessage);
-							  }
-						  }
-					  }
-				  }
+				  this.transactionWithoutCodeHandler(order, tempStageId);
 			  }
 		  }, (error) => {
 			  this.inProgress = false;
@@ -1160,6 +1113,64 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 		  })
 	  );
   }
+	
+	private transactionWithCodeHandler(order: TransactionShort){
+		this.summary.orderId = order.code as string;
+		this.summary.fee = order.feeFiat as number ?? 0;
+		this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
+		this.summary.feePercent = order.feePercent as number ?? 0;
+		this.summary.networkFee = order.approxNetworkFee ?? 0;
+		this.summary.transactionDate = new Date().toLocaleString();
+		this.summary.transactionId = order.transactionId as string;
+		
+		if(this.transactionInput.type === TransactionType.Buy){
+			this.summary.instrument = this.transactionInput.instrument;
+			this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
+			if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
+				if(order.instrumentDetails) {
+					const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
+					this.selectedWireTransfer.data = instrumentDetails.accountType.data;
+				}
+				
+				this.nextStage('wire_transfer_result', 'Payment', 5, false);
+			} else {
+				this.startPayment();
+			}
+		} else if(this.transactionInput.type === TransactionType.Sell){
+			this.processingComplete();
+		}
+	}
+
+	private transactionWithoutCodeHandler(order: TransactionShort, tempStageId: string) {
+		this.errorMessage = 'Order code is invalid';
+		if (this.widget.embedded) {
+			this.onError.emit({
+				errorMessage: this.errorMessage
+			} as PaymentErrorDetails);
+
+			return;
+		}
+
+		if (tempStageId === 'verification') {
+			this.pager.goBack();
+			return;
+		}
+
+		if(order.transactionId){
+			if(this.transactionInput.type === TransactionType.Buy){
+				this.summary.instrument = this.transactionInput.instrument;
+				this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
+			}
+			this.transactionIdConfirmationCode = order.transactionId;
+			this.nextStage('code_auth', 'Authorization', 3, true);
+		} else {
+			if(this.transactionInput.type === TransactionType.Buy) {
+				this.pager.swapStage(tempStageId);
+			} else if(this.transactionInput.type === TransactionType.Sell) {
+				this.setError('Transaction handling failed', this.errorMessage);
+			}
+		}
+	}
 
   private startPayment(): void {
   	if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {

@@ -1114,7 +1114,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					if (tempStageId === 'verification') {
   						this.pager.goBack();
   					} else {
-  						if(order.transactionId && order.transactionId){
+  						if(order.transactionId){
   							if(this.transactionInput.type == TransactionType.Buy){
   								this.summary.instrument = this.transactionInput.instrument;
   								this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
