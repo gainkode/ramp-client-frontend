@@ -1245,7 +1245,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   							errorMessage: this.errorMessage
   						} as PaymentErrorDetails);
   					} else {
-  						this.setError('Transaction handling failed', this.errorMessage, 'completeInstantpayTransaction');
+  						this.setError('Transaction handling failed', this.errorMessage, 'completeApmTransaction');
   					}
   				}
   			}

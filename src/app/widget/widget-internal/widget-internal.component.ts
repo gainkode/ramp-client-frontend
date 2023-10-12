@@ -1114,63 +1114,63 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 	  );
   }
 	
-	private transactionWithCodeHandler(order: TransactionShort){
-		this.summary.orderId = order.code as string;
-		this.summary.fee = order.feeFiat as number ?? 0;
-		this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
-		this.summary.feePercent = order.feePercent as number ?? 0;
-		this.summary.networkFee = order.approxNetworkFee ?? 0;
-		this.summary.transactionDate = new Date().toLocaleString();
-		this.summary.transactionId = order.transactionId as string;
+  private transactionWithCodeHandler(order: TransactionShort): void {
+  	this.summary.orderId = order.code as string;
+  	this.summary.fee = order.feeFiat as number ?? 0;
+  	this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
+  	this.summary.feePercent = order.feePercent as number ?? 0;
+  	this.summary.networkFee = order.approxNetworkFee ?? 0;
+  	this.summary.transactionDate = new Date().toLocaleString();
+  	this.summary.transactionId = order.transactionId as string;
 		
-		if(this.transactionInput.type === TransactionType.Buy){
-			this.summary.instrument = this.transactionInput.instrument;
-			this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
-			if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
-				if(order.instrumentDetails) {
-					const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
-					this.selectedWireTransfer.data = instrumentDetails.accountType.data;
-				}
+  	if(this.transactionInput.type === TransactionType.Buy){
+  		this.summary.instrument = this.transactionInput.instrument;
+  		this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
+  		if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
+  			if(order.instrumentDetails) {
+  				const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
+  				this.selectedWireTransfer.data = instrumentDetails.accountType.data;
+  			}
 				
-				this.nextStage('wire_transfer_result', 'Payment', 5, false);
-			} else {
-				this.startPayment();
-			}
-		} else if(this.transactionInput.type === TransactionType.Sell){
-			this.processingComplete();
-		}
-	}
+  			this.nextStage('wire_transfer_result', 'Payment', 5, false);
+  		} else {
+  			this.startPayment();
+  		}
+  	} else if(this.transactionInput.type === TransactionType.Sell){
+  		this.processingComplete();
+  	}
+  }
 
-	private transactionWithoutCodeHandler(order: TransactionShort, tempStageId: string) {
-		this.errorMessage = 'Order code is invalid';
-		if (this.widget.embedded) {
-			this.onError.emit({
-				errorMessage: this.errorMessage
-			} as PaymentErrorDetails);
+  private transactionWithoutCodeHandler(order: TransactionShort, tempStageId: string): void {
+  	this.errorMessage = 'Order code is invalid';
+  	if (this.widget.embedded) {
+  		this.onError.emit({
+  			errorMessage: this.errorMessage
+  		} as PaymentErrorDetails);
 
-			return;
-		}
+  		return;
+  	}
 
-		if (tempStageId === 'verification') {
-			this.pager.goBack();
-			return;
-		}
+  	if (tempStageId === 'verification') {
+  		this.pager.goBack();
+  		return;
+  	}
 
-		if(order.transactionId){
-			if(this.transactionInput.type === TransactionType.Buy){
-				this.summary.instrument = this.transactionInput.instrument;
-				this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
-			}
-			this.transactionIdConfirmationCode = order.transactionId;
-			this.nextStage('code_auth', 'Authorization', 3, true);
-		} else {
-			if(this.transactionInput.type === TransactionType.Buy) {
-				this.pager.swapStage(tempStageId);
-			} else if(this.transactionInput.type === TransactionType.Sell) {
-				this.setError('Transaction handling failed', this.errorMessage);
-			}
-		}
-	}
+  	if(order.transactionId){
+  		if(this.transactionInput.type === TransactionType.Buy){
+  			this.summary.instrument = this.transactionInput.instrument;
+  			this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
+  		}
+  		this.transactionIdConfirmationCode = order.transactionId;
+  		this.nextStage('code_auth', 'Authorization', 3, true);
+  	} else {
+  		if(this.transactionInput.type === TransactionType.Buy) {
+  			this.pager.swapStage(tempStageId);
+  		} else if(this.transactionInput.type === TransactionType.Sell) {
+  			this.setError('Transaction handling failed', this.errorMessage);
+  		}
+  	}
+  }
 
   private startPayment(): void {
   	if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {
@@ -1247,39 +1247,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				this.iframeContent = preAuthResult.html as string;
   				this.inProgress = false;
   				this.nextStage('processing-frame', 'widget-pager.processing-frame', this.pager.step, false);
-  			}, (error) => {
-  				this.inProgress = false;
-  				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-  					this.handleAuthError();
-  				} else {
-  					this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
-  					if (this.widget.embedded) {
-  						this.onError.emit({
-  							errorMessage: this.errorMessage
-  						} as PaymentErrorDetails);
-  					} else {
-  						this.setError('Transaction handling failed', this.errorMessage);
-  					}
-  				}
-  			}
-  		)
-  	);
-  }
-
-  private completeInstantpayTransaction(transactionId: string, provider: string, instrument: PaymentInstrument): void {
-  	this.inProgress = true;
-  	this.instantpayDetails = '';
-  	this.pSubscriptions.add(
-  		this.dataService.preAuth(transactionId, instrument, provider).subscribe(
-  			({ data }) => {
-  				const preAuthResult = data.preauth as PaymentPreauthResultShort;
-  				const order = preAuthResult.order;
-  				this.summary.setPaymentInfo(instrument, order?.paymentInfo as string);
-  				if (preAuthResult.details) {
-  					this.instantpayDetails = preAuthResult.details as string;
-  				}
-  				this.inProgress = false;
-  				this.nextStage('processing-instantpay', 'widget-pager.processing-frame', this.pager.step, false);
   			}, (error) => {
   				this.inProgress = false;
   				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
