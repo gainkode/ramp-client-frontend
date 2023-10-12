@@ -4,7 +4,7 @@
 
         <div class="__widget-title-container__ order-details__content-header m-0">
             <div class="__widget-title-logo-container d-flex m-0 ms-1">
-              <img class="__widget-title-logo" [src]="'https://app.getcoins.com.au/images/logo-widget.png'" [alt]="logoAlt" width="160">
+              <img class="__widget-title-logo" [src]="logoSrc" [alt]="logoAlt" width="160">
 
               <ng-container *ngIf="themeService.theme$ | async as theme">
                 <button 
