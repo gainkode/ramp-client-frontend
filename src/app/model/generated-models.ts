@@ -992,6 +992,7 @@ export type Mutation = {
   generateDefaultTokenWhenKycSent: LoginResult;
   get2faQRCode: Scalars['String']['output'];
   login: LoginResult;
+  loginWidget: LoginResult;
   logout: Scalars['Boolean']['output'];
   makeNotificationsViewed?: Maybe<Array<UserNotification>>;
   preauth: PaymentPreauthResultShort;
@@ -1532,6 +1533,15 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationLoginWidgetArgs = {
+  email?: InputMaybe<Scalars['String']['input']>;
+  oAuthProvider?: InputMaybe<OAuthProvider>;
+  oAuthToken?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  widgetId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type MutationMakeNotificationsViewedArgs = {
   notificationIds?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
@@ -1974,6 +1984,7 @@ export type PaymentPreauthResultShort = {
 
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
+  allowAutoExchange?: Maybe<Scalars['Boolean']['output']>;
   countriesCode2?: Maybe<Array<Scalars['String']['output']>>;
   currencies?: Maybe<Array<Scalars['String']['output']>>;
   default?: Maybe<Scalars['Boolean']['output']>;
@@ -2010,6 +2021,11 @@ export type PostAddress = {
   street?: InputMaybe<Scalars['String']['input']>;
   subStreet?: InputMaybe<Scalars['String']['input']>;
   town?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PreSettingsCommon = {
+  __typename?: 'PreSettingsCommon';
+  allowMercahntSignUp?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type PrimeTrustObject = {
@@ -2077,6 +2093,8 @@ export type Query = {
   getOneToManyRatesMerchant?: Maybe<Array<Maybe<Rate>>>;
   /** Get payment providers */
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  /** Get common settings */
+  getPreSettingsCommon?: Maybe<PreSettingsCommon>;
   /** Get the exchange rate of several currencies to one */
   getRates?: Maybe<Array<Rate>>;
   /** Get receive wallets for users */
@@ -2628,6 +2646,7 @@ export type QueryGetVaultAccountArgs = {
 
 
 export type QueryGetVaultAccountListForUsersArgs = {
+  admin?: InputMaybe<Scalars['Boolean']['input']>;
   custodyProviderName: Scalars['String']['input'];
   userIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
@@ -3057,6 +3076,7 @@ export type SettingsCurrency = {
   maxAmount: Scalars['Float']['output'];
   minAmount: Scalars['Float']['output'];
   name?: Maybe<Scalars['String']['output']>;
+  originalSymbol?: Maybe<Scalars['String']['output']>;
   precision: Scalars['Int']['output'];
   rateFactor: Scalars['Float']['output'];
   symbol: Scalars['ID']['output'];
@@ -4129,6 +4149,7 @@ export enum UserActionType {
   Signup = 'signup',
   System = 'system',
   Transfer = 'transfer',
+  UnbenchmarkInsufficient = 'unbenchmarkInsufficient',
   UnbenchmarkTransaction = 'unbenchmarkTransaction',
   UpdateCostSettings = 'updateCostSettings',
   UpdateFeeSettings = 'updateFeeSettings',
@@ -4465,6 +4486,30 @@ export type UserRole = {
   userRoleId?: Maybe<Scalars['String']['output']>;
 };
 
+export enum UserRoleObjectCode {
+  AccountBalanceTracker = 'ACCOUNT_BALANCE_TRACKER',
+  Affiliates = 'AFFILIATES',
+  ChargebackRate = 'CHARGEBACK_RATE',
+  Contacts = 'CONTACTS',
+  Costs = 'COSTS',
+  Customers = 'CUSTOMERS',
+  Exchanger = 'EXCHANGER',
+  Fees = 'FEES',
+  Kyc = 'KYC',
+  MerchantWidget = 'MERCHANT_WIDGET',
+  Notifications = 'NOTIFICATIONS',
+  QuickCheckout = 'QUICK_CHECKOUT',
+  Reconciliation = 'RECONCILIATION',
+  Risks = 'RISKS',
+  RollingReserves = 'ROLLING_RESERVES',
+  Settings = 'SETTINGS',
+  SystemUsers = 'SYSTEM_USERS',
+  Transactions = 'TRANSACTIONS',
+  UsersEmails = 'USERS_EMAILS',
+  UsersPhones = 'USERS_PHONES',
+  Wallets = 'WALLETS'
+}
+
 export type UserRolePermission = {
   __typename?: 'UserRolePermission';
   fullAccess: Scalars['Boolean']['output'];
@@ -4673,6 +4718,9 @@ export type Widget = {
   instruments?: Maybe<Array<PaymentInstrument>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   masked: Scalars['Boolean']['output'];
+  merchantFeeAddress?: Maybe<Array<WidgetDestination>>;
+  merchantFeeMinAmount?: Maybe<Scalars['Float']['output']>;
+  merchantFeePercent?: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
   newVaultPerTransaction?: Maybe<Scalars['Boolean']['output']>;
   paymentProviders?: Maybe<Array<Scalars['String']['output']>>;
@@ -4706,6 +4754,9 @@ export type WidgetInput = {
   instruments?: InputMaybe<Array<PaymentInstrument>>;
   liquidityProvider?: InputMaybe<LiquidityProvider>;
   masked?: InputMaybe<Scalars['Boolean']['input']>;
+  merchantFeeAddress?: InputMaybe<Array<WidgetDestinationInput>>;
+  merchantFeeMinAmount?: InputMaybe<Scalars['Float']['input']>;
+  merchantFeePercent?: InputMaybe<Scalars['Float']['input']>;
   name: Scalars['String']['input'];
   newVaultPerTransaction?: InputMaybe<Scalars['Boolean']['input']>;
   paymentProviders?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -4731,6 +4782,9 @@ export type WidgetShort = {
   hasFixedAddress: Scalars['Boolean']['output'];
   instruments?: Maybe<Array<PaymentInstrument>>;
   masked: Scalars['Boolean']['output'];
+  merchantFeeAddress?: Maybe<Array<WidgetDestination>>;
+  merchantFeeMinAmount?: Maybe<Scalars['Float']['output']>;
+  merchantFeePercent?: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
   newVaultPerTransaction?: Maybe<Scalars['Boolean']['output']>;
   paymentProviders?: Maybe<Array<Scalars['String']['output']>>;
@@ -4750,6 +4804,9 @@ export type WidgetUpdateInput = {
   instruments?: InputMaybe<Array<PaymentInstrument>>;
   liquidityProvider?: InputMaybe<LiquidityProvider>;
   masked?: InputMaybe<Scalars['Boolean']['input']>;
+  merchantFeeAddress?: InputMaybe<Array<WidgetDestinationInput>>;
+  merchantFeeMinAmount?: InputMaybe<Scalars['Float']['input']>;
+  merchantFeePercent?: InputMaybe<Scalars['Float']['input']>;
   name: Scalars['String']['input'];
   newVaultPerTransaction?: InputMaybe<Scalars['Boolean']['input']>;
   paymentProviders?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -4761,6 +4818,7 @@ export type WidgetUpdateInput = {
 export type WidgetUserParams = {
   __typename?: 'WidgetUserParams';
   created: Scalars['DateTime']['output'];
+  executed?: Maybe<Scalars['DateTime']['output']>;
   params?: Maybe<Scalars['String']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
   widgetId?: Maybe<Scalars['String']['output']>;
