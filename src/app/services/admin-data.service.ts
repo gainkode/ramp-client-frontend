@@ -1347,6 +1347,12 @@ const GET_WIDGETS = gql`
         newVaultPerTransaction
         fee
         masked
+        merchantFeeAddress{
+          currency
+          destination
+        }
+        merchantFeeMinAmount
+        merchantFeePercent
       }
     }
   }
@@ -1721,6 +1727,9 @@ const CREATE_WIDGET = gql`
     $newVaultPerTransaction: Boolean
     $fee: Float
     $masked: Boolean
+    $merchantFeeDestinationAddress: [WidgetDestinationInput!]
+    $merchantFeeMinAmount: Float
+    $merchantFeePercent: Float
   ) {
     createWidget(
       userId: $userId
@@ -1741,6 +1750,9 @@ const CREATE_WIDGET = gql`
         newVaultPerTransaction: $newVaultPerTransaction
         fee: $fee
         masked: $masked
+        merchantFeeAddress: $merchantFeeDestinationAddress
+        merchantFeeMinAmount: $merchantFeeMinAmount
+        merchantFeePercent: $merchantFeePercent
       }
     ) {
       widgetId
@@ -1768,6 +1780,9 @@ const UPDATE_WIDGET = gql`
     $newVaultPerTransaction: Boolean
     $fee: Float
     $masked: Boolean
+    $merchantFeeDestinationAddress: [WidgetDestinationInput!]
+    $merchantFeeMinAmount: Float
+    $merchantFeePercent: Float
   ) {
     updateWidget(
       widgetId: $widgetId,
@@ -1789,6 +1804,9 @@ const UPDATE_WIDGET = gql`
         newVaultPerTransaction: $newVaultPerTransaction
         fee: $fee
         masked: $masked
+        merchantFeeAddress: $merchantFeeDestinationAddress
+        merchantFeeMinAmount: $merchantFeeMinAmount
+        merchantFeePercent: $merchantFeePercent
       }
     ) {
       widgetId
@@ -3876,7 +3894,8 @@ export class AdminDataService {
           allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
           newVaultPerTransaction: widget.newVaultPerTransaction,
           fee: widget.fee,
-          masked: widget.masked
+          masked: widget.masked,
+          merchantFeeDestinationAddress: widget.merchantFeeDestinationAddress
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was created`, undefined, { duration: 5000 });
@@ -3901,7 +3920,10 @@ export class AdminDataService {
           allowToPayIfKycFailed: widget.allowToPayIfKycFailed,
           newVaultPerTransaction: widget.newVaultPerTransaction,
           fee: widget.fee,
-          masked: widget.masked
+          masked: widget.masked,
+          merchantFeeDestinationAddress: widget.merchantFeeDestinationAddress,
+          merchantFeeMinAmount: widget.merchantFeeMinAmount,
+          merchantFeePercent: widget.merchantFeePercent
         }
       }).pipe(tap(() => {
         this.snackBar.open(`Widget was updated`, undefined, { duration: 5000 });

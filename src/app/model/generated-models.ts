@@ -4935,6 +4935,9 @@ export type Widget = {
   instruments?: Maybe<Array<PaymentInstrument>>;
   liquidityProvider?: Maybe<LiquidityProvider>;
   masked: Scalars['Boolean']['output'];
+  merchantFeeAddress?: Maybe<Array<WidgetDestination>>;
+  merchantFeeMinAmount?: Maybe<Scalars['Float']['output']>;
+  merchantFeePercent?: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
   newVaultPerTransaction?: Maybe<Scalars['Boolean']['output']>;
   paymentProviders?: Maybe<Array<Scalars['String']['output']>>;
@@ -4968,6 +4971,9 @@ export type WidgetInput = {
   instruments?: InputMaybe<Array<PaymentInstrument>>;
   liquidityProvider?: InputMaybe<LiquidityProvider>;
   masked?: InputMaybe<Scalars['Boolean']['input']>;
+  merchantFeeAddress?: InputMaybe<Array<WidgetDestinationInput>>;
+  merchantFeeMinAmount?: InputMaybe<Scalars['Float']['input']>;
+  merchantFeePercent?: InputMaybe<Scalars['Float']['input']>;
   name: Scalars['String']['input'];
   newVaultPerTransaction?: InputMaybe<Scalars['Boolean']['input']>;
   paymentProviders?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -4993,6 +4999,9 @@ export type WidgetShort = {
   hasFixedAddress: Scalars['Boolean']['output'];
   instruments?: Maybe<Array<PaymentInstrument>>;
   masked: Scalars['Boolean']['output'];
+  merchantFeeAddress?: Maybe<Array<WidgetDestination>>;
+  merchantFeeMinAmount?: Maybe<Scalars['Float']['output']>;
+  merchantFeePercent?: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
   newVaultPerTransaction?: Maybe<Scalars['Boolean']['output']>;
   paymentProviders?: Maybe<Array<Scalars['String']['output']>>;
@@ -5012,6 +5021,9 @@ export type WidgetUpdateInput = {
   instruments?: InputMaybe<Array<PaymentInstrument>>;
   liquidityProvider?: InputMaybe<LiquidityProvider>;
   masked?: InputMaybe<Scalars['Boolean']['input']>;
+  merchantFeeAddress?: InputMaybe<Array<WidgetDestinationInput>>;
+  merchantFeeMinAmount?: InputMaybe<Scalars['Float']['input']>;
+  merchantFeePercent?: InputMaybe<Scalars['Float']['input']>;
   name: Scalars['String']['input'];
   newVaultPerTransaction?: InputMaybe<Scalars['Boolean']['input']>;
   paymentProviders?: InputMaybe<Array<Scalars['String']['input']>>;

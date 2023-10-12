@@ -60,6 +60,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   currencyOptionsCrypto: CurrencyView[] = [];
 	currencyOptions: CurrencyView[] = [];
   currenciesTable: any = [];
+	merchantFeeDestinationCurrencies: any = [];
 	currencyAmountsTable: any = [];
   currencyOptionsFiat: CurrencyView[] = [];
   paymentProviderOptions: PaymentProviderView[] = [];
@@ -78,6 +79,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   usersOptions$: Observable<UserItem[]> = of([]);
   minUsersLengthTerm = 1;
   widgetDestinationAddress: WidgetDestination[] = [];
+	merchantFeeDestinationAddress: WidgetDestination[] = [];
   widgetAdditionalSettings: Record<string, any> = {};
   selectAll = false;
   adminAdditionalSettings: Record<string, any> = {};
@@ -108,6 +110,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	minAmountFrom: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
   	maxAmountFrom: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
   	fee: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+		merchantFeeMinAmount: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+		merchantFeePercent: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
   });
 
   constructor(
@@ -172,6 +176,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	if (widget) {
   		let sellecteduserType = UserType.Personal;
   		this.widgetDestinationAddress = widget.destinationAddress;
+			this.merchantFeeDestinationAddress = widget.merchantFeeDestinationAddress;
   		if(widget.additionalSettings){
   			this.widgetAdditionalSettings = JSON.parse(widget.additionalSettings);
   			if(this.widgetAdditionalSettings.userType && this.userTypeOptions.some(userType => userType.id == this.widgetAdditionalSettings.userType)){
@@ -212,7 +217,9 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   					disclaimer: this.widgetAdditionalSettings?.disclaimer ?? false,
   					minAmountFrom: this.widgetAdditionalSettings?.minAmountFrom ?? 0,
   					maxAmountFrom: this.widgetAdditionalSettings?.maxAmountFrom ?? 0,
-  					fee: widget?.fee ?? 0
+  					fee: widget?.fee ?? 0,
+						merchantFeePercent: widget.merchantFeePercent ?? 0,
+						merchantFeeMinAmount: widget.merchantFeeMinAmount
   				});
   			})
   		);
@@ -269,6 +276,20 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   		}
   		// widget.currenciesCrypto = formValue.currenciesCrypto;
   	}
+
+		if(this.merchantFeeDestinationCurrencies._data._value && this.merchantFeeDestinationCurrencies._data._value.length > 0){
+  		for(const cryptoCurrency of this.merchantFeeDestinationCurrencies._data._value){
+  			if(cryptoCurrency.selected){
+  				if(cryptoCurrency.destination && cryptoCurrency.destination != ''){
+  					widget.merchantFeeDestinationAddress.push({
+  						currency: cryptoCurrency.currency,
+  						destination: cryptoCurrency.destination
+  					});
+  				}
+  			}
+  		}
+  		// widget.currenciesCrypto = formValue.currenciesCrypto;
+  	}
     
 		widget.additionalSettings = JSON.stringify(this.widgetAdditionalSettings);
   	widget.currenciesFiat = formValue.currenciesFiat;
@@ -280,6 +301,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	widget.secret = formValue.secret;
   	widget.allowToPayIfKycFailed = formValue.allowToPayIfKycFailed;
   	widget.fee = formValue.fee;
+		widget.merchantFeeMinAmount = formValue.merchantFeeMinAmount;
+		widget.merchantFeePercent = formValue.merchantFeePercent;
   	widget.newVaultPerTransaction = formValue.newVaultPerTransaction;
 		widget.masked = formValue.masked;
   	// widget.destinationAddress = this.widgetDestinationAddress;
@@ -317,6 +340,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   					for(const currency of currencySettings.settingsCurrency.list){
   						if(currency.fiat === false){
   							const widgetDestination = this.widgetDestinationAddress.find(wallet => wallet.currency == currency.symbol);
+								const merchantFeeDestination = this.merchantFeeDestinationAddress.find(wallet => wallet.currency == currency.symbol)
   							const currencySelectedWithoutDestination = formValue.currenciesCrypto.find(item=> item == currency.symbol);
   							// let currencyTable = this.currenciesTable.find(item => item.currency == currency.symbol);
                 
@@ -333,6 +357,12 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   									{ currency: currency.symbol, destination: '', selected: true }
   								);
   							}
+
+								if(merchantFeeDestination){
+									this.merchantFeeDestinationCurrencies.push(
+  									{ currency: currency.symbol, destination: widgetDestination.destination, selected: true }
+  								);
+								}
 
   							// if(!currencyTable){
   							//   this.currenciesTable.push(
@@ -355,6 +385,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 						this.currencyOptions = this.currencyOptions.concat(currenciesCrypto, currenciesFiat);
   					this.currenciesTable = new MatTableDataSource(this.currenciesTable);
 						this.currencyAmountsTable = new MatTableDataSource(this.currencyAmountsTable);
+						this.merchantFeeDestinationCurrencies = new MatTableDataSource(this.merchantFeeDestinationCurrencies);
   				}
   				// this.currencyOptionsCrypto = currencySettings.settingsCurrency.list?.
   				//   filter(x => x.fiat === false).
@@ -433,6 +464,21 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   		}
   	}
   	this.currenciesTable = new MatTableDataSource(currenciesTableDel);
+  }
+
+	addMerchantFeeDestinationAddress(): void{
+  	this.merchantFeeDestinationCurrencies._data._value.push({ currency: '', destination: '', selected: true });
+  	this.merchantFeeDestinationCurrencies = new MatTableDataSource(this.merchantFeeDestinationCurrencies._data._value);
+  }
+
+  delMerchantFeeDestinationAddress(element: any): void{
+  	const merchantFeeDestinationCurrenciesDel: Record<string, any>[] = [];
+  	for(const item of this.merchantFeeDestinationCurrencies._data._value){
+  		if(item.currency != element.currency){
+  			merchantFeeDestinationCurrenciesDel.push(item);
+  		}
+  	}
+  	this.merchantFeeDestinationCurrencies = new MatTableDataSource(merchantFeeDestinationCurrenciesDel);
   }
 
 	addWidgetAmounts(): void{
