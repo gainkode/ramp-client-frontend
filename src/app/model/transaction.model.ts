@@ -529,7 +529,7 @@ export class TransactionItem {
 			this.recipient = paymentData.recipient;
 			this.rate = data.rate ?? data.initialRate ?? '';
 			this.transferOrderHash = data.transferOrder?.transferHash ?? '';
-			this.transferOrderBlockchainLink = (<Transaction>data).transferOrderBlockchainLink ?? '';
+			this.transferOrderBlockchainLink = data.transferOrderBlockchainLink ?? '';
 			this.status = userStatus;
 			this.ip = data.userIp as string;
 			const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;
