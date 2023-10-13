@@ -1146,10 +1146,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {
   		this.nextStage('credit_card', 'widget-pager.credit_card', this.pager.step, true);
   	} else if (this.summary.providerView?.instrument === PaymentInstrument.Apm) {
-  		this.completeApmTransaction(
-  			this.summary.transactionId,
-  			this.summary.providerView.id,
-  			PaymentInstrument.Apm);
+  		this.completeApmTransaction(this.summary.transactionId, PaymentInstrument.Apm);
   	} else if(this.summary.providerView?.instrument === PaymentInstrument.FiatVault){
   		this.completeTextData = completeDataDefault;
   		this.nextStage('complete', 'widget-pager.complete', 6, false);
@@ -1162,14 +1159,14 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private completeApmTransaction(transactionId: string, provider: string, instrument: PaymentInstrument): void {
+  private completeApmTransaction(transactionId: string, instrument: PaymentInstrument): void {
   	this.inProgress = true;
   	this.pSubscriptions.add(
-  		this.dataService.createApmPayment(transactionId, instrument).subscribe(
-  			({ data }) => {
+  		this.dataService.createApmPayment(transactionId, instrument).subscribe({
+  			next: ({ data }) => {
   				this.inProgress = false;
   				const preAuthResult = data.createApmPayment as PaymentApmResult;
-  				if(preAuthResult.type === PaymentApmType.External) {
+  				if (preAuthResult.type === PaymentApmType.External) {
   					this.showWidget = false;
   					this.inProgress = false;
   					this.onIFramePay.emit(true);
@@ -1182,22 +1179,21 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   					this.nextStage('processing-instantpay', 'Payment', this.pager.step, false);
   				}
 				
-  			}, (error) => {
+  			},
+  			error: (error) => {
   				this.inProgress = false;
   				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
   					this.handleAuthError();
   				} else {
   					this.errorMessage = this.errorHandler.getError(error.message, 'Unable to confirm your order');
   					if (this.widget.embedded) {
-  						this.onError.emit({
-  							errorMessage: this.errorMessage
-  						} as PaymentErrorDetails);
+  						this.onError.emit({ errorMessage: this.errorMessage } as PaymentErrorDetails);
   					} else {
   						this.setError('Transaction handling failed', this.errorMessage);
   					}
   				}
   			}
-  		)
+  		})
   	);
   }
 
@@ -1205,9 +1201,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.inProgress = true;
   	this.iframeContent = '';
   	this.pSubscriptions.add(
-  		this.dataService.preAuthCard(transactionId, PaymentInstrument.CreditCard, provider, card).subscribe(
-  			({ data }) => {
-  				// One more chance to start notifictions
+  		this.dataService.preAuthCard(transactionId, PaymentInstrument.CreditCard, provider, card).subscribe({
+  			next: ({ data }) => {
   				if (!this.notificationStarted) {
   					this.startNotificationListener();
   				}
@@ -1217,7 +1212,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				this.iframeContent = preAuthResult.html as string;
   				this.inProgress = false;
   				this.nextStage('processing-frame', 'widget-pager.processing-frame', this.pager.step, false);
-  			}, (error) => {
+  			},
+  			error: (error) => {
   				this.inProgress = false;
   				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
   					this.handleAuthError();
@@ -1232,7 +1228,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   					}
   				}
   			}
-  		)
+  		})
   	);
   }
 
