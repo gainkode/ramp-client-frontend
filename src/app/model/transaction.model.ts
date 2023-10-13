@@ -500,6 +500,8 @@ export class TransactionItem {
 	status: TransactionStatusDescriptorMap | undefined = undefined;
 	typeIcon = 'error';
 	kycStatus = '';
+	transferOrderHash = '';
+	transferOrderBlockchainLink = '';
 	kycRejected = false;
 	private created!: Date;
 	private datepipe = new DatePipe('en-US');
@@ -526,7 +528,8 @@ export class TransactionItem {
 			this.sender = paymentData.sender;
 			this.recipient = paymentData.recipient;
 			this.rate = data.rate ?? data.initialRate ?? '';
-
+			this.transferOrderHash = data.transferOrder?.transferHash ?? '';
+			this.transferOrderBlockchainLink = (<Transaction>data).transferOrderBlockchainLink ?? '';
 			this.status = userStatus;
 			this.ip = data.userIp as string;
 			const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;
@@ -805,7 +808,7 @@ function getPaymentData(
 		result.sender = {
 			id: '',
 			title:
-        data.sourceAddress && data.sourceAddress != ''
+        data.sourceAddress && data.sourceAddress !== ''
         	? data.sourceAddress
         	: 'External',
 			imgSource: '',
@@ -817,7 +820,7 @@ function getPaymentData(
 		const c = getCryptoSymbol(result.currencyToSpend);
 		let cryptoImg =
       c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
-		if (data.instrument == PaymentInstrument.FiatVault) {
+		if (data.instrument === PaymentInstrument.FiatVault) {
 			result.recipient = {
 				id: '',
 				title: `${data.currencyToReceive} Wallet`,

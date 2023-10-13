@@ -83,7 +83,11 @@ const GET_MY_TRANSACTIONS = gql`
         sourceVaultId
         status
         transactionId
-        transferOrder { transferDetails }
+        transferOrderBlockchainLink
+        transferOrder { 
+          transferDetails
+          transferHash
+        }
         type
         userId
         userIp
@@ -659,6 +663,7 @@ export class ProfileDataService {
 			first: takeItems,
 			orderBy: orderFields,
 		};
+
 		return this.apollo.watchQuery<any>({
 			query: GET_MY_TRANSACTIONS,
 			variables: vars,
