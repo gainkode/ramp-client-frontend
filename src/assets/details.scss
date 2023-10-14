@@ -123,12 +123,16 @@ $font_main: var(--font_main);
     margin: 8px 0px;
 }
 
-.__profile-details-item-grid {
+.__profile-details-item-grid, .__profile-transaction-details-item-grid {
     width: 100%;
     margin: 8px 0px;
     display: grid;
     grid-template-columns: 130px auto;
     grid-template-rows: auto;
+}
+
+.__profile-transaction-details-item-grid {
+    grid-template-columns: 150px auto;
 }
 
 .__profile-details-item-activated-block {
@@ -235,6 +239,13 @@ $font_main: var(--font_main);
     white-space: normal;
     color: $color_purple_900_text;
 }
+
+.__profile-details-item-value-truncate {
+    width: 210px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+} 
 
 .__profile-details-item-single-value {
     margin: 0px;
