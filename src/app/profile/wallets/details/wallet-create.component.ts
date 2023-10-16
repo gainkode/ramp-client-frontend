@@ -67,8 +67,8 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     	this.subscriptions.add(
     		this.currencyField?.valueChanges.subscribe(val => {
     			this.currencyInit = true;
-					this.ethFlag = this.selectedCurrency.currencyBlockchain === CurrencyBlockchain.Ethereum;
-					this.trxFlag = this.selectedCurrency.currencyBlockchain === CurrencyBlockchain.Tron;
+					this.ethFlag = this.selectedCurrency?.currencyBlockchain === CurrencyBlockchain.Ethereum;
+					this.trxFlag = this.selectedCurrency?.currencyBlockchain === CurrencyBlockchain.Tron;
     			this.selectedCurrency = this.cryptoList.find(x => x.symbol === val);
     			this.useExistingEthWalletField?.setValue(false);
     			this.useExistingEthWalletField?.updateValueAndValidity();
