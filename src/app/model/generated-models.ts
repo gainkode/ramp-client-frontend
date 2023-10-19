@@ -3866,6 +3866,7 @@ export type TransactionShort = {
   subStatus?: Maybe<Scalars['String']['output']>;
   transactionId: Scalars['ID']['output'];
   transferOrder?: Maybe<TransferOrder>;
+  transferOrderBlockchainLink?: Maybe<Scalars['String']['output']>;
   type: TransactionType;
   updated?: Maybe<Scalars['DateTime']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
@@ -5034,17 +5035,36 @@ export type WidgetUpdateInput = {
 
 export type WidgetUserParams = {
   __typename?: 'WidgetUserParams';
-  created: Scalars['DateTime']['output'];
+  created?: Maybe<Scalars['DateTime']['output']>;
   executed?: Maybe<Scalars['DateTime']['output']>;
+  merchantFeeAddress?: Maybe<Scalars['String']['output']>;
+  merchantFeeMinAmount?: Maybe<Scalars['Float']['output']>;
+  merchantFeePercent?: Maybe<Scalars['Float']['output']>;
   params?: Maybe<Scalars['String']['output']>;
+  userAddress?: Maybe<Scalars['String']['output']>;
+  userBirthday?: Maybe<Scalars['DateTime']['output']>;
+  userEmail: Scalars['String']['output'];
+  userFirstName?: Maybe<Scalars['String']['output']>;
+  userGender?: Maybe<Gender>;
   userId?: Maybe<Scalars['String']['output']>;
+  userLastName?: Maybe<Scalars['String']['output']>;
+  userPhone?: Maybe<Scalars['String']['output']>;
   widgetId?: Maybe<Scalars['String']['output']>;
   widgetUserParamsId?: Maybe<Scalars['ID']['output']>;
 };
 
 export type WidgetUserParamsInput = {
+  merchantFeeAddress?: InputMaybe<Scalars['String']['input']>;
+  merchantFeeMinAmount?: InputMaybe<Scalars['Float']['input']>;
+  merchantFeePercent?: InputMaybe<Scalars['Float']['input']>;
   params?: InputMaybe<Scalars['String']['input']>;
+  userAddress?: InputMaybe<Scalars['String']['input']>;
+  userBirthday?: InputMaybe<Scalars['DateTime']['input']>;
   userEmail: Scalars['String']['input'];
+  userFirstName?: InputMaybe<Scalars['String']['input']>;
+  userGender?: InputMaybe<Gender>;
+  userLastName?: InputMaybe<Scalars['String']['input']>;
+  userPhone?: InputMaybe<Scalars['String']['input']>;
   widgetId: Scalars['String']['input'];
 };
 

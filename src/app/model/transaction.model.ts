@@ -502,6 +502,8 @@ export class TransactionItem {
 	status: TransactionStatusDescriptorMap | undefined = undefined;
 	typeIcon = 'error';
 	kycStatus = '';
+	transferOrderHash = '';
+	transferOrderBlockchainLink = '';
 	kycRejected = false;
 	private created!: Date;
 	private datepipe = new DatePipe('en-US');
@@ -528,7 +530,8 @@ export class TransactionItem {
 			this.sender = paymentData.sender;
 			this.recipient = paymentData.recipient;
 			this.rate = data.rate ?? data.initialRate ?? '';
-
+			this.transferOrderHash = data.transferOrder?.transferHash ?? '';
+			this.transferOrderBlockchainLink = data.transferOrderBlockchainLink ?? '';
 			this.status = userStatus;
 			this.ip = data.userIp as string;
 			const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;
