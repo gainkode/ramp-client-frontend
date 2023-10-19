@@ -51,6 +51,7 @@ import { ProfileInfoDropboxComponent } from './settings/components/info-dropbox.
 import { ProfilePaymentErrorComponent } from './details/payment-error.component';
 import { ProfileApiKeysSettingsComponent } from './settings/panels/apikeys.component';
 import { ProfileIpListSettingsComponent } from './settings/panels/ip-list.component';
+import { ShortHashPipe } from './pipes/short-hash.pipe';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -93,7 +94,8 @@ export class MaterialModule { }
 		ProfileSettingsComponent, ProfileInfoSettingsComponent, ProfileVerificationSettingsComponent,
 		ProfileSecuriySettingsComponent, ProfileApiKeysSettingsComponent, ProfileIpListSettingsComponent,
 		ProfileChangePasswordComponent, ProfileInfoTextboxComponent, ProfileInfoDateboxComponent, ProfileInfoDropboxComponent,
-		SettingsMenuBarComponent
+		SettingsMenuBarComponent,
+		ShortHashPipe
 	],
 	exports: [
 		ProfileHomeComponent,
@@ -103,7 +105,7 @@ export class MaterialModule { }
 		ProfilePriceListComponent,
 		ProfilePaymentCompleteComponent, ProfilePaymentErrorComponent,
 		ProfileNotificationsComponent,
-		ProfileSettingsComponent
+		ProfileSettingsComponent, ShortHashPipe
 	],
 	providers: [],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA]

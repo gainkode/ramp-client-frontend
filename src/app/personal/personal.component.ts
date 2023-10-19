@@ -149,7 +149,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     	}
     }
 
-    private loadCommonSettings(){
+    private loadCommonSettings(): void{
     	const settingsCommon = this.auth.getLocalSettingsCommon();
     	if(settingsCommon){
     		this.userAdditionalSettings = typeof settingsCommon.userAdditionalSettings == 'string' ? JSON.parse(settingsCommon.userAdditionalSettings) : settingsCommon.userAdditionalSettings;
@@ -178,7 +178,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     		if (personalVerified === true) {
     			this.selectedMenu = section;
     		} else {
-    			this.router.navigateByUrl(this.menuItems[0].url);
+    			void this.router.navigateByUrl(this.menuItems[0].url);
     		}
     	}
     }
@@ -303,8 +303,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     			}
     		}
     	}
-    	this.router.navigateByUrl(baseLink, { skipLocationChange: true }).then(() =>
-    		this.router.navigate([link]));
+    	void this.router.navigateByUrl(baseLink, { skipLocationChange: true }).then(() => this.router.navigate([link]));
     }
 
     logout(): void {
