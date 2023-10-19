@@ -338,7 +338,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 
 								if(merchantFeeDestination){
 									this.merchantFeeDestinationCurrencies.push(
-  									{ currency: currency.symbol, destination: widgetDestination.destination, selected: true }
+  									{ currency: currency.symbol, destination: merchantFeeDestination.destination, selected: true }
   								);
 								}
 
