@@ -10,6 +10,7 @@ import { EnvService } from 'services/env.service';
 })
 export class WidgetCompleteComponent {
   @Input() showRestartButton = false;
+  @Input() isWidgetUserParams = false;
   @Input() set textContent(data: string[]) {
   	if (data.length > 0) {
   		this.textData = new CustomTextList(data);
