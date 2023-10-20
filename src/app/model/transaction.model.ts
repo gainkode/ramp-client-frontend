@@ -674,60 +674,61 @@ function getPaymentData(
 	result.amountToReceive = data.amountToReceiveWithoutFee ?? data.initialAmountToReceiveWithoutFee ?? 0;
 	let recepientImg = '';
 	let senderImg = '';
-	if (data.type === TransactionType.Buy) {
-		result.currencyFiat = result.currencyToSpend;
-		result.currencyCrypto = result.currencyToReceive;
-		result.fees = (data.feeFiat as number) ?? 0;
-		result.networkFee = data.approxNetworkFee ?? 0;
-		result.typeIcon = 'account_balance';
-		const c = getCryptoSymbol(result.currencyToReceive);
-		recepientImg = c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
-
-		if (result.networkFee < 0) {
-			result.networkFee = 0;
+	switch(data.type) {
+		case TransactionType.Buy: {
+			result.currencyFiat = result.currencyToSpend;
+			result.currencyCrypto = result.currencyToReceive;
+			result.fees = (data.feeFiat as number) ?? 0;
+			result.networkFee = data.approxNetworkFee ?? 0;
+			result.typeIcon = 'account_balance';
+			const c = getCryptoSymbol(result.currencyToReceive);
+			recepientImg = c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
+	
+			if (result.networkFee < 0) {
+				result.networkFee = 0;
+			}
+			break;
+		} 
+		case TransactionType.Transfer: {
+			result.currencyFiat = result.currencyToReceive;
+			result.currencyCrypto = result.currencyToSpend;
+			result.fees = (data.feeFiat as number) ?? 0;
+			result.networkFee = data.approxNetworkFee ?? 0;
+			result.typeIcon = 'file_upload';
+			const c = getCryptoSymbol(result.currencyToSpend);
+			senderImg = c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
+			break;
 		}
-	} else if (data.type === TransactionType.Transfer) {
-		result.currencyFiat = result.currencyToReceive;
-		result.currencyCrypto = result.currencyToSpend;
-		result.fees = (data.feeFiat as number) ?? 0;
-		result.networkFee = data.approxNetworkFee ?? 0;
-		result.typeIcon = 'file_upload';
-		const c = getCryptoSymbol(result.currencyToSpend);
-		senderImg = c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
-	} else if (data.type === TransactionType.Receive) {
-		result.currencyFiat = result.currencyToSpend;
-		result.currencyCrypto = result.currencyToReceive;
-		result.fees = (data.feeFiat as number) ?? 0;
-		result.networkFee = data.approxNetworkFee ?? 0;
-		result.typeIcon = 'file_download';
-		const c = getCryptoSymbol(result.currencyToReceive).toLowerCase();
-		recepientImg = c !== '' ? `../../../assets/svg-crypto/${c}.svg` : '';
-	} else if (data.type === TransactionType.Sell) {
-		result.currencyFiat = result.currencyToReceive;
-		result.currencyCrypto = result.currencyToSpend;
-		result.fees = (data.feeFiat as number) ?? 0;
-		result.networkFee = data.approxNetworkFee ?? 0;
-		result.typeIcon = 'account_balance';
-		const c = getCryptoSymbol(result.currencyToSpend);
-		senderImg = c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
-	} else if (data.type === TransactionType.Deposit) {
-		result.currencyFiat = result.currencyToReceive;
-		result.currencyCrypto = '';
-		result.fees = (data.feeFiat as number) ?? 0;
-		result.networkFee = data.approxNetworkFee ?? 0;
-		result.typeIcon = 'monetization_on';
-	} else if (data.type === TransactionType.Withdrawal) {
-		result.currencyFiat = result.currencyToReceive;
-		result.currencyCrypto = '';
-		result.fees = (data.feeFiat as number) ?? 0;
-		result.networkFee = data.approxNetworkFee ?? 0;
-		result.typeIcon = 'monetization_on';
-	} else if (data.type === TransactionType.MerchantBuy) {
-		result.currencyFiat = result.currencyToReceive;
-		result.currencyCrypto = '';
-		result.fees = (data.feeFiat as number) ?? 0;
-		result.networkFee = data.approxNetworkFee ?? 0;
-		result.typeIcon = 'monetization_on';
+		case TransactionType.Receive: {
+			result.currencyFiat = result.currencyToSpend;
+			result.currencyCrypto = result.currencyToReceive;
+			result.fees = (data.feeFiat as number) ?? 0;
+			result.networkFee = data.approxNetworkFee ?? 0;
+			result.typeIcon = 'file_download';
+			const c = getCryptoSymbol(result.currencyToReceive).toLowerCase();
+			recepientImg = c !== '' ? `../../../assets/svg-crypto/${c}.svg` : '';
+			break;
+		} 
+		case TransactionType.Sell: {
+			result.currencyFiat = result.currencyToReceive;
+			result.currencyCrypto = result.currencyToSpend;
+			result.fees = (data.feeFiat as number) ?? 0;
+			result.networkFee = data.approxNetworkFee ?? 0;
+			result.typeIcon = 'account_balance';
+			const c = getCryptoSymbol(result.currencyToSpend);
+			senderImg = c !== '' ? `../../../assets/svg-crypto/${c.toLowerCase()}.svg` : '';
+			break;
+		} 
+		case TransactionType.Deposit:
+		case TransactionType.Withdrawal:
+		case(TransactionType.MerchantBuy): {
+			result.currencyFiat = result.currencyToReceive;
+			result.currencyCrypto = '';
+			result.fees = (data.feeFiat as number) ?? 0;
+			result.networkFee = data.approxNetworkFee ?? 0;
+			result.typeIcon = 'monetization_on';
+			break;
+		}
 	}
 
 	result.recipient = {
@@ -740,8 +741,8 @@ function getPaymentData(
 	result.sender = {
 		id: '',
 		title: data.senderName,
-		imgSource: senderImg ? '__profile-transactions-table-cell-sender-icon' : '',
-		imgClass: senderImg,
+		imgSource: senderImg,
+		imgClass: senderImg ? '__profile-transactions-table-cell-sender-icon' : '',
 	} as CommonTargetValue;
 	return result;
 }
