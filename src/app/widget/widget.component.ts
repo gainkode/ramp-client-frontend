@@ -88,6 +88,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   disclaimerTextData = disclaimerDataDefault;
   completeTextData = completeDataDefault;
   transactionIdConfirmationCode = '';
+	isWidgetUserParams = false;
 
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
@@ -225,6 +226,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
 		
   		if (data.currentUserParams) {
   			let setCurrencyExchangeRate = false;
+				this.isWidgetUserParams = true;
+				
   			userParams = JSON.parse(data.currentUserParams);
   			if (userParams.params) {
   				if (userParams.params.amount) {

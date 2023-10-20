@@ -156,7 +156,7 @@
         [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onComplete)="processingComplete()">
       </app-widget-processing-instantpay>
       <!-- Complete -->
-      <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''"
+      <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''" [isWidgetUserParams]="isWidgetUserParams"
         [textContent]="completeTextData" (onFinish)="resetWizard()"></app-widget-complete>
       <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
         [tryAgain]="transactionErrorTryAgain" (onFinish)="resetWizard()"></app-widget-error>
