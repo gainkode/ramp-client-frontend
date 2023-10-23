@@ -94,9 +94,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   currentRate = 0;
   transactionStatus: TransactionStatus | undefined = undefined;
   transactionStatusName = '';
-  notPaidStatus = false;
-	allowExchangetatus = false;
-  notDeclinedStatus = false;
+	notPaidStatuses = [TransactionStatus.Completed, TransactionStatus.Paid, TransactionStatus.Exchanged, TransactionStatus.Exchanging, TransactionStatus.TransferBenchmarkWaiting];
+	exchangeStatuses = [TransactionStatus.Paid];
   kycStatus = '';
   accountStatus = '';
   showTransferHash = false;
@@ -253,32 +252,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
   		this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
   		if(this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
-  			this.scriningData = this.data?.screeningData?.paymentChecks[0]
+  			this.scriningData = this.data?.screeningData?.paymentChecks[0];
   		}
   		this.form.get('comment')?.setValue(this.data.comment);
   		this.transactionStatus = this.data.status;
   		if (this.transactionStatuses.length > 0) {
   			this.transactionStatusName = this.transactionStatuses.find(x => x.id === this.transactionStatus)?.name ?? '';
   		}
-  		if (this.data.status === TransactionStatus.Completed ||
-        this.data.status === TransactionStatus.Paid ||
-        this.data.status === TransactionStatus.Exchanged ||
-        this.data.status === TransactionStatus.Exchanging ||
-        this.data.status === TransactionStatus.TransferBenchmarkWaiting) {
-  			this.notPaidStatus = false;
-				
-				if(this.data.status === TransactionStatus.Paid){
-					this.allowExchangetatus = true;
-				}
-  		} else {
-  			this.notPaidStatus = true;
-  		}
-  		if (this.data.status === TransactionStatus.Completed ||
-        this.data.status === TransactionStatus.PaymentDeclined) {
-  			this.notDeclinedStatus = false;
-  		} else {
-  			this.notDeclinedStatus = true;
-  		}
+
   		this.showTransferHash = (this.data.transferOrderId !== '');
   		this.showBenchmarkTransferHash = (this.data.benchmarkTransferOrderId !== '');
   		this.kycStatus = TransactionKycStatusList.find(x => x.id === this.data?.kycStatusValue)?.name ?? '';
@@ -301,7 +282,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   				this.transactionTypeSetting = settingsCommon.transactionTypeSettings.find(item => item.transactionType == this.transactionType);
   				this.transactionTypes = this.transactionTypes.filter(item => 
   					settingsCommon.transactionTypeSettings.find(settingType => settingType.transactionType == item.id && settingType.allowChange == true)
-  				)
+  				);
   			}
 				
   		})

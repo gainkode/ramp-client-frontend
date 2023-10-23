@@ -311,14 +311,14 @@
                 aria-hidden="true"></span>
               Cancel
             </button>
-            <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && notPaidStatus"
+            <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && !notPaidStatuses.includes(transactionStatus)"
               class="btn btn-success pd-x-30 me-2 mg-t-5" type="button"
               (click)="onPaid(update_confirm_content)">
               <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                 aria-hidden="true"></span>
               Paid
             </button>
-            <button *ngIf="permission>1 && allowExchangetatus"
+            <button *ngIf="permission>1 && exchangeStatuses.includes(transactionStatus)"
               class="btn btn-info pd-x-30 me-2 mg-t-5" type="button"
               (click)="onExchange(update_confirm_content)">
               <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
