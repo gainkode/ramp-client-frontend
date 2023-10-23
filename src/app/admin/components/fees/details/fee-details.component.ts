@@ -19,7 +19,7 @@ import { CommonDataService } from 'services/common-data.service';
 @Component({
 	selector: 'app-admin-fee-details',
 	templateUrl: 'fee-details.component.html',
-	styleUrls: ['fee-details.component.scss', '../../assets/scss/_validation.scss']
+	styleUrls: ['fee-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
