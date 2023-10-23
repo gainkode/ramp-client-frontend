@@ -90,6 +90,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   transactionStatus: TransactionStatus | undefined = undefined;
   transactionStatusName = '';
   notPaidStatus = false;
+	allowExchangetatus = false;
   notDeclinedStatus = false;
   kycStatus = '';
   accountStatus = '';
@@ -252,6 +253,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         this.data.status === TransactionStatus.Exchanging ||
         this.data.status === TransactionStatus.TransferBenchmarkWaiting) {
   			this.notPaidStatus = false;
+				
+				if(this.data.status === TransactionStatus.Paid){
+					this.allowExchangetatus = true;
+				}
   		} else {
   			this.notPaidStatus = true;
   		}
@@ -466,6 +471,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   onPaid(content: any): void {
   	this.fastStatusChange(TransactionStatus.Paid, content);
+  }
+
+	onExchange(content: any): void {
+  	this.fastStatusChange(TransactionStatus.Exchanging, content);
   }
 
   onDeclined(content: any): void {
