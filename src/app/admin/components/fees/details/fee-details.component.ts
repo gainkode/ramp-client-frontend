@@ -75,9 +75,9 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	instrument: [undefined],
   	currenciesFrom: [],
   	currenciesTo: [],
-  	userType: [[]],
+  	userType: [undefined],
   	userMode: [[]],
-  	trxType: [[]],
+  	trxType: [undefined],
   	provider: [undefined, Validators.required],
   	transactionFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
   	minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
@@ -192,8 +192,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('targetValues')?.setValue([]);
   		this.form.get('instrument')?.setValue(undefined);
   		this.form.get('userMode')?.setValue([]);
-  		this.form.get('userType')?.setValue('');
-  		this.form.get('trxType')?.setValue('');
+  		this.form.get('userType')?.setValue(undefined);
+  		this.form.get('trxType')?.setValue(undefined);
   		this.form.get('provider')?.setValue([]);
   		// Terms
   		this.form.get('transactionFees')?.setValue(undefined);
