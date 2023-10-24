@@ -2395,6 +2395,19 @@ const UPDATE_SETTINGS_FEE = gql`
     }
   }
 `;
+const ASSIGN_COST_TO_FEES = gql`
+  mutation AssignCostToFees(
+    $settingsIds: [ID!], 
+    $costId: ID!
+  ) {
+    assignCostToFees(
+      settingsIds: $settingsIds
+      costId: $costId
+    ) {
+      settingsFeeId
+    }
+  }
+`;
 
 const UPDATE_SETTINGS_COST = gql`
   mutation UpdateSettingsCost(
@@ -3603,6 +3616,16 @@ export class AdminDataService {
           terms: settings.terms.getObject()
         }
       });
+  }
+
+  assignCostToFees(feeIds: string[], costId: string): Observable<any> {
+    return this.mutate({
+      mutation: ASSIGN_COST_TO_FEES,
+      variables: {
+        settingsIds: feeIds, 
+        costId: costId
+      }
+    });
   }
 
   saveBankAccountSettings(account: WireTransferBankAccount, create: boolean): Observable<any> {

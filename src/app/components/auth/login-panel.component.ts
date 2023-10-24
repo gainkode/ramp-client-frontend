@@ -220,12 +220,12 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     onSubmit(): void {
     	this.registerError('');
 
-    	if (this.loginForm.valid && (this.recaptcha || this.isWidget)) {
+    	if (this.loginForm.valid) {
     		this.done = true;
     		const login = this.emailField?.value;
     		try {
     			const widgetID =  this.widgetId !== '' ? this.widgetId : undefined;
-    			const loginData = this.auth.authenticate(this.widgetId !== '', login, this.passwordField?.value, false, widgetID);
+    			const loginData = this.isWidget ? this.auth.authenticateWidget(this.widgetId !== '', login, this.passwordField?.value, false, widgetID) : this.auth.authenticate(this.widgetId !== '', login, this.passwordField?.value, false, widgetID);
     			this.progressChange.emit(true);
     			this.subscriptions.add(
     				loginData.subscribe(({ data }) => {
