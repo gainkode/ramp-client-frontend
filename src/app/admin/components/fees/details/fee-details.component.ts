@@ -37,8 +37,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   private removeDialog: NgbModalRef | undefined = undefined;
   private settingsId = '';
 
-  TARGET_TYPE: typeof SettingsFeeTargetFilterType = SettingsFeeTargetFilterType;
-  PAYMENT_INSTRUMENT: typeof PaymentInstrument = PaymentInstrument;
+  TARGET_TYPE: typeof SettingsFeeTargetFilterType = SettingsFeeTargetFilterType
   submitted = false;
   createNew = false;
   saveInProgress = false;
@@ -79,7 +78,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	userType: [[]],
   	userMode: [[]],
   	trxType: [[]],
-  	provider: [{ value: undefined, disabled: true }, Validators.required],
+  	provider: [undefined, Validators.required],
   	transactionFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
   	minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
   });
@@ -93,6 +92,10 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	private adminService: AdminDataService) {
 
   }
+
+	get isWireTransfer(): boolean {
+		return this.form.controls.instrument?.value === PaymentInstrument.WireTransfer;
+	}
 
   ngOnInit(): void {
   	this.subscriptions.add(
@@ -356,7 +359,11 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		} else {
   			this.form.get('provider')?.setValue([]);
   		}
-  	}
+  	} else {
+			if (this.costSchemes.length !== 0) {
+				this.form.controls.provider.enable();
+			}
+		}
   }
 
   private filterTargets(searchString: string): Observable<CommonTargetValue[]> {
