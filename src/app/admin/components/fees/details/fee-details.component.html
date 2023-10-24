@@ -124,10 +124,10 @@
               bindLabel="name"
               bindValue="id"
               formControlName="provider"
-              [items]="(form.controls.instrument?.value !== PAYMENT_INSTRUMENT.WireTransfer) ? filteredProviders : costSchemes"
-              [multiple]="(form.controls.instrument?.value !== PAYMENT_INSTRUMENT.WireTransfer)" 
-              [placeholder]="(form.controls.instrument?.value !== PAYMENT_INSTRUMENT.WireTransfer) ? 'Select one or more providers' : 'Select cost scheme'" 
-              [closeOnSelect]="form.controls.instrument?.value === PAYMENT_INSTRUMENT.WireTransfer"
+              [items]="!isWireTransfer ? filteredProviders : costSchemes"
+              [multiple]="!isWireTransfer" 
+              [placeholder]="!isWireTransfer ? 'Select one or more providers' : 'Select cost scheme'" 
+              [closeOnSelect]="isWireTransfer"
               >
             </ng-select>
           </div>
