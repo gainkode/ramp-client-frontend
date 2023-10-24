@@ -6,13 +6,11 @@
     <div class="card">
       <div class="card-body">
         <div class="table-responsive">
-          <div class="table-button-container">
-            <button *ngIf="permission > 1" type="button" class="btn btn-primary me-2"
-              (click)="showDetails(undefined, details_content)">
+          <div class="table-button-container" *ngIf="permission > 1">
+            <button type="button" class="btn btn-primary me-2" (click)="showDetails(undefined, details_content)">
               Add scheme
             </button>
-            <button *ngIf="permission > 1" type="button" class="btn btn-primary me-2"
-              (click)="showDetails(undefined, assign_cost_content)">
+            <button type="button" class="btn btn-primary me-2" (click)="showDetails(undefined, assign_cost_content)">
               Assign cost scheme
             </button>
           </div>
@@ -120,7 +118,7 @@
           <ng-template #assign_cost_content let-modal>
             <div class="modal-header">
               <h5 class="modal-title">
-                {{detailsTitle}}
+                Assign cost schema
               </h5>
               <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>

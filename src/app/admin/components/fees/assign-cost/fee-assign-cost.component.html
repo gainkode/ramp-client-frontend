@@ -1,83 +1,60 @@
-<!-- eslint-disable @angular-eslint/template/no-inline-styles -->
-<div class="row">
-  <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
-    <form novalidate [formGroup]="form">
-      <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <div class="card card-body pd-20 pd-md-40 border shadow-none">
-          <h5 class="card-title mg-b-20">
-            Assign cost schema
-          </h5>
 
-          <div class="form-group">
-            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-              Fees
-            </label>
-            <ng-select [items]="feeOptions" 
-              bindLabel="title" bindValue="id" 
-              formControlName="ids"
-              [multiple]="true"
-              [searchFn]="feeSearchFn"
-              [clearable]=false [clearOnBackspace]=false required>
-              <ng-template ng-option-tmp let-item="item">
-                {{item.title}} <br />
-                <small>{{item.id}}</small>
-              </ng-template>
-            </ng-select>
-          </div>
+<form [formGroup]="form">
+  <div class="card card-body pd-20 pd-md-40 border shadow-none">
+    <h5 class="card-title mg-b-20">
+      Schema assignment details
+    </h5>
 
-          <div class="form-group">
-            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-              Cost Schema
-            </label>
-            <ng-select 
-              bindLabel="name"
-              bindValue="id"
-              formControlName="costId"
-              [items]="costSchemes"
-              [placeholder]="'Select cost scheme'" 
-              [closeOnSelect]
-              >
-            </ng-select>
-          </div>
-        </div>
-      </div>
+    <div class="form-group">
+      <label class="main-content-label tx-11 tx-medium tx-gray-600">
+        Fees
+      </label>
+      <ng-select 
+        [items]="feeOptions" 
+        bindLabel="title" 
+        bindValue="id" 
+        formControlName="ids"
+        [multiple]="true"
+        [searchFn]="feeSearchFn"
+        [closeOnSelect]="false"
+        [clearOnBackspace]=false 
+        [placeholder]="'Select fee'" 
+        required>
+        <ng-template ng-option-tmp let-item="item">
+          {{item.title}} <br />
+          <small>{{item.id}}</small>
+        </ng-template>
+      </ng-select>
+    </div>
 
-      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
-        <h4 class="card-title2 mg-b-20 color_brown">
-          {{errorMessage}}
-        </h4>
-      </div>
-      <div style="display: flex; justify-content: flex-end;">
-        <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit()">
-          <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          Save
-        </button>
-        <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="close.emit()">
-          Close
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<ng-template #delete_content let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">Delete fee scheme</h5>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <h4 class="text-center">
-      You are going to delete selected fee scheme. Confirm operation.
-    </h4>
-    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
-        Reject
-      </button>
-      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
-        Confirm
-      </button>
+    <div class="form-group">
+      <label class="main-content-label tx-11 tx-medium tx-gray-600">
+        Cost Schema
+      </label>
+      <ng-select 
+        bindLabel="name"
+        bindValue="id"
+        [clearable]=false
+        formControlName="costId"
+        [items]="costSchemes"
+        [placeholder]="'Select cost scheme'" 
+        required
+        >
+      </ng-select>
     </div>
   </div>
-</ng-template>
+  <div *ngIf="errorMessage" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
+    <h4 class="card-title2 mg-b-20 color_brown">
+      {{errorMessage}}
+    </h4>
+  </div>
+  <div class="d-sm-flex justify-content-end">
+    <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" [disabled]="!form.valid" (click)="onSubmit()">
+      <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Save
+    </button>
+    <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="close.emit()">
+      Close
+    </button>
+  </div>
+</form>
