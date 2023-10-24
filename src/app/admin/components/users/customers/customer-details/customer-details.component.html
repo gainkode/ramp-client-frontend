@@ -28,7 +28,7 @@
     </div>
 
     <app-admin-details-item
-      *ngIf="auth.user?.type === 'Merchant'" 
+      *ngIf="isMerchant" 
       label="Widgets" 
       [value]="'Related widgets'" 
       [linkUrl]="'/admin/widgets/'+ userData?.id" 
