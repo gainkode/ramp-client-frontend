@@ -126,6 +126,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 
   handleFilterApplied(filter: Filter): void {
   	this.filter = filter;
+		this.pageIndex = 0;
   	this.loadList();
   }
 
