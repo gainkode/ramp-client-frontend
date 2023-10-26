@@ -78,7 +78,8 @@ import { AdminKycSchemeDetailsComponent } from './components/kyc/schemes/kyc-det
 import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.component';
 import { AdminCostSchemeDetailsComponent } from './components/costs/schemes/cost-details.component';
 import { AdminFeeSchemesComponent } from './components/fees/fees.component';
-import { AdminFeeSchemeDetailsComponent } from './components/fees/fee-details.component';
+import { AdminFeeSchemeDetailsComponent } from './components/fees/details/fee-details.component';
+import { AdminFeeAssignCostComponent } from './components/fees/assign-cost/fee-assign-cost.component';
 import { AdminCommonSettingsComponent } from './components/settings/common/common.component';
 import { AdminDashboardCardComponent } from './misc/dashboard-card/dashboard-card.component';
 import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
@@ -176,7 +177,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminMessagesComponent, AdminMessageDetailsComponent,
 		AdminRisksComponent, AdminRiskDetailsComponent,
 		AdminWidgetsComponent, AdminWidgetDetailsComponent,
-		AdminFeeSchemesComponent, AdminFeeSchemeDetailsComponent,
+		AdminFeeSchemesComponent, AdminFeeSchemeDetailsComponent, AdminFeeAssignCostComponent,
 		AdminLevelsComponent, AdminLevelDetailsComponent,
 		AdminKycTiersComponent, AdminKycTierDetailsComponent,
 		AdminKycSchemesComponent, AdminKycSchemeDetailsComponent,

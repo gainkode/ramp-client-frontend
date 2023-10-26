@@ -1005,7 +1005,7 @@
                           <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                         </label>
                         <input class="form-control" type="text" formControlName="refundTransactionId" required>
-                        <button type="button" *ngIf="permission>1" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="paymentProviderRefund('Monoova', payment_provider_payout)">
+                        <button type="button" *ngIf="permission > 1" [disabled]="paymentProviderRefundInProgress" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onPaymentProviderRefund('Monoova', payment_provider_payout)">
                           <span *ngIf="paymentProviderRefundInProgress" class="spinner-border spinner-border-sm" role="status"
                             aria-hidden="true"></span>
                           Refund

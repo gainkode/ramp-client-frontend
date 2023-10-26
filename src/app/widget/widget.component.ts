@@ -84,6 +84,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
   transactionIdConfirmationCode = '';
   kycSubscribeResult: boolean | undefined = undefined;
   transactionInput: TransactionInput | undefined = undefined;
+  isWidgetUserParams = false;
+
   private pSubscriptions: Subscription = new Subscription();
   private pNotificationsSubscription: Subscription | undefined = undefined;
   private externalKycProvideNotificationsSubscription: Subscription | undefined = undefined;
@@ -211,6 +213,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
 		
   		if (data.currentUserParams) {
   			let setCurrencyExchangeRate = false;
+  			this.isWidgetUserParams = true;
+				
   			userParams = JSON.parse(data.currentUserParams);
   			if (userParams.params) {
   				if (userParams.params.amount) {

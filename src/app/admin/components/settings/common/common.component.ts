@@ -11,6 +11,8 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { PaymentProviderPayoutType, SettingsCommon, SettingsCurrencyWithDefaults, TransactionConfirmationMode, UserRoleObjectCode } from 'model/generated-models';
 import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteDialogBox } from 'components/dialogs/delete-box.dialog';
 
 interface FrameBlock {
 	X: number;
@@ -163,6 +165,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		private commonService: CommonDataService,
 		private errorHandler: ErrorService,
 		private modalService: NgbModal,
+		public dialog: MatDialog,
 		private router: Router
 	) {
 		this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Settings);
@@ -588,7 +591,31 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		);
 	}
 
+	onPaymentProviderRefund(provider: string, content: any): void {
+		const refundAmount = this.form.controls.refundAmount.value;
+		const refundTransactionId = this.form.controls.refundTransactionId.value;
+
+		if (!refundAmount || !refundTransactionId) {
+			return;
+		}
+
+		const dialogRef = this.dialog.open(DeleteDialogBox, {
+    		width: '400px',
+    		data: {
+    			title: 'Refund Transaction',
+				message: `You are about to refund ${this.form.controls.refundAmount.value} for ${this.form.controls.refundTransactionId.value} transaction. Please confirm`,
+    			button: 'Confirm'
+    		}
+    	});
+    	dialogRef.afterClosed().subscribe((isConfirmed) => {
+			if (isConfirmed) {
+				this.paymentProviderRefund(provider, content);
+			}
+		});
+	}
+
 	paymentProviderRefund(provider: string, content: any): void{
+
 		this.paymentProviderRefundInProgress = true;
 		this.subscriptions.add(
 			this.adminService.createPaymentProviderRefund(provider, this.form.get('refundAmount')?.value, this.form.get('refundTransactionId')?.value).subscribe(({ data }) => {

@@ -89,9 +89,10 @@
           <div class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Payment Methods
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
             <ng-select bindLabel="name" bindValue="id" formControlName="instrument" 
-              placeholder="Select payment method" [items]="instruments">
+              placeholder="Select payment method" [items]="instruments" [clearable]=false required>
             </ng-select>
           </div>
 
@@ -115,7 +116,7 @@
             </ng-select>
           </div>
 
-          <div *ngIf="showPaymentProvider" class="form-group">
+          <div class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Payment providers
             </label>
@@ -123,10 +124,10 @@
               bindLabel="name"
               bindValue="id"
               formControlName="provider"
-              [items]="(form.controls.instrument?.value !== PAYMENT_INSTRUMENT.WireTransfer) ? filteredProviders : costSchemes"
-              [multiple]="(form.controls.instrument?.value !== PAYMENT_INSTRUMENT.WireTransfer)" 
-              [placeholder]="(form.controls.instrument?.value !== PAYMENT_INSTRUMENT.WireTransfer) ? 'Select one or more providers' : 'Select cost scheme'" 
-              [closeOnSelect]="form.controls.instrument?.value === PAYMENT_INSTRUMENT.WireTransfer"
+              [items]="!isWireTransfer ? filteredProviders : costSchemes"
+              [multiple]="!isWireTransfer" 
+              [placeholder]="!isWireTransfer ? 'Select one or more providers' : 'Select cost scheme'" 
+              [closeOnSelect]="isWireTransfer"
               >
             </ng-select>
           </div>
@@ -197,123 +198,6 @@
               </small>
             </div>
           </div>
-  
-          <!-- <div class="form-group">
-            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-              Rolling reserves, %
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-            </label>
-            <input class="form-control" [ngClass]="{'has-error': !form.controls.rollingReserves.valid}" type="text"
-              formControlName="rollingReserves" maxlength="7" placeholder="5%" required>
-            <div
-              *ngIf="(form.controls.rollingReserves.touched || submitted) && (form.controls.rollingReserves.errors?.['required'])"
-              class="tx-danger">
-              <small>
-                Please specify rolling reserves value
-              </small>
-            </div>
-            <div
-              *ngIf="(form.controls.rollingReserves.touched || submitted) && (form.controls.rollingReserves.errors?.['pattern'])"
-              class="tx-danger">
-              <small>
-                Invalid number value
-              </small>
-            </div>
-          </div>
-  
-          <div class="form-group">
-            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-              Rolling reserve days, %
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-            </label>
-            <input class="form-control" [ngClass]="{'has-error': !form.controls.rollingReservesDays.valid}" type="text"
-              formControlName="rollingReservesDays" maxlength="7" placeholder="5%" required>
-            <div
-              *ngIf="(form.controls.rollingReservesDays.touched || submitted) && (form.controls.rollingReservesDays.errors?.['required'])"
-              class="tx-danger">
-              <small>
-                Please specify percentage of rolling reserve days
-              </small>
-            </div>
-            <div
-              *ngIf="(form.controls.rollingReservesDays.touched || submitted) && (form.controls.rollingReservesDays.errors?.['pattern'])"
-              class="tx-danger">
-              <small>
-                Invalid number value
-              </small>
-            </div>
-          </div>
-  
-          <div class="form-group">
-            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-              Chargeback fees, %
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-            </label>
-            <input class="form-control" [ngClass]="{'has-error': !form.controls.chargebackFees.valid}" type="text"
-              formControlName="chargebackFees" maxlength="10" placeholder="5%" required>
-            <div
-              *ngIf="(form.controls.chargebackFees.touched || submitted) && (form.controls.chargebackFees.errors?.['required'])"
-              class="tx-danger">
-              <small>
-                Please specify chargeback fee
-              </small>
-            </div>
-            <div
-              *ngIf="(form.controls.chargebackFees.touched || submitted) && (form.controls.chargebackFees.errors?.['pattern'])"
-              class="tx-danger">
-              <small>
-                Invalid number value
-              </small>
-            </div>
-          </div>
-  
-          <div class="form-group">
-            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-              Monthly fees
-              <span class="main-content-label tx-11 tx-medium tx-italic mg-r-4">(only in system)</span>
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-            </label>
-            <input class="form-control" [ngClass]="{'has-error': !form.controls.monthlyFees.valid}" type="text"
-              formControlName="monthlyFees" maxlength="7" placeholder="5" required>
-            <div
-              *ngIf="(form.controls.monthlyFees.touched || submitted) && (form.controls.monthlyFees.errors?.['required'])"
-              class="tx-danger">
-              <small>
-                Please specify monthly fee
-              </small>
-            </div>
-            <div
-              *ngIf="(form.controls.monthlyFees.touched || submitted) && (form.controls.monthlyFees.errors?.['pattern'])"
-              class="tx-danger">
-              <small>
-                Invalid number value
-              </small>
-            </div>
-          </div>
-  
-          <div *ngIf="operation == 'new'" class="form-group">
-            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-              Mininmal monthly fees
-              <span class="main-content-label tx-11 tx-medium tx-italic mg-r-4">(in system)</span>
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-            </label>
-            <input class="form-control" [ngClass]="{'has-error': !form.controls.minMonthlyFees.valid}" type="text"
-              formControlName="minMonthlyFees" maxlength="7" placeholder="5" required>
-            <div
-              *ngIf="(form.controls.minMonthlyFees.touched || submitted) && (form.controls.minMonthlyFees.errors?.['required'])"
-              class="tx-danger">
-              <small>
-                Please specify minimal monthly fee
-              </small>
-            </div>
-            <div
-              *ngIf="(form.controls.minMonthlyFees.touched || submitted) && (form.controls.minMonthlyFees.errors?.['pattern'])"
-              class="tx-danger">
-              <small>
-                Invalid number value
-              </small>
-            </div>
-          </div> -->
         </div>
       </div>
 

@@ -66,7 +66,7 @@
             <td mat-cell *matCellDef="let element">
                 <div class="__profile-transactions-table-cell-sender">
                     <img *ngIf="element.recipient?.imgSource!==''" class="__profile-transactions-table-cell-sender-icon"
-                        [src]="element.recipient?.imgSource">
+                        [src]="element.recipient?.imgSource" width="20" height="20">
                     <div class="__profile-transactions-table-cell-data">
                         {{element.recipientShort}}
                     </div>

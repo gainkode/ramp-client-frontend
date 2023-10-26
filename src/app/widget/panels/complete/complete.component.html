@@ -26,10 +26,10 @@
     </div>
 
     <div class="__widget-buttons-area">
-        <button *ngIf="showRestartButton" class="__main-button" type="button" (click)="onFinish.emit()">
-            {{'global.widget_btn-done' | transloco}}
+        <button *ngIf="showRestartButton && !isWidgetUserParams" class="__main-button" type="button" (click)="onFinish.emit()">
+            done
         </button>
-        <button *ngIf="!showRestartButton && finishLink!==''" class="__main-button" type="button" (click)="onFinish.emit()">
+        <button *ngIf="!showRestartButton && finishLink!=='' && !isWidgetUserParams" class="__main-button" type="button" (click)="onFinish.emit()">
             return
         </button>
     </div>

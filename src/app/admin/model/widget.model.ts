@@ -20,6 +20,9 @@ export class WidgetItem {
 	currenciesCrypto: Array<string> = [];
 	currenciesFiat: Array<string> = [];
 	destinationAddress: Array<WidgetDestination> = [];
+	merchantFeeDestinationAddress: Array<WidgetDestination> = [];
+	merchantFeeMinAmount: number = 0;
+  merchantFeePercent: number = 0;
 	destinationAddresses: Array<string> = [];
 	countriesCode2: Array<string> = [];
 	countries: Array<string> = [];
@@ -54,6 +57,12 @@ export class WidgetItem {
 			if(data.fee){
 				this.fee = data.fee;
 			}
+			if(data.merchantFeeMinAmount){
+				this.merchantFeeMinAmount = data.merchantFeeMinAmount;
+			}
+			if(data.merchantFeePercent){
+				this.merchantFeePercent = data.merchantFeePercent;
+			}
 			if (data.createdByUser) {
 				this.createdByEmail = data.createdByUser.email;
 				const fn = data.createdByUser.firstName ?? '';
@@ -83,6 +92,10 @@ export class WidgetItem {
 			this.currenciesFiat = data.currenciesFiat ?? [];
 
 			this.destinationAddress = data.destinationAddress;
+
+			if(data.merchantFeeAddress && data.merchantFeeAddress.length != 0){
+				this.merchantFeeDestinationAddress = data.merchantFeeAddress;
+			}
       
 			this.countriesCode2 = data.countriesCode2 ?? [];
 			this.instruments = data.instruments ?? [];

@@ -19,7 +19,7 @@ import { CommonDataService } from 'services/common-data.service';
 @Component({
 	selector: 'app-admin-fee-details',
 	templateUrl: 'fee-details.component.html',
-	styleUrls: ['fee-details.component.scss', '../../assets/scss/_validation.scss']
+	styleUrls: ['fee-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   @Input() permission = 0;
@@ -37,8 +37,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   private removeDialog: NgbModalRef | undefined = undefined;
   private settingsId = '';
 
-  TARGET_TYPE: typeof SettingsFeeTargetFilterType = SettingsFeeTargetFilterType;
-  PAYMENT_INSTRUMENT: typeof PaymentInstrument = PaymentInstrument;
+  TARGET_TYPE: typeof SettingsFeeTargetFilterType = SettingsFeeTargetFilterType
   submitted = false;
   createNew = false;
   saveInProgress = false;
@@ -52,7 +51,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   instruments = PaymentInstrumentList;
   providers: PaymentProviderView[] = [];
   filteredProviders: PaymentProviderView[] = [];
-  showPaymentProvider = true;
   costSchemes: CostScheme[] = [];
   currency = '';
   targetEntity = ['', ''];
@@ -77,17 +75,12 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	instrument: [undefined],
   	currenciesFrom: [],
   	currenciesTo: [],
-  	userType: [[]],
+  	userType: [undefined],
   	userMode: [[]],
-  	trxType: [[]],
-  	provider: [[]],
+  	trxType: [undefined],
+  	provider: [undefined, Validators.required],
   	transactionFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
   	minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
-  	// rollingReserves: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	// rollingReservesDays: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	// chargebackFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	// monthlyFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	// minMonthlyFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
   });
 
   constructor(
@@ -100,9 +93,13 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   }
 
+	get isWireTransfer(): boolean {
+		return this.form.controls.instrument?.value === PaymentInstrument.WireTransfer;
+	}
+
   ngOnInit(): void {
   	this.subscriptions.add(
-  		this.form.get('target')?.valueChanges.subscribe(val => this.updateTarget())
+  		this.form.get('target')?.valueChanges.subscribe(() => this.updateTarget())
   	);
   	this.subscriptions.add(
   		this.form.get('instrument')?.valueChanges.subscribe(val => this.filterPaymentProviders(val))
@@ -122,10 +119,10 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		this.userModes = this.userModes.filter(item => this.adminAdditionalSettings.userMode[item.id] == true);
-  		this.transactionTypes = this.transactionTypes.filter(item => this.adminAdditionalSettings.transactionType[item.id] == true);
-  		this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings.userType[item.id] == true);
-  		this.instruments = this.instruments.filter(item => this.adminAdditionalSettings.paymentMethods[item.id] == true);
+  		this.userModes = this.userModes.filter(item => this.adminAdditionalSettings.userMode[item.id]);
+  		this.transactionTypes = this.transactionTypes.filter(item => this.adminAdditionalSettings.transactionType[item.id]);
+  		this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings.userType[item.id]);
+  		this.instruments = this.instruments.filter(item => this.adminAdditionalSettings.paymentMethods[item.id]);
   	}
   }
 
@@ -180,11 +177,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		// Terms
   		this.form.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
   		this.form.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
-  		// this.form.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
-  		// this.form.get('rollingReservesDays')?.setValue(scheme?.terms.rollingReservesDays);
-  		// this.form.get('chargebackFees')?.setValue(scheme?.terms.chargebackFees);
-  		// this.form.get('monthlyFees')?.setValue(scheme?.terms.monthlyFees);
-  		// this.form.get('minMonthlyFees')?.setValue(scheme?.terms.minMonthlyFees);
   		this.setTargetValidator();
   		this.setTargetValueParams();
   	} else {
@@ -200,17 +192,12 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('targetValues')?.setValue([]);
   		this.form.get('instrument')?.setValue(undefined);
   		this.form.get('userMode')?.setValue([]);
-  		this.form.get('userType')?.setValue('');
-  		this.form.get('trxType')?.setValue('');
+  		this.form.get('userType')?.setValue(undefined);
+  		this.form.get('trxType')?.setValue(undefined);
   		this.form.get('provider')?.setValue([]);
   		// Terms
   		this.form.get('transactionFees')?.setValue(undefined);
   		this.form.get('minTransactionFee')?.setValue(undefined);
-  		// this.form.get('rollingReserves')?.setValue(undefined);
-  		// this.form.get('rollingReservesDays')?.setValue(undefined);
-  		// this.form.get('chargebackFees')?.setValue(undefined);
-  		// this.form.get('monthlyFees')?.setValue(undefined);
-  		// this.form.get('minMonthlyFees')?.setValue(undefined);
   		this.setTargetValidator();
   	}
   }
@@ -238,11 +225,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	// terms
   	data.terms.transactionFees = Number(this.form.get('transactionFees')?.value);
   	data.terms.minTransactionFee = Number(this.form.get('minTransactionFee')?.value);
-  	// data.terms.rollingReserves = Number(this.form.get('rollingReserves')?.value);
-  	// data.terms.rollingReservesDays = Number(this.form.get('rollingReservesDays')?.value);
-  	// data.terms.chargebackFees = Number(this.form.get('chargebackFees')?.value);
-  	// data.terms.monthlyFees = Number(this.form.get('monthlyFees')?.value);
-  	// data.terms.minMonthlyFees = Number(this.form.get('minMonthlyFees')?.value);
   	return data;
   }
 
@@ -357,13 +339,17 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	if (!instruments || instruments.length === 0) {
   		this.form.get('instrument')?.setValue(undefined);
   		this.form.get('provider')?.setValue([]);
-  		this.showPaymentProvider = false;
   		return;
   	}
 
   	if (!instruments.includes(PaymentInstrument.WireTransfer)) {
   		this.filteredProviders = getProviderList(instruments, this.providers);
-  		this.showPaymentProvider = this.filteredProviders.length > 0;
+  		
+  		if (this.filteredProviders.length) {
+  			this.form.controls.provider.enable();
+  		} else {
+  			this.form.controls.provider.disable();
+  		}
 	
   		if (this.providers.length > 0) {
   			this.form.get('provider')?.setValue(getCheckedProviderList(
@@ -373,7 +359,11 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		} else {
   			this.form.get('provider')?.setValue([]);
   		}
-  	}
+  	} else {
+			if (this.costSchemes.length !== 0) {
+				this.form.controls.provider.enable();
+			}
+		}
   }
 
   private filterTargets(searchString: string): Observable<CommonTargetValue[]> {
@@ -495,7 +485,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.saveFeeSettings(scheme);
   	
-	  this.subscriptions.add(
+  	this.subscriptions.add(
   		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
   			next: () => this.save.emit(),
   			error: (errorMessage) => {

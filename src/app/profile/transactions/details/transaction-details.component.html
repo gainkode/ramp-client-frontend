@@ -5,7 +5,7 @@
     <div class="__profile-details-data-container">
         <div class="__profile-details-data-area">
             <!-- Code -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     Transaction ID:
                 </div>
@@ -15,7 +15,7 @@
             </div>
 
             <!-- Date -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     Date:
                 </div>
@@ -25,7 +25,7 @@
             </div>
 
             <!-- Type -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     Type:
                 </div>
@@ -35,7 +35,7 @@
             </div>
 
             <!-- From -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     From:
                 </div>
@@ -45,7 +45,7 @@
             </div>
 
             <!-- Amount sent -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     Amount Sent:
                 </div>
@@ -55,18 +55,18 @@
             </div>
 
             <!-- To -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     To:
                 </div>
-                <div class="__profile-details-item-value-box-default">
-                    <input class="__profile-text-box-noborder" type="text" readonly
+                <div class="__profile-details-item-value-box-default" [matTooltip]="transaction?.recipient?.title" matTooltipClass="info-tooltip">
+                    <input class="__profile-text-box-noborder __profile-details-item-value-truncate" type="text" readonly
                         [value]="transaction?.recipient?.title" />
                 </div>
             </div>
 
             <!-- Amount received -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     Amount Received:
                 </div>
@@ -76,7 +76,7 @@
             </div>
 
             <!-- Rate -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     Rate:
                 </div>
@@ -86,7 +86,7 @@
             </div>
 
             <!-- System Fee -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     System Fee:
                 </div>
@@ -96,7 +96,7 @@
             </div>
 
             <!-- Network Fee -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     Network Fee:
                 </div>
@@ -106,7 +106,7 @@
             </div>
 
             <!-- Status -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     Status:
                 </div>
@@ -117,7 +117,7 @@
             </div>
 
             <!-- DocsCheck -->
-            <div *ngIf="transaction?.kycStatus!==''" class="__profile-details-item-grid">
+            <div *ngIf="transaction?.kycStatus!==''" class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     DocsCheck:
                 </div>
@@ -128,7 +128,7 @@
             </div>
 
             <!-- IP -->
-            <div class="__profile-details-item-grid">
+            <div class="__profile-transaction-details-item-grid">
                 <div class="__profile-details-item-title-box">
                     IP Address:
                 </div>
@@ -137,20 +137,26 @@
                 </div>
             </div>
 
-            <!-- Buttons -->
-            <!-- <div class="__profile-details-button-container">
-                <button type="button" class="__main-button">
-                    repeat
-                </button>
-            </div> -->
-        </div>
-        <!-- <div class="__profile-details-footer">
-            <a href="#" class="__profile-details-link __profile-details-link-accent">
-                report transaction
-            </a>
-            <div class="__profile-details-footer-caption">
-                don't recognize?
+            <div class="__profile-transaction-details-item-grid" *ngIf="transaction?.transferOrderHash">
+                <div class="__profile-details-item-title-box">
+                    Hash:
+                </div>
+                <div class="__profile-details-item-value-box d-flex align-items-center" [matTooltip]="transaction?.transferOrderHash" matTooltipClass="info-tooltip">
+                    {{transaction?.transferOrderHash | shortHash}}
+                    <button type="button" class="__inline-button mg-l-5" (click)="copyParameter(transaction?.transferOrderHash)">
+                        <mat-icon class="tx-16">content_copy</mat-icon>
+                    </button>
+                </div>
             </div>
-        </div> -->
+
+            <div class="__profile-transaction-details-item-grid" *ngIf="transaction?.transferOrderBlockchainLink">
+                <div class="__profile-details-item-title-box">
+                    Blockchain Link:
+                </div>
+                <div class="__profile-details-item-value-box d-flex align-items-center" [matTooltip]="transaction?.transferOrderBlockchainLink" matTooltipClass="info-tooltip">
+                    <a class="__profile-details-item-value-truncate" target="_blank" rel="noopener noreferrer" [href]="transaction?.transferOrderBlockchainLink">{{transaction?.transferOrderBlockchainLink}}</a> 
+                </div>
+            </div>
+        </div>
     </div>
 </div>
