@@ -225,20 +225,21 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     		const login = this.emailField?.value;
     		try {
     			const widgetID =  this.widgetId !== '' ? this.widgetId : undefined;
+					//Depending on login type(widget or not) we didn't check recaptcha
     			const loginData = this.isWidget ? this.auth.authenticateWidget(this.widgetId !== '', login, this.passwordField?.value, false, widgetID) : this.auth.authenticate(this.widgetId !== '', login, this.passwordField?.value, false, widgetID);
     			this.progressChange.emit(true);
     			this.subscriptions.add(
     				loginData.subscribe(({ data }) => {
-    					const userData = data.login as LoginResult;
+    					const userData = (this.isWidget ? data.loginWidget : data.login) as LoginResult;
     					this.progressChange.emit(false);
     					if (userData.user?.mode) {
     						if (userData.authTokenAction === 'TwoFactorAuth') {
     							this.auth.setLoginUser(userData);
     							this.twoFa = true;
     							this.socialLogin = true;
-    							this.done = false;
+									this.done = false;
     						} else if (userData.authTokenAction === 'UserInfoRequired') {
-    							this.done = false;
+									this.done = false;
     							this.showSignupPanel(userData);
     						} else {
     							this.authenticated.emit(userData);
