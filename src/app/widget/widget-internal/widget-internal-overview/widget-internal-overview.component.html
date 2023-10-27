@@ -22,7 +22,7 @@
                 <div class="navbar">
                     <div class="navbar__item">
                         <a class="navbar__item-group-link">{{activeLang}}
-                            <i class="fa fa-caret-down" aria-hidden="true"></i></a>
+                            <i style="display: none;" class="fa fa-caret-down" aria-hidden="true"></i></a>
                         <ul class="navbar__item-group navbar__item-group--left">
                             <li *ngFor="let lang of availableLangs" class="navbar__subitem">
                                 <a class="navbar__link navlink" (click)="onLangSelect(lang)">

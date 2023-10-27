@@ -976,6 +976,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   // == KYC =============
 
   kycComplete(): void {
+	debugger
   	if (this.widget.kycFirst) {
   		this.loadAccountData();
   		console.log('KYC COMPLETE');

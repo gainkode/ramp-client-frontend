@@ -50,6 +50,6 @@ export class ApiFacadeService {
 
 	private concatAuthOptions(options: IRequestOptions) {
 		const auth = { headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.auth.token) };
-		return { ... options, ...auth };
+		return { ...options, ...auth };
 	}
 }

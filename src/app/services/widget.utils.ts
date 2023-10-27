@@ -7,7 +7,6 @@ export class KycTierResultData {
 }
 
 export function getCurrentTierLevelName(tierId: string, tiersData: SettingsKycTierShortExListResult, user: User | null = null): KycTierResultData {
-	console.log(tiersData)
 	const result: KycTierResultData = {
 		levelName: null,
 		required: false
@@ -22,7 +21,7 @@ export function getCurrentTierLevelName(tierId: string, tiersData: SettingsKycTi
 			result.showForm = true;
 		}
 
-		if(kycStatus == 'waiting' && newTier.skipForWaiting){
+		if(kycStatus === 'waiting' && newTier.skipForWaiting){
 			return result;
 		}
         
@@ -45,7 +44,6 @@ export function isKycRequired(currentUser: User, tierData: KycTierResultData): [
 		if (kycStatus !== 'init' && kycStatus !== 'unknown') {
 			result = false;
 		} else {
-			// if kycStatus = 'init' or 'unknown'
 			if (tierData.levelName !== null) {
 				const valid = currentUser.kycValid ?? true;
 				if (valid === true) {

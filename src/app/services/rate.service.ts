@@ -25,19 +25,19 @@ export class ExchangeRateService {
 		this.startTimer();
 	}
 
-	setCurrency(fromCurrency: string, toCurrency: string, transactionType: TransactionType) {
+	setCurrency(fromCurrency: string, toCurrency: string, transactionType: TransactionType): void {
 		this.active = true;
 		this.currencyFrom = fromCurrency;
 		this.currencyTo = toCurrency;
 		this.transaction = transactionType;
 	}
 
-	register(command: Function) {
+	register(command: Function): void {
 		this.active = true;
 		this.updateCallback = command;
 	}
 
-	stop() {
+	stop(): void {
 		this.active = false;
 		// service shouldn't be stopped as it is a single-ton service
 
@@ -54,7 +54,7 @@ export class ExchangeRateService {
 
 	private startTimer(): void {
 		this.pSubscriptions.add(
-			this.updateTimer.subscribe(val => {
+			this.updateTimer.subscribe(() => {
 				if (this.countDownInit) {
 					if (this.countDown > 0) {
 						this.countDown -= 1;

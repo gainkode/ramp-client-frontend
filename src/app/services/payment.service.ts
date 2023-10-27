@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
-import { KycProvider, PaymentInstrument, PaymentPreauthInput, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
+import { KycProvider, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -507,53 +507,30 @@ mutation AbandonCryptoInvoice(
 }
 `;
 
-// const GET_CORIUNDER_TOKEN = gql`
-// query GetCoriunderWebAuthParams(
-//  $transactionId: String!
-//  $instrument: PaymentInstrument!
-//  $provider: String!
-//  $card: PaymentCard
-//  $transactionFullId: String
-// ) {
-//     getCoriunderWebAuthParams(
-//         params: {
-//           transactionId: $transactionId
-//           instrument: $instrument
-//           provider: $provider
-//           card: $card
-//         }
-//         transactionId: $transactionFullId
-//     ) {
-//       full_url
-//     }
-// }
-// `;
-
 @Injectable()
 export class PaymentDataService {
 	constructor(private apollo: Apollo) { }
 
-	getRates(listCrypto: string[], fiat: string): QueryRef<any, EmptyObject> {
-		const vars = {
-			currenciesFrom: listCrypto,
-			currencyTo: fiat
-		};
+	getRates(currenciesFrom: string[], currencyTo: string): QueryRef<any, EmptyObject> {
+		const variables = { currenciesFrom, currencyTo };
+
 		return this.apollo.watchQuery<any>({
 			query: GET_RATES,
-			variables: vars,
+			variables,
 			fetchPolicy: 'network-only'
 		});
 	}
 
-	getOneToManyRates(from: string, to: string[], reverseRate: boolean): QueryRef<any, EmptyObject> {
-		const vars = {
-			reverse: reverseRate,
-			currencyFrom: from,
-			currenciesTo: to
+	getOneToManyRates(currencyFrom: string, currenciesTo: string[], reverse: boolean): QueryRef<any, EmptyObject> {
+		const variables = {
+			reverse,
+			currencyFrom,
+			currenciesTo
 		};
+
 		return this.apollo.watchQuery<any>({
 			query: GET_ONE_TO_MANY_RATES,
-			variables: vars,
+			variables,
 			fetchPolicy: 'network-only'
 		});
 	}
@@ -599,46 +576,33 @@ export class PaymentDataService {
 	}
 
 	createTransaction(transactionInput: TransactionInput): Observable<any> {
-    const { type, ...otherParams } = transactionInput;
+		const { type, ...otherParams } = transactionInput;
 
 		return this.apollo.mutate({
 			mutation: CREATE_TRANSACTION,
 			variables: {
 				transactionType: type,
-        ...otherParams
-      }
+				...otherParams
+			}
 		});
 	}
 
-	confirmQuickCheckout(id: string, code: number): Observable<any> {
+	confirmQuickCheckout(transactionId: string, code: number): Observable<any> {
 		return this.apollo.mutate({
 			mutation: EXECUTE_TRANSACTION,
 			variables: {
-				transactionId: id,
+				transactionId,
 				code
 			}
 		});
 	}
 
-  // getCoriunderWebAuthParams(params: PaymentPreauthInput): Observable<any> {
-	// 	return this.apollo.mutate({
-	// 		mutation: GET_CORIUNDER_TOKEN,
-	// 		variables: {
-  //       transactionId: params.transactionId,
-  //       instrument: params.instrument,
-  //       provider: params.provider,
-  //       card: params.card,
-  //       transactionFullId: params.transactionId
-	// 		}
-	// 	});
-	// }
-
-	preAuthCard(id: string, paymentInstrument: string, paymentProvider: string, card: CardView): Observable<any> {
+	preAuthCard(transactionId: string, instrument: string, paymentProvider: string, card: CardView): Observable<any> {
 		return this.apollo.mutate({
 			mutation: PRE_AUTH_CARD,
 			variables: {
-				transactionId: id,
-				instrument: paymentInstrument,
+				transactionId,
+				instrument,
 				paymentProvider,
 				cardNumber: card.cardNumber,
 				expiredMonth: card.monthExpired,
@@ -649,18 +613,18 @@ export class PaymentDataService {
 		});
 	}
 
-	preAuth(id: string, paymentInstrument: string, paymentProvider: string): Observable<any> {
+	preAuth(transactionId: string, instrument: string, paymentProvider: string): Observable<any> {
 		return this.apollo.mutate({
 			mutation: PRE_AUTH,
 			variables: {
-				transactionId: id,
-				instrument: paymentInstrument,
+				transactionId,
+				instrument,
 				paymentProvider
 			}
 		});
 	}
 
-  createApmPayment(id: string, paymentInstrument: string): Observable<any> {
+	createApmPayment(id: string, paymentInstrument: string): Observable<any> {
 		return this.apollo.mutate({
 			mutation: CREATE_APM_PAYMENT,
 			variables: {
@@ -700,23 +664,20 @@ export class PaymentDataService {
 		});
 	}
 
-	abandonTransaction(id: string): Observable<any> {
-		const vars = {
-			transactionId: id
-		};
+	abandonTransaction(transactionId: string): Observable<any> {
+		const variables = { transactionId };
 		return this.apollo.mutate({
 			mutation: ABANDON_TRANSACTION,
-			variables: vars
+			variables
 		});
 	}
   
-	abandonCryptoInvoice(id: string): Observable<any> {
-		const vars = {
-			cryptoInvoiceId: id
-		};
+	abandonCryptoInvoice(cryptoInvoiceId: string): Observable<any> {
+		const variables = { cryptoInvoiceId };
+
 		return this.apollo.mutate({
 			mutation: ABANDON_CRYPTO_INVOICE,
-			variables: vars
+			variables
 		});
 	}
   
@@ -748,7 +709,7 @@ export class PaymentDataService {
 
 	mySettingsFee(
 		transactionType: TransactionType,
-		source: TransactionSource,
+		transactionSource: TransactionSource,
 		instrument: PaymentInstrument,
 		paymentProvider: string,
 		currencyTo: string,
@@ -756,7 +717,7 @@ export class PaymentDataService {
 		widgetId: string): QueryRef<any, EmptyObject> {
 		const vars = {
 			transactionType,
-			transactionSource: source,
+			transactionSource,
 			instrument,
 			paymentProvider: (paymentProvider === '') ? undefined : paymentProvider,
 			currencyTo,
@@ -770,13 +731,12 @@ export class PaymentDataService {
 		});
 	}
 
-	getWidget(paramsId: string): QueryRef<any, EmptyObject> {
-		const vars = {
-			id: paramsId,
-		};
+	getWidget(id: string): QueryRef<any, EmptyObject> {
+		const variables = { id };
+
 		return this.apollo.watchQuery<any>({
 			query: GET_WIDGET,
-			variables: vars,
+			variables,
 			fetchPolicy: 'network-only'
 		});
 	}

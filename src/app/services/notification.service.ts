@@ -62,11 +62,11 @@ mutation SendTestTransactionServiceNotification(
 @Injectable()
 export class NotificationService {
 	private apolloNotificationClient;
-	constructor(private apollo: Apollo) {
+	constructor(apollo: Apollo) {
 		this.apolloNotificationClient = apollo;
 	}
   
-	wsClientInit(){
+	wsClientInit(): void{
 		console.log(`wsClientInit with token ${localStorage.getItem('currentToken')}`);
 		const webSocketLink = new GraphQLWsLink(createClient({
 			url: `${EnvService.ws_server}/subscriptions`,

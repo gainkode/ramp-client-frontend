@@ -231,11 +231,9 @@ export class CommonDataService {
 	constructor(private apollo: Apollo) { }
 
 	getSettingsCurrency(): QueryRef<any, EmptyObject> {
-		const recaptchaId = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
 		return this.apollo.watchQuery<any>({
 			query: GET_SETTINGS_CURRENCY,
-			variables: {
-			},
+			variables: {},
 			fetchPolicy: 'network-only'
 		});
 	}
@@ -264,9 +262,7 @@ export class CommonDataService {
 	myFiatVaults(assetsOnly: string[]): QueryRef<any, EmptyObject> {
 		return this.apollo.watchQuery<any>({
 			query: MY_FIAT_VAULTS,
-			variables: {
-				assetsOnly: assetsOnly
-			},
+			variables: { assetsOnly },
 			fetchPolicy: 'network-only'
 		});
 	}
@@ -278,22 +274,18 @@ export class CommonDataService {
 		});
 	}
 
-	getUserById(id: string): QueryRef<any, EmptyObject> {
+	getUserById(userId: string): QueryRef<any, EmptyObject> {
 		return this.apollo.watchQuery<any>({
 			query: GET_USER_BY_ID,
-			variables: { userId: id },
+			variables: { userId },
 			fetchPolicy: 'network-only'
 		});
 	}
 
-	addMyWidgetUserParams(id: string, email: string, parameters: string): Observable<any> {
+	addMyWidgetUserParams(widgetId: string, userEmail: string, params: string): Observable<any> {
 		return this.apollo.mutate({
 			mutation: ADD_MY_WIDGET_PARAMS,
-			variables: {
-				widgetId: id,
-				userEmail: email,
-				params: parameters
-			}
+			variables: { widgetId, userEmail, params }
 		});
 	}
 

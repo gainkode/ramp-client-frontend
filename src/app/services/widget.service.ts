@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCurrencyWithDefaults, SettingsFeeShort, SettingsKycTierShortEx, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from '../model/generated-models';
+import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsFeeShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from '../model/generated-models';
 import { WidgetSettings, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { CheckoutSummary, PaymentProviderInstrumentView } from '../model/payment.model';
 import { AuthService } from './auth.service';
@@ -49,7 +49,7 @@ export class WidgetService {
 		companyLevelVerificationHandler?: Function | undefined,
 		sellPaymentProvidersCallback?: Function | undefined,
 		recaptchaCallback?: Function | undefined,
-		quickcheckout?: boolean | undefined) {
+		quickcheckout?: boolean | undefined): void {
 		this.onProgressChanged = progressCallback;
 		this.onError = errorCallback;
 		this.onIdentificationRequired = identificationCallback;
@@ -74,6 +74,7 @@ export class WidgetService {
 			const dataGetter$ = this.auth.getSettingsCommon().valueChanges.pipe(take(1));
 			this.pSubscriptions.add(
 				dataGetter$.subscribe(({ data }) => {
+					debugger
 					if (this.auth.user) {
 						this.auth.setLocalSettingsCommon(data.getSettingsCommon);
 						this.getTiers(summary, widget);
@@ -99,41 +100,42 @@ export class WidgetService {
 		}
 	}
 
-	authenticate(login: string, widgetId: string) {
+	authenticate(login: string, widgetId: string): void {
 		// Consider that the user is one-time wallet user rather than internal one
 		// this.authenticateInternal(login, widgetId);
-		let recaptcha = localStorage.getItem('recaptchaId');
-		if(recaptcha || !this.onQuickcheckout){
+		const recaptcha = localStorage.getItem('recaptchaId');
+		if (recaptcha || !this.onQuickcheckout) {
 			this.authenticateInternal(login, widgetId);
-		}else{
-			if(this.onRecaptchaCallback){
+		} else {
+			if (this.onRecaptchaCallback) {
 				this.onRecaptchaCallback();
 			}
 		}
 	}
 
-	authenticateInternal(login: string, widgetId: string) {
+	authenticateInternal(login: string, widgetId: string): void {
 		try {
 			const authenticateData$ = this.onQuickcheckout 
-			? this.auth.authenticate(
-				widgetId !== '',
-				login,
-				'',
-				true,
-				(widgetId !== '') ? widgetId : undefined)
-			: this.auth.authenticateWidget(
-				widgetId !== '',
-				login,
-				'',
-				true,
-				(widgetId !== '') ? widgetId : undefined);
+				? this.auth.authenticate(
+					widgetId !== '',
+					login,
+					'',
+					true,
+					(widgetId !== '') ? widgetId : undefined)
+				: this.auth.authenticateWidget(
+					widgetId !== '',
+					login,
+					'',
+					true,
+					(widgetId !== '') ? widgetId : undefined);
 			authenticateData$.pipe(take(1));
 			if (this.onProgressChanged) {
 				this.onProgressChanged(true);
 			}
 			this.pSubscriptions.add(
 				authenticateData$.subscribe(({ data }) => {
-					let dataLogin = data?.login ?? data?.loginWidget
+					const dataLogin = data?.login ?? data?.loginWidget;
+					
 					if (this.onProgressChanged) {
 						this.onProgressChanged(false);
 					}
@@ -179,10 +181,7 @@ export class WidgetService {
 		if (this.onProgressChanged) {
 			this.onProgressChanged(true);
 		}
-		let currency = summary.currencyTo;
-		if ((summary.providerView?.id ?? '') === 'Openpayd') {
-			currency = summary.currencyFrom;
-		}
+
 		const settingsData$ = this.paymentService.mySettingsFee(
 			summary.transactionType,
 			this.getSource(widget),
@@ -196,25 +195,26 @@ export class WidgetService {
 				if (this.onProgressChanged) {
 					this.onProgressChanged(false);
 				}
-				let wireTransferList: WireTransferPaymentCategoryItem[] = [];
+				const wireTransferList: WireTransferPaymentCategoryItem[] = [];
 				let accountData: WireTransferBankAccountShort | undefined = undefined;
 				const settingsResult = data.mySettingsFee as SettingsFeeShort;
+
 				if(settingsResult.requiredFields && settingsResult.requiredFields.length > 0 && this.userInfoRequired){
 					this.userInfoRequired(settingsResult.requiredFields);
-				}else if (settingsResult.costs) {
+				} else if (settingsResult.costs) {
 					if (settingsResult.costs.length > 0) {
 						const costs = settingsResult.costs[0];
 						if (costs.bankAccounts && (costs.bankAccounts?.length ?? 0 > 0)) {
 							accountData = costs.bankAccounts[0];
 
-							if(accountData.objectsDetails?.length != 0){
-								for(let object of accountData.objectsDetails){
+							if (accountData.objectsDetails?.length !== 0) {
+								for(const object of accountData.objectsDetails){
 									wireTransferList.push({
 										title: object.title,
 										id: object.id,
 										data: JSON.stringify(object),
 										bankAccountId: accountData.bankAccountId
-									})
+									});
 								}
 							}
 						}
@@ -248,7 +248,7 @@ export class WidgetService {
 				this.onProgressChanged(true);
 			}
 			this.pSubscriptions.add(
-				messageData$.subscribe(({ data }) => {
+				messageData$.subscribe(() => {
 					if (this.onProgressChanged) {
 						this.onProgressChanged(false);
 					}
@@ -316,10 +316,8 @@ export class WidgetService {
 					}
 				} else {
 					if (this.onKycStatusUpdate) {
-						if(tierData.showForm){
-							if(this.companyLevelVerification){
-								this.companyLevelVerification();
-							}
+						if (tierData.showForm && this.companyLevelVerification) {
+							this.companyLevelVerification();
 						}
 						this.onKycStatusUpdate(kycData[0] === true, kycData[1]);
 					}
@@ -340,8 +338,8 @@ export class WidgetService {
 		);
 	}
 
-	getSellSettings(summary: CheckoutSummary, widget: WidgetSettings){
-		if(summary.transactionType == TransactionType.Sell){
+	getSellSettings(summary: CheckoutSummary, widget: WidgetSettings): void {
+		if (summary.transactionType === TransactionType.Sell) {
 			this.loadPaymentProviders(summary, widget);
 		}
 	}
@@ -358,19 +356,21 @@ export class WidgetService {
 		const providersData$ = this.paymentService.getProviders(
 			fiatCurrency, (widgetId !== '') ? widgetId : undefined, this.getSource(widget), summary.transactionType, amount
 		).valueChanges.pipe(take(1));
+
 		if (this.onProgressChanged) {
 			this.onProgressChanged(true);
 		}
+
 		this.pSubscriptions.add(
 			providersData$.subscribe(({ data }) => {
 				if (this.onProgressChanged) {
 					this.onProgressChanged(false);
 				}
-				if (this.onPaymentProvidersLoaded && summary.transactionType == TransactionType.Buy) {
+				if (this.onPaymentProvidersLoaded && summary.transactionType === TransactionType.Buy) {
 					this.onPaymentProvidersLoaded(this.getPaymentProviderList(
 						summary,
 						data.getAppropriatePaymentProviders as PaymentProviderByInstrument[]));
-				}else if(this.onSellPaymentProvidersLoaded && summary.transactionType == TransactionType.Sell){
+				} else if (this.onSellPaymentProvidersLoaded && summary.transactionType === TransactionType.Sell) {
 					this.onSellPaymentProvidersLoaded(this.getPaymentProviderList(
 						summary,
 						data.getAppropriatePaymentProviders as PaymentProviderByInstrument[]));
@@ -392,7 +392,7 @@ export class WidgetService {
 			currency = summary.currencyTo ?? '';
 		}
 		const dataList = list
-			.filter(x => x.provider?.currencies?.includes(currency, 0) || x.provider?.currencies?.length == 0 || x.instrument === PaymentInstrument.WireTransfer)
+			.filter(x => x.provider?.currencies?.includes(currency, 0) || x.provider?.currencies?.length === 0 || x.instrument === PaymentInstrument.WireTransfer)
 			.map(val => new PaymentProviderInstrumentView(val));
 
 		return dataList;
@@ -423,11 +423,7 @@ export class WidgetService {
 	private getSource(widget: WidgetSettings): TransactionSource {
 		let source = TransactionSource.Wallet;
 		if (widget.embedded === false) {
-			if (widget.widgetId === '') {
-				source = TransactionSource.QuickCheckout;
-			} else {
-				source = TransactionSource.Widget;
-			}
+			source = widget.widgetId === '' ? TransactionSource.QuickCheckout : TransactionSource.Widget;
 		}
 		return source;
 	}
