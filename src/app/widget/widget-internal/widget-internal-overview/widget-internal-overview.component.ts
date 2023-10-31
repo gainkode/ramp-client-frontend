@@ -533,17 +533,14 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   private setWalletVisible(): void {
   	switch (this.currentTransaction) {
-			case TransactionType.Buy:
-				if (!this.settings?.walletAddressPreset) {
-					this.showWallet = this.settings.transfer || !this.settings.embedded;
-				} else {
-					this.showWallet = false;
-				}
-				break;
-			case TransactionType.Sell:
-				this.showWallet = false;
-				break;
-		}
+  		case TransactionType.Buy:
+  			this.showWallet = !this.settings?.walletAddressPreset ? 
+  				(this.settings.transfer || !this.settings.embedded) : false ;
+  			break;
+  		case TransactionType.Sell:
+  			this.showWallet = false;
+  			break;
+  	}
 
   	if (!this.settings?.walletAddressPreset && this.userAdditionalSettings?.transactionSettings?.walletsRequired !== false) {
   		this.walletField?.setValidators([Validators.required]);
@@ -585,81 +582,74 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   private setSpendValidators(maxValid: number | undefined = undefined): void {
   	let minAmount = this.currentCurrencySpend?.minAmount ?? 0;
-  	let minAmountDisplay = this.currentCurrencySpend?.minAmount ?? 0;
-
   	let currencyDisplay = this.currentCurrencySpend?.display;
-
   	let maxAmount = 0;
+  	let minAmountDisplay = this.currentCurrencySpend?.minAmount ?? 0;
   	let maxAmountDisplay = 0;
-	
-  	if (!this.currentCurrencySpend?.fiat) {
+  
+  	if(!this.currentCurrencySpend?.fiat){
   		currencyDisplay = this.currentCurrencyReceive?.display;
-
-	  if (this.pDepositRate) {
-		  minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
-	  }
+  		if(this.pDepositRate){
+  			minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
+  		}
   	}
-
-  	if (this.settings.currencyAmounts?.length > 0) {
+  	if(this.settings.currencyAmounts && this.settings.currencyAmounts.length !== 0){
   		const currencyAmount = this.settings.currencyAmounts.find(item => item.currency === this.currentCurrencySpend?.display);
-  		
-  		if(currencyAmount?.minAmount){
-  			minAmount = currencyAmount.minAmount;
-
-  			if (!this.currentCurrencySpend?.fiat) {
-  				if(this.pDepositRate){
-  					minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
+  		if(currencyAmount){
+  			if(currencyAmount.minAmount){
+  				minAmount = currencyAmount.minAmount;
+  				if(!this.currentCurrencySpend?.fiat){
+  					if(this.pDepositRate){
+  						minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
+  					}
+  				}else{
+  					minAmountDisplay = minAmount;
   				}
-  			} else {
-  				minAmountDisplay = minAmount;
   			}
-  		}
-
-  		if(currencyAmount?.maxAmount){
-  			maxAmount = currencyAmount.maxAmount;
-
-  			if (!this.currentCurrencySpend?.fiat) {
-  				if(this.pDepositRate){
-  					maxAmountDisplay = parseFloat((maxAmount * this.pDepositRate).toFixed(2));
+  			if(currencyAmount.maxAmount){
+  				maxAmount = currencyAmount.maxAmount;
+  				if(!this.currentCurrencySpend?.fiat){
+  					if(this.pDepositRate){
+  						maxAmountDisplay = parseFloat((maxAmount * this.pDepositRate).toFixed(2));
+  					}
+  				} else {
+  					maxAmountDisplay = maxAmount;
   				}
-  			} else {
-  				maxAmountDisplay = maxAmount;
   			}
   		}
   	}
-
   	this.amountSpendErrorMessages['min'] = this.t(this.amountSpendErrorMessages['min'],{ value: `${minAmountDisplay} ${currencyDisplay}` });
-
   	let validators = [
-	  Validators.required,
-	  Validators.pattern(this.pNumberPattern),
-	  Validators.min(minAmount),
+  		Validators.required,
+  		Validators.pattern(this.pNumberPattern),
+  		Validators.min(minAmount),
   	];
-	
-  	if ((!maxAmount || maxAmount === 0) && maxValid) {
-  		this.amountSpendErrorMessages['max'] = maxValid > 0 ? 
-  			this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` }) : 
-  			'widget-internal-overview.spend-max-empty';
-
-  		validators = [
-  			...validators,
-  			Validators.max(maxValid)
-  		];
+  
+  	if(!maxAmount || maxAmount === 0){
+  		if (maxValid !== undefined) {
+  			if (maxValid > 0) {
+  				this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` });
+  			} else {
+  				this.amountSpendErrorMessages['max'] = 'widget-internal-overview.spend-max-empty';
+  			}
+  			validators = [
+  				...validators,
+  				Validators.max(maxValid)
+  			];
+  		}
   	} else {
-  		this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
-
+	  this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
   		validators = [
   			...validators,
   			Validators.max(maxAmount)
   		];
   	}
-
-  	if (!this.initValidators) {
-	  this.amountSpendField?.setValidators(validators);
-	  this.amountSpendField?.updateValueAndValidity();
+  	if(!this.initValidators){
+  		this.amountSpendField?.setValidators(validators);
+  		this.amountSpendField?.updateValueAndValidity();
   	}
   }
-
+  
   private setReceiveValidators(): void {
   	this.amountReceiveErrorMessages['min'] = this.t(this.amountReceiveErrorMessages['min'],{ value: `${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}` });
 
