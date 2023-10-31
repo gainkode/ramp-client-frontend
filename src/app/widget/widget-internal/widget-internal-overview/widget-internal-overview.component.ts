@@ -532,15 +532,18 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   private setWalletVisible(): void {
-  	if (this.currentTransaction === TransactionType.Buy) {
-  		if (!this.settings?.walletAddressPreset) {
-  			this.showWallet = this.settings.transfer || !this.settings.embedded;
-  		} else {
-  			this.showWallet = false;
-  		}
-  	} else {
-  		this.showWallet = false;
-  	}
+  	switch (this.currentTransaction) {
+			case TransactionType.Buy:
+				if (!this.settings?.walletAddressPreset) {
+					this.showWallet = this.settings.transfer || !this.settings.embedded;
+				} else {
+					this.showWallet = false;
+				}
+				break;
+			case TransactionType.Sell:
+				this.showWallet = false;
+				break;
+		}
 
   	if (!this.settings?.walletAddressPreset && this.userAdditionalSettings?.transactionSettings?.walletsRequired !== false) {
   		this.walletField?.setValidators([Validators.required]);

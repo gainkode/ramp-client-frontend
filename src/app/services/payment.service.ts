@@ -264,6 +264,7 @@ mutation CreateTransaction(
   $transactionType: TransactionType!,
   $source: TransactionSource!,
   $sourceVaultId: String,
+  $sourceAddress: String,
   $currencyToSpend: String!,
   $currencyToReceive: String!,
   $amountToSpend: Float!,
@@ -277,6 +278,7 @@ mutation CreateTransaction(
   createTransaction(transaction: {
     type: $transactionType
     source: $source
+    sourceAddress: $sourceAddress
     sourceVaultId: $sourceVaultId
     currencyToSpend: $currencyToSpend
     currencyToReceive: $currencyToReceive
