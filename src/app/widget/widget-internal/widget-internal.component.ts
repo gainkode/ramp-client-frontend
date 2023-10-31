@@ -57,8 +57,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   showWidget = true;
   widgetLink = '';
   userWallets: WalletItem[] = [];
-  exchangeRateCountDownTitle = '';
-  exchangeRateCountDownValue = '';
   paymentProviders: PaymentProviderInstrumentView[] = [];
   bankAccountId = '';
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
@@ -424,8 +422,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   }
 
   onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
-  	this.exchangeRateCountDownTitle = countDownTitle;
-  	this.exchangeRateCountDownValue = countDownValue;
   	this.rateErrorMessage = error;
   	if (rate) {
   		this.summary.exchangeRate = rate;
@@ -976,7 +972,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   // == KYC =============
 
   kycComplete(): void {
-	debugger
   	if (this.widget.kycFirst) {
   		this.loadAccountData();
   		console.log('KYC COMPLETE');

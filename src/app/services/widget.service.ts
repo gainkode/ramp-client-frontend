@@ -74,7 +74,6 @@ export class WidgetService {
 			const dataGetter$ = this.auth.getSettingsCommon().valueChanges.pipe(take(1));
 			this.pSubscriptions.add(
 				dataGetter$.subscribe(({ data }) => {
-					debugger
 					if (this.auth.user) {
 						this.auth.setLocalSettingsCommon(data.getSettingsCommon);
 						this.getTiers(summary, widget);
