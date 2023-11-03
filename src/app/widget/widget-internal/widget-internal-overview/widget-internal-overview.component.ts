@@ -312,9 +312,9 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
   		.subscribe(val => this.onAmountReceiveUpdated(val)));
     
-  	this.pSubscriptions.add(this.transactionField?.valueChanges
-  		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
-  		.subscribe(val => this.onTransactionUpdated(val)));
+  	// this.pSubscriptions.add(this.transactionField?.valueChanges
+  	// 	.pipe(distinctUntilChanged((prev, curr) => prev === curr))
+  	// 	.subscribe(val => this.onTransactionUpdated(val)));
 
   	this.pSubscriptions.add(this.walletSelectorField?.valueChanges
   		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
@@ -600,7 +600,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				minAmount = currencyAmount.minAmount;
   				if(!this.currentCurrencySpend?.fiat){
   					if(this.pDepositRate){
-  						minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
+  						minAmountDisplay = parseFloat((minAmount / this.pDepositRate).toFixed(2));
   					}
   				}else{
   					minAmountDisplay = minAmount;
@@ -610,7 +610,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				maxAmount = currencyAmount.maxAmount;
   				if(!this.currentCurrencySpend?.fiat){
   					if(this.pDepositRate){
-  						maxAmountDisplay = parseFloat((maxAmount * this.pDepositRate).toFixed(2));
+  						maxAmountDisplay = parseFloat((maxAmount / this.pDepositRate).toFixed(2));
   					}
   				} else {
   					maxAmountDisplay = maxAmount;
@@ -618,7 +618,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			}
   		}
   	}
-  	this.amountSpendErrorMessages['min'] = this.t(this.amountSpendErrorMessages['min'],{ value: `${minAmountDisplay} ${currencyDisplay}` });
+
+  	this.amountSpendErrorMessages['min'] = this.t(this.amountSpendErrorMessages['min'], { value: `${minAmountDisplay} ${currencyDisplay}` });
   	let validators = [
   		Validators.required,
   		Validators.pattern(this.pNumberPattern),
@@ -809,6 +810,9 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	// this.amountReceiveField?.setValue(0);
   	this.setWalletVisible();
   	this.pTransactionChanged = false;
+		this.amountSpendField?.setValue(undefined);
+		this.amountReceiveField?.setValue(undefined);
+		this.sendData();
   }
 
   private onWalletSelectorUpdated(val: string): void {
@@ -887,7 +891,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   					dst = 0;
   				} else {
   					const receiveWithouFee = this.defaultFee ? (receive + receive/100 * this.defaultFee) : receive;
-  					dst = receiveWithouFee / this.pDepositRate;
+  					dst = receiveWithouFee * this.pDepositRate;
   				}
   				this.validData = true;
   			}
@@ -914,7 +918,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		} else if (this.currentTransaction === TransactionType.Sell) {
   			if (spend && this.pDepositRate) {
   				const spendWithouFee = this.defaultFee ? (spend - spend/100 * this.defaultFee) : spend;
-  				dst = spendWithouFee * this.pDepositRate;
+  				dst = spendWithouFee / this.pDepositRate;
   				this.validData = true;
   			}
   		}

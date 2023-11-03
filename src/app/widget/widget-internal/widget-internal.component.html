@@ -72,6 +72,11 @@
           <app-widget-sell-details *ngSwitchCase="'sell_details'" [summary]="summary" (onBack)="stageBack()"
             (onComplete)="sellComplete($event)">
           </app-widget-sell-details>
+
+          <app-sell-widget-complete *ngSwitchCase="'sell_widget_complete'" [address]="this.summary.sourceAddress" 
+          [amount]="this.summary.amountFrom" [currency]="this.summary.currencyFrom" (onFinish)="resetWizard()"
+          (onProgress)="progressChanged($event)">
+          </app-sell-widget-complete>
           <!-- Disclaimer -->
           <app-widget-disclaimer *ngSwitchCase="'intro_disclaimer'" [agreementChecked]="summary.agreementChecked"
             [textContent]="disclaimerTextData" [errorMessageData]="errorMessage" [backButton]=false (onNext)="introDisclaimerNext()">

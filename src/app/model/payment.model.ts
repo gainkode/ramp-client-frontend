@@ -615,6 +615,7 @@ export class CheckoutSummary {
 	instrument: PaymentInstrument | undefined = undefined;
 	quoteLimit = 0;
 	verifyWhenPaid = false;
+	sourceAddress: string = undefined;
 
 	get isFromCrypto(): boolean {
 		let result = false;

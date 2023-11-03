@@ -29,6 +29,7 @@ import { WidgetService } from 'services/widget.service';
 export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';
   @Input() quickCheckout = false;
+	@Input() isWidget = false;
   @Input() settings: WidgetSettings | undefined = undefined;
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
@@ -1103,7 +1104,12 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.startPayment();
   		}
   	} else if(this.transactionInput.type === TransactionType.Sell){
-  		this.processingComplete();
+			if(this.isWidget && order.sourceAddress) {
+				this.summary.sourceAddress = order.sourceAddress;
+				this.nextStage('sell_widget_complete', 'Complete', 5, false);
+			}else{
+				this.processingComplete();
+			}
   	}
   }
 

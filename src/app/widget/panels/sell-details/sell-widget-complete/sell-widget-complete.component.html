@@ -1,0 +1,57 @@
+<div class="__widget-data-box">
+    <div *ngIf="qrCode!==''">
+        <div class="__widget-data-three-column-grid">
+            <div class="__widget-data-three-column-item-one">
+                Address:
+            </div>
+            <div class="__widget-data-three-column-item-two">
+                <input class="__text-box-noborder" type="text" readonly [value]="address" />
+            </div>
+            <div class="__widget-data-three-column-item-three">
+                <button type="button" class="__tool-button" (click)="copyAddress()">
+                    <mat-icon class="tx-20">content_copy</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="__widget-data-three-column-grid">
+            <div class="__widget-data-three-column-item-one">
+                Amount:
+            </div>
+            <div class="__widget-data-three-column-item-two">
+                <input class="__text-box-noborder" type="text" readonly [value]="amount" />
+            </div>
+            <div class="__widget-data-three-column-item-three">
+                <button type="button" class="__tool-button" (click)="copyAmount()">
+                    <mat-icon class="tx-20">content_copy</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="__widget-data-three-column-grid">
+            <div class="__widget-data-three-column-item-one">
+                Network:
+            </div>
+            <div class="__widget-data-three-column-item-two">
+                <input class="__text-box-noborder" type="text" readonly [value]="sellectedCurrency?.name" />
+            </div>
+        </div>
+        <div class="__profile-details-item-block">
+            <div class="__form-separator-small"></div>
+        </div>
+        <!-- QR-code -->
+        <div class="__profile-details-qrcode-block">
+            <qrcode [qrdata]="qrCode" [colorLight]="qrCodeBackground" [colorDark]="qrCodeForeground" [width]="150" [errorCorrectionLevel]="'M'"
+                [allowEmptyString]="true"></qrcode>
+        </div>
+    </div>
+
+    <div class="__widget-buttons-area">
+        <button class="__main-button" type="button" (click)="onFinish.emit()">
+            done
+        </button>
+    </div>
+
+    <div class="__widget-data-error">
+        {{errorMessage}}
+    </div>
+</div>
