@@ -567,8 +567,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			data.currencyTo = this.currencyReceiveField?.value;
   			data.amountToPrecision = this.currentCurrencyReceive?.precision ?? 2;
   		}
-  		if (this.transactionField?.valid) {
-  			data.transactionType = this.transactionField?.value;
+  		if (this.currentTransaction) {
+  			data.transactionType = this.currentTransaction;
   		}
   		if (this.walletField?.valid && this.showWallet) {
   			data.address = this.walletField?.value;
@@ -600,7 +600,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				minAmount = currencyAmount.minAmount;
   				if(!this.currentCurrencySpend?.fiat){
   					if(this.pDepositRate){
-  						minAmountDisplay = parseFloat((minAmount / this.pDepositRate).toFixed(2));
+  						minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
   					}
   				}else{
   					minAmountDisplay = minAmount;
@@ -610,7 +610,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				maxAmount = currencyAmount.maxAmount;
   				if(!this.currentCurrencySpend?.fiat){
   					if(this.pDepositRate){
-  						maxAmountDisplay = parseFloat((maxAmount / this.pDepositRate).toFixed(2));
+  						maxAmountDisplay = parseFloat((maxAmount * this.pDepositRate).toFixed(2));
   					}
   				} else {
   					maxAmountDisplay = maxAmount;
@@ -891,7 +891,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   					dst = 0;
   				} else {
   					const receiveWithouFee = this.defaultFee ? (receive + receive/100 * this.defaultFee) : receive;
-  					dst = receiveWithouFee * this.pDepositRate;
+  					dst = receiveWithouFee / this.pDepositRate;
   				}
   				this.validData = true;
   			}
@@ -918,7 +918,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		} else if (this.currentTransaction === TransactionType.Sell) {
   			if (spend && this.pDepositRate) {
   				const spendWithouFee = this.defaultFee ? (spend - spend/100 * this.defaultFee) : spend;
-  				dst = spendWithouFee / this.pDepositRate;
+  				dst = spendWithouFee * this.pDepositRate;
   				this.validData = true;
   			}
   		}
