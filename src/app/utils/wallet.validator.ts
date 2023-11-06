@@ -1,4 +1,4 @@
-import { UntypedFormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { TransactionType } from '../model/generated-models';
 import { EnvService } from '../services/env.service';
 import { getCryptoSymbol } from './utils';
@@ -6,13 +6,15 @@ import { getCryptoSymbol } from './utils';
 const WAValidator = require('multicoin-address-validator');
 
 export class WalletValidator {
-	static addressValidator(addressField: string, currencyField: string, transactionField: string): ValidationErrors | null {
-		return (fg: UntypedFormGroup) => {
+	static addressValidator(addressField: string, currencyField: string, transactionField: string): ValidatorFn {
+		return (control: AbstractControl): ValidationErrors | null => {
+			const fg = control as UntypedFormGroup;
+			
 			const addressControl = fg.controls[addressField];
 			const currencyControl = fg.controls[currencyField];
 			const transactionControl = fg.controls[transactionField];
 
-			if (!addressControl || addressControl?.value?.length == 0 || addressControl?.value == '' || !currencyControl || !transactionControl) {
+			if (!addressControl || addressControl?.value?.length === 0 || addressControl?.value === '' || !currencyControl || !transactionControl) {
 				return null;
 			}
 			if (transactionControl.value !== TransactionType.Buy) {

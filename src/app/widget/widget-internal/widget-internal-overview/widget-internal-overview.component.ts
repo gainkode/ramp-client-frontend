@@ -147,16 +147,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	verifyWhenPaid: [undefined],
   	walletSelector: [undefined, { validators: [], updateOn: 'change' }],
   	wallet: [undefined, { validators: [], updateOn: 'change' }]
-  }, {
-  	validators: [
-  		WalletValidator.addressValidator(
-  			'wallet',
-  			'currencyReceive',
-  			'transaction'
-  		),
-  	],
-  	updateOn: 'change',
-  });
+  }, { validator: WalletValidator.addressValidator('wallet', 'currencyReceive','transaction') } );
 
   termsLink = EnvService.terms_link;
   privacyLink = EnvService.privacy_link;
@@ -198,16 +189,17 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   get isOrderDetailsFormValid(): boolean {
+  	console.log(this.walletField?.valid)
   	return this.dataForm.valid && 
 		this.amountSpendField.value && 
-		this.walletField?.valid && 
-		this.emailField?.valid;
+		this.emailField?.valid && this.walletField?.valid;
   }
 
   get isOrderProceedFormValid(): boolean {
   	if (this.isSinglePage) {
   		return this.isOrderDetailsFormValid;
   	}
+
 
   	return this.amountSpendField.valid && this.amountSpendField.value;
   }
@@ -547,6 +539,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	} else {
   		this.walletField?.setValidators([]);
   	}
+	
   	this.walletField?.updateValueAndValidity();
   }
 
@@ -791,6 +784,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   private onTransactionUpdated(val: TransactionType): void {
+	this.walletField?.setValue(undefined);
+	
   	this.currentTransaction = val;
   	this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
   	this.setAmountTitles();
@@ -806,13 +801,19 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.setCurrencyLists();
   	this.currencySpendField?.setValue(this.currentCurrencySpend?.symbol);
   	this.currencyReceiveField?.setValue(this.currentCurrencyReceive?.symbol);
-  	// this.amountSpendField?.setValue(0);
-  	// this.amountReceiveField?.setValue(0);
+
   	this.setWalletVisible();
   	this.pTransactionChanged = false;
-		this.amountSpendField?.setValue(undefined);
-		this.amountReceiveField?.setValue(undefined);
-		this.sendData();
+  	this.amountSpendField?.setValue(undefined);
+  	this.amountReceiveField?.setValue(undefined);
+
+  	this.sendData();
+
+  	if (this.currentTransaction === this.TRANSACTION_TYPE.Buy) {
+  		this.dataForm.setValidators(WalletValidator.addressValidator('wallet', 'currencyReceive','transaction'));
+  	} else if (this.currentTransaction === this.TRANSACTION_TYPE.Sell) {
+  		this.dataForm.removeValidators(WalletValidator.addressValidator('wallet', 'currencyReceive','transaction'));
+  	}
   }
 
   private onWalletSelectorUpdated(val: string): void {
