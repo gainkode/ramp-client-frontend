@@ -2,8 +2,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
 	selector: 'app-widget-rate',
-	templateUrl: 'rate.component.html',
-	styleUrls: []
+	templateUrl: 'rate.component.html'
 })
 export class WidgetRateComponent {
     @Input() title = '';
