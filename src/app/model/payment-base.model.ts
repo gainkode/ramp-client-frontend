@@ -16,6 +16,7 @@ export class WidgetSettings {
 	email = '';
 	hideEmail = false;
 	transaction: TransactionType | undefined = undefined;
+	transactionTypes: TransactionType[];
 	source: TransactionSource = TransactionSource.QuickCheckout;
 	walletAddressPreset = false;
 	widgetId = '';
@@ -31,7 +32,7 @@ export class WidgetSettings {
 	amountFrom = 0;
 	minAmountFrom: number | undefined = undefined;
 	maxAmountFrom: number | undefined = undefined;
-	currencyAmounts: {currency: string, minAmount?: number, maxAmount?: number}[] = [];
+	currencyAmounts: { currency: string; minAmount?: number; maxAmount?: number; }[] = [];
 	allowToPayIfKycFailed = false;
 	fee: number | undefined = undefined;
 	showRate: boolean | undefined = undefined;

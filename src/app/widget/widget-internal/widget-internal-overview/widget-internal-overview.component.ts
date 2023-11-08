@@ -92,7 +92,6 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   currentCurrencySpend: CurrencyView | undefined = undefined;
   currentCurrencyReceive: CurrencyView | undefined = undefined;
   currentTransaction: TransactionType = TransactionType.Buy;
-  currentTransactionName = '';
   spendTitle = '';
   receiveTitle = '';
   spendCurrencyList: CurrencyView[] = [];
@@ -152,7 +151,9 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   termsLink = EnvService.terms_link;
   privacyLink = EnvService.privacy_link;
-
+  isBuyButton = false;
+  isSellButton = false;
+  
   get emailField(): AbstractControl | null {
   	return this.dataForm.get('email');
   }
@@ -197,8 +198,6 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	}
 
   	return false;
-
- 
   }
 
   get isOrderProceedFormValid(): boolean {
@@ -244,12 +243,16 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		kycTier,
   		kycValid
   	} = this.USER || {};
-	
+
   	if (settings){
   		this.userAdditionalSettings = typeof settings.userAdditionalSettings == 'string' ? JSON.parse(settings.userAdditionalSettings) : settings.userAdditionalSettings;
   	}
 	
   	this.isMasked = this.settings.masked;
+
+	this.isBuyButton = this.settings.transactionTypes?.length === 0 || this.settings.transactionTypes.includes(this.TRANSACTION_TYPE.Buy);
+	this.isSellButton = this.settings.transactionTypes?.length === 0 || this.settings.transactionTypes.includes(this.TRANSACTION_TYPE.Sell);
+
   	this.showVerifyWhenPaid = additionalSettings?.core?.verifyWhenPaid || true;
 
   	if (transactionType) {
@@ -292,7 +295,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   	this.setWalletVisible();
   	this.setAmountTitles();
-  	this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
+  	
   	this.loadDetailsForm(initialized ?? false);
 
   	this.pSubscriptions.add(this.currencySpendField?.valueChanges
@@ -793,7 +796,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.walletField?.setValue(undefined);
 	
   	this.currentTransaction = val;
-  	this.currentTransactionName = QuickCheckoutTransactionTypeList.find(x => x.id === this.currentTransaction)?.name ?? this.currentTransaction;
+  	
   	this.setAmountTitles();
   	this.pSpendAutoUpdated = true;
   	this.pReceiveAutoUpdated = true;

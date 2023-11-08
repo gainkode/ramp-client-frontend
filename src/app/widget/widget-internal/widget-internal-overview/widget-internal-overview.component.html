@@ -37,11 +37,13 @@
             <div class="order-details__content-header-buttons" 
                 [class.order-details__content-header-buttons--inactive]="false">
                 <div class="order-details__content-header-button" 
+                    *ngIf="isBuyButton"
                     (click)="toggleTransationType(TRANSACTION_TYPE.Buy)"
                     [class.order-details__content-header-button--active]="currentTransaction === TRANSACTION_TYPE.Buy">
                     {{'widget-internal-overview.transaction-type_button-buy' | transloco}}
                 </div>
                 <div class="order-details__content-header-button"
+                    *ngIf="isSellButton"
                     (click)="toggleTransationType(TRANSACTION_TYPE.Sell)"
                     [class.order-details__content-header-button--active]="currentTransaction === TRANSACTION_TYPE.Sell">
                     {{'widget-internal-overview.transaction-type_button-sell' | transloco}}

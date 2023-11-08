@@ -107,7 +107,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	private profileService: ProfileDataService,
   	private errorHandler: ErrorService) { }
 
-  private externalKycSubscriptionFlag = false;
   private companyLevelVerificationFlag = false;
 
   	ngOnInit(): void {
@@ -170,8 +169,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	if (this.externalPaymentNotificationsSubscription) {
   		this.externalPaymentNotificationsSubscription.unsubscribe();
   	}
-    
-  	this.externalKycSubscriptionFlag = false;
+
   	this.exhangeRate.stop();
   }
 
@@ -239,7 +237,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		}
 
   		this.widget.transaction = undefined;
-
+		this.widget.transactionTypes = data.transactionTypes;
+		
   		if (data.currenciesCrypto?.length > 0) {
   			this.widget.cryptoList = data.currenciesCrypto.map(val => val);
   		}
@@ -317,7 +316,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	
   	if(this.auth.user && isExternalProvider){
   		console.log('Kyc completed notifications subscribed');
-  		this.externalKycSubscriptionFlag = true;
+
   		this.externalKycProvideNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications()
   			.subscribe(
   				{
@@ -336,7 +335,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   						this.loadAccountData();
   					},
   					error: (error) => {
-  						this.externalKycSubscriptionFlag = false;
   						console.error('KYC complete notification error', error);
   					}
   				});
@@ -435,15 +433,19 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	} else {
   		this.inProgress = false;
   		this.requiredExtraData = false;
-  		this.summary.reset();
+
+  		// this.summary.reset();  commented during sell implementation
+
   		if (this.userParamsId === '') {
   			this.initData(undefined);
+
   			if (this.widget.orderDefault) {
   				this.orderDetailsComplete(this.summary.email);
   			} else {
   				this.pager.init('', '');
   				this.nextStage('order_details', 'widget-pager.order_details', 1, false);
   			}
+
   		} else {
   			this.loadUserParams();
   		}
@@ -454,6 +456,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.isSingleOrderDetailsCompleted = false;
   		}
   	}
+
+	this.transactionErrorMessage = undefined;
   }
 
   capchaResult(event): void {
@@ -992,7 +996,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.auth.setLoginUser(data);
   		if(this.externalKycProvideNotificationsSubscription){
   			this.externalKycProvideNotificationsSubscription.unsubscribe();
-  			this.externalKycSubscriptionFlag = false;
   		}
   		this.startExternalKycProvideListener();
 
