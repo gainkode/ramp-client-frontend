@@ -42,6 +42,11 @@ import {
 } from './payment.model';
 import { UserItem } from './user.model';
 
+export enum ScreeningAnswer {
+	GREEN = 'GREEN',
+	RED = 'RED',
+}
+
 export class TransactionItemFull {
 	id = '';
 	code = '';
@@ -67,7 +72,7 @@ export class TransactionItemFull {
 	transferOriginalOrderId = '';
 	paymentOrderId = '';
 	transferOrderHash = '';
-	screeningAnswer = '';
+	screeningAnswer: ScreeningAnswer;
 	screeningRiskscore = 0;
 	screeningStatus = '';
 	screeningData: Record<string, any> = {};
@@ -165,7 +170,7 @@ export class TransactionItemFull {
 			this.transferOrderId = data.transferOrder?.orderId ?? '';
 			this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
 			this.transferOrderHash = data.transferOrder?.transferHash ?? '';
-			this.screeningAnswer = data?.screeningAnswer ?? '';
+			this.screeningAnswer = <ScreeningAnswer>data?.screeningAnswer ?? undefined;
 			this.screeningRiskscore = data?.screeningRiskscore ?? 0;
 			this.screeningStatus = data?.screeningStatus ?? '';
 			this.screeningData = JSON.parse(data?.screeningData ?? '{}');

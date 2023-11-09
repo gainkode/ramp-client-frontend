@@ -4,7 +4,6 @@
       (click)="activeTabInfo()">
           Transaction info
       </div>
-      <!-- *ngIf="data?.screeningAnswer" -->
       <div *ngIf="data?.screeningAnswer" [ngClass]="{'__info-tab-selected': activeTab == 'infoScreening'}" class="__info-type-tab __info-type-tab-right"
       (click)="activeTabInfoScreening()">
           Transaction screeneng info
@@ -12,27 +11,21 @@
   </div>
   <div *ngIf="activeTab == 'info'" class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
     <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(update_confirm_content)">
-      <div style="display: flex; justify-content: flex-start;">
-        <!-- <button *ngIf="permission>1"
-          class="btn btn-primary pd-x-30 me-2 mg-t-5"
-          (click)="flagValue()">
-          <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-            aria-hidden="true"></span>
-          {{flagText()}}
-        </button> -->
-        <button *ngIf="permission>0" class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="flagValue()">
-          <span *ngIf="flagInProgress" class="spinner-border spinner-border-sm" role="status"
-              aria-hidden="true"></span>
-          {{flagText()}}
+      <div style="display: flex; justify-content: space-between;">
+        <button *ngIf="permission > 0" class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="flagValue()">
+          <span *ngIf="flagInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          {{flag ? 'Unflag' : 'Flag'}}
         </button>
+
+        <div class="btn pe-none pd-x-30 mg-t-5" [ngClass]="{'btn-success': data?.screeningAnswer === 'GREEN', 'btn-danger': data?.screeningAnswer == 'RED'}" >
+          {{data?.screeningAnswer}}
+        </div>
       </div>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 class="card-title mg-b-20">
           Payment Data
         </h5>
         <app-admin-details-item label="Transaction Id" [value]="data?.code"></app-admin-details-item>
-        <!-- <app-admin-details-item label="Transaction Id" [value]="data?.code"
-          [linkUrl]="'/admin/transactions/'+ transactionId"></app-admin-details-item> -->
         <app-admin-details-item label="Transaction Created" [value]="data?.created"></app-admin-details-item>
         <app-admin-details-item label="Transaction Completed" [value]="data?.executed"></app-admin-details-item>
         <app-admin-details-item label="Transaction Last Updated" [value]="data?.updated"></app-admin-details-item>
@@ -61,13 +54,15 @@
           </ng-select>
         </div>
         
-        <app-admin-details-item *ngIf="(transactionType!==TRANSACTION_TYPE.Deposit && transactionType!==TRANSACTION_TYPE.Withdrawal) || editableDestination===false"
-          label="Wallet address" [value]="data?.address"></app-admin-details-item>
-        <div *ngIf="(transactionType!==TRANSACTION_TYPE.Deposit && transactionType!==TRANSACTION_TYPE.Withdrawal) && editableDestination===true"
-          class="form-group">
+        <app-admin-details-item 
+          *ngIf="isTransactionNotDepositOrWithdrawal && !editableDestination"
+          label="End User Address" 
+          [value]="data?.address">
+        </app-admin-details-item>
+
+        <div *ngIf="isTransactionNotDepositOrWithdrawal && editableDestination" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            Wallet address
-            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            End User Address <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
           <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
             formControlName="address" required>
@@ -78,14 +73,13 @@
             </small>
           </div>
         </div>
+
         <app-admin-details-item label="Custody Order Id" [value]="data?.transferOriginalOrderId">
         </app-admin-details-item>
         <app-admin-details-item label="Payment Order Id" [value]="data?.paymentOrderId">
         </app-admin-details-item>
-        <!-- <app-admin-details-item label="Transfer Order Id" [value]="data?.transferOrderId"></app-admin-details-item> -->
         <app-admin-details-item label="Transfer Order Hash" [value]="data?.transferOrderHash"></app-admin-details-item>
 
-        <!-- <app-admin-details-item label="BENCHMARK TRANSFER ORDER ID" [value]="data?.benchmarkTransferOrderId"></app-admin-details-item> -->
         <app-admin-details-item label="LIQUIDITY BENCHMARK TRANSFER ORDER ID" [value]="data?.benchmarkTransferOriginalOrderId"></app-admin-details-item>
         <!-- Transaction status -->
         <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status"
@@ -199,13 +193,6 @@
             </small>
           </div>
         </div>
-        <!-- <div
-          *ngIf="transactionType===TRANSACTION_TYPE.Buy || transactionType===TRANSACTION_TYPE.Sell || transactionType===TRANSACTION_TYPE.Exchange"
-          class="form-group">
-          <a [routerLink]="" (click)="updateRate()">
-            Set current exchange rate
-          </a>
-        </div> -->
 
         <!-- Fees -->
         <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" [label]="systemFeeTitle"
@@ -232,7 +219,10 @@
         <app-admin-details-item label="Blockchain fee" [value]="data?.transferFee"></app-admin-details-item>
 
         <app-admin-details-item label="From" [value]="data?.sender"></app-admin-details-item>
-        <app-admin-details-item label="To" [value]="data?.recipient"></app-admin-details-item>
+        <app-admin-details-item
+           *ngIf="data?.recipient !== data?.address"
+           label="To" [value]="data?.recipient">
+        </app-admin-details-item>
         <app-admin-details-item label="Initiated from" [value]="data?.transactionSourceName"></app-admin-details-item>
         <app-admin-details-item label="Wallet type" [value]="data?.userModeName"></app-admin-details-item>
         <app-admin-details-item label="Instrument details" [value]="data?.instrumentDetailsData">
@@ -254,20 +244,21 @@
           </label>
           <input class="form-control" type="text" formControlName="transferHash">
         </div>
-        <!-- <app-admin-details-item label="Answer screening" [value]="data?.screeningAnswer"></app-admin-details-item> -->
-        <div class="form-group">
+      
+        <div class="form-group pe-none">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Answer screening
           </label>
           <input class="form-control" type="text" formControlName="screeningAnswer">
         </div>
-        <div class="form-group">
+
+        <div class="form-group pe-none">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Riscscore screening
           </label>
           <input class="form-control" type="number" formControlName="screeningRiskscore">
         </div>
-        <div class="form-group">
+        <div class="form-group pe-none">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Status screening
           </label>
