@@ -90,8 +90,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   transactionStatus: TransactionStatus | undefined = undefined;
   transactionStatusName = '';
   notPaidStatus = false;
-	allowExchangetatus = false;
+  allowExchangetatus = false;
   notDeclinedStatus = false;
+  isTransactionNotDepositOrWithdrawal = false;
   kycStatus = '';
   accountStatus = '';
   showTransferHash = false;
@@ -219,6 +220,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.data = val;
   	this.transactionId = val?.id ?? '';
   	this.transactionType = val?.type ?? TransactionType.System;
+  	this.isTransactionNotDepositOrWithdrawal = this.transactionType !== this.TRANSACTION_TYPE.Deposit && this.transactionType !== this.TRANSACTION_TYPE.Withdrawal;
+  	
   	this.transferOrderBlockchainLink = val?.transferOrderBlockchainLink ?? '';
   	this.benchmarkTransferOrderBlockchainLink = val?.benchmarkTransferOrderBlockchainLink ?? '';
   	this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
@@ -254,9 +257,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         this.data.status === TransactionStatus.TransferBenchmarkWaiting) {
   			this.notPaidStatus = false;
 				
-				if(this.data.status === TransactionStatus.Paid){
-					this.allowExchangetatus = true;
-				}
+  			if(this.data.status === TransactionStatus.Paid){
+  				this.allowExchangetatus = true;
+  			}
   		} else {
   			this.notPaidStatus = true;
   		}
@@ -318,10 +321,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	} as Transaction;
 
   	return transactionToUpdate;
-  }
-
-  flagText(): String {
-  	return this.flag == true ? 'Unflag' : 'Flag';
   }
 
   activeTabInfo(): void{
@@ -473,7 +472,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.fastStatusChange(TransactionStatus.Paid, content);
   }
 
-	onExchange(content: any): void {
+  onExchange(content: any): void {
   	this.fastStatusChange(TransactionStatus.Exchanging, content);
   }
 
