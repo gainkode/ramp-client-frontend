@@ -237,7 +237,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		}
 
   		this.widget.transaction = undefined;
-		this.widget.transactionTypes = data.transactionTypes;
+  		this.widget.transactionTypes = data.transactionTypes;
 		
   		if (data.currenciesCrypto?.length > 0) {
   			this.widget.cryptoList = data.currenciesCrypto.map(val => val);
@@ -457,7 +457,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		}
   	}
 
-	this.transactionErrorMessage = undefined;
+  	this.transactionErrorMessage = undefined;
   }
 
   capchaResult(event): void {
@@ -851,6 +851,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
   			this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   			this.startPayment();
+  		} else if (provider.instrument === PaymentInstrument.OpenBanking) {
+  			this.nextStage(`payment_${provider.name}`, 'Bank details', 2, true);
   		} else {
   			this.createTransaction(provider.id, provider.instrument, '');
   		}
@@ -1107,12 +1109,12 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.startPayment();
   		}
   	} else if(this.transactionInput.type === TransactionType.Sell){
-			if(this.isWidget && order.sourceAddress) {
-				this.summary.sourceAddress = order.sourceAddress;
-				this.nextStage('sell_widget_complete', 'Complete', 5, false);
-			}else{
-				this.processingComplete();
-			}
+  		if(this.isWidget && order.sourceAddress) {
+  			this.summary.sourceAddress = order.sourceAddress;
+  			this.nextStage('sell_widget_complete', 'Complete', 5, false);
+  		}else{
+  			this.processingComplete();
+  		}
   	}
   }
 

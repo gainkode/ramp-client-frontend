@@ -28,3 +28,4 @@ export * from './wire-transfer/wire-transfer.component';
 export * from './wire-transfer-info-required/wire-transfer-info-required.component';
 export * from './wire-transfer-result/wire-transfer-result.component';
 export * from './widget-iframe/widget-iframe.component';
+export * from './payment-provider/yapily/payment.component';
