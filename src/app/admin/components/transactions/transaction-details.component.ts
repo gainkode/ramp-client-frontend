@@ -122,6 +122,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	screeningRiskscore: [undefined],
   	screeningStatus: [undefined],
   	benchmarkTransferHash: [undefined],
+		merchantFeePercent: [undefined],
   	comment: [undefined]
   });
 
@@ -242,6 +243,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('screeningRiskscore')?.setValue(this.data.screeningRiskscore);
   		this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
   		this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
+			this.form.get('merchantFeePercent')?.setValue(this.data.widgetUserParams.merchantFeePercent);
   		if(this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
   			this.scriningData = JSON.stringify(this.data?.screeningData?.paymentChecks[0], null, 4);
   		}
@@ -315,6 +317,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		benchmarkTransferOrder: {
   			orderId: this.data?.benchmarkTransferOrderId,
   			transferHash: this.form.get('benchmarkTransferHash')?.value ?? ''
+  		},
+  		widgetUserParams: {
+  			merchantFeePercent: this.form.get('merchantFeePercent')?.value ?? ''
   		},
   		comment: this.form.get('comment')?.value ?? '',
   		flag: this.flag

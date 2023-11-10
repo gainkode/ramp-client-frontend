@@ -248,6 +248,7 @@ export enum CallbackStatus {
 
 export enum CallbackType {
   TransactionStatusChanged = 'transactionStatusChanged',
+  TransactionStatusChangedAdmin = 'transactionStatusChangedAdmin',
   UserVerificationChanged = 'userVerificationChanged'
 }
 
@@ -908,6 +909,7 @@ export type Mutation = {
   /** This endpoint can be used to add a user's wallet. */
   addUserVault?: Maybe<VaultAccount>;
   addWireTransferBankAccount: WireTransferBankAccount;
+  assignCostToFees?: Maybe<Array<Maybe<SettingsFee>>>;
   assignRole?: Maybe<User>;
   /** This endpoint to recalculate the invoice with current rate */
   calculateInvoice?: Maybe<CryptoInvoiceCreationResult>;
@@ -1145,6 +1147,12 @@ export type MutationAddUserVaultArgs = {
 
 export type MutationAddWireTransferBankAccountArgs = {
   bankAccount: WireTransferBankAccountInput;
+};
+
+
+export type MutationAssignCostToFeesArgs = {
+  costId: Scalars['ID']['input'];
+  settingsIds?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
 
@@ -3536,7 +3544,7 @@ export type Transaction = {
   widget?: Maybe<Scalars['String']['output']>;
   widgetCode?: Maybe<Scalars['String']['output']>;
   widgetId?: Maybe<Scalars['String']['output']>;
-  widgetUserParams?: Maybe<Scalars['String']['output']>;
+  widgetUserParams?: Maybe<WidgetUserParams>;
   widgetUserParamsId?: Maybe<Scalars['String']['output']>;
 };
 
@@ -3837,6 +3845,7 @@ export type TransactionUpdateInput = {
   subStatus?: InputMaybe<Scalars['String']['input']>;
   transferOrderChanges?: InputMaybe<TransactionUpdateTransferOrderChanges>;
   widgetId?: InputMaybe<Scalars['String']['input']>;
+  widgetUserParamsChanges?: InputMaybe<WidgetUserParamsChanges>;
   widgetUserParamsId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -4834,6 +4843,10 @@ export type WidgetUserParams = {
   userPhone?: Maybe<Scalars['String']['output']>;
   widgetId?: Maybe<Scalars['String']['output']>;
   widgetUserParamsId?: Maybe<Scalars['ID']['output']>;
+};
+
+export type WidgetUserParamsChanges = {
+  merchantFeePercent?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type WidgetUserParamsInput = {

@@ -27,6 +27,7 @@ import {
 	TransactionType,
 	User,
 	UserMode,
+	WidgetUserParams,
 } from './generated-models';
 import {
 	TransactionTypeList,
@@ -111,6 +112,7 @@ export class TransactionItemFull {
 	canBeCancelled = false;
 	hasToBeRefunded = false;
 	canBeReviewed = false;
+	widgetUserParams: WidgetUserParams;
 
 	constructor(data: Transaction | TransactionShort | null) {
 		if (data !== null) {
@@ -165,6 +167,7 @@ export class TransactionItemFull {
 				);
 			}
 
+			this.widgetUserParams = transactionData.widgetUserParams;
 			this.comment = transactionData.comment ?? '';
 			this.paymentOrderId = transactionData.paymentOrderId ?? '-';
 			this.transferOrderId = data.transferOrder?.orderId ?? '';
