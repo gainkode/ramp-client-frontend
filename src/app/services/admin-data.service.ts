@@ -55,7 +55,8 @@ import {
 	CurrencyPairLiquidityProvidersListResult,
 	QueryGetCurrencyPairLiquidityProviderArgs,
 	LiquidityProvider,
-	LiquidityProviderEntity
+	LiquidityProviderEntity,
+  WidgetUserParamsChanges
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -768,6 +769,9 @@ const GET_TRANSACTIONS = gql`
           screeningRiskscore
           screeningStatus
           screeningData
+        }
+        widgetUserParams {
+          merchantFeePercent
         }
         transferOrderBlockchainLink
         type        
@@ -2068,6 +2072,7 @@ mutation UpdateTransaction(
   $recalculate: Boolean
   $transferOrder: TransactionUpdateTransferOrderChanges
   $benchmarkTransferOrder: TransactionUpdateTransferOrderChanges
+  $widgetUserParams: WidgetUserParamsChanges
   $comment: String
   $widgetId: String
   $flag: Boolean
@@ -2090,6 +2095,7 @@ mutation UpdateTransaction(
       launchAfterUpdate: $launchAfterUpdate
       transferOrderChanges: $transferOrder
       benchmarkTransferOrderChanges: $benchmarkTransferOrder
+      widgetUserParamsChanges: $widgetUserParams
       comment: $comment
       flag: $flag
     }
@@ -4151,6 +4157,8 @@ export class AdminDataService {
   updateTransaction(data: Transaction, restartTransaction: boolean, recalculateAmounts: boolean): Observable<any> {
     let benchmark: TransactionUpdateTransferOrderChanges | undefined = undefined;
     let transfer: TransactionUpdateTransferOrderChanges | undefined = undefined;
+    let widgetUserParams: WidgetUserParamsChanges | undefined = undefined;
+
     if (data.transferOrder?.orderId !== '' && data.transferOrder?.transferHash !== '') {
       transfer = {
         orderId: data.transferOrder?.orderId,
@@ -4163,6 +4171,13 @@ export class AdminDataService {
         hash: data.benchmarkTransferOrder?.transferHash
       };
     }
+
+    if (data.widgetUserParams?.merchantFeePercent) {
+      widgetUserParams = {
+        merchantFeePercent: data.widgetUserParams?.merchantFeePercent
+      };
+    }
+    
     const vars = {
       transactionId: data.transactionId,
       currencyToSpend: data.currencyToSpend,
@@ -4182,6 +4197,7 @@ export class AdminDataService {
       recalculate: recalculateAmounts,
       flag: data.flag,
       widgetId: data.widgetId,
+      widgetUserParams
     };
     return this.mutate({
       mutation: UPDATE_TRANSACTIONS,
