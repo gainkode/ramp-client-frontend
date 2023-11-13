@@ -7,8 +7,7 @@ import { PaymentDataService } from 'services/payment.service';
 
 @Component({
 	selector: 'app-widget-payment-yapily',
-	templateUrl: 'payment.component.html',
-	styleUrls: ['../../../../assets/text-control.scss']
+	templateUrl: 'payment.component.html'
 })
 export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   @Input() providers: PaymentProviderInstrumentView[] = [];
