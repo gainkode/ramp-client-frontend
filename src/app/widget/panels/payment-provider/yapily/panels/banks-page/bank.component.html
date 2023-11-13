@@ -1,0 +1,18 @@
+<div class="__widget-provider-list-container">
+    <button *ngFor="let item of banks" type="button" class="__widget-provider-item-button" (click)="selectBankItem(item.id)" [disabled]="">
+        <img class="__widget-provider-item-image" [src]="item.icon">
+        <h2 class="__widget-provider-item-title">
+            {{item.name}}
+        </h2>
+    </button>
+</div>
+
+<div class="__widget-buttons-area">
+    <button class="__outlined-button" type="button" (click)="onBack.emit()">
+        {{'global.widget_btn-back' | transloco}}
+    </button>
+</div>
+
+<div class="__widget-data-error">
+    {{errorMessage}}
+</div>

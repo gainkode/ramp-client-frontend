@@ -47,6 +47,7 @@ import {
 	WidgetKycComponent,
 	WidgetPaymentComponent,
 	WidgetPaymentYapilyComponent,
+	PaymentYapilyBankComponent,
 	WidgetProcessingFrameComponent,
 	WidgetCryptoDetailsComponent,
 	WidgetCryptoCompleteComponent,
@@ -73,6 +74,7 @@ import { WidgetEmbeddedOverviewComponent } from './widget-internal/widget-intern
 import { WidgetEmbeddedComponent } from './widget-internal/widget-internal.component';
 import { SpinnerModule } from 'shared/spinner/spinner.module';
 import { TranslocoRootModule } from 'transloco-root.module';
+import { WidgetPagerService } from 'services/widget-pager.service';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -149,6 +151,7 @@ export class MaterialModule {}
 		WidgetKycComponent,
 		WidgetPaymentComponent,
 		WidgetPaymentYapilyComponent,
+		PaymentYapilyBankComponent,
 		WidgetProcessingFrameComponent,
 		WidgetCryptoDetailsComponent,
 		WidgetCryptoCompleteComponent,
@@ -175,8 +178,10 @@ export class MaterialModule {}
 		CompanyLevelVerificationComponent,
 
 		WidgetEmbeddedOverviewComponent,
-		WidgetEmbeddedComponent,
+		WidgetEmbeddedComponent
 	],
-	providers: [],
+	providers: [
+		WidgetPagerService
+	],
 })
 export class WidgetModule {}

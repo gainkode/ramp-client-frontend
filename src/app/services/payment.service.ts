@@ -69,6 +69,20 @@ query GetAppropriatePaymentProviders(
 }
 `;
 
+const MY_BANKS = gql`
+query MyBanks(
+  $paymentProvider: String!
+) {
+  myBanks(
+    paymentProvider: $paymentProvider
+  ) {
+    icon
+    name
+    id
+  }
+}
+`;
+
 const MY_SETTINGS_COST = gql`
 query MySettingsCost(
   $transactionType: TransactionType!
@@ -535,6 +549,15 @@ export class PaymentDataService {
 			query: GET_ONE_TO_MANY_RATES,
 			variables,
 			fetchPolicy: 'network-only'
+		});
+	}
+
+  myBanks(paymentProvider: string): Observable<any> {
+		return this.apollo.mutate({
+			mutation: MY_BANKS,
+			variables: {
+				paymentProvider
+			}
 		});
 	}
 

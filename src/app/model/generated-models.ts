@@ -1986,6 +1986,13 @@ export enum PaymentApmType {
   PayId = 'payId'
 }
 
+export type PaymentBank = {
+  __typename?: 'PaymentBank';
+  icon?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
 export type PaymentCaptureInput = {
   instrument: PaymentInstrument;
   orderId: Scalars['String']['input'];
@@ -2309,6 +2316,8 @@ export type Query = {
   myBalanceHistory: UserBalanceHistoryRecordListResult;
   /** Get bank accounts for current user */
   myBankAccounts: UserContactListResult;
+  /** Get banks for OpenBanking */
+  myBanks?: Maybe<Array<Maybe<PaymentBank>>>;
   /** Get contacts for current user */
   myContacts: UserContactListResult;
   myDefaultSettingsFee?: Maybe<SettingsFee>;
@@ -2904,6 +2913,11 @@ export type QueryMyBankAccountsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryMyBanksArgs = {
+  paymentProvider: Scalars['String']['input'];
 };
 
 
