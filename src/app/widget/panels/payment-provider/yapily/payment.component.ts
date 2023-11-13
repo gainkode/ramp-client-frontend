@@ -1,39 +1,47 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { PaymentProviderInstrumentView, CheckoutSummary } from 'model/payment.model';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { PaymentBank } from 'model/generated-models';
+import { CheckoutSummary } from 'model/payment.model';
 import { Subscription } from 'rxjs';
-import { ErrorService } from 'services/error.service';
-import { PaymentDataService } from 'services/payment.service';
+import { WidgetPaymentPagerService } from 'services/widget-payment-pager.service';
 
 
 @Component({
 	selector: 'app-widget-payment-yapily',
-	templateUrl: 'payment.component.html'
+	templateUrl: 'payment.component.html',
+	styleUrls: []
 })
 export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
-  @Input() providers: PaymentProviderInstrumentView[] = [];
   @Input() summary: CheckoutSummary | undefined = undefined;
   @Input() errorMessage = '';
   @Output() onBack = new EventEmitter();
-  @Output() onSelect = new EventEmitter<PaymentProviderInstrumentView>();
   
   private pSubscriptions: Subscription = new Subscription();
-  
+  banks: PaymentBank[] = [];
+  yapilyStage = 'initialization';
   constructor(
-  	private changeDetector: ChangeDetectorRef,
-  	private paymentService: PaymentDataService,
-  	private errorHandler: ErrorService) { }
-
+    public pager: WidgetPaymentPagerService
+  ) { }
+  
+  get providerName(): string {
+  	return 'Yapily';
+  }
+  
   ngOnInit(): void {
-    this.getBankAccounts();
+    this.pager.init('initialization', 'Banks');
   }
 
   ngOnDestroy(): void {
   	this.pSubscriptions.unsubscribe();
   }
 
-  getBankAccounts () {
-    // sendRequest().then(this.nextStage('bank_accounts', 'widget-pager.credit_card', this.pager.step, true);)
+  bankSelected() {
+    console.log(this.summary)
   }
 
-  
+  stageBack(): void {
+  	const stage = this.pager.goBack();
+  	if (!stage) {
+  		this.onBack.emit();
+  	}
+  }
 }

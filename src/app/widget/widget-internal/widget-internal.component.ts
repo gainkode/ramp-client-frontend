@@ -852,7 +852,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   			this.startPayment();
   		} else if (provider.instrument === PaymentInstrument.OpenBanking) {
-  			this.nextStage(`payment_${provider.name}`, 'Bank details', 2, true);
+  			this.nextStage(`payment_${provider.name}`, 'Payment', 5, true);
   		} else {
   			this.createTransaction(provider.id, provider.instrument, '');
   		}

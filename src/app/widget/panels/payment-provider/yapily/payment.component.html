@@ -1,3 +1,4 @@
+
 <div class="widget-list__container">
     <!-- <div class="widget-list__header">
       <div class="widget-list__header-search">
@@ -39,6 +40,6 @@
     </div>      -->
 </div>
 
-<ng-container *ngIf="!summary?.rate">
-    <app-spinner></app-spinner>
-  </ng-container>
+<div class="__widget-data-box" [ngSwitch]="yapilyStage">
+    <app-payment-yapily-banks *ngSwitchCase="'initialization'" (selectBank)="bankSelected()" (onBack)="stageBack()"></app-payment-yapily-banks>
+</div>
