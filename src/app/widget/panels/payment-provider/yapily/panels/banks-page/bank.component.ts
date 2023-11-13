@@ -13,28 +13,28 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   @Output() selectBank = new EventEmitter<PaymentBank>();
 	@Output() onBack = new EventEmitter();
   
-  private pSubscriptions: Subscription = new Subscription();
-  banks: PaymentBank[] = [];
-  constructor() { }
+	private pSubscriptions: Subscription = new Subscription();
+	banks: PaymentBank[] = [];
+	constructor() { }
   
-  get providerName(): string {
+	get providerName(): string {
   	return 'Yapily';
-  }
+	}
   
-  ngOnInit(): void {
+	ngOnInit(): void {
   	this.getBankAccounts();
-  }
+	}
 
-  ngOnDestroy(): void {
+	ngOnDestroy(): void {
   	this.pSubscriptions.unsubscribe();
-  }
+	}
 
 	selectBankItem(id: string) {
 		const bank = this.banks.find(item => item.id === id);
 		this.selectBank.emit(bank);
 	}
 
-  getBankAccounts() {
+	getBankAccounts() {
   	this.banks = [
   		{
   			"icon": "https://images.yapily.com/image/ce2bfdbf-1ae2-4919-ab7b-e8b3d5e93b36?size=0",
@@ -48,7 +48,5 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   	// }, (error) => {
   	// 	console.log(error);
   	// });
-  }
-
-  
+	}
 }

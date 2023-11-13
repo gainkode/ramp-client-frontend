@@ -17,7 +17,6 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   
   private pSubscriptions: Subscription = new Subscription();
   banks: PaymentBank[] = [];
-  yapilyStage = 'initialization';
   constructor(
     public pager: WidgetPaymentPagerService
   ) { }
