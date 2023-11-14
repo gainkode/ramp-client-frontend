@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { PaymentBank } from 'model/generated-models';
 import { Subscription } from 'rxjs';
+import { PaymentDataService } from 'services/payment.service';
 
 
 @Component({
@@ -15,7 +16,9 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   
   private pSubscriptions: Subscription = new Subscription();
   banks: PaymentBank[] = [];
-  constructor() { }
+  constructor(
+		public paymentService: PaymentDataService,
+	) { }
   
   get providerName(): string {
   	return 'Yapily';

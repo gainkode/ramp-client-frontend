@@ -1944,6 +1944,11 @@ export enum OAuthProvider {
   Twitter = 'twitter'
 }
 
+export type OpenBankingPreauthObject = {
+  __typename?: 'OpenBankingPreauthObject';
+  yapily?: Maybe<YapilyPreauthObject>;
+};
+
 export type Openpayd = {
   __typename?: 'Openpayd';
   countriesCode2?: Maybe<Array<Scalars['String']['output']>>;
@@ -1991,6 +1996,11 @@ export type PaymentBank = {
   icon?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+};
+
+export type PaymentBankInput = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PaymentCaptureInput = {
@@ -2104,6 +2114,7 @@ export type PaymentOrderShort = {
 };
 
 export type PaymentPreauthInput = {
+  bank?: InputMaybe<PaymentBankInput>;
   card?: InputMaybe<PaymentCard>;
   instrument: PaymentInstrument;
   provider: Scalars['String']['input'];
@@ -2114,6 +2125,7 @@ export type PaymentPreauthResult = {
   __typename?: 'PaymentPreauthResult';
   details?: Maybe<Scalars['String']['output']>;
   html?: Maybe<Scalars['String']['output']>;
+  openBankingObject?: Maybe<OpenBankingPreauthObject>;
   operation?: Maybe<PaymentOperation>;
   order?: Maybe<PaymentOrder>;
 };
@@ -2122,6 +2134,7 @@ export type PaymentPreauthResultShort = {
   __typename?: 'PaymentPreauthResultShort';
   details?: Maybe<Scalars['String']['output']>;
   html?: Maybe<Scalars['String']['output']>;
+  openBankingObject?: Maybe<OpenBankingPreauthObject>;
   order?: Maybe<PaymentOrderShort>;
 };
 
@@ -5163,6 +5176,12 @@ export enum WireTransferPaymentCategory {
   Eu = 'EU',
   Uk = 'UK'
 }
+
+export type YapilyPreauthObject = {
+  __typename?: 'YapilyPreauthObject';
+  qrCodeUrl?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
 
 export type LiquidityProviderBalance = {
   __typename?: 'liquidityProviderBalance';

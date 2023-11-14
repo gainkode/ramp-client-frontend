@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { Observable } from 'rxjs';
-import { KycProvider, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
+import { KycProvider, PaymentBankInput, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -335,12 +335,14 @@ mutation PreAuth(
   $transactionId: String!,
   $instrument: PaymentInstrument!,
   $paymentProvider: String!
+  $bank: PaymentBankInput
 ) {
   preauth(
     orderParams: {
       transactionId: $transactionId
       instrument: $instrument
       provider: $paymentProvider
+      bank: $bank
     }
   ) {
     order {
@@ -352,6 +354,12 @@ mutation PreAuth(
       amount
       currency
       paymentInfo
+    }
+    openBankingObject {
+      yapily {
+        url
+        qrCodeUrl
+      }
     }
     details
   }
@@ -639,13 +647,14 @@ export class PaymentDataService {
 		});
 	}
 
-	preAuth(transactionId: string, instrument: string, paymentProvider: string): Observable<any> {
+	preAuth(transactionId: string, instrument: string, paymentProvider: string, bank?: PaymentBankInput): Observable<any> {
 		return this.apollo.mutate({
 			mutation: PRE_AUTH,
 			variables: {
 				transactionId,
 				instrument,
-				paymentProvider
+				paymentProvider,
+        bank
 			}
 		});
 	}
