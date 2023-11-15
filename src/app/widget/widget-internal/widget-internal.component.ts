@@ -848,8 +848,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   selectProvider(provider: PaymentProviderInstrumentView): void {
   	if(this.summary.transactionType === TransactionType.Buy){
+			this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
-  			this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   			this.startPayment();
   		} else if (provider.instrument === PaymentInstrument.OpenBanking) {
   			this.nextStage(`payment_${provider.name}`, 'Payment', 5, true);

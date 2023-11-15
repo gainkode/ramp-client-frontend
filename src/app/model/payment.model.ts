@@ -42,13 +42,14 @@ export class PaymentProviderInstrumentView {
 			this.name = 'CARD PAYMENT';
 			this.image = './assets/svg-providers/credit-card.svg';
 		} else if (this.instrument === PaymentInstrument.WireTransfer) {
-			//this.id = 'WireTransferPayment';
 			this.name = data.provider?.displayName ?? 'WIRE TRANSFER';
 			this.image = './assets/svg-providers/wire-transfer.svg';
 		} else if (this.instrument === PaymentInstrument.FiatVault) {
-			//this.id = 'WireTransferPayment';
 			this.name = 'FIAT VAULT';
 			this.image = './assets/svg-providers/fiat-vault.png';
+		} else if (this.instrument === PaymentInstrument.OpenBanking) {
+			this.name = data.provider?.displayName;
+			this.image = `./assets/svg-providers/${this.name}.svg`;
 		}
 	}
 }

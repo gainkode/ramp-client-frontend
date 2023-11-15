@@ -40,7 +40,5 @@
 </div>
 
 <div class="__widget-data-box" [ngSwitch]="pager.stageId">
-    <app-payment-yapily-banks *ngSwitchCase="'initialization'" (selectBank)="bankSelected()" (onBack)="stageBack()"></app-payment-yapily-banks>
+    <app-payment-yapily-banks *ngSwitchCase="'initialization'" (selectBank)="bankSelected($event)" (onBack)="stageBack()"></app-payment-yapily-banks>
 </div>
-
-
