@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { PaymentBank, PaymentBankInput, PaymentPreauthResultShort, TransactionInput, TransactionShort, TransactionSource, TransactionType } from 'model/generated-models';
 import { CheckoutSummary } from 'model/payment.model';
 import { Subscription } from 'rxjs';
@@ -23,7 +24,8 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   constructor(
     public paymentService: PaymentDataService,
     public pager: WidgetPaymentPagerService
-  ) { }
+  ) {
+  }
   
   get providerName(): string {
   	return 'Yapily';

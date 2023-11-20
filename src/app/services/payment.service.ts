@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { Observable } from 'rxjs';
-import { KycProvider, PaymentBankInput, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
+import { map, Observable } from 'rxjs';
+import { KycProvider, PaymentBank, PaymentBankInput, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -79,6 +79,10 @@ query MyBanks(
     icon
     name
     id
+    countries {
+      displayName
+      countryCode2
+    }
   }
 }
 `;
@@ -560,13 +564,13 @@ export class PaymentDataService {
 		});
 	}
 
-  myBanks(paymentProvider: string): Observable<any> {
-		return this.apollo.mutate({
+  myBanks(paymentProvider: string): Observable< { myBanks: PaymentBank[]; } > {
+		return this.apollo.mutate<{ myBanks: PaymentBank[]; }>({
 			mutation: MY_BANKS,
 			variables: {
 				paymentProvider
 			}
-		});
+		}).pipe(map(response => response.data));
 	}
 
 	getSettingsKycTiers(): QueryRef<any, EmptyObject> {

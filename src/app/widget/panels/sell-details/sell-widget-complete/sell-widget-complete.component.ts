@@ -22,36 +22,36 @@ export class WidgetSellCompleteComponent implements OnInit, OnDestroy {
   @Output() onProgress = new EventEmitter<boolean>();
 	@Output() onFinish = new EventEmitter();
 
-  private pSubscriptions: Subscription = new Subscription();
+	private pSubscriptions: Subscription = new Subscription();
 
-  errorMessage = '';
-  inProgress = false;
+	errorMessage = '';
+	inProgress = false;
 	sellectedCurrency: CurrencyView = undefined;
-  wallets: WalletItem[] = [];
-  qrCode = '';
-  qrCodeBackground = EnvService.color_white;
-  qrCodeForeground = EnvService.color_purple_900;
+	wallets: WalletItem[] = [];
+	qrCode = '';
+	qrCodeBackground = EnvService.color_white;
+	qrCodeForeground = EnvService.color_purple_900;
 
-  walletErrorMessages: { [key: string]: string; } = {
+	walletErrorMessages: { [key: string]: string; } = {
   	['required']: 'Wallet is required'
-  };
+	};
 
-  constructor(
+	constructor(
 		private commonService: CommonDataService,
   	private clipboard: Clipboard) { }
 
-  ngOnInit(): void {
+	ngOnInit(): void {
   	this.showQrCode(this.address);
-  }
+	}
 
-  ngOnDestroy(): void {
+	ngOnDestroy(): void {
   	this.pSubscriptions.unsubscribe();
-  }
+	}
 
-  private showQrCode(address: string): void {
+	private showQrCode(address: string): void {
   	this.qrCode = address;
 		this.loadCurrencies();
-  }
+	}
 
 	private loadCurrencies(){
 		const currencyData = this.commonService.getSettingsCurrency();
@@ -68,11 +68,11 @@ export class WidgetSellCompleteComponent implements OnInit, OnDestroy {
   			})
   	);
 	}
-  copyAddress(): void {
+	copyAddress(): void {
   	this.clipboard.copy(this.address ?? '');
-  }
+	}
 
 	copyAmount(): void {
   	this.clipboard.copy(this.amount.toString() ?? '');
-  }
+	}
 }

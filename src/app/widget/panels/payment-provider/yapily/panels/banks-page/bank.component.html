@@ -1,4 +1,5 @@
 <div class="__widget-provider-list-container">
+
     <button *ngFor="let item of banks" type="button" class="__widget-provider-item-button" (click)="selectBankItem(item.id)" [disabled]="">
         <img class="__widget-provider-item-image" [src]="item.icon">
         <h2 class="__widget-provider-item-title">
@@ -16,3 +17,45 @@
 <div class="__widget-data-error">
     {{errorMessage}}
 </div>
+
+<div class="widget-list__container">
+    <div class="widget-list__header">
+      <div class="widget-list__header-search">
+          <mat-form-field appearance="outline">
+            <mat-label>Select country</mat-label>
+            <mat-select appendTo="body" [formControl]="searchCountryControl">
+              <mat-option *ngFor="let country of bankCountries" [value]="country.id">
+                {{ country.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+      </div>
+<!-- 
+      <div class="widget-list__header-search">
+        <mat-form-field appearance="outline" class="border-red">
+          <mat-label>Select your bank</mat-label>
+          <input matInput [formControl]="searchBankControl">
+        </mat-form-field>
+    </div> -->
+      <!-- <button class="widget-list__header-button" type="button">
+        <mat-icon>close</mat-icon>
+      </button> -->
+    </div>
+    <!-- <div class="widget-list__item">
+        <div *ngFor="let item of filteredItems | async">
+            <button type="button" class="widget-list__item-row" (click)="onCurrencySelect(item.symbol)">
+                <div class="widget-list__item-column">
+                  <div>
+                    <img [class.crypto-img]="!item.fiat" alt="Currency" [src]="item.img">
+                  </div>
+                  <div class="widget-list__item-column-item">
+                    <div class="widget-list__item-column-label">
+                      <span>{{item.display}}</span>
+                    </div>
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                  </div>
+                </div>
+            </button>
+        </div>     
+    </div>      -->
+</div> 
