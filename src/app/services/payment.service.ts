@@ -69,16 +69,28 @@ query GetAppropriatePaymentProviders(
 }
 `;
 
-const MY_BANKS = gql`
-query MyBanks(
+const GET_OPENBANKING_DETAILS = gql`
+query GetOpenBankingGetails(
   $paymentProvider: String!
 ) {
-  myBanks(
+  getOpenBankingGetails(
     paymentProvider: $paymentProvider
   ) {
-    icon
-    name
-    id
+    yapily {
+      banks {
+        icon
+        name
+        id
+        countries {
+          displayName
+          countryCode2
+        }
+      }
+      countries {
+        displayName
+        countryCode2
+      }
+    }
   }
 }
 `;
@@ -560,9 +572,9 @@ export class PaymentDataService {
 		});
 	}
 
-  myBanks(paymentProvider: string): Observable<any> {
+  getOpenBankingDetails(paymentProvider: string): Observable<any> {
 		return this.apollo.mutate({
-			mutation: MY_BANKS,
+			mutation: GET_OPENBANKING_DETAILS,
 			variables: {
 				paymentProvider
 			}
