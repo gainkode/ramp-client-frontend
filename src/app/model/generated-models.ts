@@ -173,6 +173,22 @@ export type BalanceStats = {
   volume?: Maybe<TransactionStatsVolume>;
 };
 
+export type BankDetails = {
+  __typename?: 'BankDetails';
+  bankDetailsId: Scalars['ID']['output'];
+  created: Scalars['DateTime']['output'];
+  currency?: Maybe<Scalars['String']['output']>;
+  details?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['DateTime']['output']>;
+  providerName?: Maybe<Scalars['String']['output']>;
+};
+
+export type BankDetailsListResult = {
+  __typename?: 'BankDetailsListResult';
+  count?: Maybe<Scalars['Int']['output']>;
+  list?: Maybe<Array<BankDetails>>;
+};
+
 export type BankDetailsObject = {
   __typename?: 'BankDetailsObject';
   accountName?: Maybe<Scalars['String']['output']>;
@@ -690,6 +706,12 @@ export type GetRates = {
   currenciesFrom?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   currencyTo?: Maybe<Scalars['String']['output']>;
   withFactor?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type InstitutionCountry = {
+  __typename?: 'InstitutionCountry';
+  countryCode2?: Maybe<Scalars['String']['output']>;
+  displayName?: Maybe<Scalars['String']['output']>;
 };
 
 export type InstrumentStats = BaseStat & {
@@ -1944,6 +1966,11 @@ export enum OAuthProvider {
   Twitter = 'twitter'
 }
 
+export type OpenBankingGetails = {
+  __typename?: 'OpenBankingGetails';
+  yapily?: Maybe<YapilyOpenBankingDetails>;
+};
+
 export type OpenBankingPreauthObject = {
   __typename?: 'OpenBankingPreauthObject';
   yapily?: Maybe<YapilyPreauthObject>;
@@ -1993,6 +2020,7 @@ export enum PaymentApmType {
 
 export type PaymentBank = {
   __typename?: 'PaymentBank';
+  countries?: Maybe<Array<Maybe<InstitutionCountry>>>;
   icon?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
@@ -2244,6 +2272,8 @@ export type Query = {
   getOneToManyRates?: Maybe<Array<Rate>>;
   /** Get the rate of one currency to many (using for liquidity provider functionality) */
   getOneToManyRatesMerchant?: Maybe<Array<Maybe<Rate>>>;
+  /** Get banks for OpenBanking */
+  getOpenBankingGetails?: Maybe<OpenBankingGetails>;
   /** Get payment providers */
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
   /** Get common settings */
@@ -2329,8 +2359,6 @@ export type Query = {
   myBalanceHistory: UserBalanceHistoryRecordListResult;
   /** Get bank accounts for current user */
   myBankAccounts: UserContactListResult;
-  /** Get banks for OpenBanking */
-  myBanks?: Maybe<Array<Maybe<PaymentBank>>>;
   /** Get contacts for current user */
   myContacts: UserContactListResult;
   myDefaultSettingsFee?: Maybe<SettingsFee>;
@@ -2592,6 +2620,11 @@ export type QueryGetOneToManyRatesMerchantArgs = {
   currenciesTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   currencyFrom?: InputMaybe<Scalars['String']['input']>;
   withFactor?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type QueryGetOpenBankingGetailsArgs = {
+  paymentProvider: Scalars['String']['input'];
 };
 
 
@@ -2926,11 +2959,6 @@ export type QueryMyBankAccountsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueryMyBanksArgs = {
-  paymentProvider: Scalars['String']['input'];
 };
 
 
@@ -5176,6 +5204,12 @@ export enum WireTransferPaymentCategory {
   Eu = 'EU',
   Uk = 'UK'
 }
+
+export type YapilyOpenBankingDetails = {
+  __typename?: 'YapilyOpenBankingDetails';
+  banks?: Maybe<Array<Maybe<PaymentBank>>>;
+  countries?: Maybe<Array<Maybe<InstitutionCountry>>>;
+};
 
 export type YapilyPreauthObject = {
   __typename?: 'YapilyPreauthObject';

@@ -69,19 +69,27 @@ query GetAppropriatePaymentProviders(
 }
 `;
 
-const MY_BANKS = gql`
-query MyBanks(
+const GET_OPENBANKING_DETAILS = gql`
+query GetOpenBankingGetails(
   $paymentProvider: String!
 ) {
-  myBanks(
+  getOpenBankingGetails(
     paymentProvider: $paymentProvider
   ) {
-    icon
-    name
-    id
-    countries {
-      displayName
-      countryCode2
+    yapily {
+      banks {
+        icon
+        name
+        id
+        countries {
+          displayName
+          countryCode2
+        }
+      }
+      countries {
+        displayName
+        countryCode2
+      }
     }
   }
 }
@@ -564,15 +572,6 @@ export class PaymentDataService {
 		});
 	}
 
-  myBanks(paymentProvider: string): Observable< { myBanks: PaymentBank[]; } > {
-		return this.apollo.mutate<{ myBanks: PaymentBank[]; }>({
-			mutation: MY_BANKS,
-			variables: {
-				paymentProvider
-			}
-		}).pipe(map(response => response.data));
-	}
-
 	getSettingsKycTiers(): QueryRef<any, EmptyObject> {
 		return this.apollo.watchQuery<any>({
 			query: GET_SETTINGS_KYC_TIERS,
@@ -658,7 +657,7 @@ export class PaymentDataService {
 				transactionId,
 				instrument,
 				paymentProvider,
-        bank
+				bank
 			}
 		});
 	}
@@ -744,6 +743,15 @@ export class PaymentDataService {
 			},
 			fetchPolicy: 'network-only'
 		});
+	}
+
+	myBanks(paymentProvider: string): Observable< { myBanks: PaymentBank[]; } > {
+		return this.apollo.mutate<{ myBanks: PaymentBank[]; }>({
+			mutation: GET_OPENBANKING_DETAILS,
+			variables: {
+				paymentProvider
+			}
+		}).pipe(map(response => response.data));
 	}
 
 	mySettingsFee(
