@@ -1,0 +1,108 @@
+.widget-list {
+    &__container {
+        background: white;
+        width: 100%;
+        height: 100%;
+        flex: 1 1;
+        display: flex;
+        flex-direction: column;
+        padding-top: 5px;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+    &__header {
+        display: grid;
+        grid-template-columns: auto;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        z-index: 9999;
+        height: 50px;
+        &-title {
+            font: 700 18px/24px Mulish,sans-serif;
+            margin: 0;
+        }
+        &-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 0px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            text-align: center;
+        }
+    }
+    &__item {
+        scrollbar-width: thin;
+        overflow-y: auto;
+        position: relative;
+        &::before {
+            content: "";
+            border-bottom: 1px solid #e8eaed;
+            box-shadow: 0 4px 4px #e8eaed66;
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: block;
+            height: 1px;
+            z-index: 99999;
+            opacity: 0;
+            transition: opacity .1s ease-in-out;
+        }
+        &-row {
+            all: unset;
+            box-sizing: border-box;
+            display: block;
+            cursor: pointer;
+            width: 100%;
+            background-color: white;
+            transition: .2s background-color;
+            padding: 0 16px;
+            &:hover {
+                background-color: rgb(243, 244, 245);
+            }
+        }
+        &-row {
+            .widget-list__item-column {
+                column-gap: 5px;
+                display: grid;
+                grid-template-columns: 40px auto;
+                grid-template-rows: 65px;
+                align-items: center;
+                width: 100%;
+        
+                img {
+                    width: 25px;
+                    height: 25px;
+                }
+        
+                .crypto-img {
+                    width: 35px;
+                    height: 35px;
+                }
+        
+                &-item {
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border-bottom: 1px solid lightgray;
+                    transition: border-color .1s;
+                }
+            }
+        }
+    }
+}
+
+.bank-country {
+  display: flex;
+  align-items: center;
+}
+
+.bank-flag-align {
+    margin-top: 2px;
+    margin-right: 10px;
+}
