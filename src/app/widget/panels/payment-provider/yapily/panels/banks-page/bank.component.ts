@@ -56,8 +56,6 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   				);
 
   				this.bankCountries = getOpenBankingGetails.yapily.countries;
-          console.log(this.bankCountries)
-          console.log(Countries)
   			},
   			error: (errorRes) => {
   				console.log(errorRes)
