@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { PaymentBank, PaymentBankInput, PaymentPreauthResultShort, TransactionInput, TransactionShort, TransactionSource, TransactionType } from 'model/generated-models';
 import { CheckoutSummary } from 'model/payment.model';
 import { Subscription } from 'rxjs';
+import { NotificationService } from 'services/notification.service';
 import { PaymentDataService } from 'services/payment.service';
 import { WidgetPaymentPagerService } from 'services/widget-payment-pager.service';
 
@@ -21,7 +22,9 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   private pSubscriptions: Subscription = new Subscription();
   paymentBank: PaymentBank = undefined;
   transactionInput: TransactionInput | undefined = undefined;
+  private pPaymentStatusSchangedSubscription: Subscription | undefined = undefined;
   constructor(
+  	private notification: NotificationService,
   	public paymentService: PaymentDataService,
   	public pager: WidgetPaymentPagerService
   ) {
@@ -32,14 +35,19 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit(): void {
+    this.startPaymentStatusChangedSubscriptions();
   	this.pager.init('initialization', 'Banks');
   }
 
   ngOnDestroy(): void {
+  	if(this.pPaymentStatusSchangedSubscription){
+  		this.pPaymentStatusSchangedSubscription.unsubscribe();
+  	}
+
   	this.pSubscriptions.unsubscribe();
   }
 
-  bankSelected(bank: PaymentBank): void {
+  bankSelected(bank: PaymentBank) {
   	this.paymentBank = bank;
   	const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
   	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
@@ -62,7 +70,13 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
 
   	this.createTransactionInternal();
   }
-
+  
+  private startPaymentStatusChangedSubscriptions() {
+  	this.pPaymentStatusSchangedSubscription = this.notification.subscribeToPaymentStatusChanged()
+  		.subscribe((data) => {
+        console.log(data)
+      });
+  }
   private createTransactionInternal(): void {
   	this.errorMessage = '';
   	this.pSubscriptions.add(
