@@ -22,8 +22,8 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   paymentBank: PaymentBank = undefined;
   transactionInput: TransactionInput | undefined = undefined;
   constructor(
-    public paymentService: PaymentDataService,
-    public pager: WidgetPaymentPagerService
+  	public paymentService: PaymentDataService,
+  	public pager: WidgetPaymentPagerService
   ) {
   }
   
@@ -32,18 +32,18 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   }
   
   ngOnInit(): void {
-    this.pager.init('initialization', 'Banks');
+  	this.pager.init('initialization', 'Banks');
   }
 
   ngOnDestroy(): void {
   	this.pSubscriptions.unsubscribe();
   }
 
-  bankSelected(bank: PaymentBank) {
-    this.paymentBank = bank;
-    const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
+  bankSelected(bank: PaymentBank): void {
+  	this.paymentBank = bank;
+  	const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
   	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
-    const instrumentDetails = JSON.stringify(bank);
+  	const instrumentDetails = JSON.stringify(bank);
 
   	this.transactionInput = {
   		type: this.summary.transactionType,
@@ -60,7 +60,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   		verifyWhenPaid: this.summary.transactionType === TransactionType.Buy ? this.summary.verifyWhenPaid : false
   	};
 
-    this.createTransactionInternal();
+  	this.createTransactionInternal();
   }
 
   private createTransactionInternal(): void {
@@ -76,17 +76,17 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   }
 
   private preauth(transactionId: string): void {
-    const paymentBankInput: PaymentBankInput = {
-      id: this.paymentBank.id,
-      name: this.paymentBank.name
-    }
-    this.pSubscriptions.add(
+  	const paymentBankInput: PaymentBankInput = {
+  		id: this.paymentBank.id,
+  		name: this.paymentBank.name
+  	}
+  	this.pSubscriptions.add(
 		  this.paymentService.preAuth(
-        transactionId, 
-        this.summary.providerView.instrument, 
-        this.summary.providerView.name,
-        paymentBankInput
-      ).subscribe(({ data }) => {
+  			transactionId, 
+  			this.summary.providerView.instrument, 
+  			this.summary.providerView.name,
+  			paymentBankInput
+  		).subscribe(({ data }) => {
 			  const order = data.preauth as PaymentPreauthResultShort;
 			  console.log(order)
 		  }, (error) => {
