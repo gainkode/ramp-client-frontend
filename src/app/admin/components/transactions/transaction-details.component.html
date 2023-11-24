@@ -16,10 +16,6 @@
           <span *ngIf="flagInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           {{flag ? 'Unflag' : 'Flag'}}
         </button>
-
-        <div class="btn pe-none pd-x-30 mg-t-5" [ngClass]="{'btn-success': data?.screeningAnswer === 'GREEN', 'btn-danger': data?.screeningAnswer == 'RED'}" >
-          {{data?.screeningAnswer}}
-        </div>
       </div>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <h5 class="card-title mg-b-20">
@@ -54,23 +50,30 @@
           </ng-select>
         </div>
         
-        <app-admin-details-item 
-          *ngIf="isTransactionNotDepositOrWithdrawal && !editableDestination"
-          label="End User Address" 
-          [value]="data?.address">
-        </app-admin-details-item>
+        <div class="screening-status-wrapper">
+          <app-admin-details-item 
+            *ngIf="isTransactionNotDepositOrWithdrawal && !editableDestination"
+            label="End User Address" 
+            [value]="data?.address">
+          </app-admin-details-item>
 
-        <div *ngIf="isTransactionNotDepositOrWithdrawal && editableDestination" class="form-group">
-          <label class="main-content-label tx-11 tx-medium tx-gray-600">
-            End User Address <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-          </label>
-          <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
-            formControlName="address" required>
-          <div *ngIf="(form.controls.address.touched || submitted) && (form.controls.address.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Address is required
-            </small>
+          <div *ngIf="isTransactionNotDepositOrWithdrawal && editableDestination" class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              End User Address <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
+              formControlName="address" required>
+            <div *ngIf="(form.controls.address.touched || submitted) && (form.controls.address.errors?.['required'])"
+              class="tx-danger">
+              <small>
+                Address is required
+              </small>
+            </div>
+          </div>
+
+          <div
+           class="btn pe-none pd-x-30 mg-t-5" [ngClass]="{'btn-success': data?.screeningAnswer === 'GREEN', 'btn-danger': data?.screeningAnswer == 'RED'}" >
+            {{data?.screeningAnswer}}
           </div>
         </div>
 
