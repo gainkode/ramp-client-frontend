@@ -3,6 +3,7 @@
         *ngSwitchCase="'initialization'" 
         [yapilyRedirectObject]="yapilyRedirectObject"
         (selectBank)="bankSelected($event)" 
+        (isLoading)="isLoading = true"
         (onBack)="stageBack()">
     </app-payment-yapily-banks>
 </div>

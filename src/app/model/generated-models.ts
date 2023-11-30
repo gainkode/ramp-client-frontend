@@ -301,6 +301,9 @@ export enum CallbackType {
   ExternalSendgridCallback = 'externalSendgridCallback',
   ExternalSuftiCallback = 'externalSuftiCallback',
   ExternalSumsubCallback = 'externalSumsubCallback',
+  ExternalYapilyAuthCallback = 'externalYapilyAuthCallback',
+  ExternalYapilyCallback = 'externalYapilyCallback',
+  ExternalYapilyQrcodeCallback = 'externalYapilyQrcodeCallback',
   TransactionStatusChanged = 'transactionStatusChanged',
   TransactionStatusChangedAdmin = 'transactionStatusChangedAdmin',
   UserVerificationChanged = 'userVerificationChanged'
@@ -3614,6 +3617,7 @@ export type Subscription = {
   kycCompletedNotification?: Maybe<Scalars['Void']['output']>;
   kycServiceNotification?: Maybe<Scalars['Void']['output']>;
   newNotification?: Maybe<Scalars['Void']['output']>;
+  paymentStatusChanged?: Maybe<Scalars['Void']['output']>;
   transactionServiceNotification?: Maybe<Scalars['Void']['output']>;
 };
 
@@ -5203,6 +5207,27 @@ export enum WireTransferPaymentCategory {
   Au = 'AU',
   Eu = 'EU',
   Uk = 'UK'
+}
+
+export enum YapilyAuthorizationRequestStatus {
+  Ailed = 'AILED',
+  Authorized = 'AUTHORIZED',
+  AwaitingAuthorization = 'AWAITING_AUTHORIZATION',
+  AwaitingDecoupledAuthorization = 'AWAITING_DECOUPLED_AUTHORIZATION',
+  AwaitingDecoupledPreAuthorization = 'AWAITING_DECOUPLED_PRE_AUTHORIZATION',
+  AwaitingFurtherAuthorization = 'AWAITING_FURTHER_AUTHORIZATION',
+  AwaitingPreAuthorization = 'AWAITING_PRE_AUTHORIZATION',
+  AwaitingReAuthorization = 'AWAITING_RE_AUTHORIZATION',
+  AwaitingScaCode = 'AWAITING_SCA_CODE',
+  AwaitingScaMethod = 'AWAITING_SCA_METHOD',
+  Consumed = 'CONSUMED',
+  Expired = 'EXPIRED',
+  Failed = 'FAILED',
+  Invalid = 'INVALID',
+  PreAuthorized = 'PRE_AUTHORIZED',
+  Rejected = 'REJECTED',
+  Revoked = 'REVOKED',
+  Unknown = 'UNKNOWN'
 }
 
 export type YapilyOpenBankingDetails = {

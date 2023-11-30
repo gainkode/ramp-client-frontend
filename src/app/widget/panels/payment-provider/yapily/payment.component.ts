@@ -1,6 +1,6 @@
 import { HttpClient, HttpUrlEncodingCodec } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { PaymentBank, PaymentBankInput, PaymentPreauthResultShort, TransactionInput, TransactionShort, TransactionSource, TransactionType } from 'model/generated-models';
+import { PaymentBank, PaymentBankInput, PaymentPreauthResultShort, TransactionInput, TransactionShort, TransactionSource, TransactionType, YapilyAuthorizationRequestStatus } from 'model/generated-models';
 import { CheckoutSummary } from 'model/payment.model';
 import { Subscription, finalize, map, switchMap } from 'rxjs';
 import { EnvService } from 'services/env.service';
@@ -77,8 +77,15 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   
   private startPaymentStatusChangedSubscriptions():void {
   	this.pPaymentStatusSchangedSubscription = this.notification.subscribeToPaymentStatusChanged()
-  		.subscribe((data) => {
-  			console.log(data)
+  		.subscribe(({data}) => {
+				console.log(data, YapilyAuthorizationRequestStatus.AwaitingAuthorization)
+				if (data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.AwaitingAuthorization) {
+					this.isLoading = true;
+				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Authorized) {
+					this.isLoading = false;
+				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Failed) {
+					// Errrorrrrr
+				}
   		});
   }
   private createTransactionInternal(): void {

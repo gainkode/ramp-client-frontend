@@ -27,6 +27,7 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   @Input() yapilyRedirectObject: YapilyRedirectModel;
   @Output() selectBank = new EventEmitter<PaymentBank>();
   @Output() onBack = new EventEmitter();
+	@Output() isLoading = new EventEmitter();
   qrCodeBackground = EnvService.color_white;
   qrCodeForeground = EnvService.color_purple_900;
   searchCountryControl = new FormControl();
@@ -74,7 +75,8 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   }
 
   onYapilyNavigate(url: string): void{
-	window.open(url, '_blank');
+		window.open(url, '_blank');
+		this.isLoading.emit(true);
   }
 
   private _filter(value: string, banks: PaymentBank[]): PaymentBank[] {
