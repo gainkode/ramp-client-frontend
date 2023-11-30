@@ -64,7 +64,7 @@
         </div>
     </div>
     <div class="__dialog-space"></div>
-    <button class="__main-button __button-wide" (click)="stepTwoComplete()">
+    <button type="button" class="__main-button __button-wide" (click)="stepTwoComplete()">
         NEXT
     </button>
 </div>
@@ -83,7 +83,7 @@
         Resetting your Google Authentication requires opening a support ticket and takes at least 7 days to process.
     </div>
     <div class="__dialog-space-large"></div>
-    <button class="__main-button __button-wide" (click)="stepThreeComplete()">
+    <button type="button" class="__main-button __button-wide" (click)="stepThreeComplete()">
         NEXT
     </button>
 </div>
@@ -99,7 +99,7 @@
         </app-form-password>
         <div class="__dialog-space-large"></div>
         <mat-dialog-actions align="center">
-            <button class="__main-button __button-wide" [mat-dialog-close]="codeField?.value" [disabled]="!codeForm.valid">
+            <button type="button" class="__main-button __button-wide" [mat-dialog-close]="codeField?.value" [disabled]="!codeForm.valid">
                 NEXT
             </button>
         </mat-dialog-actions>

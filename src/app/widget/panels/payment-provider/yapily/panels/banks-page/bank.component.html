@@ -1,4 +1,4 @@
-<div class="widget-list__container">
+<div class="widget-list__container" *ngIf="!yapilyRedirectObject">
   <div class="widget-list__header">
     <div class="widget-list__header-search">
         <mat-form-field appearance="outline">
@@ -31,12 +31,35 @@
         </button>
     </div>     
   </div>
-    <div class="__widget-buttons-area">
-      <button class="__outlined-button" type="button" (click)="onBack.emit()">
-          {{'global.widget_btn-back' | transloco}}
-      </button>
+
+  <div class="__widget-buttons-area">
+    <button class="__outlined-button" type="button" (click)="onBack.emit()">
+        {{'global.widget_btn-back' | transloco}}
+    </button>
   </div>
 </div> 
+
+<div class="__dialog-wizard-data-container" *ngIf="yapilyRedirectObject">
+  <div class="__dialog-message">
+      Scan this QR code to authenticate with the choosed bank account.
+  </div>
+  <div class="__dialog-wizard-qr-code-container">
+      <qrcode 
+        [colorLight]="qrCodeBackground" 
+        [colorDark]="qrCodeForeground" 
+        [qrdata]="yapilyRedirectObject.yapilyQrCodeUrl"
+        [width]="300"
+        [allowEmptyString]="true"
+        [errorCorrectionLevel]="'M'" >
+      </qrcode>
+  </div>
+
+  <div class="__widget-buttons-area">
+    <button class="__outlined-button" type="button" (click)="onYapilyNavigate(yapilyRedirectObject.yapilyAuthUrl)">
+       GO
+    </button>
+  </div>
+</div>
 
 <ng-container *ngIf="isYapilyBankLoading">
   <app-spinner></app-spinner>

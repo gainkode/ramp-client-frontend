@@ -1,6 +1,7 @@
 import {
 	Component,
 	EventEmitter,
+	Input,
 	OnDestroy,
 	OnInit,
 	Output,
@@ -9,7 +10,13 @@ import { FormControl } from '@angular/forms';
 import { InstitutionCountry, PaymentBank } from 'model/generated-models';
 import { Observable, Subscription, map, startWith } from 'rxjs';
 import { PaymentDataService } from 'services/payment.service';
-import { Countries } from 'model/country-code.model';
+import { PaymentYapiliApi } from '../../services/yapily.api';
+import { EnvService } from 'services/env.service';
+
+export interface YapilyRedirectModel {
+	yapilyQrCodeUrl: string;
+	yapilyAuthUrl: string;
+}
 
 @Component({
 	selector: 'app-payment-yapily-banks',
@@ -17,9 +24,11 @@ import { Countries } from 'model/country-code.model';
 	styleUrls: ['bank.component.scss'],
 })
 export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
+  @Input() yapilyRedirectObject: YapilyRedirectModel;
   @Output() selectBank = new EventEmitter<PaymentBank>();
   @Output() onBack = new EventEmitter();
-
+  qrCodeBackground = EnvService.color_white;
+  qrCodeForeground = EnvService.color_purple_900;
   searchCountryControl = new FormControl();
   isYapilyBankLoading = false;
   paymentBanks$: Observable<PaymentBank[]>;
@@ -55,12 +64,17 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   				);
 
   				this.bankCountries = getOpenBankingGetails.yapily.countries;
+
   			},
   			error: (errorRes) => {
   				console.log(errorRes)
   			},
   			complete: () => this.isYapilyBankLoading = false
   		});
+  }
+
+  onYapilyNavigate(url: string): void{
+	window.open(url, '_blank');
   }
 
   private _filter(value: string, banks: PaymentBank[]): PaymentBank[] {
@@ -72,4 +86,23 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
 
   	return banks.filter(item => item.countries.some(country => country.countryCode2.toLowerCase() === filterValue));
   }
+}
+
+
+@Component({
+	selector: 'app-payment-yapily-redirect-page',
+	template: `
+	<ng-container>
+  		<app-spinner></app-spinner>
+	</ng-container>
+	`,
+	providers: [PaymentYapiliApi]
+})
+export class PaymentYapilyRedirectPageComponent implements OnInit {
+
+	constructor(public yapilyApi: PaymentYapiliApi) {}
+ 
+	ngOnInit(): void {
+		this.yapilyApi.yapilyPaymentCallback().subscribe();
+	}
 }
