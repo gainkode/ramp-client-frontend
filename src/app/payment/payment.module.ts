@@ -10,12 +10,10 @@ import { WidgetModule } from '../widget/widget.module';
 import { CryptoWidgetWrapComponent } from './crypto-widget-wrap.component';
 import { CryptoWidgetWizardComponent } from './crypto-widget-wizard.component';
 import { NormalWidgetWizardComponent } from './normal-widget-wizard.component';
-import { PaymentYapilyRedirectPageComponent } from 'widget/panels';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
 const routing = RouterModule.forChild([
-	{ path: 'redirect', component: PaymentYapilyRedirectPageComponent },
 	{ path: 'quickcheckout', component: QuickCheckoutComponent },
 	{ path: 'quickcheckout/:userParamsId', component: QuickCheckoutComponent }, // one time payment
 	{ path: 'quickcheckout-express/:from/:to/:value', component: QuickCheckoutComponent }, // ??

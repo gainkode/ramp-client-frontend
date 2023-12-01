@@ -90,25 +90,3 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   	return banks.filter(item => item.countries.some(country => country.countryCode2.toLowerCase() === filterValue));
   }
 }
-
-
-@Component({
-	selector: 'app-payment-yapily-redirect-page',
-	template: `
-	<ng-container>
-  		<app-spinner></app-spinner>
-	</ng-container>
-	`,
-	providers: [PaymentYapiliApi]
-})
-export class PaymentYapilyRedirectPageComponent implements OnInit {
-
-	constructor(public yapilyApi: PaymentYapiliApi) {}
- 
-	ngOnInit(): void {
-		let win = window.open('http://localhost:4000/payment/quickcheckout', '_blank'); 
-    // win.close();
-		// window.open('http://localhost:4000/payment/quickcheckout', '_self').close();
-		// this.yapilyApi.yapilyPaymentCallback().subscribe();
-	}
-}
