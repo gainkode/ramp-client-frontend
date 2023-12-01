@@ -10,7 +10,6 @@ import { FormControl } from '@angular/forms';
 import { InstitutionCountry, PaymentBank } from 'model/generated-models';
 import { Observable, Subscription, map, startWith } from 'rxjs';
 import { PaymentDataService } from 'services/payment.service';
-import { PaymentYapiliApi } from '../../services/yapily.api';
 import { EnvService } from 'services/env.service';
 
 export interface YapilyRedirectModel {
