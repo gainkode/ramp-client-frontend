@@ -28,6 +28,7 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   @Output() selectBank = new EventEmitter<PaymentBank>();
   @Output() onBack = new EventEmitter();
 	@Output() isLoading = new EventEmitter();
+	@Output() openWindow = new EventEmitter<string>();
   qrCodeBackground = EnvService.color_white;
   qrCodeForeground = EnvService.color_purple_900;
   searchCountryControl = new FormControl();
@@ -75,7 +76,7 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   }
 
   onYapilyNavigate(url: string): void{
-		window.open(url, '_blank');
+		this.openWindow.emit(url);
 		this.isLoading.emit(true);
   }
 
@@ -105,6 +106,9 @@ export class PaymentYapilyRedirectPageComponent implements OnInit {
 	constructor(public yapilyApi: PaymentYapiliApi) {}
  
 	ngOnInit(): void {
-		this.yapilyApi.yapilyPaymentCallback().subscribe();
+		let win = window.open('http://localhost:4000/payment/quickcheckout', '_blank'); 
+    // win.close();
+		// window.open('http://localhost:4000/payment/quickcheckout', '_self').close();
+		// this.yapilyApi.yapilyPaymentCallback().subscribe();
 	}
 }

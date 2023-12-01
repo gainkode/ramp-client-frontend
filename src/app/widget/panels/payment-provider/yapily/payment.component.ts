@@ -25,6 +25,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   private pSubscriptions: Subscription = new Subscription();
   paymentBank: PaymentBank = undefined;
   transactionInput: TransactionInput | undefined = undefined;
+	newWindow: Window = undefined;
   private pPaymentStatusSchangedSubscription: Subscription | undefined = undefined;
   constructor(
   	private readonly http: HttpClient,
@@ -74,6 +75,10 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
 
   	this.createTransactionInternal();
   }
+
+	openWindow(url: string) {
+		this.newWindow = window.open(url, '_blank');
+	}
   
   private startPaymentStatusChangedSubscriptions():void {
   	this.pPaymentStatusSchangedSubscription = this.notification.subscribeToPaymentStatusChanged()
@@ -83,6 +88,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
 					this.isLoading = true;
 				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Authorized) {
 					this.isLoading = false;
+					this.newWindow.close();
 				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Failed) {
 					// Errrorrrrr
 				}
