@@ -1,17 +1,21 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountUk } from 'model/cost-scheme.model';
-import { WireTransferPaymentCategory } from 'model/generated-models';
-import { WireTransferPaymentCategoryItem } from 'model/payment-base.model';
+import { BankCategory, PaymentInstrument, TransactionSource, WireTransferPaymentCategory } from 'model/generated-models';
+import { WidgetSettings, WireTransferPaymentCategoryItem } from 'model/payment-base.model';
 import { CheckoutSummary } from 'model/payment.model';
-
+import { PaymentDataService } from 'services/payment.service';
+import { take } from 'rxjs/operators';
+import { ErrorService } from 'services/error.service';
 @Component({
 	selector: 'app-widget-sell-details',
 	templateUrl: 'sell-details.component.html',
 	styleUrls: ['../../../../../assets/text-control.scss']
 })
-export class WidgetSellDetailsComponent {
+export class WidgetSellDetailsComponent implements OnInit{
     @Input() summary: CheckoutSummary | undefined = undefined;
+		@Input() widget: WidgetSettings | undefined = undefined;
+		@Output() handleError = new EventEmitter<string>();
     @Output() onBack = new EventEmitter();
     @Output() onComplete = new EventEmitter<string>();
 
@@ -55,31 +59,58 @@ export class WidgetSellDetailsComponent {
     }
 
     constructor(
-    	private formBuilder: UntypedFormBuilder) {
-    	const au = new WireTransferBankAccountAu();
-    	const eu = new WireTransferBankAccountEu();
-    	const uk = new WireTransferBankAccountUk();
-    	this.bankCategories.push({
-    		id: WireTransferPaymentCategory.Au,
-    		bankAccountId: '',
-    		title: 'Australia',
-    		data: JSON.stringify(au)
-    	});
-    	this.bankCategories.push({
-    		id: WireTransferPaymentCategory.Eu,
-    		bankAccountId: '',
-    		title: 'EU',
-    		data: JSON.stringify(eu)
-    	});
-    	this.bankCategories.push({
-    		id: WireTransferPaymentCategory.Uk,
-    		bankAccountId: '',
-    		title: 'UK',
-    		data: JSON.stringify(uk)
-    	});
+    	private formBuilder: UntypedFormBuilder,
+    	private paymentService: PaymentDataService,
+    	private errorHandler: ErrorService,
+    ) {
     	this.setFormData();
     }
 
+    ngOnInit(): void {
+    	this.getBankCategoriesSettings();
+    }
+
+    getBankCategoriesSettings(): void {
+    	const settingsData$ = this.paymentService.myBankCategories(
+    		this.summary.transactionType,
+    		this.getSource(this.widget),
+    		PaymentInstrument.WireTransfer
+    	).valueChanges.pipe(take(1));
+    	settingsData$.subscribe(({ data }) => {
+    		const settingsResult = data.myBankCategories as BankCategory[];
+				
+    		if (!settingsResult.length) {
+    			this.handleError.emit(this.errorHandler.getError('bank_categories_not_found', 'Bank categories not found'));
+    			return;
+    		}
+
+    		this.bankCategories = settingsResult.map(item => {
+    			let data: WireTransferBankAccountAu | WireTransferBankAccountEu | WireTransferBankAccountUk;
+					
+    			// eslint-disable-next-line @typescript-eslint/indent
+					switch (item.id) {
+    				case WireTransferPaymentCategory.Au: 
+    					data = new WireTransferBankAccountAu();
+    					break;
+    				case WireTransferPaymentCategory.Eu:
+    					data = new WireTransferBankAccountEu();
+    					break;
+    				case WireTransferPaymentCategory.Uk:
+    					data = new WireTransferBankAccountUk();
+    					break;
+    			}
+    			return <WireTransferPaymentCategoryItem>{
+    				id: item.id,
+    				title: item.title,
+    				data: JSON.stringify(data)
+    			};
+    		});
+
+    	}, (error) => {
+    		this.handleError.emit(this.errorHandler.getError(error.message, 'Something went wrong'));
+    	});
+    }
+		
     private setFormData(): void {
     	const auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Au);
     	if (auCategory) {
@@ -149,5 +180,13 @@ export class WidgetSellDetailsComponent {
     		this.done = true;
     		this.onComplete.emit(JSON.stringify(result));
     	}
+    }
+		
+    private getSource(widget: WidgetSettings): TransactionSource {
+    	let source = TransactionSource.Wallet;
+    	if (widget.embedded === false) {
+    		source = widget.widgetId === '' ? TransactionSource.QuickCheckout : TransactionSource.Widget;
+    	}
+    	return source;
     }
 }

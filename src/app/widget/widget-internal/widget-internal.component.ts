@@ -856,6 +856,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		}
   	} else {
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
+				console.log(this.summary)
   			this.nextStage('sell_details', 'Bank details', 2, true);
   		} else {
   			this.createTransaction(provider.id, provider.instrument, '');
@@ -1066,7 +1067,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			  if (tempStageId === 'verification') {
 				  this.pager.goBack();
 			  } else {
-				  this.pager.swapStage(tempStageId);
+				  // this.pager.swapStage(tempStageId);
 			  }
 			  
 			  if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
@@ -1077,7 +1078,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 				  if (this.widget.embedded) {
 					  this.onError.emit({ errorMessage: msg } as PaymentErrorDetails);
 				  } else {
-					  setTimeout(() => this.setError('Transaction handling failed', msg), 100);
+					  this.setError('Transaction handling failed', msg);
 				  }
 			  }
 		  })

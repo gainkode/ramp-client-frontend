@@ -173,6 +173,16 @@ export type BalanceStats = {
   volume?: Maybe<TransactionStatsVolume>;
 };
 
+export type BankCategory = {
+  __typename?: 'BankCategory';
+  countryCode?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<WireTransferPaymentCategory>;
+  instrument?: Maybe<Array<Maybe<PaymentInstrument>>>;
+  title?: Maybe<Scalars['String']['output']>;
+  transactionSource?: Maybe<Array<Maybe<TransactionSource>>>;
+  transactionType?: Maybe<Array<Maybe<TransactionType>>>;
+};
+
 export type BankDetailsObject = {
   __typename?: 'BankDetailsObject';
   accountName?: Maybe<Scalars['String']['output']>;
@@ -286,6 +296,7 @@ export enum CallbackType {
   ExternalSuftiCallback = 'externalSuftiCallback',
   ExternalSumsubCallback = 'externalSumsubCallback',
   TransactionStatusChanged = 'transactionStatusChanged',
+  TransactionStatusChangedAdmin = 'transactionStatusChangedAdmin',
   UserVerificationChanged = 'userVerificationChanged'
 }
 
@@ -293,6 +304,12 @@ export type CheckOrCreateDestinationAddressResult = {
   __typename?: 'CheckOrCreateDestinationAddressResult';
   destVaultId?: Maybe<Scalars['String']['output']>;
   destination?: Maybe<Scalars['String']['output']>;
+};
+
+export type CheckOrCreateSourceAddressResult = {
+  __typename?: 'CheckOrCreateSourceAddressResult';
+  sourceAddress?: Maybe<Scalars['String']['output']>;
+  sourceVaultId?: Maybe<Scalars['String']['output']>;
 };
 
 export type CoriunderWebAuthParams = {
@@ -1026,6 +1043,7 @@ export type Mutation = {
   /** This endpoint can be used to add a user's wallet. */
   addUserVault?: Maybe<VaultAccount>;
   addWireTransferBankAccount: WireTransferBankAccount;
+  assignCostToFees?: Maybe<Array<Maybe<SettingsFee>>>;
   assignRole?: Maybe<User>;
   /** This endpoint to recalculate the invoice with current rate */
   calculateInvoice?: Maybe<CryptoInvoiceCreationResult>;
@@ -1263,6 +1281,12 @@ export type MutationAddUserVaultArgs = {
 
 export type MutationAddWireTransferBankAccountArgs = {
   bankAccount: WireTransferBankAccountInput;
+};
+
+
+export type MutationAssignCostToFeesArgs = {
+  costId: Scalars['ID']['input'];
+  settingsIds?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
 
@@ -2156,7 +2180,7 @@ export type Query = {
   /** Check or create destination address */
   checkOrCreateDestinationAddress?: Maybe<CheckOrCreateDestinationAddressResult>;
   /** Check or create source vault address */
-  checkOrCreateSourceVaultAddress?: Maybe<Scalars['String']['output']>;
+  checkOrCreateSourceVaultAddress?: Maybe<CheckOrCreateSourceAddressResult>;
   /** KYC widget API token generation */
   generateWebApiToken: Scalars['String']['output'];
   /** Get API keys */
@@ -2171,6 +2195,10 @@ export type Query = {
   getAppropriateSettingsKyc?: Maybe<SettingsKyc>;
   /** Get KYC levels settings for relevant options */
   getAppropriateSettingsKycTiers?: Maybe<SettingsKycTierShortExListResult>;
+  /** This endpoint can be used to get transaction for chatbot with their description. */
+  getChatbotTransactions?: Maybe<TransactionListResult>;
+  /** This endpoint can be used to get transaction for chatbot with their description. */
+  getChatbotUsers?: Maybe<UserListResult>;
   /** Get a black list of countries */
   getCountryBlackList?: Maybe<BlackCountryListResult>;
   getCurrencyPairLiquidityProvider?: Maybe<CurrencyPairLiquidityProvider>;
@@ -2290,6 +2318,8 @@ export type Query = {
   myBalanceHistory: UserBalanceHistoryRecordListResult;
   /** Get bank accounts for current user */
   myBankAccounts: UserContactListResult;
+  /** Get fee settings for the current user(SettingsFeeShort) */
+  myBankCategories?: Maybe<Array<Maybe<BankCategory>>>;
   /** Get contacts for current user */
   myContacts: UserContactListResult;
   myDefaultSettingsFee?: Maybe<SettingsFee>;
@@ -2423,6 +2453,18 @@ export type QueryGetAppropriateSettingsKycTiersArgs = {
   source?: InputMaybe<TransactionSource>;
   targetKycProvider: KycProvider;
   widgetId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetChatbotTransactionsArgs = {
+  keyObjects?: InputMaybe<Scalars['String']['input']>;
+  transactionIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type QueryGetChatbotUsersArgs = {
+  keyObjects?: InputMaybe<Scalars['String']['input']>;
+  userIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -2873,6 +2915,13 @@ export type QueryMyBankAccountsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryMyBankCategoriesArgs = {
+  instrument: PaymentInstrument;
+  transactionSource: TransactionSource;
+  transactionType: TransactionType;
 };
 
 
@@ -4305,6 +4354,7 @@ export enum UserActionType {
   CancelTransaction = 'cancelTransaction',
   ChangeRiskAlertSettings = 'changeRiskAlertSettings',
   ChangeUserKycTier = 'changeUserKycTier',
+  CoriunderCallback = 'coriunderCallback',
   CreateApiKey = 'createApiKey',
   CreateCryptoInvoice = 'createCryptoInvoice',
   CreateUser = 'createUser',
@@ -4384,6 +4434,7 @@ export type UserAddress = {
   assetOriginalId?: Maybe<Scalars['String']['output']>;
   created?: Maybe<Scalars['DateTime']['output']>;
   details?: Maybe<Scalars['String']['output']>;
+  interim?: Maybe<Scalars['Boolean']['output']>;
   legacyAddress?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['String']['output']>;
   userId?: Maybe<Scalars['String']['output']>;

@@ -132,6 +132,27 @@ query MySettingsFee(
 }
 `;
 
+const MY_BANK_CATEGORIES = gql`
+query MyBankCategories(
+  $transactionType: TransactionType!
+  $transactionSource: TransactionSource!
+  $instrument: PaymentInstrument!
+) {
+  myBankCategories(
+    transactionType: $transactionType
+    transactionSource: $transactionSource
+    instrument: $instrument
+  ) {
+    id
+    title
+    transactionType
+    transactionSource
+    instrument
+    countryCode
+  }
+}
+`;
+
 const GET_SETTINGS_KYC_TIERS = gql`
 query GetSettingsKycTiers {
   getSettingsKycTiers {
@@ -729,6 +750,22 @@ export class PaymentDataService {
 		};
 		return this.apollo.watchQuery<any>({
 			query: MY_SETTINGS_FEE,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		});
+	}
+
+  myBankCategories(
+		transactionType: TransactionType,
+		transactionSource: TransactionSource,
+		instrument: PaymentInstrument): QueryRef<any, EmptyObject> {
+		const vars = {
+			transactionType,
+			transactionSource,
+			instrument
+		};
+		return this.apollo.watchQuery<any>({
+			query: MY_BANK_CATEGORIES,
 			variables: vars,
 			fetchPolicy: 'network-only'
 		});

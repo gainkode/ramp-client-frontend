@@ -69,8 +69,8 @@
           <!-- Initialization -->
           <app-widget-initialization *ngSwitchCase="'initialization'" [message]="initMessage"></app-widget-initialization>
           <!-- Sell details -->
-          <app-widget-sell-details *ngSwitchCase="'sell_details'" [summary]="summary" (onBack)="stageBack()"
-            (onComplete)="sellComplete($event)">
+          <app-widget-sell-details *ngSwitchCase="'sell_details'" [summary]="summary" [widget]="widget" (onBack)="stageBack()"
+            (onComplete)="sellComplete($event)" (handleError)="handleError($event)">
           </app-widget-sell-details>
 
           <app-sell-widget-complete *ngSwitchCase="'sell_widget_complete'" [address]="this.summary.sourceAddress" 
