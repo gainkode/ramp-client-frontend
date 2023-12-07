@@ -41,7 +41,7 @@
 
 <div class="__dialog-wizard-data-container tx-center" *ngIf="yapilyRedirectObject">
   <div class="__dialog-message">
-      Scan this QR code to authenticate with the choosed bank account.
+      Scan this QR code to authenticate with the {{yapilyRedirectObject.bankName}} account.
   </div>
   <div class="__dialog-wizard-qr-code-container">
       <qrcode 
@@ -58,7 +58,7 @@
     <button type="button" mat-raised-button (click)="onYapilyNavigate(yapilyRedirectObject.yapilyAuthUrl)">
             Use the desktop login
     </button>
-</div>
+  </div>
 </div>
 
 <ng-container *ngIf="isYapilyBankLoading">

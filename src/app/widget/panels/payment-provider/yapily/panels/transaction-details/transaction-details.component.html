@@ -1,0 +1,68 @@
+
+<div class="payment-details__wrapper">
+    <div class="payment-details__header">
+       <div class="payment-details__header-logo">
+            <img [src]="success ? 'assets/rocket.svg': 'assets/widget_error.svg'" alt="complete">
+       </div>
+    </div>
+
+    <div class="payment-details__content mt-3">
+        <span class="__widget-disclaimer-line"  *ngIf="success">
+            Dear Customer,
+            <br>
+            Thank you for choosing {{productName}}!
+        </span>
+
+        <div *ngIf="success" class="__widget-disclaimer-container">
+            <span class="__widget-disclaimer-line">
+                Your payment has been successfully completed.
+            </span>
+        </div>
+
+        <div *ngIf="!success" class="__widget-disclaimer-container">
+            <span class="__widget-disclaimer-line">
+                Please note that your order has been Canceled due to order time limit exceeded.
+                <br>
+                To refund the received crypto assets please contact us: <a [href]="supportEmailLink">{{supportEmail}}</a>
+            </span>
+        </div>
+
+        <div *ngIf="success" class="__widget-details-container-field" >
+            <div class="__widget-details-title">
+                <div class="__widget-details-title-item">
+                    {{'widget-payment-result.field_referenceId' | transloco}}
+                </div>
+                <button class="__tool-button" type="button" (click)="copyParameter(yapilyRedirectObject.transactionId)">
+                    <i class="material-icons">
+                        content_copy
+                    </i>
+                </button>
+            </div>
+            <div class="__widget-details-item">
+                {{yapilyRedirectObject.transactionId}}
+            </div>
+        </div>
+
+        <div *ngIf="success" class="__widget-details-container-field">
+            <div class="__widget-details-title">
+                <div class="__widget-details-title-item">
+                    {{'widget-payment-result.field_bankName' | transloco}}
+                </div>
+                <button class="__tool-button" type="button" (click)="copyParameter(yapilyRedirectObject.bankName)">
+                    <i class="material-icons">
+                        content_copy
+                    </i>
+                </button>
+            </div>
+            <div class="__widget-details-item">
+                {{yapilyRedirectObject.bankName}}
+            </div>
+        </div>
+    </div>
+ 
+    <div class="payment-details__actions">
+       <button class="__main-button mg-l-20" type="button" (click)="onReturn()">
+          {{'widget-payment-result.btn-done_label' | transloco}}
+       </button>
+    </div>
+ </div>

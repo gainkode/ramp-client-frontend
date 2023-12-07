@@ -1,5 +1,5 @@
 import { HttpClient, HttpUrlEncodingCodec } from '@angular/common/http';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { PaymentBank, PaymentBankInput, PaymentPreauthResultShort, TransactionInput, TransactionShort, TransactionSource, TransactionType, YapilyAuthorizationRequestStatus } from 'model/generated-models';
 import { CheckoutSummary } from 'model/payment.model';
 import { Subscription, finalize, map, switchMap } from 'rxjs';
@@ -12,7 +12,7 @@ import { YapilyRedirectModel } from './panels/banks-page/bank.component';
 @Component({
 	selector: 'app-widget-payment-yapily',
 	templateUrl: 'payment.component.html',
-	styleUrls: []
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   @Input() summary: CheckoutSummary | undefined = undefined;
@@ -22,12 +22,16 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   @Output() onBack = new EventEmitter();
   yapilyRedirectObject!: YapilyRedirectModel;
   isLoading = false;
-  private pSubscriptions: Subscription = new Subscription();
+  bankName = '';
+  transactionId = '';
   paymentBank: PaymentBank = undefined;
   transactionInput: TransactionInput | undefined = undefined;
-	newWindow: Window = undefined;
+  newWindow: Window = undefined;
+  isPaymentSuccess = false;
+  private pSubscriptions: Subscription = new Subscription();
   private pPaymentStatusSchangedSubscription: Subscription | undefined = undefined;
   constructor(
+  	private cdr: ChangeDetectorRef,
   	private readonly http: HttpClient,
   	private notification: NotificationService,
   	public paymentService: PaymentDataService,
@@ -35,21 +39,21 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   ) {
   }
   
-  get providerName(): string {
-  	return 'Yapily';
-  }
-  
   ngOnInit(): void {
-  	this.startPaymentStatusChangedSubscriptions();
-  	this.pager.init('initialization', 'Banks');
+  	this.pager.init('instructions', 'Instructions');
   }
 
   ngOnDestroy(): void {
-  	if(this.pPaymentStatusSchangedSubscription){
+  	if (this.pPaymentStatusSchangedSubscription) {
   		this.pPaymentStatusSchangedSubscription.unsubscribe();
   	}
 
   	this.pSubscriptions.unsubscribe();
+  }
+
+  onInstructionsConfirm(): void {
+  	this.startPaymentStatusChangedSubscriptions();
+  	this.pager.nextStage('initialization', 'Banks', 2);
   }
 
   bankSelected(bank: PaymentBank): void {
@@ -76,24 +80,34 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   	this.createTransactionInternal();
   }
 
-	openWindow(url: string) {
-		this.newWindow = window.open(url, '_blank');
-	}
+  openWindow(url: string): void {
+  	this.newWindow = window.open(url, '_blank');
+  }
   
   private startPaymentStatusChangedSubscriptions():void {
   	this.pPaymentStatusSchangedSubscription = this.notification.subscribeToPaymentStatusChanged()
-  		.subscribe(({data}) => {
-				console.log(data, YapilyAuthorizationRequestStatus.AwaitingAuthorization)
-				if (data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.AwaitingAuthorization) {
-					this.isLoading = true;
-				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Authorized) {
-					this.isLoading = false;
-					this.newWindow.close();
-				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Failed) {
-					// Errrorrrrr
-				}
+  		.subscribe({
+  			next: ({ data }) => {
+  				debugger
+  				console.log(data, YapilyAuthorizationRequestStatus.AwaitingAuthorization)
+
+  				if (data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.AwaitingAuthorization) {
+  					this.isLoading = true;
+  				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Authorized) {
+  					this.isLoading = false;
+  					this.newWindow.close();
+  					this.isPaymentSuccess = true;
+  					this.pager.nextStage('payment_completed', 'Completed', 3);
+  				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Failed) {
+  					this.isPaymentSuccess = false;
+  					this.pager.nextStage('payment_completed', 'Completed', 3);
+  				}
+  			},
+  			error: (error) => console.log(error),
+  			complete: () => this.cdr.markForCheck()
   		});
   }
+
   private createTransactionInternal(): void {
   	this.errorMessage = '';
   	this.isLoading = true;
@@ -103,9 +117,17 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   			{
   				next: ({ data }) => {
   					const order = data.createTransaction as TransactionShort;
-			  		this.preauth(order.transactionId);
+
+  						if (order) {
+  							const parsedInstrumentDetails = JSON.parse(order.instrumentDetails);
+  							this.bankName = parsedInstrumentDetails?.name ?? '';
+  							this.transactionId = order.transactionId;
+  						}
+
+			  		this.preauth(this.transactionId);
   				},
-  				error: () => this.isLoading = false
+  				error: () => this.isLoading = false,
+  					complete: () => this.cdr.markForCheck()
   			})
   	);
   }
@@ -133,7 +155,9 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   				return this.http.get('https://tinyurl.com/api-create.php?url=' + encodeURIComponent(yapilyQrCodeUrl), { responseType: 'text' })
   					.pipe(map(res => ({
   						yapilyQrCodeUrl: res || yapilyQrCodeUrl,
-  						yapilyAuthUrl: order.openBankingObject.yapily.url
+  						yapilyAuthUrl: order.openBankingObject.yapily.url,
+  						bankName: this.bankName,
+  						transactionId
   					})));
   			}),
   			finalize(() => this.isLoading = false)
@@ -143,7 +167,8 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   			},
   			error: (error) => {
   				console.error(error);
-  			}
+  			},
+  			complete: () => this.cdr.markForCheck()
   		}));
   }
 

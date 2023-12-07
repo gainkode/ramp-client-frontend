@@ -43,21 +43,23 @@ export class WidgetPaymentPagerService {
 		return undefined;
 	}
 
-	nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
+	nextStage(id: string, name: string, stepId: number): void {
 		const store = (
 			this._stageId !== 'initialization' &&
             this._stageId !== 'register' &&
             this._stageId !== 'login_auth' &&
             this._stageId !== 'code_auth');
+
 		this._swapStage = '';
+
 		if (store) {
 			this._stages.push({
 				id: this.stageId,
 				title: this.title,
 				step: this.step,
-				summary: summaryVisible
 			} as WidgetStage);
 		}
+		
 		this._stageId = id;
 		this._title = name;
 		this._step = stepId;
