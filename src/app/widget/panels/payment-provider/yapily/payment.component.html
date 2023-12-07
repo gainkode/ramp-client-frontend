@@ -9,12 +9,12 @@
         *ngSwitchCase="'initialization'" 
         [yapilyRedirectObject]="yapilyRedirectObject"
         (selectBank)="bankSelected($event)" 
-        (isLoading)="isLoading = true"
+        (isLoading)="isLoadingfunc($event)"
         (openWindow)="openWindow($event)"
         (onBack)="stageBack()">
     </app-payment-yapily-banks>
 
-    <app-transaction-details *ngSwitchCase="'payment_completed'" [yapilyRedirectObject]="yapilyRedirectObject"> </app-transaction-details>
+    <app-transaction-details [isPaymentSuccess]="isPaymentSuccess" *ngSwitchCase="'payment_completed'" [yapilyRedirectObject]="yapilyRedirectObject"> </app-transaction-details>
 </div>
 
 <ng-container *ngIf="isLoading">

@@ -13,8 +13,8 @@ import { YapilyRedirectModel } from '../banks-page/bank.component';
 })
 export class TransactionDetailsComponent {
   @Input() yapilyRedirectObject: YapilyRedirectModel;
+  @Input() isPaymentSuccess: boolean;
   @Output() transactionDone = new EventEmitter();
-  success = false;
   productName = EnvService.productFull;
   supportEmail = EnvService.support_email ?? 'support@test.com';
   supportEmailLink = `mailto: ${EnvService.support_email}` ?? 'mailto: support@test.com';
@@ -28,9 +28,7 @@ export class TransactionDetailsComponent {
   }
 
   onReturn(): void {
-  	void this.router.navigateByUrl(this.finishLink).then(() => {
-  		window.location.reload();
-  	});
+  	window.location.reload();
   }
 
   copyParameter(value: string): void {

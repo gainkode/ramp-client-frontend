@@ -51,6 +51,11 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   	this.pSubscriptions.unsubscribe();
   }
 
+	isLoadingfunc(value: boolean) {
+		this.isLoading = value;
+		this.cdr.markForCheck();
+	}
+
   onInstructionsConfirm(): void {
   	this.startPaymentStatusChangedSubscriptions();
   	this.pager.nextStage('initialization', 'Banks', 2);
@@ -88,19 +93,21 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   	this.pPaymentStatusSchangedSubscription = this.notification.subscribeToPaymentStatusChanged()
   		.subscribe({
   			next: ({ data }) => {
-  				debugger
-  				console.log(data, YapilyAuthorizationRequestStatus.AwaitingAuthorization)
-
+  				console.log(data.paymentStatusChanged.status, YapilyAuthorizationRequestStatus.AwaitingAuthorization)
   				if (data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.AwaitingAuthorization) {
   					this.isLoading = true;
+						this.cdr.markForCheck();
   				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Authorized) {
   					this.isLoading = false;
   					this.newWindow.close();
   					this.isPaymentSuccess = true;
+						this.cdr.markForCheck();
   					this.pager.nextStage('payment_completed', 'Completed', 3);
   				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Failed) {
   					this.isPaymentSuccess = false;
+						this.isLoading = false;
   					this.pager.nextStage('payment_completed', 'Completed', 3);
+						this.cdr.markForCheck();
   				}
   			},
   			error: (error) => console.log(error),

@@ -2,24 +2,24 @@
 <div class="payment-details__wrapper">
     <div class="payment-details__header">
        <div class="payment-details__header-logo">
-            <img [src]="success ? 'assets/rocket.svg': 'assets/widget_error.svg'" alt="complete">
+            <img [src]="isPaymentSuccess ? 'assets/rocket.svg': 'assets/widget_error.svg'" alt='complete'>
        </div>
     </div>
 
     <div class="payment-details__content mt-3">
-        <span class="__widget-disclaimer-line"  *ngIf="success">
+        <span class="__widget-disclaimer-line"  *ngIf="isPaymentSuccess">
             Dear Customer,
             <br>
             Thank you for choosing {{productName}}!
         </span>
 
-        <div *ngIf="success" class="__widget-disclaimer-container">
+        <div *ngIf="isPaymentSuccess" class="__widget-disclaimer-container">
             <span class="__widget-disclaimer-line">
                 Your payment has been successfully completed.
             </span>
         </div>
 
-        <div *ngIf="!success" class="__widget-disclaimer-container">
+        <div *ngIf="!isPaymentSuccess" class="__widget-disclaimer-container">
             <span class="__widget-disclaimer-line">
                 Please note that your order has been Canceled due to order time limit exceeded.
                 <br>
@@ -27,7 +27,7 @@
             </span>
         </div>
 
-        <div *ngIf="success" class="__widget-details-container-field" >
+        <div *ngIf="isPaymentSuccess" class="__widget-details-container-field" >
             <div class="__widget-details-title">
                 <div class="__widget-details-title-item">
                     {{'widget-payment-result.field_referenceId' | transloco}}
@@ -43,7 +43,7 @@
             </div>
         </div>
 
-        <div *ngIf="success" class="__widget-details-container-field">
+        <div *ngIf="isPaymentSuccess" class="__widget-details-container-field">
             <div class="__widget-details-title">
                 <div class="__widget-details-title-item">
                     {{'widget-payment-result.field_bankName' | transloco}}

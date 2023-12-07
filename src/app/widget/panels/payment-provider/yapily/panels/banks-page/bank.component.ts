@@ -31,7 +31,7 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   @Input() yapilyRedirectObject: YapilyRedirectModel;
   @Output() selectBank = new EventEmitter<PaymentBank>();
   @Output() onBack = new EventEmitter();
-  @Output() isLoading = new EventEmitter();
+  @Output() isLoading = new EventEmitter<boolean>();
   @Output() openWindow = new EventEmitter<string>();
   qrCodeBackground = EnvService.color_white;
   qrCodeForeground = EnvService.color_purple_900;
