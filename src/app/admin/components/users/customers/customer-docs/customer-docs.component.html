@@ -61,10 +61,11 @@
 </div>
 
 <ng-template #docsTable>
-  <button class="btn btn-primary mg-t-10 mg-b-10 tx-14" type="button" (click)="onAddDocument()">Add Document</button>
+  <button class="btn btn-primary mg-t-10 mg-b-10 tx-14" type="button" (click)="onAddDocument()">
+    Add Document
+  </button>
 
   <div class="docs-wrapper" [class.emptyData]="!tableDataSource.data.length">
-
     <app-table
       [dataSource]="tableDataSource" 
       [columns]="columnsToDisplay">

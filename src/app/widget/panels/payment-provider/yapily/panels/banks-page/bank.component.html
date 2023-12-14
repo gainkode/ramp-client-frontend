@@ -1,0 +1,66 @@
+<div class="widget-list__container" *ngIf="!yapilyRedirectObject">
+  <div class="widget-list__header">
+    <div class="widget-list__header-search">
+        <mat-form-field appearance="outline">
+          <mat-label>Select country</mat-label>
+          <mat-select appendTo="body" [formControl]="searchCountryControl">
+            <mat-option *ngFor="let country of bankCountries" [value]="country.countryCode2">
+              <div class="bank-country">
+                <img *ngIf="getCountryFlag" class="country-flag-admin bank-flag-align" alt="Country" src="{{getCountryFlag(country.countryCode2)}}"/>
+                {{ country.displayName }}
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+    </div>
+  </div>
+  <div class="widget-list__item">
+      <div *ngFor="let item of paymentBanks$ | async">
+        <button type="button" class="widget-list__item-row" (click)="selectBankItem(item)">
+            <div class="widget-list__item-column">
+              <div>
+                <img alt="Bank" [src]="item.icon">
+              </div>
+              <div class="widget-list__item-column-item">
+                <div class="widget-list__item-column-label">
+                  <span>{{item.name}}</span>
+                </div>
+                <mat-icon>keyboard_arrow_right</mat-icon>
+              </div>
+            </div>
+        </button>
+    </div>     
+  </div>
+
+  <div class="__widget-buttons-area">
+    <button class="__outlined-button" type="button" (click)="onBack.emit()">
+        {{'global.widget_btn-back' | transloco}}
+    </button>
+  </div>
+</div> 
+
+<div class="__dialog-wizard-data-container tx-center" *ngIf="yapilyRedirectObject">
+  <div class="__dialog-message">
+      Scan this QR code to authenticate with the {{yapilyRedirectObject.bankName}} account.
+  </div>
+  <div class="__dialog-wizard-qr-code-container">
+      <qrcode 
+        [colorLight]="qrCodeBackground" 
+        [colorDark]="qrCodeForeground" 
+        [qrdata]="yapilyRedirectObject.yapilyQrCodeUrl"
+        [width]="300"
+        [allowEmptyString]="true"
+        [errorCorrectionLevel]="'M'" >
+      </qrcode>
+  </div>
+
+  <div class="button-proceed-wrapper">
+    <button type="button" mat-raised-button (click)="onYapilyNavigate(yapilyRedirectObject.yapilyAuthUrl)">
+            Use the desktop login
+    </button>
+  </div>
+</div>
+
+<ng-container *ngIf="isYapilyBankLoading">
+  <app-spinner></app-spinner>
+</ng-container>

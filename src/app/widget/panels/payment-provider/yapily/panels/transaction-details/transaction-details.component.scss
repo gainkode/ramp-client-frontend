@@ -1,0 +1,22 @@
+.payment-details__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.5rem !important;
+}
+
+.payment-details__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mdc-list-item__primary-text {
+    font-size: 15px;
+    color: rgba(0,0,0,.9);
+    span {
+        font-size: 14px;
+        color: rgba(0,0,0,.8);
+    }
+}
+

@@ -42,13 +42,14 @@ export class PaymentProviderInstrumentView {
 			this.name = 'CARD PAYMENT';
 			this.image = './assets/svg-providers/credit-card.svg';
 		} else if (this.instrument === PaymentInstrument.WireTransfer) {
-			//this.id = 'WireTransferPayment';
 			this.name = data.provider?.displayName ?? 'WIRE TRANSFER';
 			this.image = './assets/svg-providers/wire-transfer.svg';
 		} else if (this.instrument === PaymentInstrument.FiatVault) {
-			//this.id = 'WireTransferPayment';
 			this.name = 'FIAT VAULT';
 			this.image = './assets/svg-providers/fiat-vault.png';
+		} else if (this.instrument === PaymentInstrument.OpenBanking) {
+			this.name = data.provider?.displayName;
+			this.image = `./assets/svg-providers/${this.name}.svg`;
 		}
 	}
 }
@@ -298,7 +299,8 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
 	{ id: PaymentInstrument.CreditCard, name: 'Credit card' },
 	{ id: PaymentInstrument.WireTransfer, name: 'Wire transfer' },
 	{ id: PaymentInstrument.FiatVault, name: 'Fiat vault' },
-	{ id: PaymentInstrument.CryptoVault, name: 'Crypto vault' }
+	{ id: PaymentInstrument.CryptoVault, name: 'Crypto vault' },
+	{ id: PaymentInstrument.OpenBanking, name: 'Open Banking' }
 ];
 
 export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryItem> = [

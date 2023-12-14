@@ -25,6 +25,7 @@ import { DirectiveModule } from './directives/directives.module';
 import { ProfileDataService } from './services/profile.service';
 import { ExchangeRateService } from './services/rate.service';
 import { WidgetPagerService } from './services/widget-pager.service';
+import { WidgetPaymentPagerService } from './services/widget-payment-pager.service';
 import { WidgetService } from './services/widget.service';
 import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/env.service';
 import { shareReplay } from 'rxjs/operators';
@@ -73,6 +74,7 @@ function socialConfigFactory(): SocialAuthServiceConfig {
 		ErrorService,
 		ExchangeRateService,
 		WidgetPagerService,
+		WidgetPaymentPagerService,
 		WidgetService
 	],
 	bootstrap: [AppComponent]

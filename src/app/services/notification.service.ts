@@ -32,6 +32,12 @@ subscription onKycCompletedNotification {
 }
 `;
 
+const SUBSCRIBE_PAYMENT_STATUS_CHANGED = gql`
+subscription onPaymentStatusChanged {
+  paymentStatusChanged
+}
+`;
+
 const SUBSCRIBE_EXTERNAL_PAYMENT_COMPLETED_NOTIFICATIONS = gql`
 subscription onExternalPaymentCompletedNotification {
   externalPaymentCompletedNotification
@@ -137,6 +143,13 @@ export class NotificationService {
 	subscribeToKycCompleteNotifications(): Observable<any> {
 		return this.apolloNotificationClient.subscribe({
 			query: SUBSCRIBE_KYC_COMPLETED_NOTIFICATIONS,
+			fetchPolicy: 'no-cache'
+		});
+	}
+
+	subscribeToPaymentStatusChanged(): Observable<any> {
+		return this.apolloNotificationClient.subscribe({
+			query: SUBSCRIBE_PAYMENT_STATUS_CHANGED,
 			fetchPolicy: 'no-cache'
 		});
 	}

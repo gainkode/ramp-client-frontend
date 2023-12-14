@@ -173,14 +173,20 @@ export type BalanceStats = {
   volume?: Maybe<TransactionStatsVolume>;
 };
 
-export type BankCategory = {
-  __typename?: 'BankCategory';
-  countryCode?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<WireTransferPaymentCategory>;
-  instrument?: Maybe<Array<Maybe<PaymentInstrument>>>;
-  title?: Maybe<Scalars['String']['output']>;
-  transactionSource?: Maybe<Array<Maybe<TransactionSource>>>;
-  transactionType?: Maybe<Array<Maybe<TransactionType>>>;
+export type BankDetails = {
+  __typename?: 'BankDetails';
+  bankDetailsId: Scalars['ID']['output'];
+  created: Scalars['DateTime']['output'];
+  currency?: Maybe<Scalars['String']['output']>;
+  details?: Maybe<Scalars['String']['output']>;
+  disabled?: Maybe<Scalars['DateTime']['output']>;
+  providerName?: Maybe<Scalars['String']['output']>;
+};
+
+export type BankDetailsListResult = {
+  __typename?: 'BankDetailsListResult';
+  count?: Maybe<Scalars['Int']['output']>;
+  list?: Maybe<Array<BankDetails>>;
 };
 
 export type BankDetailsObject = {
@@ -295,6 +301,9 @@ export enum CallbackType {
   ExternalSendgridCallback = 'externalSendgridCallback',
   ExternalSuftiCallback = 'externalSuftiCallback',
   ExternalSumsubCallback = 'externalSumsubCallback',
+  ExternalYapilyAuthCallback = 'externalYapilyAuthCallback',
+  ExternalYapilyCallback = 'externalYapilyCallback',
+  ExternalYapilyQrcodeCallback = 'externalYapilyQrcodeCallback',
   TransactionStatusChanged = 'transactionStatusChanged',
   TransactionStatusChangedAdmin = 'transactionStatusChangedAdmin',
   UserVerificationChanged = 'userVerificationChanged'
@@ -700,6 +709,12 @@ export type GetRates = {
   currenciesFrom?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   currencyTo?: Maybe<Scalars['String']['output']>;
   withFactor?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type InstitutionCountry = {
+  __typename?: 'InstitutionCountry';
+  countryCode2?: Maybe<Scalars['String']['output']>;
+  displayName?: Maybe<Scalars['String']['output']>;
 };
 
 export type InstrumentStats = BaseStat & {
@@ -1954,6 +1969,16 @@ export enum OAuthProvider {
   Twitter = 'twitter'
 }
 
+export type OpenBankingGetails = {
+  __typename?: 'OpenBankingGetails';
+  yapily?: Maybe<YapilyOpenBankingDetails>;
+};
+
+export type OpenBankingPreauthObject = {
+  __typename?: 'OpenBankingPreauthObject';
+  yapily?: Maybe<YapilyPreauthObject>;
+};
+
 export type Openpayd = {
   __typename?: 'Openpayd';
   countriesCode2?: Maybe<Array<Scalars['String']['output']>>;
@@ -1996,6 +2021,19 @@ export enum PaymentApmType {
   PayId = 'payId'
 }
 
+export type PaymentBank = {
+  __typename?: 'PaymentBank';
+  countries?: Maybe<Array<Maybe<InstitutionCountry>>>;
+  icon?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+export type PaymentBankInput = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PaymentCaptureInput = {
   instrument: PaymentInstrument;
   orderId: Scalars['String']['input'];
@@ -2015,6 +2053,7 @@ export enum PaymentInstrument {
   CreditCard = 'CreditCard',
   CryptoVault = 'CryptoVault',
   FiatVault = 'FiatVault',
+  OpenBanking = 'OpenBanking',
   WireTransfer = 'WireTransfer'
 }
 
@@ -2106,6 +2145,7 @@ export type PaymentOrderShort = {
 };
 
 export type PaymentPreauthInput = {
+  bank?: InputMaybe<PaymentBankInput>;
   card?: InputMaybe<PaymentCard>;
   instrument: PaymentInstrument;
   provider: Scalars['String']['input'];
@@ -2116,6 +2156,7 @@ export type PaymentPreauthResult = {
   __typename?: 'PaymentPreauthResult';
   details?: Maybe<Scalars['String']['output']>;
   html?: Maybe<Scalars['String']['output']>;
+  openBankingObject?: Maybe<OpenBankingPreauthObject>;
   operation?: Maybe<PaymentOperation>;
   order?: Maybe<PaymentOrder>;
 };
@@ -2124,6 +2165,7 @@ export type PaymentPreauthResultShort = {
   __typename?: 'PaymentPreauthResultShort';
   details?: Maybe<Scalars['String']['output']>;
   html?: Maybe<Scalars['String']['output']>;
+  openBankingObject?: Maybe<OpenBankingPreauthObject>;
   order?: Maybe<PaymentOrderShort>;
 };
 
@@ -2233,6 +2275,8 @@ export type Query = {
   getOneToManyRates?: Maybe<Array<Rate>>;
   /** Get the rate of one currency to many (using for liquidity provider functionality) */
   getOneToManyRatesMerchant?: Maybe<Array<Maybe<Rate>>>;
+  /** Get banks for OpenBanking */
+  getOpenBankingGetails?: Maybe<OpenBankingGetails>;
   /** Get payment providers */
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
   /** Get common settings */
@@ -2581,6 +2625,11 @@ export type QueryGetOneToManyRatesMerchantArgs = {
   currenciesTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   currencyFrom?: InputMaybe<Scalars['String']['input']>;
   withFactor?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type QueryGetOpenBankingGetailsArgs = {
+  paymentProvider: Scalars['String']['input'];
 };
 
 
@@ -3577,6 +3626,7 @@ export type Subscription = {
   kycCompletedNotification?: Maybe<Scalars['Void']['output']>;
   kycServiceNotification?: Maybe<Scalars['Void']['output']>;
   newNotification?: Maybe<Scalars['Void']['output']>;
+  paymentStatusChanged?: Maybe<Scalars['Void']['output']>;
   transactionServiceNotification?: Maybe<Scalars['Void']['output']>;
 };
 
@@ -5167,6 +5217,39 @@ export enum WireTransferPaymentCategory {
   Eu = 'EU',
   Uk = 'UK'
 }
+
+export enum YapilyAuthorizationRequestStatus {
+  Ailed = 'AILED',
+  Authorized = 'AUTHORIZED',
+  AwaitingAuthorization = 'AWAITING_AUTHORIZATION',
+  AwaitingDecoupledAuthorization = 'AWAITING_DECOUPLED_AUTHORIZATION',
+  AwaitingDecoupledPreAuthorization = 'AWAITING_DECOUPLED_PRE_AUTHORIZATION',
+  AwaitingFurtherAuthorization = 'AWAITING_FURTHER_AUTHORIZATION',
+  AwaitingPreAuthorization = 'AWAITING_PRE_AUTHORIZATION',
+  AwaitingReAuthorization = 'AWAITING_RE_AUTHORIZATION',
+  AwaitingScaCode = 'AWAITING_SCA_CODE',
+  AwaitingScaMethod = 'AWAITING_SCA_METHOD',
+  Consumed = 'CONSUMED',
+  Expired = 'EXPIRED',
+  Failed = 'FAILED',
+  Invalid = 'INVALID',
+  PreAuthorized = 'PRE_AUTHORIZED',
+  Rejected = 'REJECTED',
+  Revoked = 'REVOKED',
+  Unknown = 'UNKNOWN'
+}
+
+export type YapilyOpenBankingDetails = {
+  __typename?: 'YapilyOpenBankingDetails';
+  banks?: Maybe<Array<Maybe<PaymentBank>>>;
+  countries?: Maybe<Array<Maybe<InstitutionCountry>>>;
+};
+
+export type YapilyPreauthObject = {
+  __typename?: 'YapilyPreauthObject';
+  qrCodeUrl?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
 
 export type LiquidityProviderBalance = {
   __typename?: 'liquidityProviderBalance';

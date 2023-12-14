@@ -39,7 +39,7 @@ const routing = RouterModule.forChild([
 		WidgetWrapComponent,
 		CryptoWidgetWrapComponent,
 		CryptoWidgetWizardComponent,
-		NormalWidgetWizardComponent
+		NormalWidgetWizardComponent,
 	],
 	providers: [],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA]

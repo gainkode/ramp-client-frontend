@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { Observable } from 'rxjs';
-import { KycProvider, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
+import { map, Observable } from 'rxjs';
+import { KycProvider, OpenBankingGetails, PaymentBank, PaymentBankInput, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -64,6 +64,32 @@ query GetAppropriatePaymentProviders(
       instruments
       default
       external
+    }
+  }
+}
+`;
+
+const GET_OPENBANKING_DETAILS = gql`
+query GetOpenBankingGetails(
+  $paymentProvider: String!
+) {
+  getOpenBankingGetails(
+    paymentProvider: $paymentProvider
+  ) {
+    yapily {
+      banks {
+        icon
+        name
+        id
+        countries {
+          displayName
+          countryCode2
+        }
+      }
+      countries {
+        displayName
+        countryCode2
+      }
     }
   }
 }
@@ -342,12 +368,14 @@ mutation PreAuth(
   $transactionId: String!,
   $instrument: PaymentInstrument!,
   $paymentProvider: String!
+  $bank: PaymentBankInput
 ) {
   preauth(
     orderParams: {
       transactionId: $transactionId
       instrument: $instrument
       provider: $paymentProvider
+      bank: $bank
     }
   ) {
     order {
@@ -359,6 +387,12 @@ mutation PreAuth(
       amount
       currency
       paymentInfo
+    }
+    openBankingObject {
+      yapily {
+        url
+        qrCodeUrl
+      }
     }
     details
   }
@@ -637,13 +671,14 @@ export class PaymentDataService {
 		});
 	}
 
-	preAuth(transactionId: string, instrument: string, paymentProvider: string): Observable<any> {
+	preAuth(transactionId: string, instrument: string, paymentProvider: string, bank?: PaymentBankInput): Observable<any> {
 		return this.apollo.mutate({
 			mutation: PRE_AUTH,
 			variables: {
 				transactionId,
 				instrument,
-				paymentProvider
+				paymentProvider,
+				bank
 			}
 		});
 	}
@@ -729,6 +764,15 @@ export class PaymentDataService {
 			},
 			fetchPolicy: 'network-only'
 		});
+	}
+
+	getOpenBankgingDetails(paymentProvider: string): Observable< { getOpenBankingGetails: OpenBankingGetails; } > {
+		return this.apollo.mutate<{ getOpenBankingGetails: OpenBankingGetails; }>({
+			mutation: GET_OPENBANKING_DETAILS,
+			variables: {
+				paymentProvider
+			}
+		}).pipe(map(response => response.data));
 	}
 
 	mySettingsFee(

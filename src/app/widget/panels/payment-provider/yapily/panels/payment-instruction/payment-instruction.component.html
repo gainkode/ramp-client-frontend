@@ -1,0 +1,35 @@
+
+<div class="payment-instruction__wrapper">
+   <div class="payment-instruction__header">
+      <h3>Follow Instructions to proceed transaction</h3>
+   </div>
+   <mat-card>
+      <mat-card-content>
+         <mat-list class="p-0">
+            <mat-list-item>
+               <mat-icon matListItemIcon class="mg-y-0-f mg-x-10-f">format_list_bulleted</mat-icon> 
+               Choose Bank from the list
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item class="mg-y-10-f">
+               <mat-icon matListItemIcon class="mg-y-0-f mg-x-10-f">verified_user</mat-icon> 
+               Authentication in your bank by <br> QRcode or direct link
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>
+               <mat-icon matListItemIcon class="mg-y-0-f mg-x-10-f">file_copy</mat-icon> 
+               Check transaction details
+            </mat-list-item>
+          </mat-list>
+      </mat-card-content>
+   </mat-card>
+
+   <div class="payment-instruction__actions">
+      <button class="__outlined-button" type="button" (click)="onBack.emit()">
+         Back
+      </button>
+      <button class="__main-button mg-l-20" type="button" (click)="nextStep.emit()">
+         Confirm
+      </button>
+   </div>
+</div>

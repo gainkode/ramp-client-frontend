@@ -1,0 +1,22 @@
+<div class="__widget-data-box" [ngSwitch]="pager.stageId">
+    <app-payment-instruction 
+        *ngSwitchCase="'instructions'"
+        (onBack)="stageBack()"
+        (nextStep)="onInstructionsConfirm()"> 
+    </app-payment-instruction>
+
+    <app-payment-yapily-banks 
+        *ngSwitchCase="'initialization'" 
+        [yapilyRedirectObject]="yapilyRedirectObject"
+        (selectBank)="bankSelected($event)" 
+        (isLoading)="isLoadingfunc($event)"
+        (openWindow)="openWindow($event)"
+        (onBack)="stageBack()">
+    </app-payment-yapily-banks>
+
+    <app-transaction-details [isPaymentSuccess]="isPaymentSuccess" *ngSwitchCase="'payment_completed'" [yapilyRedirectObject]="yapilyRedirectObject"> </app-transaction-details>
+</div>
+
+<ng-container *ngIf="isLoading">
+    <app-spinner></app-spinner>
+</ng-container>

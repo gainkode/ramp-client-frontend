@@ -88,6 +88,9 @@
           <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="stageBack()"
             (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">
           </app-widget-register>
+          <app-widget-payment-yapily *ngSwitchCase="'payment_Yapily'" [userParamsId]="userParamsId" [source]="widget.source" [summary]="summary" (onBack)="stageBack()"
+            (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">
+          </app-widget-payment-yapily>
           <!-- Login Authentication -->
           <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widget]="widget"
             [requiredExtraData]="requiredExtraData" [allowCreate]="quickCheckout"

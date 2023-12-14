@@ -153,5 +153,10 @@
 
   "widget-recent-transactions.title": "Historique des transactions",
   "widget-recent-transactions.label_from": "de",
-  "widget-recent-transactions.label_to": "à"
+  "widget-recent-transactions.label_to": "à",
+  
+  "widget-payment-result.title": "Payment Details",
+  "widget-payment-result.field_referenceId": "Reference ID",
+  "widget-payment-result.field_bankName": "Bank Name",
+  "widget-payment-result.btn-done_label": "Done"
 }

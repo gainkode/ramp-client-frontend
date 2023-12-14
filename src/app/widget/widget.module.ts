@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ClipboardModule } from '@angular/cdk/clipboard';
@@ -46,6 +47,8 @@ import {
 	WidgetDisclaimerComponent,
 	WidgetKycComponent,
 	WidgetPaymentComponent,
+	WidgetPaymentYapilyComponent,
+	PaymentYapilyBankComponent,
 	WidgetProcessingFrameComponent,
 	WidgetCryptoDetailsComponent,
 	WidgetCryptoCompleteComponent,
@@ -72,6 +75,9 @@ import { WidgetEmbeddedOverviewComponent } from './widget-internal/widget-intern
 import { WidgetEmbeddedComponent } from './widget-internal/widget-internal.component';
 import { SpinnerModule } from 'shared/spinner/spinner.module';
 import { TranslocoRootModule } from 'transloco-root.module';
+import { WidgetPagerService } from 'services/widget-pager.service';
+import { TransactionDetailsComponent } from './panels/payment-provider/yapily/panels/transaction-details/transaction-details.component';
+import { PaymentInstructionComponent } from './panels/payment-provider/yapily/panels/payment-instruction/payment-instruction.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -91,6 +97,7 @@ const modules = [
 	MatProgressBarModule,
 	MatStepperModule,
 	MatCheckboxModule,
+	MatCardModule,
 	ComponentsModule,
 ];
 
@@ -147,6 +154,8 @@ export class MaterialModule {}
 		WidgetDisclaimerComponent,
 		WidgetKycComponent,
 		WidgetPaymentComponent,
+		WidgetPaymentYapilyComponent,
+		PaymentYapilyBankComponent,
 		WidgetProcessingFrameComponent,
 		WidgetCryptoDetailsComponent,
 		WidgetCryptoCompleteComponent,
@@ -155,7 +164,10 @@ export class MaterialModule {}
 		WidgetCompleteComponent,
 		WidgetErrorComponent,
 		PaymentIntroComponent,
-		
+
+		TransactionDetailsComponent,
+		PaymentInstructionComponent,
+
 		WidgetEmbeddedOverviewComponent,
 		WidgetEmbeddedComponent
 	],
@@ -173,8 +185,10 @@ export class MaterialModule {}
 		CompanyLevelVerificationComponent,
 
 		WidgetEmbeddedOverviewComponent,
-		WidgetEmbeddedComponent,
+		WidgetEmbeddedComponent
 	],
-	providers: [],
+	providers: [
+		WidgetPagerService
+	],
 })
 export class WidgetModule {}
