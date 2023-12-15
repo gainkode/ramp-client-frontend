@@ -99,13 +99,22 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
 						this.cdr.markForCheck();
   				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Authorized) {
   					this.isLoading = false;
-  					this.newWindow.close();
+
+						if (this.newWindow) {
+							this.newWindow.close();
+						}
+  					
   					this.isPaymentSuccess = true;
 						this.cdr.markForCheck();
   					this.pager.nextStage('payment_completed', 'Completed', 3);
   				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Failed) {
   					this.isPaymentSuccess = false;
 						this.isLoading = false;
+
+						if (this.newWindow) {
+							this.newWindow.close();
+						}
+						
   					this.pager.nextStage('payment_completed', 'Completed', 3);
 						this.cdr.markForCheck();
   				}

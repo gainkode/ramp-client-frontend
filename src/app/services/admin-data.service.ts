@@ -56,8 +56,7 @@ import {
 	QueryGetMessagesArgs,
 	TransactionLifelineStatusItem,
 	TransactionUpdateInput,
-	LiquidityProviderEntity,
-  WidgetUserParamsChanges
+	LiquidityProviderEntity
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -706,7 +705,6 @@ const GET_TRANSACTIONS = gql`
           transferHash
           originalOrderId
         }
-        widgetUserParams
         benchmarkTransferOrderBlockchainLink
         code
         comment
@@ -813,7 +811,6 @@ const GET_TRANSACTIONS = gql`
         verifyWhenPaid        
         widget
         widgetId
-        widgetUserParams
         screeningAnswer
         screeningRiskscore
         screeningStatus
