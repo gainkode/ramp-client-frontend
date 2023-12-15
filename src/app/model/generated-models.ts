@@ -3775,7 +3775,7 @@ export type Transaction = {
   widget?: Maybe<Scalars['String']['output']>;
   widgetCode?: Maybe<Scalars['String']['output']>;
   widgetId?: Maybe<Scalars['String']['output']>;
-  widgetUserParams?: Maybe<Scalars['String']['output']>;
+  widgetUserParams?: Maybe<WidgetUserParams>;
   widgetUserParamsId?: Maybe<Scalars['String']['output']>;
 };
 
@@ -4145,6 +4145,7 @@ export type TransactionUpdateInput = {
   transferOrderChanges?: InputMaybe<TransactionUpdateTransferOrderChanges>;
   type?: InputMaybe<TransactionType>;
   widgetId?: InputMaybe<Scalars['String']['input']>;
+  widgetUserParamsChanges?: InputMaybe<WidgetUserParamsChanges>;
   widgetUserParamsId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -5152,6 +5153,10 @@ export type WidgetUserParams = {
   userPhone?: Maybe<Scalars['String']['output']>;
   widgetId?: Maybe<Scalars['String']['output']>;
   widgetUserParamsId?: Maybe<Scalars['ID']['output']>;
+};
+
+export type WidgetUserParamsChanges = {
+  merchantFeePercent?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type WidgetUserParamsInput = {

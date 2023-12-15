@@ -52,11 +52,12 @@ import {
 	TransactionInput,
 	CurrencyPairLiquidityProvidersListResult,
 	QueryGetCurrencyPairLiquidityProviderArgs,
-	LiquidityProviderEntity,
 	MessageListResult,
 	QueryGetMessagesArgs,
 	TransactionLifelineStatusItem,
-	TransactionUpdateInput
+	TransactionUpdateInput,
+	LiquidityProviderEntity,
+  WidgetUserParamsChanges
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -803,6 +804,9 @@ const GET_TRANSACTIONS = gql`
           screeningRiskscore
           screeningStatus
           screeningData
+        }
+        widgetUserParams {
+          merchantFeePercent
         }
         transferOrderBlockchainLink
         type        
@@ -2133,6 +2137,7 @@ mutation UpdateTransaction(
   $recalculate: Boolean
   $transferOrder: TransactionUpdateTransferOrderChanges
   $benchmarkTransferOrder: TransactionUpdateTransferOrderChanges
+  $widgetUserParamsChanges: WidgetUserParamsChanges
   $comment: String
   $widgetId: String
   $flag: Boolean
@@ -2157,6 +2162,7 @@ mutation UpdateTransaction(
       launchAfterUpdate: $launchAfterUpdate
       transferOrderChanges: $transferOrder
       benchmarkTransferOrderChanges: $benchmarkTransferOrder
+      widgetUserParamsChanges: $widgetUserParamsChanges
       comment: $comment
       flag: $flag
       type: $type

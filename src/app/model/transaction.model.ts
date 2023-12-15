@@ -27,6 +27,7 @@ import {
 	TransactionType,
 	User,
 	UserMode,
+	WidgetUserParams,
 } from './generated-models';
 import {
 	TransactionTypeList,
@@ -41,6 +42,11 @@ import {
 	UserTransactionStatusList,
 } from './payment.model';
 import { UserItem } from './user.model';
+
+export enum ScreeningAnswer {
+	GREEN = 'GREEN',
+	RED = 'RED',
+}
 
 export class TransactionItemFull {
 	id = '';
@@ -67,7 +73,7 @@ export class TransactionItemFull {
 	transferOriginalOrderId = '';
 	paymentOrderId = '';
 	transferOrderHash = '';
-	screeningAnswer = '';
+	screeningAnswer: ScreeningAnswer;
 	screeningRiskscore = 0;
 	screeningStatus = '';
 	screeningData: Record<string, any> = {};
@@ -107,6 +113,7 @@ export class TransactionItemFull {
 	canBeCancelled = false;
 	hasToBeRefunded = false;
 	canBeReviewed = false;
+	widgetUserParams: WidgetUserParams;
 
 	constructor(data: Transaction | TransactionShort | null) {
 		if (data !== null) {
@@ -161,12 +168,13 @@ export class TransactionItemFull {
 				);
 			}
 
+			this.widgetUserParams = transactionData.widgetUserParams;
 			this.comment = transactionData.comment ?? '';
 			this.paymentOrderId = transactionData.paymentOrderId ?? '';
 			this.transferOrderId = data.transferOrder?.orderId ?? '';
 			this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
 			this.transferOrderHash = data.transferOrder?.transferHash ?? '';
-			this.screeningAnswer = data?.screeningAnswer ?? '';
+			this.screeningAnswer = <ScreeningAnswer>data?.screeningAnswer ?? undefined;
 			this.screeningRiskscore = data?.screeningRiskscore ?? 0;
 			this.screeningStatus = data?.screeningStatus ?? '';
 			this.screeningData = JSON.parse(data?.screeningData ?? '{}');

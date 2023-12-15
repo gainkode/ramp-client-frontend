@@ -96,6 +96,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   transactionStatusName = '';
 	notPaidStatuses = [TransactionStatus.Completed, TransactionStatus.Paid, TransactionStatus.Exchanged, TransactionStatus.Exchanging, TransactionStatus.TransferBenchmarkWaiting];
 	exchangeStatuses = [TransactionStatus.Paid];
+  notPaidStatus = false;
+  allowExchangetatus = false;
+  notDeclinedStatus = false;
+  isTransactionNotDepositOrWithdrawal = false;
   kycStatus = '';
   accountStatus = '';
   showTransferHash = false;
@@ -128,7 +132,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	screeningStatus: [undefined],
   	benchmarkTransferHash: [undefined],
   	comment: [undefined],
-  	transactionType: [undefined]
+  	transactionType: [undefined],
+		merchantFeePercent: [undefined],
   });
 
   widgetOptions$: Observable<CommonTargetValue[]>;
@@ -230,6 +235,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.data = val;
   	this.transactionId = val?.id ?? '';
   	this.transactionType = val?.type ?? TransactionType.System;
+  	this.isTransactionNotDepositOrWithdrawal = this.transactionType !== this.TRANSACTION_TYPE.Deposit && this.transactionType !== this.TRANSACTION_TYPE.Withdrawal;
+  	
   	this.transferOrderBlockchainLink = val?.transferOrderBlockchainLink ?? '';
   	this.benchmarkTransferOrderBlockchainLink = val?.benchmarkTransferOrderBlockchainLink ?? '';
   	this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
@@ -251,6 +258,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('screeningRiskscore')?.setValue(this.data.screeningRiskscore);
   		this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
   		this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
+			this.form.get('merchantFeePercent')?.setValue(this.data.widgetUserParams.merchantFeePercent);
   		if(this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
   			this.scriningData = this.data?.screeningData?.paymentChecks[0];
   		}
@@ -259,7 +267,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		if (this.transactionStatuses.length > 0) {
   			this.transactionStatusName = this.transactionStatuses.find(x => x.id === this.transactionStatus)?.name ?? '';
   		}
-
   		this.showTransferHash = (this.data.transferOrderId !== '');
   		this.showBenchmarkTransferHash = (this.data.benchmarkTransferOrderId !== '');
   		this.kycStatus = TransactionKycStatusList.find(x => x.id === this.data?.kycStatusValue)?.name ?? '';
@@ -315,6 +322,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			hash: this.form.get('benchmarkTransferHash')?.value ?? ''
   		},
   		type: this.form.get('transactionType')?.value ?? undefined,
+  		widgetUserParamsChanges: {
+  			merchantFeePercent: this.form.get('merchantFeePercent')?.value ?? ''
+  		},
   		comment: this.form.get('comment')?.value ?? '',
   		flag: this.flag
   	};
@@ -440,7 +450,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.fastStatusChange(TransactionStatus.Paid, content);
   }
 
-	onExchange(content: any): void {
+  onExchange(content: any): void {
   	this.fastStatusChange(TransactionStatus.Exchanging, content);
   }
 

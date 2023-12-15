@@ -133,3 +133,25 @@
     }
 }
 
+.screening-status-wrapper {
+    position: relative;
+    .btn {
+        position: absolute;
+        top: -7px;
+        right: 0;
+        margin: 0;
+        background: white;
+        font-size: 14px;
+        border: none;
+        border-bottom: 1px solid;
+        border-radius: 0;
+        padding-bottom: 0;
+    }
+
+    .btn-success {
+        color: #28a745;
+    }
+    .btn-danger {
+        color: #dc3545;
+    }
+}
