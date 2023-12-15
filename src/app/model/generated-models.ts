@@ -173,6 +173,16 @@ export type BalanceStats = {
   volume?: Maybe<TransactionStatsVolume>;
 };
 
+export type BankCategory = {
+  __typename?: 'BankCategory';
+  countryCode?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  id?: Maybe<WireTransferPaymentCategory>;
+  instrument?: Maybe<Array<Maybe<PaymentInstrument>>>;
+  title?: Maybe<Scalars['String']['output']>;
+  transactionSource?: Maybe<Array<Maybe<TransactionSource>>>;
+  transactionType?: Maybe<Array<Maybe<TransactionType>>>;
+};
+
 export type BankDetails = {
   __typename?: 'BankDetails';
   bankDetailsId: Scalars['ID']['output'];
@@ -3729,6 +3739,9 @@ export type Transaction = {
   manuallyEditedFee?: Maybe<Scalars['Boolean']['output']>;
   manuallyEditedKycStatus?: Maybe<Scalars['Boolean']['output']>;
   manuallyEditedStatus?: Maybe<Scalars['Boolean']['output']>;
+  merchantFeeTransferOrder?: Maybe<TransferOrder>;
+  merchantFeeTransferOrderBlockchainLink?: Maybe<Scalars['String']['output']>;
+  merchantFeeTransferOrderId?: Maybe<Scalars['String']['output']>;
   paymentOrder?: Maybe<PaymentOrder>;
   paymentOrderId?: Maybe<Scalars['String']['output']>;
   paymentProvider?: Maybe<Scalars['String']['output']>;
@@ -3976,7 +3989,7 @@ export type TransactionShort = {
   widget?: Maybe<Scalars['String']['output']>;
   widgetCode?: Maybe<Scalars['String']['output']>;
   widgetId?: Maybe<Scalars['String']['output']>;
-  widgetUserParams?: Maybe<Scalars['String']['output']>;
+  widgetUserParams?: Maybe<WidgetUserParams>;
   widgetUserParamsId?: Maybe<Scalars['String']['output']>;
 };
 

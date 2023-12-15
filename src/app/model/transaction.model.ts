@@ -177,7 +177,7 @@ export class TransactionItemFull {
 			this.screeningRiskscore = data?.screeningRiskscore ?? 0;
 			this.screeningStatus = data?.screeningStatus ?? '';
 			this.screeningData = JSON.parse(data?.screeningData ?? '{}');
-			this.widgetUserParams = JSON.parse(data?.widgetUserParams ?? null);
+			this.widgetUserParams = data?.widgetUserParams ?? null;
 			this.transferFee = data.transferOrder?.feeCurrency?.toFixed(8) ?? '';
 			this.transferOrderBlockchainLink =
         transactionData.transferOrderBlockchainLink ?? '';
