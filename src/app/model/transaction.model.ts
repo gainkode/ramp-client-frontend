@@ -103,7 +103,6 @@ export class TransactionItemFull {
 	kycTier = '';
 	widgetId = '';
 	widgetName = '';
-	widgetUserParams = {};
 	selected = false;
 	comment = '';
 	declineReason = '';
