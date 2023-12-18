@@ -19,7 +19,7 @@
         <button type="button" class="widget-list__item-row" (click)="selectBankItem(item)">
             <div class="widget-list__item-column">
               <div>
-                <img alt="Bank" [src]="item.icon">
+                <img alt="Bank" [src]="item.icon | safeurl">
               </div>
               <div class="widget-list__item-column-item">
                 <div class="widget-list__item-column-label">
