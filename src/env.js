@@ -14,7 +14,7 @@
     window.__env_data.api_server = 'https://testnet2.getcoins.com.au';
     // API WebSocket address
     // window.__env_data.ws_server = 'ws://localhost:4001';
-    window.__env_data.ws_server = 'wss://https://testnet2.getcoins.com.au';
+    window.__env_data.ws_server = 'wss://testnet2.getcoins.com.au';
     // Image hosting address
     window.__env_data.image_host = './assets';
     window.__env_data.widget_secret = '15b78abfe32712f21f0f6eb43d1b5732691bec08';
