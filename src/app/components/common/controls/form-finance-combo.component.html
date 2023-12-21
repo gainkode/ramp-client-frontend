@@ -15,7 +15,7 @@
             <mat-select-trigger>
                 <div class="__form-finance-combo-item">
                     <img *ngIf="!selectedComboValue?.fiat" class="__form-finance-combo-item-img"
-                        [src]="selectedComboValue?.img">
+                        [src]="selectedComboValue?.img + '.svg'">
                     <div *ngIf="selectedComboValue?.fiat" class="__form-finance-combo-item-img"></div>
                     <span class="__form-finance-combo-item-text">
                         {{selectedComboValue?.display}}
@@ -24,7 +24,7 @@
             </mat-select-trigger>
             <mat-option *ngFor="let item of comboList" [value]="item.symbol" style="height: 32px;">
                 <div class="__form-finance-combo-item">
-                    <img *ngIf="!item.fiat" class="__form-finance-combo-item-img" [src]="item.img">
+                    <img *ngIf="!item.fiat" class="__form-finance-combo-item-img" [src]="item.img + '.svg'">
                     <span class="__form-finance-combo-item-text">
                         {{item.display}}
                     </span>

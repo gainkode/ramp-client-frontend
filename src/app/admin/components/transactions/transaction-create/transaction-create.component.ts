@@ -56,9 +56,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   submitted = false;
   saveInProgress = false;
   errorMessage = '';
-  TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   data: TransactionItemFull | undefined = undefined;
-  removable = false;
   transactionType: TransactionType = TransactionType.System;
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];
@@ -80,10 +78,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   filteredProviders: PaymentProviderView[] = [];
   providers: PaymentProviderView[] = [];
   showPaymentProvider = false;
-
   costSchemes: CostScheme[] = [];
-
-  showFullAmount = true;
 
   form = this.formBuilder.group({
   	currencyToSpend: [null, { validators: [Validators.required], updateOn: 'change' }],

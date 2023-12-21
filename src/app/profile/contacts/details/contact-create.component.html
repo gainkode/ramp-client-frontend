@@ -30,7 +30,7 @@
                             placeholder="Select coin from your list">
                             <mat-select-trigger>
                                 <div class="__form-finance-combo-item">
-                                    <img class="__form-combo-item-img" [src]="selectedCurrency?.img">
+                                    <img class="__form-combo-item-img" [src]="selectedCurrency?.img + '.svg'">
                                     <span class="__form-finance-combo-item-text">
                                         {{selectedCurrency?.display}}
                                     </span>
@@ -38,7 +38,7 @@
                             </mat-select-trigger>
                             <mat-option *ngFor="let item of cryptoList" [value]="item.symbol" style="height: 32px;">
                                 <div class="__form-finance-combo-item">
-                                    <img class="__form-combo-item-img" [src]="item.img">
+                                    <img class="__form-combo-item-img" [src]="item.img + '.svg'">
                                     <span class="__form-finance-combo-item-text">
                                         {{item.display}}
                                     </span>

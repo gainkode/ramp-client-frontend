@@ -214,9 +214,9 @@ export class CurrencyView {
 		this.validateAsSymbol = data.validateAsSymbol as string | null;
 		this.fiat = data.fiat as boolean;
 		if (!this.fiat) {
-			this.img = `assets/svg-crypto/${getCryptoSymbol(this.code).toLowerCase()}.svg`;
+			this.img = `assets/svg-crypto/${getCryptoSymbol(this.code).toLowerCase()}`;
 		} else {
-			this.img = `assets/svg-fiat/${getCryptoSymbol(this.code).toLowerCase()}.svg`;
+			this.img = `assets/svg-fiat/${getCryptoSymbol(this.code).toLowerCase()}`;
 		}
 	}
 }

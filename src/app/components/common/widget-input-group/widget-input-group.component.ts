@@ -2,6 +2,7 @@ import { Component, Input, SkipSelf } from '@angular/core';
 import { AbstractControl, ControlContainer, FormControl } from '@angular/forms';
 import { CurrencyView } from 'model/payment.model';
 import { Observable, map, startWith } from 'rxjs';
+import { ThemeService } from 'services/theme-service';
 
 @Component({
 	selector: 'app-widget-input-group',
@@ -74,7 +75,7 @@ export class WidgetInputGroupComponent {
   searchCurrencyControl = new FormControl();
   filteredItems: Observable<CurrencyView[]>;
 
-  constructor() {
+  constructor(public themeService: ThemeService) {
 
   	this.filteredItems = this.searchCurrencyControl.valueChanges.pipe(
   		startWith(''),

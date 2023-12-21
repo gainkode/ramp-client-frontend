@@ -33,7 +33,7 @@
                                     </mat-select-trigger>
                                     <mat-option *ngFor="let item of cryptoList" [value]="item.symbol" style="height: 32px;">
                                         <div class="__tool-bar-image-combo-item">
-                                            <img class="__tool-bar-image-combo-item-img" [src]="item.img">
+                                            <img class="__tool-bar-image-combo-item-img" [src]="item.img + '.svg'">
                                             <span class="__tool-bar-image-combo-item-text">
                                                 {{item.display}}
                                             </span>

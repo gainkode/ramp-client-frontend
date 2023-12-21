@@ -32,9 +32,9 @@
         </div>
 
          <!-- Amounts -->
-         <div *ngIf="transactionType != 'Deposit' && transactionType != 'Withdrawal'" class="form-group">
+         <div *ngIf="transactionType !== 'Deposit' && transactionType !== 'Withdrawal'" class="form-group">
           <div class="__tool-bar-double-sided-data-box-top">
-            <div *ngIf="showFullAmount" class="__tool-bar-block">
+            <div class="__tool-bar-block">
                 <div class="__tool-bar-label">
                   Full amount
                 </div>
@@ -144,7 +144,7 @@
           </ng-select>
         </div>
         <!-- Payment Providers -->
-        <div *ngIf="showPaymentProvider===true && form.controls.instrument?.value!==PAYMENT_INSTRUMENT.WireTransfer" class="form-group">
+        <div *ngIf="showPaymentProvider && form.controls.instrument?.value!==PAYMENT_INSTRUMENT.WireTransfer" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Payment providers
           </label>

@@ -16,7 +16,7 @@
             <div class="widget-input__item-select-img">
                 <img 
                     [hidden]="!selectedComboValue?.img" 
-                    [src]="selectedComboValue?.img" 
+                    [src]="selectedComboValue?.img + '.svg'" 
                     alt="Currency icon">
             </div>
             <span class="widget-input__item-select-label">{{selectedComboValue?.display}}</span>
@@ -33,7 +33,7 @@
 <div class="widget-list__container" *ngIf="showCurrencyList">
     <div class="widget-list__header">
       <div class="widget-list__header-search">
-          <mat-form-field appearance="outline" class="border-red">
+          <mat-form-field appearance="outline">
             <mat-label>{{'widget-input-group.search-placeholder' | transloco}}</mat-label>
             <input matInput [formControl]="searchCurrencyControl">
           </mat-form-field>
@@ -48,7 +48,7 @@
             <button type="button" class="widget-list__item-row" (click)="onCurrencySelect(item.symbol)">
                 <div class="widget-list__item-column">
                   <div>
-                    <img [class.crypto-img]="!item.fiat" alt="Currency" [src]="item.img">
+                    <img [class.crypto-img]="!item.fiat" alt="Currency" [src]="item.img + ((themeService.theme$ | async) === 'dark' ? '-light.svg' : '.svg')">
                   </div>
                   <div class="widget-list__item-column-item">
                     <div class="widget-list__item-column-label">
