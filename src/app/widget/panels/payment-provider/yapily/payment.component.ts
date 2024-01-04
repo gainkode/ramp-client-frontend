@@ -51,10 +51,10 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   	this.pSubscriptions.unsubscribe();
   }
 
-	isLoadingfunc(value: boolean) {
-		this.isLoading = value;
-		this.cdr.markForCheck();
-	}
+  isLoadingfunc(value: boolean) {
+  	this.isLoading = value;
+  	this.cdr.markForCheck();
+  }
 
   onInstructionsConfirm(): void {
   	this.startPaymentStatusChangedSubscriptions();
@@ -96,27 +96,27 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   				console.log(data.paymentStatusChanged.status, YapilyAuthorizationRequestStatus.AwaitingAuthorization)
   				if (data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.AwaitingAuthorization) {
   					this.isLoading = true;
-						this.cdr.markForCheck();
+  					this.cdr.markForCheck();
   				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Authorized) {
   					this.isLoading = false;
 
-						if (this.newWindow) {
-							this.newWindow.close();
-						}
+  					if (this.newWindow) {
+  						this.newWindow.close();
+  					}
   					
   					this.isPaymentSuccess = true;
-						this.cdr.markForCheck();
+  					this.cdr.markForCheck();
   					this.pager.nextStage('payment_completed', 'Completed', 3);
   				} else if(data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.Failed) {
   					this.isPaymentSuccess = false;
-						this.isLoading = false;
+  					this.isLoading = false;
 
-						if (this.newWindow) {
-							this.newWindow.close();
-						}
+  					if (this.newWindow) {
+  						this.newWindow.close();
+  					}
 						
   					this.pager.nextStage('payment_completed', 'Completed', 3);
-						this.cdr.markForCheck();
+  					this.cdr.markForCheck();
   				}
   			},
   			error: (error) => console.log(error),
@@ -160,32 +160,22 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   			this.summary.providerView.instrument, 
   			this.summary.providerView.name,
   			paymentBankInput
-  		).pipe(
-  			switchMap(({ data }) => {
-  				const codec = new HttpUrlEncodingCodec();
-  				const order = data.preauth as PaymentPreauthResultShort;
-  				const baseUrl = `${EnvService.api_server}/rest/yapily/qrcode-callback?`;
-  				const yapilyUrl = codec.encodeValue(order.openBankingObject.yapily.url);
-  				const yapilyQrCodeUrl = baseUrl + 'authorisationUrl=' + yapilyUrl + '&transactionId=' + transactionId;
-	
-  				return this.http.get('https://tinyurl.com/api-create.php?url=' + encodeURIComponent(yapilyQrCodeUrl), { responseType: 'text' })
-  					.pipe(map(res => ({
-  						yapilyQrCodeUrl: res || yapilyQrCodeUrl,
+  		).pipe(finalize(() => this.isLoading = false))
+  			.subscribe({
+  				next: ({data}) => {
+  					const order = data.preauth as PaymentPreauthResultShort;
+  					this.yapilyRedirectObject = {
+  						yapilyQrCodeUrl: order.openBankingObject.yapily.qrCodeUrl,
   						yapilyAuthUrl: order.openBankingObject.yapily.url,
   						bankName: this.bankName,
   						transactionId
-  					})));
-  			}),
-  			finalize(() => this.isLoading = false)
-  		).subscribe({
-  			next: (redirectObject) => {
-  				this.yapilyRedirectObject = redirectObject as YapilyRedirectModel;
-  			},
-  			error: (error) => {
-  				console.error(error);
-  			},
-  			complete: () => this.cdr.markForCheck()
-  		}));
+  					} as YapilyRedirectModel;
+  				},
+  				error: (error) => {
+  					console.error(error);
+  				},
+  				complete: () => this.cdr.markForCheck()
+  			}));
   }
 
   stageBack(): void {
