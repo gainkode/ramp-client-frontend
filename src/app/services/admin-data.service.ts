@@ -756,6 +756,23 @@ const GET_TRANSACTIONS = gql`
         userTier { name }
         transactionId
         transferOrder {
+          amount
+          executingResult
+          feeCurrency
+          orderId
+          originalOrderId
+          publishingResult
+          status
+          subStatus
+          transferDetails
+          transferHash
+          screeningAnswer
+          screeningRiskscore
+          screeningStatus
+          screeningData
+        }
+        merchantTransferOrder {
+          amount
           executingResult
           feeCurrency
           orderId

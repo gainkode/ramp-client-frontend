@@ -69,6 +69,7 @@ export class TransactionItemFull {
 	currencyFiat = '';
 	amountToSpend = 0;
 	amountToReceive = 0;
+	merchantAmountToReceive = 0;
 	transferOrderId = '';
 	transferOriginalOrderId = '';
 	paymentOrderId = '';
@@ -195,7 +196,8 @@ export class TransactionItemFull {
 			this.fees = paymentData.fees;
 			this.sender = paymentData.sender.title;
 			this.recipient = paymentData.recipient.title;
-			this.amountToReceive = paymentData.amountToReceive;
+			this.amountToReceive = data.transferOrder.amount ?? paymentData.amountToReceive;
+      this.merchantAmountToReceive = data.merchantTransferOrder.amount ?? 0;
 			this.rate = data.rate ?? data.initialRate;
 
 			if (data.type === TransactionType.Deposit) {

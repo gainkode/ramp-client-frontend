@@ -3501,6 +3501,10 @@ export type Transaction = {
   manuallyEditedFee?: Maybe<Scalars['Boolean']['output']>;
   manuallyEditedKycStatus?: Maybe<Scalars['Boolean']['output']>;
   manuallyEditedStatus?: Maybe<Scalars['Boolean']['output']>;
+  merchantFeeTransferOrder?: Maybe<TransferOrder>;
+  merchantFeeTransferOrderBlockchainLink?: Maybe<Scalars['String']['output']>;
+  merchantFeeTransferOrderId?: Maybe<Scalars['String']['output']>;
+  merchantTransferOrder?: Maybe<TransferOrder>;
   paymentOrder?: Maybe<PaymentOrder>;
   paymentOrderId?: Maybe<Scalars['String']['output']>;
   paymentProvider?: Maybe<Scalars['String']['output']>;
@@ -3671,6 +3675,7 @@ export type TransactionShort = {
   kycStatus?: Maybe<TransactionKycStatus>;
   liquidityOrder?: Maybe<LiquidityExchangeOrder>;
   liquidityProvider?: Maybe<LiquidityProvider>;
+  merchantTransferOrder?: Maybe<TransferOrder>;
   paymentOrder?: Maybe<PaymentOrder>;
   paymentProvider?: Maybe<Scalars['String']['output']>;
   rate?: Maybe<Scalars['Float']['output']>;
