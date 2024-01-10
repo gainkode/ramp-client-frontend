@@ -152,13 +152,36 @@
           <div class="row">
             <div class="col-sm-12">
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                Amount To Receive
+                End-user Amount
                 <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
               </label>
               <div class="row">
                 <div class="col-sm-7">
                   <p class="pd-t-10">
                     {{data?.amountToReceive}}
+                  </p>
+                </div>
+                <div class="col-sm-5 mg-t-10 mg-sm-t-0">
+                  <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false
+                    bindLabel="display" bindValue="symbol" formControlName="currencyToReceive" required>
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="data?.merchantAmountToReceive" class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                Merchant Fee Amount
+                <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+              </label>
+              <div class="row">
+                <div class="col-sm-7">
+                  <p class="pd-t-10">
+                    {{data?.merchantAmountToReceive}}
                   </p>
                 </div>
                 <div class="col-sm-5 mg-t-10 mg-sm-t-0">
