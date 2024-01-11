@@ -6,18 +6,6 @@
     <div class="card">
       <div class="card-body">
         <div class="table-responsive">
-          <!-- <div class="table-button-container">
-            <button (click)="refresh()" class="btn btn-primary me-2">
-              Refresh
-            </button>
-            <button (click)="export(export_content)" class="btn btn-outline-secondary">
-              Export
-            </button>
-            <button (click)="unbenchmark(settle_content)" style="float: right;" class="btn btn-danger me-2"
-              [disabled]="!selectedForUnbenchmark">
-              Settle
-            </button>
-          </div> -->
           <div style="overflow: hidden;">
             <div class="table-button-container">
               <button type="button" (click)="refresh()" class="btn btn-primary me-2">
@@ -58,34 +46,34 @@
               <ng-container matColumnDef="details" sticky>
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListSelectorColumnStyle">
-                  <input style="margin-right: 4px;" [checked]="element.selected" type="checkbox"
+                  <input class="mg-r-5-f" [checked]="element.selected" type="checkbox"
                     (change)="onTransactionSelected(element)">
-                  <button mat-icon-button class="row-button" (click)="showDetails(element, details_content, 'info')"
+                  <button type="button" mat-icon-button class="row-button" (click)="showDetails(element, details_content, 'info')"
                     [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedTransaction"
                     matTooltip="Transaction details" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">wysiwyg</i>
+                    <i class="material-icons tx-20">wysiwyg</i>
                   </button>
-                  <button *ngIf="element.screeningAnswer" mat-icon-button class="row-button" (click)="showDetails(element, details_content, 'infoScreening')"
+                  <button type="button" *ngIf="element?.screeningAnswer === 'RED' || element?.screeningAnswer === 'GREEN'" mat-icon-button class="row-button" (click)="showDetails(element, details_content, 'infoScreening')"
                     [attr.aria-label]="'Transaction screening details'" [attr.aria-pressed]="!!selectedTransaction"
                     matTooltip="Transaction screening details" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;" [ngStyle]="{'color': element.screeningAnswer == 'RED' ? '#c90000' : '#6af16a'}">fact_check</i>
+                    <i class="material-icons tx-20" [ngStyle]="{'color': element.screeningAnswer === 'RED' ? '#c90000' : '#6af16a'}">fact_check</i>
                   </button>
-                  <button *ngIf="element.vaultIds.length>0" mat-icon-button class="row-button"
+                  <button type="button" *ngIf="element.vaultIds.length > 0" mat-icon-button class="row-button"
                     (click)="showWallets(element.id)" [attr.aria-label]="'Transaction wallet'"
                     [matTooltip]="'Transaction wallet'" matTooltipClass="info-tooltip">
                     <i class="material-icons tx-20">
                       account_balance_wallet
                     </i>
                   </button>
-                  <button *ngIf="element.paymentOrderPreauth == true" mat-icon-button class="row-button" [attr.aria-label]="'PreAuth'" 
+                  <button type="button" *ngIf="element.paymentOrderPreauth" mat-icon-button class="row-button" [attr.aria-label]="'PreAuth'" 
                   [matTooltip]="'PreAuth'" matTooltipClass="info-tooltip">
                     <i class="material-icons tx-20">
                       update
                     </i>
                   </button>
-                  <button *ngIf="element.flag == true" mat-icon-button class="row-button" [attr.aria-label]="'Flaged Transaction'" 
+                  <button type="button" *ngIf="element.flag" mat-icon-button class="row-button" [attr.aria-label]="'Flaged Transaction'" 
                   [matTooltip]="'Flaged Transaction'" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="color:#c90000; font-size: 20px;">
+                    <i class="material-icons tx-20" style="color:#c90000;">
                       flag
                     </i>
                   </button>
