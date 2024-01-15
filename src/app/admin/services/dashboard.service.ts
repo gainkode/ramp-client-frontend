@@ -593,33 +593,33 @@ export class DashboardService implements OnDestroy {
 				rows: [
 					{
 						source: 'Deposit',
-						volume: this.getFeeValue(rawData.deposits?.fee?.volume ?? null),
-						count: rawData.deposits?.fee?.count ?? null
+						volume: this.getFeeValue(rawData.deposits?.fee?.volume ?? 0),
+						count: rawData.deposits?.fee?.count ?? 0
 					},
 					{
 						source: 'Withdrawal',
-						volume: this.getFeeValue(rawData.withdrawals?.fee?.volume ?? null),
-						count: rawData.withdrawals?.fee?.count ?? null
+						volume: this.getFeeValue(rawData.withdrawals?.fee?.volume ?? 0),
+						count: rawData.withdrawals?.fee?.count ?? 0
 					},
 					{
 						source: 'Buy',
-						volume: this.getFeeValue(rawData.buys?.fee?.volume ?? null),
-						count: rawData.buys?.fee?.count ?? null
+						volume: this.getFeeValue(rawData.buys?.fee?.volume ?? 0),
+						count: rawData.buys?.fee?.count ?? 0
 					},
 					{
 						source: 'Sell',
-						volume: this.getFeeValue(rawData.sells?.fee?.volume ?? null),
-						count: rawData.sells?.fee?.count ?? null
+						volume: this.getFeeValue(rawData.sells?.fee?.volume ?? 0),
+						count: rawData.sells?.fee?.count ?? 0
 					},
 					{
 						source: 'Send',
-						volume: this.getFeeValue(rawData.transfers?.fee?.volume ?? null),
-						count: rawData.transfers?.fee?.count ?? null
+						volume: this.getFeeValue(rawData.transfers?.fee?.volume ?? 0),
+						count: rawData.transfers?.fee?.count ?? 0
 					},
 					{
 						source: 'Receive',
-						volume: this.getFeeValue(rawData.receives?.fee?.volume ?? null),
-						count: rawData.receives?.fee?.count ?? null
+						volume: this.getFeeValue(rawData.receives?.fee?.volume ?? 0),
+						count: rawData.receives?.fee?.count ?? 0
 					}
 				]
 			};
