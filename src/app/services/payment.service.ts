@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { map, Observable } from 'rxjs';
-import { KycProvider, OpenBankingGetails, PaymentBank, PaymentBankInput, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
+import { KycProvider, OpenBankingDetails, PaymentBank, PaymentBankInput, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -70,10 +70,10 @@ query GetAppropriatePaymentProviders(
 `;
 
 const GET_OPENBANKING_DETAILS = gql`
-query GetOpenBankingGetails(
+query GetOpenBankingDetails(
   $paymentProvider: String!
 ) {
-  getOpenBankingGetails(
+  getOpenBankingDetails(
     paymentProvider: $paymentProvider
   ) {
     yapily {
@@ -766,8 +766,8 @@ export class PaymentDataService {
 		});
 	}
 
-	getOpenBankgingDetails(paymentProvider: string): Observable< { getOpenBankingGetails: OpenBankingGetails; } > {
-		return this.apollo.mutate<{ getOpenBankingGetails: OpenBankingGetails; }>({
+	getOpenBankgingDetails(paymentProvider: string): Observable< { getOpenBankingDetails: OpenBankingDetails; } > {
+		return this.apollo.mutate<{ getOpenBankingDetails: OpenBankingDetails; }>({
 			mutation: GET_OPENBANKING_DETAILS,
 			variables: {
 				paymentProvider

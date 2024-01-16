@@ -144,10 +144,10 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	const settingsCommon = this.auth.getLocalSettingsCommon();
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		this.transactionTypeOptions = this.transactionTypeOptions.filter(item => this.adminAdditionalSettings.transactionType[item.id] == true);
-  		this.liquidityProviderOptions = this.liquidityProviderOptions.filter(item => this.adminAdditionalSettings.liquidityProvider[item.id] == true);
-  		this.instrumentOptions = this.instrumentOptions.filter(item => this.adminAdditionalSettings.paymentMethods[item.id] == true);
-  		this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings.userType[item.id] == true);
+  		this.transactionTypeOptions = this.transactionTypeOptions.filter(item => this.adminAdditionalSettings?.transactionType[item.id] !== false);
+  		this.liquidityProviderOptions = this.liquidityProviderOptions.filter(item => this.adminAdditionalSettings?.liquidityProvider[item.id] !== false);
+  		this.instrumentOptions = this.instrumentOptions.filter(item => this.adminAdditionalSettings?.paymentMethods[item.id] !== false);
+  		this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings?.userType[item.id] !== false);
   	}
   }
   private initUserSearch(): void {

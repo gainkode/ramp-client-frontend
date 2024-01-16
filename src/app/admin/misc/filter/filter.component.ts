@@ -111,10 +111,13 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
     
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		this.userModeOptions = this.userModeOptions.filter(item => this.adminAdditionalSettings.userMode[item.id] == true);
-  		this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings.userType[item.id] == true);
-  		this.paymentInstrumentsOptions = this.paymentInstrumentsOptions.filter(item => this.adminAdditionalSettings.paymentMethods[item.id] == true);
-  		this.transactionTypeOptions = this.transactionTypeOptions.filter(item => this.adminAdditionalSettings.transactionType[item.id] == true);
+  		if (this.adminAdditionalSettings) {
+				this.userModeOptions = this.userModeOptions.filter(item => this.adminAdditionalSettings?.userMode[item.id] == true);
+				this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings?.userType[item.id] == true);
+				this.paymentInstrumentsOptions = this.paymentInstrumentsOptions.filter(item => this.adminAdditionalSettings?.paymentMethods[item.id] == true);
+				this.transactionTypeOptions = this.transactionTypeOptions.filter(item => this.adminAdditionalSettings?.transactionType[item.id] == true);
+			}
+			
   	}
   }
 

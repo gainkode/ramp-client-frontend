@@ -302,6 +302,7 @@ export enum CallbackType {
   ExternalAu10tixCallback = 'externalAu10tixCallback',
   ExternalCoriunderCallback = 'externalCoriunderCallback',
   ExternalFibonatixCallback = 'externalFibonatixCallback',
+  ExternalFireblocksCallback = 'externalFireblocksCallback',
   ExternalFlashfxCallback = 'externalFlashfxCallback',
   ExternalGetcoinsCallback = 'externalGetcoinsCallback',
   ExternalMonoovaCallback = 'externalMonoovaCallback',
@@ -1979,8 +1980,8 @@ export enum OAuthProvider {
   Twitter = 'twitter'
 }
 
-export type OpenBankingGetails = {
-  __typename?: 'OpenBankingGetails';
+export type OpenBankingDetails = {
+  __typename?: 'OpenBankingDetails';
   yapily?: Maybe<YapilyOpenBankingDetails>;
 };
 
@@ -2286,7 +2287,7 @@ export type Query = {
   /** Get the rate of one currency to many (using for liquidity provider functionality) */
   getOneToManyRatesMerchant?: Maybe<Array<Maybe<Rate>>>;
   /** Get banks for OpenBanking */
-  getOpenBankingGetails?: Maybe<OpenBankingGetails>;
+  getOpenBankingDetails?: Maybe<OpenBankingDetails>;
   /** Get payment providers */
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
   /** Get common settings */
@@ -2638,7 +2639,7 @@ export type QueryGetOneToManyRatesMerchantArgs = {
 };
 
 
-export type QueryGetOpenBankingGetailsArgs = {
+export type QueryGetOpenBankingDetailsArgs = {
   paymentProvider: Scalars['String']['input'];
 };
 

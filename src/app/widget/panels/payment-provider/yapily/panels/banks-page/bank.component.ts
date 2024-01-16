@@ -62,15 +62,15 @@ export class PaymentYapilyBankComponent implements OnInit, OnDestroy {
   getYapilyDetails(): void {
   	this.isYapilyBankLoading = true;
   	this.paymentService.getOpenBankgingDetails('Yapily').subscribe({
-  		next: ({ getOpenBankingGetails }) => {
+  		next: ({ getOpenBankingDetails }) => {
   			this.paymentBanks$ = this.searchCountryControl.valueChanges.pipe(
   				startWith(''),
   				map((value) =>
-  					this._filter(value, getOpenBankingGetails.yapily.banks)
+  					this._filter(value, getOpenBankingDetails.yapily.banks)
   				)
   			);
 
-  			this.bankCountries = getOpenBankingGetails.yapily.countries;
+  			this.bankCountries = getOpenBankingDetails.yapily.countries;
   		},
   		error: (errorRes) => {
   			console.log(errorRes);
