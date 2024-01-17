@@ -19,7 +19,7 @@
 
           <div class="data-table">
             <mat-table [dataSource]="schemes">
-              <!-- Details Column -->
+
               <ng-container matColumnDef="details">
                 <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-details">
                 </th>
@@ -33,10 +33,8 @@
                 </td>
               </ng-container>
 
-              <!-- Default Column -->
               <ng-container matColumnDef="default">
-                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-details">
-                </th>
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-details"></th>
                 <td *matCellDef="let element" mat-cell>
                   <div *ngIf="element.isDefault" class="row-icon">
                     <i class="material-icons tx-20">offline_bolt</i>
@@ -44,9 +42,8 @@
                 </td>
               </ng-container>
 
-              <!-- Name Column -->
               <ng-container matColumnDef="name">
-                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-name">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-name">
                   Name
                 </th>
                 <td *matCellDef="let element" mat-cell>
@@ -54,29 +51,63 @@
                 </td>
               </ng-container>
 
-              <!-- Target Column -->
               <ng-container matColumnDef="target">
-                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-target">
-                  Target
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-target">
+                  Target type
                 </th>
                 <td *matCellDef="let element" mat-cell>
                   {{element.targetName}}
                 </td>
               </ng-container>
 
-              <!-- Transaction type Column -->
-              <ng-container matColumnDef="trxType">
-                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-trx-type">
-                  Transaction type
+              <ng-container matColumnDef="targetValues">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-target">
+                  Targets
                 </th>
                 <td *matCellDef="let element" mat-cell>
-                  {{element.transactionTypeList}}
+                  <mat-chip-listbox>
+                    <mat-chip *ngFor="let address of element.targetValues" class="widget-chip">
+                      <span class="tx-13">{{address}}</span>
+                    </mat-chip>
+                  </mat-chip-listbox>
                 </td>
               </ng-container>
 
-              <!-- Payment Method Column -->
+              <ng-container matColumnDef="trxType">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-trx-type">
+                  Transaction types
+                </th>
+                <td *matCellDef="let element" mat-cell>
+                  <span class="multiple-cell" *ngFor="let type of element.trxType">{{type}} 
+                    <span class="multiple-cell-seperator">|</span> 
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="userType">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-userType">
+                  User types
+                </th>
+                <td *matCellDef="let element" mat-cell>
+                  <span class="multiple-cell" *ngFor="let type of element.userType">{{type}} 
+                    <span class="multiple-cell-seperator">|</span> 
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="userMode">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-userMode">
+                  User modes
+                </th>
+                <td *matCellDef="let element" mat-cell>
+                  <span class="multiple-cell" *ngFor="let mode of element.userMode">{{mode}} 
+                    <span class="multiple-cell-seperator">|</span> 
+                  </span>
+                </td>
+              </ng-container>
+
               <ng-container matColumnDef="instrument">
-                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-instrument">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-instrument">
                   Payment Method
                 </th>
                 <td *matCellDef="let element" mat-cell>
@@ -84,13 +115,36 @@
                 </td>
               </ng-container>
 
-              <!-- Provider Column -->
               <ng-container matColumnDef="provider">
-                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-provider">
-                  Provider
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-provider">
+                  Payment provider / cost scheme
                 </th>
                 <td *matCellDef="let element" mat-cell>
-                  {{element.providerList}}
+                  <span class="multiple-cell" *ngFor="let provider of convertToArray(element.providerList)">{{provider}} 
+                    <span class="multiple-cell-seperator">|</span> 
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="currenciesFrom">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-provider">
+                  Currencies from
+                </th>
+                <td *matCellDef="let element" mat-cell>
+                  <span class="multiple-cell" *ngFor="let currency of element.currenciesFrom">{{currency}} 
+                    <span class="multiple-cell-seperator">|</span> 
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="currenciesTo">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-provider">
+                  Currencies to
+                </th>
+                <td *matCellDef="let element" mat-cell>
+                  <span class="multiple-cell" *ngFor="let currency of element.currenciesTo">{{currency}} 
+                    <span class="multiple-cell-seperator">|</span> 
+                  </span>
                 </td>
               </ng-container>
 

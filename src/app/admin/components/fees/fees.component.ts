@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -20,9 +19,14 @@ export class AdminFeeSchemesComponent implements OnInit, OnDestroy {
 		'default',
 		'name',
 		'target',
+		'targetValues',
 		'trxType',
+		'userType',
+		'userMode',
 		'instrument',
-		'provider'
+		'provider',
+		'currenciesFrom',
+		'currenciesTo',
 	];
 	inProgress = false;
 	errorMessage = '';
@@ -38,8 +42,7 @@ export class AdminFeeSchemesComponent implements OnInit, OnDestroy {
 	constructor(
 		private modalService: NgbModal,
 		private auth: AuthService,
-		private adminService: AdminDataService,
-		private router: Router
+		private adminService: AdminDataService
 	) {
 		this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Fees);
 	}
@@ -85,6 +88,7 @@ export class AdminFeeSchemesComponent implements OnInit, OnDestroy {
 				this.inProgress = false;
 				this.schemes = list;
 				list.forEach(val => {
+					console.log(val)
 					if (val.instrument.length > 0 && val.provider.length > 0) {
 						const instrumentData = val.instrument[0];
 						const providerData = val.provider[0];
@@ -102,19 +106,18 @@ export class AdminFeeSchemesComponent implements OnInit, OnDestroy {
 
 	showDetails(scheme: FeeScheme | undefined, content: any): void {
 		this.selectedScheme = scheme;
-		if (scheme) {
-			this.detailsTitle = 'Fee scheme details';
-		} else {
-			this.detailsTitle = 'Add new fee scheme';
-		}
+		this.detailsTitle = scheme ? 'Fee scheme details' : 'Add new fee scheme';
+
 		this.detailsDialog = this.modalService.open(content, {
 			backdrop: 'static',
 			windowClass: 'modalCusSty',
 		});
 		this.subscriptions.add(
-			this.detailsDialog.closed.subscribe(val => {
-				this.loadSchemes();
-			})
+			this.detailsDialog.closed.subscribe(() => this.loadSchemes())
 		);
+	}
+
+	convertToArray(scheme: string): string[]{
+		return scheme?.split(',');
 	}
 }

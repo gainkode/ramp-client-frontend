@@ -16,38 +16,26 @@
 }
 
 .mat-column-cost-table-name {
-  flex: 0 0 18%;
-  width: 18%;
   min-width: 5em;
 }
 
 .mat-column-cost-table-target {
-  flex: 0 0 12%;
-  width: 12%;
   min-width: 5em;
 }
 
 .mat-column-cost-table-trx-type {
-  flex: 0 0 22%;
-  width: 22%;
   min-width: 5em;
 }
 
 .mat-column-cost-table-instrument {
-  flex: 0 0 22%;
-  width: 22%;
   min-width: 5em;
 }
 
 .mat-column-cost-table-provider {
-  flex: 0 0 22%;
-  width: 22%;
   min-width: 5em;
 }
 
 .mat-column-cost-table-details {
-  flex: 0 0 2%;
-  width: 2%;
   min-width: 1.5em;
 }
 
@@ -56,4 +44,16 @@
   justify-content: center;
   align-items: center;
   margin-top: 12px;
+}
+
+.multiple-cell {
+  font-size: 13px;
+
+  &:last-child .multiple-cell-seperator {
+    display: none;
+  }
+  .multiple-cell-seperator {
+    color: rgba(0, 0, 0, 0.2);
+    margin-right: 5px;
+  }
 }

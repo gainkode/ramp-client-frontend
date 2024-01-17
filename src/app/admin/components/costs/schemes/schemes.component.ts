@@ -19,10 +19,16 @@ export class AdminCostSchemesComponent implements OnInit, OnDestroy {
 		'default',
 		'name',
 		'target',
+		'targetValues',
 		'trxType',
+		'userType',
+		'userMode',
 		'instrument',
-		'provider'
+		'provider',
+		'currenciesFrom',
+		'currenciesTo',
 	];
+	
 	inProgress = false;
 	errorMessage = '';
 	detailsTitle = '';
@@ -76,19 +82,18 @@ export class AdminCostSchemesComponent implements OnInit, OnDestroy {
 
 	showDetails(scheme: CostScheme | undefined, content: any): void {
 		this.selectedScheme = scheme;
-		if (scheme) {
-			this.detailsTitle = 'Cost scheme details';
-		} else {
-			this.detailsTitle = 'Add new cost scheme';
-		}
+		this.detailsTitle = scheme ? 'Cost scheme details' : 'Add new cost scheme';
+
 		this.detailsDialog = this.modalService.open(content, {
 			backdrop: 'static',
 			windowClass: 'modalCusSty',
 		});
 		this.subscriptions.add(
-			this.detailsDialog.closed.subscribe(val => {
-				this.loadSchemes();
-			})
+			this.detailsDialog.closed.subscribe(() => this.loadSchemes())
 		);
+	}
+
+	convertToArray(scheme: string): string[]{
+		return scheme?.split(',');
 	}
 }
