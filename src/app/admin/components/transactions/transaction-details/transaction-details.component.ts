@@ -94,8 +94,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   currentRate = 0;
   transactionStatus: TransactionStatus | undefined = undefined;
   transactionStatusName = '';
-	notPaidStatuses = [TransactionStatus.Completed, TransactionStatus.Paid, TransactionStatus.Exchanged, TransactionStatus.Exchanging, TransactionStatus.TransferBenchmarkWaiting];
-	exchangeStatuses = [TransactionStatus.Paid];
+  notPaidStatuses = [TransactionStatus.Completed, TransactionStatus.Paid, TransactionStatus.Exchanged, TransactionStatus.Exchanging, TransactionStatus.TransferBenchmarkWaiting];
+  exchangeStatuses = [TransactionStatus.Paid];
   notPaidStatus = false;
   allowExchangetatus = false;
   notDeclinedStatus = false;
@@ -133,7 +133,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	benchmarkTransferHash: [undefined],
   	comment: [undefined],
   	transactionType: [undefined],
-		merchantFeePercent: [undefined],
+  	merchantFeePercent: [undefined],
   });
 
   widgetOptions$: Observable<CommonTargetValue[]>;
@@ -258,7 +258,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('screeningRiskscore')?.setValue(this.data.screeningRiskscore);
   		this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
   		this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
-			this.form.get('merchantFeePercent')?.setValue(this.data.widgetUserParams.merchantFeePercent);
+  		this.form.get('merchantFeePercent')?.setValue(this.data.widgetUserParams.merchantFeePercent);
   		if(this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
   			this.scriningData = this.data?.screeningData?.paymentChecks[0];
   		}
@@ -302,6 +302,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	if (currentRateValue !== undefined) {
   		currentRate = parseFloat(currentRateValue);
   	}
+  	let widgetUserParamsChanges = undefined;
+  	if (this.form.get('merchantFeePercent')?.value) {
+  		widgetUserParamsChanges = {
+  			merchantFeePercent: this.form.get('merchantFeePercent')?.value ?? ''
+  		};
+  	}
   	const transactionToUpdate: TransactionUpdateInput = {
   		destination: this.form.get('address')?.value,
   		currencyToSpend: this.form.get('currencyToSpend')?.value,
@@ -322,9 +328,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			hash: this.form.get('benchmarkTransferHash')?.value ?? ''
   		},
   		type: this.form.get('transactionType')?.value ?? undefined,
-  		widgetUserParamsChanges: {
-  			merchantFeePercent: this.form.get('merchantFeePercent')?.value ?? ''
-  		},
+  		widgetUserParamsChanges,
   		comment: this.form.get('comment')?.value ?? '',
   		flag: this.flag
   	};
@@ -541,7 +545,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onChangeTransactionStatusConfirm(restartTransaction: number): void {
-		let continueCurrentChange = true;
+  	let continueCurrentChange = true;
   	this.restartTransaction = (restartTransaction === 1);
   	if (this.statusDialog) {
   		this.statusDialog.close('');
@@ -549,7 +553,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   	if ((!this.data.paymentOrderId || this.data.paymentOrderId == '') && !this.originalOrderIdChanged) {
   		if(this.transactionToUpdate.status == TransactionStatus.Paid) {
-				continueCurrentChange = false;
+  			continueCurrentChange = false;
   			this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
   				backdrop: 'static',
   				windowClass: 'modalCusSty',
@@ -557,16 +561,16 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		}
   	}
 		
-		if(continueCurrentChange){
-			if(this.amountChanged) {
-				this.amountDialog = this.modalService.open(this.amountDialogContent, {
-					backdrop: 'static',
-					windowClass: 'modalCusSty',
-				});
-			} else {
-				this.updateTransaction();
-			}
-		}
+  	if(continueCurrentChange){
+  		if(this.amountChanged) {
+  			this.amountDialog = this.modalService.open(this.amountDialogContent, {
+  				backdrop: 'static',
+  				windowClass: 'modalCusSty',
+  			});
+  		} else {
+  			this.updateTransaction();
+  		}
+  	}
   }
 
   onChangeTransactionAmountConfirm(recalcTransaction: number): void {
