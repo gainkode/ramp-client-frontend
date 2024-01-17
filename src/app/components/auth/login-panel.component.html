@@ -34,9 +34,9 @@
                 login
             </button>
         </div>
-        <div *ngIf="!wizardButtons" class="__form-separator"></div>
-        <div *ngIf="!wizardButtons" class="__auth-buttons-wizard-area">
-            <a href="/{{userTypeSection}}/auth/restore">Forgot your password?</a>
+        <div class="__form-separator"></div>
+        <div class="__auth-buttons-wizard-area">
+          <span class="fake_link" (click)="openForgotPasswordPage()">Forgot your password?</span>
         </div>
     </form>
     <!-- <div *ngIf="socialButtons">

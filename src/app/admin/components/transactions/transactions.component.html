@@ -46,23 +46,24 @@
               <ng-container matColumnDef="details" sticky>
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListSelectorColumnStyle">
-                  <input class="me-2" [checked]="element.selected" type="checkbox"
+                    <input class="me-2" [checked]="element.selected" type="checkbox"
                     (change)="onTransactionSelected(element)">
-                  <button type="button" mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
+                    <button type="button" mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
                     [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedTransaction"
                     matTooltip="Transaction details" matTooltipClass="info-tooltip">
                     <i class="material-icons tx-20">wysiwyg</i>
                   </button>
-                    <button type="button" mat-icon-button class="row-button"
+
+                  <button type="button" mat-icon-button class="row-button"
                     [routerLink]="'/admin/transaction-lifeline'"
                     [queryParams]="{transactionId: element.id}"
                     matTooltip="Transaction lifeline" matTooltipClass="info-tooltip">
                     <i class="material-icons tx-20">timeline</i>
                   </button>
-                  <button type="button" *ngIf="element.screeningAnswer" mat-icon-button class="row-button" (click)="showDetails(element, details_content, true)"
+                  <button type="button" *ngIf="element?.screeningAnswer === 'RED' || element?.screeningAnswer === 'GREEN'" mat-icon-button class="row-button" (click)="showDetails(element, details_content, true)"
                     [attr.aria-label]="'Transaction screening details'" [attr.aria-pressed]="!!selectedTransaction"
                     matTooltip="Transaction screening details" matTooltipClass="info-tooltip">
-                    <i class="material-icons tx-20" [ngStyle]="{'color': element.screeningAnswer == 'RED' ? '#c90000' : '#6af16a'}">fact_check</i>
+                    <i class="material-icons tx-20" [ngStyle]="{'color': element.screeningAnswer === 'RED' ? '#c90000' : '#6af16a'}">fact_check</i>
                   </button>
                   <button type="button" *ngIf="element.vaultIds.length > 0" mat-icon-button class="row-button"
                     (click)="showWallets(element.id)" [attr.aria-label]="'Transaction wallet'"
@@ -79,9 +80,9 @@
                   </button>
                   <button type="button" *ngIf="element.flag" mat-icon-button class="row-button" [attr.aria-label]="'Flaged Transaction'" 
                   [matTooltip]="'Flaged Transaction'" matTooltipClass="info-tooltip">
-                    <i class="material-icons tx-20 color_brown">
+                  <i class="material-icons tx-20 color_brown">
                       flag
-                    </i>
+                  </i>
                   </button>
                 </td>
               </ng-container>

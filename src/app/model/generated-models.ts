@@ -3743,6 +3743,7 @@ export type Transaction = {
   merchantFeeTransferOrder?: Maybe<TransferOrder>;
   merchantFeeTransferOrderBlockchainLink?: Maybe<Scalars['String']['output']>;
   merchantFeeTransferOrderId?: Maybe<Scalars['String']['output']>;
+  merchantTransferOrder?: Maybe<TransferOrder>;
   paymentOrder?: Maybe<PaymentOrder>;
   paymentOrderId?: Maybe<Scalars['String']['output']>;
   paymentProvider?: Maybe<Scalars['String']['output']>;
@@ -3956,6 +3957,7 @@ export type TransactionShort = {
   lifelineId?: Maybe<Scalars['String']['output']>;
   liquidityOrder?: Maybe<LiquidityExchangeOrder>;
   liquidityProvider?: Maybe<LiquidityProvider>;
+  merchantTransferOrder?: Maybe<TransferOrder>;
   paymentOrder?: Maybe<PaymentOrder>;
   paymentProvider?: Maybe<Scalars['String']['output']>;
   rate?: Maybe<Scalars['Float']['output']>;

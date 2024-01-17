@@ -188,6 +188,10 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     	localStorage.setItem('recaptchaId', event);
     }
 
+    openForgotPasswordPage(): void {
+      window.open(`/${this.userTypeSection}/auth/restore`);
+    }
+
     private loadAccountData(): void {
     
     	const meQuery$ = this.profileService.getProfileData().valueChanges.pipe(take(1));

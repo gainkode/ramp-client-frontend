@@ -53,6 +53,7 @@ export class TransactionItemFull {
 	code = '';
 	created = '';
 	executed = '';
+	exchanged = '';
 	updated = '';
 	accountId = '';
 	accountName = '';
@@ -69,6 +70,7 @@ export class TransactionItemFull {
 	currencyFiat = '';
 	amountToSpend = 0;
 	amountToReceive = 0;
+	merchantAmountToReceive = 0;
 	transferOrderId = '';
 	transferOriginalOrderId = '';
 	paymentOrderId = '';
@@ -131,6 +133,16 @@ export class TransactionItemFull {
 				data.updated,
 				'dd-MM-YYYY HH:mm:ss:SSS'
 			) as string;
+
+			if (data.liquidityOrder?.executingResult) {
+				const exchangeExecuteData = JSON.parse(data.liquidityOrder.executingResult);
+				if (exchangeExecuteData?.closetm) {
+					this.updated = datepipe.transform(
+						exchangeExecuteData.closetm,
+						'dd-MM-YYYY HH:mm:ss'
+					) as string;
+				}
+			}
 			this.accountId = data.userId ?? '';
 			this.accountStatus = data.accountStatus ?? '';
 			this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
@@ -166,7 +178,6 @@ export class TransactionItemFull {
 					data.instrumentDetails ?? '{}'
 				);
 			}
-
 			this.widgetUserParams = transactionData.widgetUserParams;
 			this.comment = transactionData.comment ?? '';
 			this.paymentOrderId = transactionData.paymentOrderId ?? '';
@@ -194,11 +205,11 @@ export class TransactionItemFull {
 			this.currencyFiat = paymentData.currencyFiat;
 			this.amountToSpend = paymentData.amountToSpend;
 			this.fees = paymentData.fees;
-			this.sender = data.senderName;
-			this.recipient = data.recipientName;
-			this.amountToReceive = paymentData.amountToReceive;
+			this.sender = paymentData.sender.title;
+			this.recipient = paymentData.recipient.title;
+			this.amountToReceive = data.transferOrder?.amount ?? paymentData.amountToReceive;
+      this.merchantAmountToReceive = data?.merchantTransferOrder?.amount ?? 0;
 			this.rate = data.rate ?? data.initialRate;
-
 			if (data.type === TransactionType.Deposit) {
 				this.address = this.recipient ?? '-';
 			} else if(data.type === TransactionType.Withdrawal) {
@@ -277,7 +288,6 @@ export class TransactionItemFull {
 					this.declineReason = data.liquidityOrder?.statusReason ?? '';
 					break;
 			}
-
 			if (data.destVaultId) {
 				if (!this.vaultIds.includes(data.destVaultId)) {
 					this.vaultIds.push(data.destVaultId);
