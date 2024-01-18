@@ -53,6 +53,7 @@ export class TransactionItemFull {
 	code = '';
 	created = '';
 	executed = '';
+	trades: string[] = [];
 	exchanged = '';
 	updated = '';
 	accountId = '';
@@ -136,9 +137,13 @@ export class TransactionItemFull {
 
 			if (data.liquidityOrder?.executingResult) {
 				const exchangeExecuteData = JSON.parse(data.liquidityOrder.executingResult);
+				if (exchangeExecuteData?.trades?.length) {
+					this.trades = exchangeExecuteData.trades;
+					console.log(this.trades);
+				}
 				if (exchangeExecuteData?.closetm) {
-					this.updated = datepipe.transform(
-						exchangeExecuteData.closetm,
+					this.exchanged = datepipe.transform(
+						exchangeExecuteData.closetm * 1000,
 						'dd-MM-YYYY HH:mm:ss'
 					) as string;
 				}

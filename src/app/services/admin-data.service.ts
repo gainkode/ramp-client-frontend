@@ -695,7 +695,7 @@ const GET_TRANSACTIONS = gql`
         instrument
         instrumentDetails
         kycStatus
-        liquidityOrder { statusReason }
+        liquidityOrder { statusReason, executingResult }
         liquidityOrderId
         liquidityProvider
         paymentOrderId
