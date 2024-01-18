@@ -317,7 +317,7 @@
           <app-admin-details-item label="Transaction Exchanged" [value]="data?.exchanged"></app-admin-details-item>
   
           <mat-chip-listbox *ngIf="data?.trades">
-            <mat-chip *ngFor="let trade of data?.trades" class="widget-chip">
+            <mat-chip *ngFor="let trade of data?.trades" class="widget-chip" (click)="navigateToKrakenTrades(trade)">
               <span class="tx-13">{{trade}}</span>
             </mat-chip>
           </mat-chip-listbox>

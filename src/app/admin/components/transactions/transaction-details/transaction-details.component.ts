@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription, map } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
-import { AccountStatus, KycStatus, PaymentOrder, Rate, SettingsCommon, Transaction, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput } from 'model/generated-models';
+import { AccountStatus, KycStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput } from 'model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, TransactionTypeList, UserStatusList } from 'model/payment.model';
 import { TransactionItemFull } from 'model/transaction.model';
 import { AuthService } from 'services/auth.service';
@@ -255,7 +255,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('screeningRiskscore')?.setValue(this.data.screeningRiskscore);
   		this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
   		this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
-		this.form.get('merchantFeePercent')?.setValue(this.data.widgetUserParams?.merchantFeePercent);
+  		this.form.get('merchantFeePercent')?.setValue(this.data.widgetUserParams?.merchantFeePercent);
   		if(this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
   			this.scriningData = this.data?.screeningData?.paymentChecks[0];
   		}
@@ -576,5 +576,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.amountDialog.close('');
   	}
   	this.updateTransaction();
+  }
+
+  navigateToKrakenTrades(uuid: string): void {
+  	const tradeURL = `https://www.kraken.com/u/trade/trades#txid=${uuid}`;
+  	window.open(tradeURL, '_blank');
   }
 }
