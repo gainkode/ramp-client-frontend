@@ -139,7 +139,6 @@ export class TransactionItemFull {
 				const exchangeExecuteData = JSON.parse(data.liquidityOrder.executingResult);
 				if (exchangeExecuteData?.trades?.length) {
 					this.trades = exchangeExecuteData.trades;
-					console.log(this.trades);
 				}
 				if (exchangeExecuteData?.closetm) {
 					this.exchanged = datepipe.transform(
