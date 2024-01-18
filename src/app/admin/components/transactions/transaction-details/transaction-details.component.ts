@@ -96,9 +96,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   transactionStatusName = '';
   notPaidStatuses = [TransactionStatus.Completed, TransactionStatus.Paid, TransactionStatus.Exchanged, TransactionStatus.Exchanging, TransactionStatus.TransferBenchmarkWaiting];
   exchangeStatuses = [TransactionStatus.Paid];
-  notPaidStatus = false;
-  allowExchangetatus = false;
-  notDeclinedStatus = false;
   isTransactionNotDepositOrWithdrawal = false;
   kycStatus = '';
   accountStatus = '';

@@ -3,7 +3,7 @@
     <ng-template matTabContent>
       <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(update_confirm_content)">
         <div style="display: flex; justify-content: flex-start;">
-          <button *ngIf="permission>0" class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="flagValue()">
+          <button *ngIf="permission > 0" class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="flagValue()">
             <span *ngIf="flagInProgress" class="spinner-border spinner-border-sm" role="status"
                 aria-hidden="true"></span>
             {{flagText()}}
@@ -41,24 +41,36 @@
               </ng-template>
             </ng-select>
           </div>
-          
-          <app-admin-details-item *ngIf="(transactionType!==TRANSACTION_TYPE.Deposit && transactionType!==TRANSACTION_TYPE.Withdrawal) || editableDestination===false"
-            label="Wallet address" [value]="data?.address"></app-admin-details-item>
-          <div *ngIf="(transactionType!==TRANSACTION_TYPE.Deposit && transactionType!==TRANSACTION_TYPE.Withdrawal) && editableDestination===true"
-            class="form-group">
-            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-              Wallet address
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-            </label>
-            <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
-              formControlName="address" required>
-            <div *ngIf="(form.controls.address.touched || submitted) && (form.controls.address.errors?.['required'])"
-              class="tx-danger">
-              <small>
-                Address is required
-              </small>
+        
+          <div class="screening-status-wrapper">
+            <app-admin-details-item 
+              *ngIf="isTransactionNotDepositOrWithdrawal && !editableDestination"
+              label="End User Address" 
+              [value]="data?.address">
+            </app-admin-details-item>
+  
+            <div *ngIf="isTransactionNotDepositOrWithdrawal && editableDestination" class="form-group">
+              <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                End User Address <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+              </label>
+              <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
+                formControlName="address" required>
+              <div *ngIf="(form.controls.address.touched || submitted) && (form.controls.address.errors?.['required'])"
+                class="tx-danger">
+                <small>
+                  Address is required
+                </small>
+              </div>
+            </div>
+  
+            <div
+              *ngIf="data?.screeningAnswer === 'GREEN' || data?.screeningAnswer === 'RED'"
+             class="btn pe-none pd-x-30 mg-t-5" [ngClass]="{'btn-success': data?.screeningAnswer === 'GREEN', 'btn-danger': data?.screeningAnswer === 'RED'}" >
+              {{data?.screeningAnswer}}
             </div>
           </div>
+
+          
           <app-admin-details-item label="Custody Order Id" [value]="data?.transferOriginalOrderId">
           </app-admin-details-item>
           <app-admin-details-item label="Payment Order Id" [value]="data?.paymentOrderId">
@@ -234,12 +246,14 @@
             </label>
             <input class="form-control" type="text" formControlName="transferHash">
           </div>
-          <div class="form-group">
+
+          <div class="form-group pe-none">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Answer screening
             </label>
             <input class="form-control" type="text" formControlName="screeningAnswer">
           </div>
+          
           <div class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Riscscore screening
@@ -260,6 +274,21 @@
             <input class="form-control" type="text" benchmarkTransferHash="transferHash">
           </div>
         </div>
+
+        <div class="card card-body pd-20 pd-md-40 border shadow-none">
+          <h5 class="card-title mg-b-20">
+            Exchange
+          </h5>
+
+          <app-admin-details-item label="Transaction Exchanged" [value]="data?.exchanged"></app-admin-details-item>
+  
+          <mat-chip-listbox *ngIf="data?.trades">
+            <mat-chip *ngFor="let trade of data?.trades" class="widget-chip">
+              <span class="tx-13">{{trade}}</span>
+            </mat-chip>
+          </mat-chip-listbox>
+        </div>
+
         <div class="card card-body pd-20 pd-md-40 border shadow-none">
           <h5 class="card-title mg-b-20">
             AML Check
@@ -342,7 +371,7 @@
             </button>
           </div>
           <div style="display: flex; justify-content: flex-end;">
-            <button *ngIf="permission>1"
+            <button *ngIf="permission > 1"
               class="btn btn-primary pd-x-30 me-2 mg-t-5">
               <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                 aria-hidden="true"></span>
@@ -356,7 +385,7 @@
       </form>
     </ng-template>
   </mat-tab>
-  <mat-tab *ngIf="data?.screeningAnswer" label="Transaction screening info">
+  <mat-tab *ngIf="data?.screeningAnswer === 'GREEN' || data?.screeningAnswer === 'RED'" label="Transaction screening info">
     <ng-template matTabContent>
      <app-raw-json [data]="scriningData"></app-raw-json>
      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
