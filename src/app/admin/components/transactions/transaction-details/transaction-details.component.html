@@ -221,6 +221,16 @@
               </small>
             </div>
           </div>
+
+          <div *ngIf="data?.widgetUserParams?.merchantFeePercent" class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Merchant Fee, %
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <input class="form-control" type="number"
+              formControlName="merchantFeePercent">
+          </div>
+          
           <app-admin-details-item label="Blockchain fee" [value]="data?.transferFee"></app-admin-details-item>
   
           <app-admin-details-item label="From" [value]="data?.sender"></app-admin-details-item>
