@@ -58,11 +58,11 @@ export class PaymentProviderView {
 	id = '';
 	name = '';
 	instruments: string[] = [];
-	virtual: boolean = false;
+	virtual = false;
 
 	constructor(data: PaymentProvider) {
 		this.id = data.name ?? '';
-		this.name = data.name ?? '';
+		this.name = data.displayName ?? data.name ?? '';
 		this.instruments = data.instruments?.map(val => val) ?? [];
 		this.virtual = data.virtual;
 	}

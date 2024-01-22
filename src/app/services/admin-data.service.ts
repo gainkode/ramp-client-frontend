@@ -1385,6 +1385,7 @@ query GetProviders {
   getPaymentProviders {
     paymentProviderId
     name
+    displayName
     currencies
     countriesCode2
     instruments
