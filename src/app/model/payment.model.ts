@@ -53,7 +53,7 @@ export class PaymentProviderView {
 
 	constructor(data: PaymentProvider) {
 		this.id = data.name ?? '';
-		this.name = data.name ?? '';
+		this.name = data.displayName ?? data.name ?? '';
 		this.instruments = data.instruments?.map(val => val) ?? [];
 	}
 }
