@@ -37,7 +37,6 @@ import { AdminComponent } from './admin.component';
 import { AdminGuard } from './admin.guard';
 import { AdminHeaderComponent } from './layout/header/header.component';
 import { AdminSidebarComponent } from './layout/sidebar/sidebar.component';
-import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminSwitcherComponent } from './layout/switcher/switcher.component';
 import { AdminPageHeaderComponent } from './layout/page-header/page-header.component';
 import { AdminDataService } from '../services/admin-data.service';
@@ -104,6 +103,7 @@ import {
 import { JobStatusPipe } from 'pipes/job-status/job-status.pipe';
 import { MatStepperModule } from '@angular/material/stepper';
 import { RawJsonModule } from 'shared/raw-json/raw-json.module';
+import { AdminDashboardWrapperComponent, DashboardAdminComponent, DashboardMerchantComponent } from './components/dashboard';
 
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
@@ -164,7 +164,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminDashboardCardComponent,
 		AdminDateRangeComponent,
 		AdminFilterComponent,
-		AdminDashboardComponent,
+		DashboardAdminComponent,
+		DashboardMerchantComponent,
+		AdminDashboardWrapperComponent,
+
 		TransactionLifelineComponent,
 		AdminTransactionsComponent, AdminTransactionDetailsComponent, AdminTransactionStatusHistoryComponent, AdminTransactionCreateComponent,
 		AdminFiatWalletsComponent, AdminFiatWalletDetailsComponent,

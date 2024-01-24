@@ -84,11 +84,10 @@ export class AdminFeeSchemesComponent implements OnInit, OnDestroy {
 		this.inProgress = true;
 		const listData$ = this.adminService.getFeeSettings().pipe(take(1));
 		this.subscriptions.add(
-			listData$.subscribe(({ list, count }) => {
+			listData$.subscribe(({ list }) => {
 				this.inProgress = false;
 				this.schemes = list;
 				list.forEach(val => {
-					console.log(val)
 					if (val.instrument.length > 0 && val.provider.length > 0) {
 						const instrumentData = val.instrument[0];
 						const providerData = val.provider[0];

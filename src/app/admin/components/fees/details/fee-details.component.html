@@ -213,8 +213,6 @@
         </button>
         <button *ngIf="permission>1 && !createNew && defaultSchemeName===''" class="btn btn-danger pd-x-30 me-2 mg-t-5"
           type="button" (click)="deleteScheme(delete_content)">
-          <span *ngIf="deleteInProgress" class="spinner-border spinner-border-sm" role="status"
-            aria-hidden="true"></span>
           Delete
         </button>
         <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="close.emit()">

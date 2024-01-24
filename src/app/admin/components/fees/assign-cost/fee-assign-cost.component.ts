@@ -82,7 +82,6 @@ export class AdminFeeAssignCostComponent implements OnInit, OnDestroy {
 		item.id && item.id.toLocaleLowerCase().indexOf(term) > -1;
   }
 
-
   onSubmit(): void {
   	this.errorMessage = '';
   	this.saveInProgress = true;

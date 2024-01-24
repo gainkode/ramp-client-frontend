@@ -1,0 +1,33 @@
+<div class="table-responsive">
+    <app-admin-filter [fields]="filterFields" [fiatCurrencies]="fiatCurrencies" [filterData]="defaultFilter" (filter)="handleFilterApplied($event)">
+    </app-admin-filter>
+
+    <mat-progress-bar *ngIf="dashboardService.loading" color="accent" mode="indeterminate">
+    </mat-progress-bar>
+
+    <div *ngIf="dashboardService.isLoaded | async" class="__dashboard-panel-container">
+        <div class="__dashboard-panel-column">
+            <app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.totalEur !== false" title="Total volume in EUR" source="total">
+            </app-admin-dashboard-card>
+            <app-admin-dashboard-card *ngIf="showDeposits && adminAdditionalSettings?.tabs?.dashboard?.Deposit !== false" title="Deposit" source="deposits">
+            </app-admin-dashboard-card>
+            <app-admin-dashboard-card *ngIf="showWithdrawals && adminAdditionalSettings?.tabs?.dashboard?.Withdrawal !== false" title="Withdrawal"
+                source="withdrawals"></app-admin-dashboard-card>
+            <app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Buy !== false" title="Buy" source="buys"></app-admin-dashboard-card>
+            <!-- <app-admin-dashboard-card title="Send" source="transfers"></app-admin-dashboard-card> -->
+            <app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Sell !== false" title="Sell" source="sells"></app-admin-dashboard-card>
+            <app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Receive !== false" title="Receive" source="receives"></app-admin-dashboard-card>
+        </div>
+        <div class="__dashboard-panel-column">
+            <app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Fees !== false" title="Fees collected" source="fees"></app-admin-dashboard-card>
+            <app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.BalanceAll !== false" title="Balances in all wallets" source="balances">
+            </app-admin-dashboard-card>
+            <app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Openpayd !== false" title="Balances in all OpenPayd wallets" source="openpaydBalances">
+            </app-admin-dashboard-card>
+            <app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Monoova !== false" title="Balances in Monoova Wallet" source="monoovaBalances">
+            </app-admin-dashboard-card>
+            <app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Liquidity !== false" [title]="liquidityProviderName" source="liquidityBalances">
+            </app-admin-dashboard-card>
+        </div>
+    </div>
+</div>

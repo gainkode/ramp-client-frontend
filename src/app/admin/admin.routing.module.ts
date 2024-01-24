@@ -6,7 +6,6 @@ import { AdminApiKeysComponent } from './components/settings/apikeys/apikeys.com
 import { AdminCurrencyPairsComponent } from './components/settings/currencyPairs/currencyPairs.component';
 import { AdminBankAccountsComponent } from './components/costs/bank-accounts/accounts.component';
 import { AdminCountryBlackListComponent } from './components/kyc/blacklist/countries.component';
-import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminMessagesComponent } from './components/message/messages.component';
@@ -24,6 +23,7 @@ import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 import { AdminUserActionsComponent } from './components/users/actions/actions.component';
 import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, TransactionLifelineComponent } from './components/transactions';
 import { UserRoleObjectCode } from 'model/generated-models';
+import { AdminDashboardWrapperComponent, DashboardAdminComponent, DashboardMerchantComponent } from './components/dashboard';
 
 const routes: Routes = [
 	{
@@ -32,15 +32,22 @@ const routes: Routes = [
 		children: [
 			{
 				path: 'dashboard',
-				component: AdminDashboardComponent,
-				data: { header: 'Dashboard', code: UserRoleObjectCode.Dashboard },
-				canActivate: [AdminGuard]
-			},
-			{
-				path: 'dashboard-merchant',
-				component: AdminDashboardComponent,
-				data: { header: 'Dashboard', code: UserRoleObjectCode.Costs },//Change Object code
-				canActivate: [AdminGuard]
+				component: AdminDashboardWrapperComponent,
+				data: { header: 'Dashboard' },
+				children: [
+					{ path: '', redirectTo: `/`, pathMatch: 'full' },
+					{ 
+						path: 'admin', 
+						// add proper roleCode 'DashboarAdmin'
+						data: { code: UserRoleObjectCode.Dashboard },
+						component: DashboardAdminComponent, canActivate: [AdminGuard]
+					},
+					{ 
+						path: 'merchant', 
+						// add proper roleCode 'DashboarMerchant'
+						data: { code: UserRoleObjectCode.Dashboard },
+						component: DashboardMerchantComponent, canActivate: [AdminGuard] },
+				]
 			},
 			{
 				path: 'common',
