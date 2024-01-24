@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/ro
 import { AuthService } from '../services/auth.service';
 import { NavService } from './services/nav.service';
 
+export const availableUserRoles = ['MERCHANT', 'MANAGER', 'SUPPORT', 'ADMIN', 'DEMO'];
 @Injectable()
 export class AdminGuard {
 	constructor(
@@ -12,39 +13,16 @@ export class AdminGuard {
 	}
 
 	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-		if (!this.auth.isAuthenticatedUserRole(['MERCHANT', 'MANAGER', 'SUPPORT', 'ADMIN', 'DEMO'])) {
+		if (!this.auth.isAuthenticatedUserRole(availableUserRoles)) {
 			void this.router.navigateByUrl('/');
 			return false;
 		}
-		const pathList: { path: string; code: string; }[] = [];
-		this.navServices.MENUITEMS.forEach(x => {
-			if (x.children) {
-				const groupCode = x.code;
-				x.children.forEach(c => {
-					if (c.path) {
-						pathList.push({
-							path: c.path,
-							code: (groupCode && groupCode !== c.code) ? groupCode : c.code ?? ''
-						});
-					}
-				});
-			} else {
-				if (x.path) {
-					pathList.push({
-						path: x.path,
-						code: x.code ?? ''
-					});
-				}
-			}
-		});
-		const currentItem = pathList.find(x => state.url.toLowerCase().includes(x.path.toLowerCase()));
-
-		if (currentItem) {
-			const permission = this.auth.isPermittedObjectCode(currentItem.code);
-			if (permission === 0) {
-				void this.router.navigateByUrl('/admin/dashboard');
-				return false;
-			}
+		
+		const permission = this.auth.isPermittedObjectCode(route.data.code);
+		// If no access get out from admin office
+		if (permission === 0) {
+			void this.router.navigateByUrl('/');
+			return false;
 		}
 
 		return true;

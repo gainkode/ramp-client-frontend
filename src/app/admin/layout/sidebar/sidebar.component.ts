@@ -29,7 +29,9 @@ export class AdminSidebarComponent {
 		public elRef: ElementRef
 	) {
 		this.navServices.items.subscribe((menuItems) => {
-			this.menuItems = menuItems;
+			// show only those items that are accessible to the user
+			this.menuItems = this.filterMenuItemsByPermissions(menuItems);
+			
 			this.router.events.subscribe((event) => {
 				if (event instanceof NavigationEnd) {
 					menuItems.filter((items) => {
@@ -129,11 +131,13 @@ export class AdminSidebarComponent {
 	}
 
 	goToMainPage() {
-		this.router.navigate([this.auth.getUserMainPage()]);
+		this.router.navigate([this.auth.getUserMainPage()]).catch((e) => {
+			throw new Error(e);
+		});
 	}
 
 	sidebarClose() {
-		if ((this.navServices.collapseSidebar = true)) {
+		if ((this.navServices.collapseSidebar === true)) {
 			document.querySelector('.app')?.classList.remove('sidenav-toggled');
 			this.navServices.collapseSidebar = false;
 		}
@@ -144,5 +148,29 @@ export class AdminSidebarComponent {
 	@HostListener('window:scroll', [])
 	onWindowScroll() {
 		this.scrolled = window.scrollY > 70;
+	}
+
+	private filterMenuItemsByPermissions(items: Menu[]): Menu[] {
+		const filteredItems: Menu[] = [];
+		for (let menuItem of items) {
+			if (menuItem.code) {
+				// If a menu item has a code, we shouldn't rely on the codes of the child elements
+				if (this.auth.isPermittedObjectCode(menuItem.code)) {
+					filteredItems.push(menuItem);
+				}
+			} else {
+				// If main item doesn't have permission code we have to check if child items accessible to current user
+				if (menuItem.children) {
+					menuItem.children = this.filterMenuItemsByPermissions(menuItem.children);
+					if (menuItem.children.length) {
+						filteredItems.push(menuItem);
+					}
+				} else {
+					filteredItems.push(menuItem);
+				}
+			}
+		}
+
+		return filteredItems;
 	}
 }

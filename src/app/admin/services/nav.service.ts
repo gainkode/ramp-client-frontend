@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Subject, BehaviorSubject, fromEvent } from 'rxjs';
 import { takeUntil, debounceTime } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { UserRoleObjectCode } from 'model/generated-models';
 
 // Menu
 export interface Menu {
@@ -88,41 +89,41 @@ export class NavService implements OnDestroy {
 			headTitle: 'MAIN',
 		},
 		{
-			path: '/admin/dashboard', icon: 'dashboard', title: 'Dashboard', type: 'link', code: 'TRANSACTIONS'
+			path: '/admin/dashboard', icon: 'dashboard', title: 'Dashboard', type: 'link', code: UserRoleObjectCode.Dashboard
 		},
 		{
-			path: '/admin/transactions', icon: 'compare_arrows', title: 'Transactions', type: 'link', code: 'TRANSACTIONS'
+			path: '/admin/transactions', icon: 'compare_arrows', title: 'Transactions', type: 'link', code: UserRoleObjectCode.Transactions
 		},
 		
 		{
 			title: 'Users', icon: 'account_box', type: 'sub', active: false, children: [
-				{ path: '/admin/customers', title: 'Customers', type: 'link', code: 'CUSTOMERS' },
-				{ path: '/admin/system-users', title: 'System users', type: 'link', code: 'SYSTEM_USERS' },
+				{ path: '/admin/customers', title: 'Customers', type: 'link', code: UserRoleObjectCode.Customers },
+				{ path: '/admin/system-users', title: 'System users', type: 'link', code: UserRoleObjectCode.SystemUsers },
 			]
 		},
 		{
-			title: 'Wallets', icon: 'wallet_membership', type: 'sub', active: false, code: 'WALLETS', children: [
+			title: 'Wallets', icon: 'wallet_membership', type: 'sub', active: false, code: UserRoleObjectCode.Wallets, children: [
 				{ path: '/admin/crypto-wallets', title: 'Crypto wallets', type: 'link' },
 				{ path: '/admin/fiat-wallets', title: 'FIat wallets', type: 'link' }
 			]
 		},
 		{
-			path: '/admin/widgets', icon: 'device_hub', title: 'Widgets', type: 'link', code: 'AFFILIATES'
+			path: '/admin/widgets', icon: 'device_hub', title: 'Widgets', type: 'link', code: UserRoleObjectCode.Widgets
 		},
 		{
-			path: '/admin/notifications', icon: 'notifications', title: 'Notifications', type: 'link', code: 'NOTIFICATIONS'
+			path: '/admin/notifications', icon: 'notifications', title: 'Notifications', type: 'link', code: UserRoleObjectCode.Notifications
 		},
 		{
-			path: '/admin/emails', icon: 'messages', title: 'Emails', type: 'link', code: 'EMAILS'
+			path: '/admin/emails', icon: 'messages', title: 'Emails', type: 'link', code: UserRoleObjectCode.Messages
 		},
 		{
-			path: '/admin/risk-center', icon: 'bolt', title: 'Risk center', type: 'link', code: 'RISKS'
+			path: '/admin/risk-center', icon: 'bolt', title: 'Risk center', type: 'link', code: UserRoleObjectCode.Risks
 		},
 		{
 			title: 'System logs', icon: 'settings', type: 'sub', active: false, children: [
-				{ path: '/admin/user-actions', title: 'User actions', type: 'link', code: 'SYSTEM_USERS' },
+				{ path: '/admin/user-actions', title: 'User actions', type: 'link', code: UserRoleObjectCode.UserActions },
 				{
-					path: '/admin/transaction-status-history', icon: 'compare_arrows', title: 'Transaction history', type: 'link', code: 'TRANSACTIONS'
+					path: '/admin/transaction-status-history', icon: 'compare_arrows', title: 'Transaction history', type: 'link', code: UserRoleObjectCode.TransactionHistoryLog
 				},
 			]
 		},
@@ -130,16 +131,16 @@ export class NavService implements OnDestroy {
 			headTitle: 'SETTINGS',
 		},
 		{
-			path: '/admin/fees', icon: 'payment', title: 'Fees', type: 'link', code: 'FEES'
+			path: '/admin/fees', icon: 'payment', title: 'Fees', type: 'link', code: UserRoleObjectCode.Fees
 		},
 		{
-			title: 'Costs', icon: 'attach_money', type: 'sub', active: false, code: 'COSTS', children: [
+			title: 'Costs', icon: 'attach_money', type: 'sub', active: false, code: UserRoleObjectCode.Costs, children: [
 				{ path: '/admin/costs', title: 'Schemes', type: 'link' },
 				{ path: '/admin/bank-accounts', title: 'Bank accounts', type: 'link' },
 			]
 		},
 		{
-			title: 'KYC / KYB', icon: 'assignment_ind', type: 'sub', active: false, code: 'KYC', children: [
+			title: 'KYC / KYB', icon: 'assignment_ind', type: 'sub', active: false, code: UserRoleObjectCode.Kyc, children: [
 				{ path: '/admin/levels', title: 'Levels', type: 'link' },
 				{ path: '/admin/tiers', title: 'Tiers', type: 'link' },
 				// { path: '/admin/kyc-schemes', title: 'Schemes', type: 'link' },
@@ -150,7 +151,7 @@ export class NavService implements OnDestroy {
 		// 	path: '/admin/reconciliation', icon: 'cloud_off', title: 'Reconciliation', code: 'RECONCILIATION', type: 'link'
 		// },
 		{
-			title: 'Settings', icon: 'settings', type: 'sub', active: false, code: 'SETTINGS', children: [
+			title: 'Settings', icon: 'settings', type: 'sub', active: false, code: UserRoleObjectCode.Settings, children: [
 				{ path: '/admin/common', title: 'Common', type: 'link' },
 				{ path: '/admin/api-keys', title: 'API keys', type: 'link' },
 				{ path: '/admin/currency-pairs', title: 'Currency pairs', type: 'link' },

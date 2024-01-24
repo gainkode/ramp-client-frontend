@@ -4825,25 +4825,35 @@ export type UserRole = {
 export enum UserRoleObjectCode {
   AccountBalanceTracker = 'ACCOUNT_BALANCE_TRACKER',
   Affiliates = 'AFFILIATES',
+  BankAccounts = 'BANK_ACCOUNTS',
   ChargebackRate = 'CHARGEBACK_RATE',
   Contacts = 'CONTACTS',
   Costs = 'COSTS',
+  CountryBlackList = 'COUNTRY_BLACK_LIST',
+  CreateNewTransaction = 'CREATE_NEW_TRANSACTION',
   Customers = 'CUSTOMERS',
+  Dashboard = 'DASHBOARD',
+  DashboardWalletBalances = 'DASHBOARD_WALLET_BALANCES',
   Exchanger = 'EXCHANGER',
   Fees = 'FEES',
   Kyc = 'KYC',
   MerchantWidget = 'MERCHANT_WIDGET',
+  Messages = 'MESSAGES',
   Notifications = 'NOTIFICATIONS',
   QuickCheckout = 'QUICK_CHECKOUT',
   Reconciliation = 'RECONCILIATION',
   Risks = 'RISKS',
+  Roles = 'ROLES',
   RollingReserves = 'ROLLING_RESERVES',
   Settings = 'SETTINGS',
   SystemUsers = 'SYSTEM_USERS',
   Transactions = 'TRANSACTIONS',
+  TransactionHistoryLog = 'TRANSACTION_HISTORY_LOG',
   UsersEmails = 'USERS_EMAILS',
   UsersPhones = 'USERS_PHONES',
-  Wallets = 'WALLETS'
+  UserActions = 'USER_ACTIONS',
+  Wallets = 'WALLETS',
+  Widgets = 'WIDGETS'
 }
 
 export type UserRolePermission = {
@@ -5050,6 +5060,7 @@ export type Widget = {
   description?: Maybe<Scalars['String']['output']>;
   destinationAddress?: Maybe<Array<WidgetDestination>>;
   fee?: Maybe<Scalars['Float']['output']>;
+  getcoinsPaymentWidgetId?: Maybe<Scalars['String']['output']>;
   hasFixedAddress: Scalars['Boolean']['output'];
   instruments?: Maybe<Array<PaymentInstrument>>;
   liquidityProvider?: Maybe<LiquidityProvider>;

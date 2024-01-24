@@ -23,6 +23,7 @@ import { AdminUserDevicesComponent } from './components/users/devices/devices.co
 import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 import { AdminUserActionsComponent } from './components/users/actions/actions.component';
 import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, TransactionLifelineComponent } from './components/transactions';
+import { UserRoleObjectCode } from 'model/generated-models';
 
 const routes: Routes = [
 	{
@@ -32,7 +33,14 @@ const routes: Routes = [
 			{
 				path: 'dashboard',
 				component: AdminDashboardComponent,
-				data: { header: 'Dashboard' }
+				data: { header: 'Dashboard', code: UserRoleObjectCode.Dashboard },
+				canActivate: [AdminGuard]
+			},
+			{
+				path: 'dashboard-merchant',
+				component: AdminDashboardComponent,
+				data: { header: 'Dashboard', code: UserRoleObjectCode.Costs },//Change Object code
+				canActivate: [AdminGuard]
 			},
 			{
 				path: 'common',
@@ -41,6 +49,8 @@ const routes: Routes = [
 			},
 			{
 				path: 'transactions',
+				data: { code: UserRoleObjectCode.Transactions },
+				canActivate: [AdminGuard],
 				children: [
 					{
 						path: 'users/:userid',
@@ -57,10 +67,13 @@ const routes: Routes = [
 			{
 				path: 'transaction-lifeline',
 				component: TransactionLifelineComponent,
-				data: { header: 'Transaction Lifeline' }
+				data: { header: 'Transaction Lifeline', code: UserRoleObjectCode.Transactions },
+				canActivate: [AdminGuard]
 			},
 			{
 				path: 'transaction-status-history',
+				data: { code: UserRoleObjectCode.TransactionHistoryLog },
+				canActivate: [AdminGuard],
 				children: [
 					{
 						path: 'users/:userid',
@@ -76,6 +89,8 @@ const routes: Routes = [
 			},
 			{
 				path: 'customers',
+				data: { code: UserRoleObjectCode.Customers },
+				canActivate: [AdminGuard],
 				children: [
 					{
 						path: ':id',
@@ -91,6 +106,8 @@ const routes: Routes = [
 			},
 			{
 				path: 'system-users',
+				data: { code: UserRoleObjectCode.SystemUsers },
+				canActivate: [AdminGuard],
 				children: [
 					{
 						path: ':id',
@@ -107,7 +124,8 @@ const routes: Routes = [
 			{
 				path: 'user-actions',
 				component: AdminUserActionsComponent,
-				data: { header: 'Actions' }
+				data: { header: 'Actions', code: UserRoleObjectCode.UserActions },
+				canActivate: [AdminGuard],
 			},
 			{
 				path: 'white-device-list/:userid',
@@ -116,6 +134,8 @@ const routes: Routes = [
 			},
 			{
 				path: 'crypto-wallets',
+				data: { code: UserRoleObjectCode.Wallets },
+				canActivate: [AdminGuard],
 				children: [
 					{
 						path: 'users/:userid',
@@ -136,6 +156,8 @@ const routes: Routes = [
 			},
 			{
 				path: 'fiat-wallets',
+				data: { code: UserRoleObjectCode.Wallets },
+				canActivate: [AdminGuard],
 				children: [
 					{
 						path: 'users/:userid',
@@ -156,28 +178,33 @@ const routes: Routes = [
 			},
 			{
 				path: 'fees',
+				data: { header: 'Fees', code: UserRoleObjectCode.Fees },
+				canActivate: [AdminGuard],
 				component: AdminFeeSchemesComponent,
-				data: { header: 'Fees' }
 			},
 			{
 				path: 'notifications',
-				component: AdminNotificationsComponent,
-				data: { header: 'Notifications' }
+				data: { header: 'Notifications', code: UserRoleObjectCode.Notifications },
+				canActivate: [AdminGuard],
+				component: AdminNotificationsComponent
 			},
 			{
 				path: 'emails',
+				data: { header: 'Emails', code: UserRoleObjectCode.Messages },
+				canActivate: [AdminGuard],
 				component: AdminMessagesComponent,
-				data: { header: 'Emails' }
 			},
 			{
 				path: 'costs',
-				component: AdminCostSchemesComponent,
-				data: { header: 'Costs' }
+				data: { header: 'Costs', code: UserRoleObjectCode.Costs },
+				canActivate: [AdminGuard],
+				component: AdminCostSchemesComponent
 			},
 			{
 				path: 'bank-accounts',
-				component: AdminBankAccountsComponent,
-				data: { header: 'Bank accounts' }
+				data: { header: 'Bank accounts', code: UserRoleObjectCode.BankAccounts },
+				canActivate: [AdminGuard],
+				component: AdminBankAccountsComponent
 			},
 			{
 				path: 'levels',
@@ -186,6 +213,7 @@ const routes: Routes = [
 			},
 			{
 				path: 'tiers',
+				
 				component: AdminKycTiersComponent,
 				data: { header: 'KYC Tiers' }
 			},
@@ -196,16 +224,20 @@ const routes: Routes = [
 			// },
 			{
 				path: 'black-list',
-				component: AdminCountryBlackListComponent,
-				data: { header: 'Black list' }
+				data: { header: 'Black list', code: UserRoleObjectCode.CountryBlackList },
+				canActivate: [AdminGuard],
+				component: AdminCountryBlackListComponent
 			},
 			{
 				path: 'risk-center',
-				component: AdminRisksComponent,
-				data: { header: 'Risk center' }
+				data: { header: 'Risk center', code: UserRoleObjectCode.Risks },
+				canActivate: [AdminGuard],
+				component: AdminRisksComponent
 			},
 			{
 				path: 'widgets',
+				data: { header: 'Widgets', code: UserRoleObjectCode.Widgets },
+				canActivate: [AdminGuard],
 				children: [
 					{
 						path: ':userId',
@@ -233,8 +265,7 @@ const routes: Routes = [
 				path: '**',
 				redirectTo: 'dashboard'
 			}
-		],
-		canActivate: [AdminGuard]
+		]
 	},
 	{ path: '**', redirectTo: 'dashboard' }
 ];
