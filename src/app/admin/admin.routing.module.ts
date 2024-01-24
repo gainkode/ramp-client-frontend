@@ -25,7 +25,7 @@ import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, Tra
 import { UserRoleObjectCode } from 'model/generated-models';
 import { AdminDashboardWrapperComponent, DashboardAdminComponent, DashboardMerchantComponent } from './components/dashboard';
 
-const routes: Routes = [
+export const routes: Routes = [
 	{
 		path: '',
 		component: AdminComponent,
@@ -33,20 +33,22 @@ const routes: Routes = [
 			{
 				path: 'dashboard',
 				component: AdminDashboardWrapperComponent,
-				data: { header: 'Dashboard' },
+				data: { header: 'Dashboard', defaultRoute: true },
+				canActivate: [AdminGuard],
 				children: [
-					{ path: '', redirectTo: `/`, pathMatch: 'full' },
 					{ 
 						path: 'admin', 
 						// add proper roleCode 'DashboarAdmin'
-						data: { code: UserRoleObjectCode.Dashboard },
-						component: DashboardAdminComponent, canActivate: [AdminGuard]
+						data: { main: true },
+						component: DashboardAdminComponent, 
+						// canActivate: [AdminGuard]
 					},
 					{ 
 						path: 'merchant', 
 						// add proper roleCode 'DashboarMerchant'
-						data: { code: UserRoleObjectCode.Dashboard },
-						component: DashboardMerchantComponent, canActivate: [AdminGuard] },
+						data: { code: UserRoleObjectCode.Dashboard, main: true },
+						component: DashboardMerchantComponent, 
+						canActivate: [AdminGuard] },
 				]
 			},
 			{
@@ -272,9 +274,8 @@ const routes: Routes = [
 				path: '**',
 				redirectTo: 'dashboard'
 			}
-		]
-	},
-	{ path: '**', redirectTo: 'dashboard' }
+		],
+	}
 ];
 
 @NgModule({

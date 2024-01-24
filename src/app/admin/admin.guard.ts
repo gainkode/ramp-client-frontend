@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router, Route } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { NavService } from './services/nav.service';
+import { routes } from './admin.routing.module';
 
 export const availableUserRoles = ['MERCHANT', 'MANAGER', 'SUPPORT', 'ADMIN', 'DEMO'];
 @Injectable()
@@ -17,14 +18,50 @@ export class AdminGuard {
 			void this.router.navigateByUrl('/');
 			return false;
 		}
-		
-		const permission = this.auth.isPermittedObjectCode(route.data.code);
-		// If no access get out from admin office
-		if (permission === 0) {
-			void this.router.navigateByUrl('/');
-			return false;
+		console.log(route, state.url)
+
+		if (route.data.defaultRoute === true) {
+			const path = this.findMainRouteWithAccess(routes);
+			
+			if (state.url !== `/admin/${path}`) {
+				void this.router.navigateByUrl(`/admin/${path}`);
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		if (route.data.code) {
+			const permission = this.auth.isPermittedObjectCode(route.data.code);
+			// If no access get out from admin office
+			if (permission === 0) {
+				void this.router.navigateByUrl('/');
+				return false;
+			}
 		}
 
 		return true;
+	}
+
+	private findMainRouteWithAccess(routeItems: Route[]): string {
+		let fullPath = '';
+		
+		for(const route of routeItems) {
+			if (route?.data?.main === true) {
+				const permission = this.auth.isPermittedObjectCode(route.data.code);
+
+				if (permission !== 0) {
+					fullPath = `${fullPath}/${route.path}`;
+					break;
+				}
+			} else if (route.children?.length) {
+				const childrenMainPath = this.findMainRouteWithAccess(route.children);
+				if (childrenMainPath != '') {
+					fullPath = `${route.path}${childrenMainPath}`;
+				}
+			}
+		}
+
+		return fullPath;
 	}
 }
