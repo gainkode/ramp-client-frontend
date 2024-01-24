@@ -38,7 +38,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   submitted = false;
   createNew = false;
   saveInProgress = false;
-  deleteInProgress = false;
   errorMessage = '';
   defaultSchemeName = '';
   bankAccounts: CommonTargetValue[] = [];
@@ -71,11 +70,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	provider: [[]],
   	mdr: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
   	transactionCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	// rollingReserves: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	// rollingReservesDays: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	// chargebackCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	// monthlyCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	// minMonthlyCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
   });
 
   constructor(
@@ -89,7 +83,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
   	this.subscriptions.add(
-  		this.form.get('target')?.valueChanges.subscribe(val => this.updateTarget())
+  		this.form.get('target')?.valueChanges.subscribe(_ => this.updateTarget())
   	);
   	this.subscriptions.add(
   		this.form.get('instrument')?.valueChanges.subscribe(val => this.filterPaymentProviders(val))
@@ -131,11 +125,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('provider')?.setValue(scheme?.provider);
   		this.form.get('mdr')?.setValue(scheme?.terms.mdr);
   		this.form.get('transactionCost')?.setValue(scheme?.terms.transactionCost);
-  		// this.form.get('rollingReserves')?.setValue(scheme?.terms.rollingReserves);
-  		// this.form.get('rollingReservesDays')?.setValue(scheme?.terms.rollingReservesDays);
-  		// this.form.get('chargebackCost')?.setValue(scheme?.terms.chargebackCost);
-  		// this.form.get('monthlyCost')?.setValue(scheme?.terms.monthlyCost);
-  		// this.form.get('minMonthlyCost')?.setValue(scheme?.terms.minMonthlyCost);
   		this.filterPaymentProviders(scheme.instrument);
   		this.setTargetValidator();
   		this.setTargetValueParams();
@@ -152,11 +141,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('provider')?.setValue([]);
   		this.form.get('mdr')?.setValue(undefined);
   		this.form.get('transactionCost')?.setValue(undefined);
-  		// this.form.get('rollingReserves')?.setValue(undefined);
-  		// this.form.get('rollingReservesDays')?.setValue(undefined);
-  		// this.form.get('chargebackCost')?.setValue(undefined);
-  		// this.form.get('monthlyCost')?.setValue(undefined);
-  		// this.form.get('minMonthlyCost')?.setValue(undefined);
   		this.filterPaymentProviders([]);
   		this.setTargetValidator();
   	}
@@ -176,11 +160,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	// terms
   	data.terms.mdr = Number(this.form.get('mdr')?.value);
   	data.terms.transactionCost = Number(this.form.get('transactionCost')?.value);
-  	// data.terms.rollingReserves = Number(this.form.get('rollingReserves')?.value);
-  	// data.terms.rollingReservesDays = Number(this.form.get('rollingReservesDays')?.value);
-  	// data.terms.chargebackCost = Number(this.form.get('chargebackCost')?.value);
-  	// data.terms.monthlyCost = Number(this.form.get('monthlyCost')?.value);
-  	// data.terms.minMonthlyCost = Number(this.form.get('minMonthlyCost')?.value);
   	return data;
   }
 
@@ -227,14 +206,10 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.targetsOptions$ = concat(
   		of([]),
   		this.targetsSearchInput$.pipe(
-  			filter(res => {
-  				return res !== null && res.length >= this.minTargetsLengthTerm;
-  			}),
+  			filter(res => res !== null && res.length >= this.minTargetsLengthTerm),
   			debounceTime(300),
   			distinctUntilChanged(),
-  			tap(() => {
-  				this.isTargetsLoading = true;
-  			}),
+  			tap(() => this.isTargetsLoading = true),
   			switchMap(searchString => {
   				this.isTargetsLoading = false;
   				return this.filterTargets(searchString);
@@ -333,9 +308,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		this.removeDialog.closed.subscribe(val => {
-  			this.deleteSchemeConfirmed(this.settingsId ?? '');
-  		})
+  		this.removeDialog.closed.subscribe(val => this.deleteSchemeConfirmed(this.settingsId ?? ''))
   	);
   }
 
@@ -344,7 +317,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.saveCostSettings(scheme, this.createNew);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {
@@ -362,7 +335,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.deleteCostSettings(id);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {

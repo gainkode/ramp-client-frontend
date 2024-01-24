@@ -37,11 +37,10 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   private removeDialog: NgbModalRef | undefined = undefined;
   private settingsId = '';
 
-  TARGET_TYPE: typeof SettingsFeeTargetFilterType = SettingsFeeTargetFilterType
+  TARGET_TYPE: typeof SettingsFeeTargetFilterType = SettingsFeeTargetFilterType;
   submitted = false;
   createNew = false;
   saveInProgress = false;
-  deleteInProgress = false;
   errorMessage = '';
   defaultSchemeName = '';
   currencyOptions: CurrencyView[] = [];
@@ -93,9 +92,9 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   }
 
-	get isWireTransfer(): boolean {
-		return this.form.controls.instrument?.value === PaymentInstrument.WireTransfer;
-	}
+  get isWireTransfer(): boolean {
+  	return this.form.controls.instrument?.value === PaymentInstrument.WireTransfer;
+  }
 
   ngOnInit(): void {
   	this.subscriptions.add(
@@ -320,14 +319,10 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.targetsOptions$ = concat(
   		of([]),
   		this.targetsSearchInput$.pipe(
-  			filter(res => {
-  				return res !== null && res.length >= this.minTargetsLengthTerm;
-  			}),
+  			filter(res => res !== null && res.length >= this.minTargetsLengthTerm),
   			debounceTime(300),
   			distinctUntilChanged(),
-  			tap(() => {
-  				this.isTargetsLoading = true;
-  			}),
+  			tap(() => this.isTargetsLoading = true),
   			switchMap(searchString => {
   				this.isTargetsLoading = false;
   				return this.filterTargets(searchString);
@@ -360,10 +355,10 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			this.form.get('provider')?.setValue([]);
   		}
   	} else {
-			if (this.costSchemes.length !== 0) {
-				this.form.controls.provider.enable();
-			}
-		}
+  		if (this.costSchemes.length !== 0) {
+  			this.form.controls.provider.enable();
+  		}
+  	}
   }
 
   private filterTargets(searchString: string): Observable<CommonTargetValue[]> {

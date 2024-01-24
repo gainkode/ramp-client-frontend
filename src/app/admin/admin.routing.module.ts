@@ -6,7 +6,6 @@ import { AdminApiKeysComponent } from './components/settings/apikeys/apikeys.com
 import { AdminCurrencyPairsComponent } from './components/settings/currencyPairs/currencyPairs.component';
 import { AdminBankAccountsComponent } from './components/costs/bank-accounts/accounts.component';
 import { AdminCountryBlackListComponent } from './components/kyc/blacklist/countries.component';
-import { AdminDashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminMessagesComponent } from './components/message/messages.component';
@@ -23,6 +22,7 @@ import { AdminUserDevicesComponent } from './components/users/devices/devices.co
 import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 import { AdminUserActionsComponent } from './components/users/actions/actions.component';
 import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, TransactionLifelineComponent } from './components/transactions';
+import { AdminDashboardWrapperComponent, DashboardAdminComponent, DashboardMerchantComponent } from './components/dashboard';
 
 const routes: Routes = [
 	{
@@ -31,9 +31,15 @@ const routes: Routes = [
 		children: [
 			{
 				path: 'dashboard',
-				component: AdminDashboardComponent,
-				data: { header: 'Dashboard' }
+				component: AdminDashboardWrapperComponent,
+				data: { header: 'Dashboard' },
+				children: [
+					{ path: '', redirectTo: `/`, pathMatch: 'full' },
+					{ path: 'admin', component: DashboardAdminComponent },
+					{ path: 'merchant', component: DashboardMerchantComponent },
+				]
 			},
+
 			{
 				path: 'common',
 				component: AdminCommonSettingsComponent,

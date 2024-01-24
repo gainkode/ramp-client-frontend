@@ -1,14 +1,3 @@
-// @import 'mixins/font-props';
-// // @import 'variables';
-
-// :host {
-// 	padding: 20px;
-// 	display: block;
-// 	height: 100%;
-// }
-
-// $search-row-height: 52px;
-
 .inputs-wrap {
     margin-top: 10px;
 }
@@ -34,12 +23,6 @@ mat-form-field {
     }
 }
 
-.header-wrapper {
-	h1 {
-		// @include font-props(true);
-	}
-}
-
 .create_docs-buttons {
   display: flex;
   align-items: center;
@@ -50,9 +33,6 @@ mat-form-field {
 .docs-wrapper {
   position: relative;
   min-height: 300px;
-	// &__table-wrapper {
-	// 	position: relative;
-	// 	height: calc(100% - #{$search-row-height});
 
 		&.emptyData:after {
       content: 'No Data';
