@@ -13,7 +13,7 @@ export class AdminGuard {
 		public navServices: NavService) {
 	}
 
-	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+	async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 		if (!this.auth.isAuthenticatedUserRole(availableUserRoles)) {
 			void this.router.navigateByUrl('/');
 			return false;
@@ -24,7 +24,7 @@ export class AdminGuard {
 	
 			if (state.url !== path) {
 				//here override navigation from merchant menu, so initially it navigates to admin/dashboard
-				setTimeout(() => void this.router.navigate([path]).then(), 0);
+				await this.router.navigate([path]);
 				return false;
 			} else {
 				return true;
@@ -35,7 +35,7 @@ export class AdminGuard {
 			const permission = this.auth.isPermittedObjectCode(route.data.code);
 			// If no access get out from admin office
 			if (permission === 0) {
-				void this.router.navigateByUrl('/');
+				await this.router.navigateByUrl('/');
 				return false;
 			}
 		}
