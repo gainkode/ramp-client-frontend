@@ -18,13 +18,13 @@ export class AdminGuard {
 			void this.router.navigateByUrl('/');
 			return false;
 		}
-		console.log(route, state.url)
 
 		if (route.data.defaultRoute === true) {
-			const path = this.findMainRouteWithAccess(routes);
-			
-			if (state.url !== `/admin/${path}`) {
-				void this.router.navigateByUrl(`/admin/${path}`);
+			const path = `/admin/${this.findMainRouteWithAccess(routes)}`;
+	
+			if (state.url !== path) {
+				//here override navigation from merchant menu, so initially it navigates to admin/dashboard
+				setTimeout(() => void this.router.navigate([path]).then(), 0);
 				return false;
 			} else {
 				return true;

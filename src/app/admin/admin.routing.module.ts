@@ -35,20 +35,22 @@ export const routes: Routes = [
 				component: AdminDashboardWrapperComponent,
 				data: { header: 'Dashboard', defaultRoute: true },
 				canActivate: [AdminGuard],
+				// canActivateChild: [AdminGuard],
 				children: [
 					{ 
 						path: 'admin', 
 						// add proper roleCode 'DashboarAdmin'
 						data: { main: true },
 						component: DashboardAdminComponent, 
-						// canActivate: [AdminGuard]
+						canActivateChild: [AdminGuard]
 					},
 					{ 
 						path: 'merchant', 
 						// add proper roleCode 'DashboarMerchant'
 						data: { code: UserRoleObjectCode.Dashboard, main: true },
 						component: DashboardMerchantComponent, 
-						canActivate: [AdminGuard] },
+						canActivateChild: [AdminGuard] 
+					}
 				]
 			},
 			{
