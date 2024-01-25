@@ -8,9 +8,7 @@ import { Filter } from 'admin/model/filter.model';
 import { PaymentInstrumentList } from 'model/payment.model';
 import { EnvService } from 'services/env.service';
 
-@Injectable({
-	providedIn: 'any'
-})
+@Injectable()
 export class DashboardService implements OnDestroy {
 	private isLoadedSubject = new BehaviorSubject(false);
 
@@ -44,6 +42,14 @@ export class DashboardService implements OnDestroy {
 	setFilter(filter: Filter): void {
 		this.filter = filter;
 		this.load();
+	}
+	
+	loadMerchant(): void {
+		this.loading = true;
+    const dashboardData$ = this.adminDataService.getDashboardMerchantStats(this.filter).pipe(take(1));
+    this.subscriptions.add(dashboardData$.subscribe(data => {
+			console.log(data)
+		}));
 	}
 
   load(): void {

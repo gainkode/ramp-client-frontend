@@ -12,7 +12,8 @@ import { EnvService } from 'services/env.service';
 @Component({
 	selector: 'app-dashboard-admin',
 	templateUrl: './dashboard-admin.component.html',
-	styleUrls: ['./dashboard-admin.component.scss']
+	styleUrls: ['./dashboard-admin.component.scss'],
+	providers: [DashboardService]
 })
 export class DashboardAdminComponent implements OnInit, OnDestroy {
 	filterFields = [
