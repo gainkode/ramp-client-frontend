@@ -1,5 +1,5 @@
 import { TransactionSource, TransactionType, UserType } from './generated-models';
-import { CurrencyView, MerchantTransactionTypeList, TransactionSourceList, UserTransactionTypeList } from './payment.model';
+import { MerchantTransactionTypeList, TransactionSourceList, UserTransactionTypeList } from './payment.model';
 import { getFormattedUtcDate } from 'utils/utils';
 
 export interface ProfileBaseFilter {
@@ -209,11 +209,4 @@ export class ContactsFilter implements ProfileBaseFilter {
 		};
 		return result;
 	}
-}
-
-export interface ListRequestFilter {
-	pageIndex: number;
-	pageSize: number;
-	sortField: string;
-	desc: boolean;
 }

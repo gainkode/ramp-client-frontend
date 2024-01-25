@@ -46,147 +46,147 @@ export class DashboardService implements OnDestroy {
 	
 	loadMerchant(): void {
 		this.loading = true;
-    const dashboardData$ = this.adminDataService.getDashboardMerchantStats(this.filter).pipe(take(1));
-    this.subscriptions.add(dashboardData$.subscribe(data => {
+		const dashboardData$ = this.adminDataService.getDashboardMerchantStats(this.filter).pipe(take(1));
+		this.subscriptions.add(dashboardData$.subscribe(data => {
 			console.log(data)
 		}));
 	}
 
-  load(): void {
-    this.loading = true;
-    const dashboardData$ = this.adminDataService.getDashboardStats(this.filter).pipe(take(1));
-    this.subscriptions.add(dashboardData$.subscribe(rawData => {
-      // region Total
-      const totalData: DashboardCardData = {
-        columns: [
-          {
-            key: 'type',
-            label: 'Transaction Type',
-            type: 'text'
-          },
-          {
-            key: 'approved',
-            label: 'Approved',
-            type: 'count-volume'
-          },
-          {
-            key: 'declined',
-            label: 'Declined',
-            type: 'count-volume'
-          },
-          {
-            key: 'abandoned',
-            label: 'Abandoned',
-            type: 'count-volume'
-          },
-          {
-            key: 'failed',
-            label: 'Failed',
-            type: 'count-volume'
-          },
-          {
-            key: 'chargedBack',
-            label: 'Charged back',
-            type: 'count-volume'
-          },
-          {
-            key: 'ratio',
-            label: 'Success Rate, %',
-            type: 'percent'
-          }
-        ],
-        rows: [
-          {
-            type: 'Deposit',
-            approvedCount: rawData.deposits?.approved?.count ?? null,
-            approvedVolume: rawData.deposits?.approved?.volume ?? null,
-            declinedCount: rawData.deposits?.declined?.count ?? null,
-            declinedVolume: rawData.deposits?.declined?.volume ?? null,
-            abandonedCount: rawData.deposits?.abandoned?.count ?? null,
-            abandonedVolume: rawData.deposits?.abandoned?.volume ?? null,
-            failedCount: rawData.deposits?.failed?.count ?? null,
-            failedVolume: rawData.deposits?.failed?.volume ?? null,
-            chargedBackCount: rawData.deposits?.chargedBack?.count ?? null,
-            chargedBackVolume: rawData.deposits?.chargedBack?.volume ?? null,
-            ratio: rawData.deposits?.ratio ?? null
-          },
-          {
-            type: 'Withdrawal',
-            approvedCount: rawData.withdrawals?.approved?.count ?? null,
-            approvedVolume: rawData.withdrawals?.approved?.volume ?? null,
-            declinedCount: rawData.withdrawals?.declined?.count ?? null,
-            declinedVolume: rawData.withdrawals?.declined?.volume ?? null,
-            abandonedCount: rawData.withdrawals?.abandoned?.count ?? null,
-            abandonedVolume: rawData.withdrawals?.abandoned?.volume ?? null,
-            failedCount: rawData.withdrawals?.failed?.count ?? null,
-            failedVolume: rawData.withdrawals?.failed?.volume ?? null,
-            chargedBackCount: rawData.withdrawals?.chargedBack?.count ?? null,
-            chargedBackVolume: rawData.withdrawals?.chargedBack?.volume ?? null,
-            ratio: rawData.withdrawals?.ratio ?? null
-          },
-          {
-            type: 'Buy',
-            approvedCount: rawData.buys?.approved?.count ?? null,
-            approvedVolume: rawData.buys?.approved?.volume ?? null,
-            declinedCount: rawData.buys?.declined?.count ?? null,
-            declinedVolume: rawData.buys?.declined?.volume ?? null,
-            abandonedCount: rawData.buys?.abandoned?.count ?? null,
-            abandonedVolume: rawData.buys?.abandoned?.volume ?? null,
-            failedCount: rawData.buys?.failed?.count ?? null,
-            failedVolume: rawData.buys?.failed?.volume ?? null,
-            chargedBackCount: rawData.buys?.chargedBack?.count ?? null,
-            chargedBackVolume: rawData.buys?.chargedBack?.volume ?? null,
-            ratio: rawData.buys?.ratio ?? null
-          },
-          {
-            type: 'Sell',
-            approvedCount: rawData.sells?.approved?.count ?? null,
-            approvedVolume: rawData.sells?.approved?.volume ?? null,
-            declinedCount: rawData.sells?.declined?.count ?? null,
-            declinedVolume: rawData.sells?.declined?.volume ?? null,
-            abandonedCount: rawData.sells?.abandoned?.count ?? null,
-            abandonedVolume: rawData.sells?.abandoned?.volume ?? null,
-            failedCount: rawData.sells?.failed?.count ?? null,
-            failedVolume: rawData.sells?.failed?.volume ?? null,
-            chargedBackCount: rawData.sells?.chargedBack?.count ?? null,
-            chargedBackVolume: rawData.sells?.chargedBack?.volume ?? null,
-            ratio: rawData.sells?.ratio ?? null
-          },
-          {
-            type: 'Send',
-            approvedCount: rawData.transfers?.approved?.count ?? null,
-            approvedVolume: rawData.transfers?.approved?.volume ?? null,
-            declinedCount: rawData.transfers?.declined?.count ?? null,
-            declinedVolume: rawData.transfers?.declined?.volume ?? null,
-            abandonedCount: rawData.transfers?.abandoned?.count ?? null,
-            abandonedVolume: rawData.transfers?.abandoned?.volume ?? null,
-            failedCount: rawData.transfers?.failed?.count ?? null,
-            failedVolume: rawData.transfers?.failed?.volume ?? null,
-            chargedBackCount: rawData.transfers?.chargedBack?.count ?? null,
-            chargedBackVolume: rawData.transfers?.chargedBack?.volume ?? null,
-            ratio: rawData.transfers?.ratio ?? null
-          },
-          {
-            type: 'Receive',
-            approvedCount: rawData.receives?.approved?.count ?? null,
-            approvedVolume: rawData.receives?.approved?.volume ?? null,
-            declinedCount: rawData.receives?.declined?.count ?? null,
-            declinedVolume: rawData.receives?.declined?.volume ?? null,
-            abandonedCount: rawData.receives?.abandoned?.count ?? null,
-            abandonedVolume: rawData.receives?.abandoned?.volume ?? null,
-            failedCount: rawData.receives?.failed?.count ?? null,
-            failedVolume: rawData.receives?.failed?.volume ?? null,
-            chargedBackCount: rawData.receives?.chargedBack?.count ?? null,
-            chargedBackVolume: rawData.receives?.chargedBack?.volume ?? null,
-            ratio: rawData.receives?.ratio ?? null
-          }
-        ]
-      };
-      if (!EnvService.deposit_withdrawal) {
-        totalData.rows.splice(totalData.rows.findIndex(x => x.type === 'Deposit'), 1);
-        totalData.rows.splice(totalData.rows.findIndex(x => x.type === 'Withdrawal'), 1);
-      }
-      // endregion
+	load(): void {
+		this.loading = true;
+		const dashboardData$ = this.adminDataService.getDashboardStats(this.filter).pipe(take(1));
+		this.subscriptions.add(dashboardData$.subscribe(rawData => {
+			// region Total
+			const totalData: DashboardCardData = {
+				columns: [
+					{
+						key: 'type',
+						label: 'Transaction Type',
+						type: 'text'
+					},
+					{
+						key: 'approved',
+						label: 'Approved',
+						type: 'count-volume'
+					},
+					{
+						key: 'declined',
+						label: 'Declined',
+						type: 'count-volume'
+					},
+					{
+						key: 'abandoned',
+						label: 'Abandoned',
+						type: 'count-volume'
+					},
+					{
+						key: 'failed',
+						label: 'Failed',
+						type: 'count-volume'
+					},
+					{
+						key: 'chargedBack',
+						label: 'Charged back',
+						type: 'count-volume'
+					},
+					{
+						key: 'ratio',
+						label: 'Success Rate, %',
+						type: 'percent'
+					}
+				],
+				rows: [
+					{
+						type: 'Deposit',
+						approvedCount: rawData.deposits?.approved?.count ?? null,
+						approvedVolume: rawData.deposits?.approved?.volume ?? null,
+						declinedCount: rawData.deposits?.declined?.count ?? null,
+						declinedVolume: rawData.deposits?.declined?.volume ?? null,
+						abandonedCount: rawData.deposits?.abandoned?.count ?? null,
+						abandonedVolume: rawData.deposits?.abandoned?.volume ?? null,
+						failedCount: rawData.deposits?.failed?.count ?? null,
+						failedVolume: rawData.deposits?.failed?.volume ?? null,
+						chargedBackCount: rawData.deposits?.chargedBack?.count ?? null,
+						chargedBackVolume: rawData.deposits?.chargedBack?.volume ?? null,
+						ratio: rawData.deposits?.ratio ?? null
+					},
+					{
+						type: 'Withdrawal',
+						approvedCount: rawData.withdrawals?.approved?.count ?? null,
+						approvedVolume: rawData.withdrawals?.approved?.volume ?? null,
+						declinedCount: rawData.withdrawals?.declined?.count ?? null,
+						declinedVolume: rawData.withdrawals?.declined?.volume ?? null,
+						abandonedCount: rawData.withdrawals?.abandoned?.count ?? null,
+						abandonedVolume: rawData.withdrawals?.abandoned?.volume ?? null,
+						failedCount: rawData.withdrawals?.failed?.count ?? null,
+						failedVolume: rawData.withdrawals?.failed?.volume ?? null,
+						chargedBackCount: rawData.withdrawals?.chargedBack?.count ?? null,
+						chargedBackVolume: rawData.withdrawals?.chargedBack?.volume ?? null,
+						ratio: rawData.withdrawals?.ratio ?? null
+					},
+					{
+						type: 'Buy',
+						approvedCount: rawData.buys?.approved?.count ?? null,
+						approvedVolume: rawData.buys?.approved?.volume ?? null,
+						declinedCount: rawData.buys?.declined?.count ?? null,
+						declinedVolume: rawData.buys?.declined?.volume ?? null,
+						abandonedCount: rawData.buys?.abandoned?.count ?? null,
+						abandonedVolume: rawData.buys?.abandoned?.volume ?? null,
+						failedCount: rawData.buys?.failed?.count ?? null,
+						failedVolume: rawData.buys?.failed?.volume ?? null,
+						chargedBackCount: rawData.buys?.chargedBack?.count ?? null,
+						chargedBackVolume: rawData.buys?.chargedBack?.volume ?? null,
+						ratio: rawData.buys?.ratio ?? null
+					},
+					{
+						type: 'Sell',
+						approvedCount: rawData.sells?.approved?.count ?? null,
+						approvedVolume: rawData.sells?.approved?.volume ?? null,
+						declinedCount: rawData.sells?.declined?.count ?? null,
+						declinedVolume: rawData.sells?.declined?.volume ?? null,
+						abandonedCount: rawData.sells?.abandoned?.count ?? null,
+						abandonedVolume: rawData.sells?.abandoned?.volume ?? null,
+						failedCount: rawData.sells?.failed?.count ?? null,
+						failedVolume: rawData.sells?.failed?.volume ?? null,
+						chargedBackCount: rawData.sells?.chargedBack?.count ?? null,
+						chargedBackVolume: rawData.sells?.chargedBack?.volume ?? null,
+						ratio: rawData.sells?.ratio ?? null
+					},
+					{
+						type: 'Send',
+						approvedCount: rawData.transfers?.approved?.count ?? null,
+						approvedVolume: rawData.transfers?.approved?.volume ?? null,
+						declinedCount: rawData.transfers?.declined?.count ?? null,
+						declinedVolume: rawData.transfers?.declined?.volume ?? null,
+						abandonedCount: rawData.transfers?.abandoned?.count ?? null,
+						abandonedVolume: rawData.transfers?.abandoned?.volume ?? null,
+						failedCount: rawData.transfers?.failed?.count ?? null,
+						failedVolume: rawData.transfers?.failed?.volume ?? null,
+						chargedBackCount: rawData.transfers?.chargedBack?.count ?? null,
+						chargedBackVolume: rawData.transfers?.chargedBack?.volume ?? null,
+						ratio: rawData.transfers?.ratio ?? null
+					},
+					{
+						type: 'Receive',
+						approvedCount: rawData.receives?.approved?.count ?? null,
+						approvedVolume: rawData.receives?.approved?.volume ?? null,
+						declinedCount: rawData.receives?.declined?.count ?? null,
+						declinedVolume: rawData.receives?.declined?.volume ?? null,
+						abandonedCount: rawData.receives?.abandoned?.count ?? null,
+						abandonedVolume: rawData.receives?.abandoned?.volume ?? null,
+						failedCount: rawData.receives?.failed?.count ?? null,
+						failedVolume: rawData.receives?.failed?.volume ?? null,
+						chargedBackCount: rawData.receives?.chargedBack?.count ?? null,
+						chargedBackVolume: rawData.receives?.chargedBack?.volume ?? null,
+						ratio: rawData.receives?.ratio ?? null
+					}
+				]
+			};
+			if (!EnvService.deposit_withdrawal) {
+				totalData.rows.splice(totalData.rows.findIndex(x => x.type === 'Deposit'), 1);
+				totalData.rows.splice(totalData.rows.findIndex(x => x.type === 'Withdrawal'), 1);
+			}
+			// endregion
 
 			// region Buys
 			const buysData: DashboardCardData = {

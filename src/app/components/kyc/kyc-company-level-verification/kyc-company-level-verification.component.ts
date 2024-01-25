@@ -63,7 +63,7 @@ export class KycCompanyLevelVerificationComponent implements OnInit, OnDestroy{
     			this.auth.companyLevelVerification(
     				this.companyNameControl?.value as string,
     				this.levelName
-    			).subscribe(({ data }) => {
+    			).subscribe(() => {
     				this.inProgress = false;
     				this.complete = true;
     			}, (error) => {

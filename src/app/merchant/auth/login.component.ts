@@ -82,7 +82,7 @@ export class MerchantLoginComponent implements OnDestroy {
 		);
 	}
 
-	onError(error: string) {
+	onError(error: string): void {
 		this.errorMessage = error;
 	}
 
@@ -91,7 +91,7 @@ export class MerchantLoginComponent implements OnDestroy {
 	}
 
 	onAuthenticated(userData: LoginResult): void {
-		if(userData.user?.mode == UserMode.OneTimeWallet){
+		if(userData.user?.mode === UserMode.OneTimeWallet){
 			this.showWrongUserModeRedirectDialog();
 		}else if (userData.user?.type === UserType.Merchant) {
 			if (userData.authTokenAction === 'Default' || userData.authTokenAction === 'KycRequired') {

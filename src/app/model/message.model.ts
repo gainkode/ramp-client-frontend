@@ -22,7 +22,7 @@ export class MessageItem {
 			this.messageType = data.messageType;
 			this.objectId = data.objectId;
 			this.params = JSON.stringify(JSON.parse(data.params), null, 4);
-			this.userNotificationId = data.userNotificationId
+			this.userNotificationId = data.userNotificationId;
 
 			if(data.user){
 				this.userEmail = data.user.email;

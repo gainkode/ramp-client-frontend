@@ -10,8 +10,8 @@ export class LiquidityProviderEntityItem {
 		this.liquidityProviderId = data.liquidityProviderId ?? '';
 		this.order = data.order ?? 0;
 
-		if(data.name){
-			this.name = LiquidityProviderList.find(item => item.id == data.name);
+		if (data.name) {
+			this.name = LiquidityProviderList.find(item => item.id === data.name);
 		}
 	}
 }

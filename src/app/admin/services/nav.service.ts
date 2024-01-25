@@ -26,7 +26,6 @@ export interface Menu {
 })
 
 export class NavService implements OnDestroy {
-
 	private unsubscriber: Subject<any> = new Subject();
 	public screenWidth: BehaviorSubject<number> = new BehaviorSubject(window.innerWidth);
 
@@ -146,13 +145,9 @@ export class NavService implements OnDestroy {
 			title: 'KYC / KYB', icon: 'assignment_ind', type: 'sub', active: false, code: UserRoleObjectCode.Kyc, children: [
 				{ path: '/admin/levels', title: 'Levels', type: 'link' },
 				{ path: '/admin/tiers', title: 'Tiers', type: 'link' },
-				// { path: '/admin/kyc-schemes', title: 'Schemes', type: 'link' },
 				{ path: '/admin/black-list', title: 'Black list', type: 'link' },
 			]
 		},
-		// {
-		// 	path: '/admin/reconciliation', icon: 'cloud_off', title: 'Reconciliation', code: 'RECONCILIATION', type: 'link'
-		// },
 		{
 			title: 'Settings', icon: 'settings', type: 'sub', active: false, code: UserRoleObjectCode.Settings, children: [
 				{ path: '/admin/common', title: 'Common', type: 'link' },

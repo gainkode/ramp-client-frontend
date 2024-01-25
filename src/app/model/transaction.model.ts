@@ -214,7 +214,7 @@ export class TransactionItemFull {
 			this.sender = paymentData.sender.title;
 			this.recipient = paymentData.recipient.title;
 			this.amountToReceive = data.transferOrder?.amount ?? paymentData.amountToReceive;
-      this.merchantAmountToReceive = data?.merchantTransferOrder?.amount ?? 0;
+			this.merchantAmountToReceive = data?.merchantTransferOrder?.amount ?? 0;
 			this.rate = data.rate ?? data.initialRate;
 			if (data.type === TransactionType.Deposit) {
 				this.address = this.recipient ?? '-';

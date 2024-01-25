@@ -43,16 +43,15 @@ export class RecaptchaComponent implements AfterViewInit, OnDestroy {
   siteKey = EnvService.recaptchaSiteKey;
   provider = EnvService.recaptchaProvider;
   scriptTag = undefined;
-	widgetId: string = '';
+  widgetId = '';
 
   constructor(
   	@Inject(DOCUMENT) private document: Document,
-  	private renderer: Renderer2,
   	public dialog: MatDialog
   ) {}
 
   ngAfterViewInit(): void {
-		this.includeScript();
+  	this.includeScript();
 
   	const turnstileOptions: TurnstileOptions = {
   		sitekey: this.siteKey,
@@ -62,13 +61,12 @@ export class RecaptchaComponent implements AfterViewInit, OnDestroy {
   	this.turnstileCaptchaRender(turnstileOptions);
   }
   ngOnDestroy(): void {
-		if(this.widgetId){
-			window.turnstile.remove(this.widgetId);
-		}
+  	if(this.widgetId){
+  		window.turnstile.remove(this.widgetId);
+  	}
 		
   	if (this.scriptTag) {
   		this.scriptTag.parentNode.removeChild(this.scriptTag);
-  		// this.renderer.removeChild(this.document.head, this.scriptTag);
   		this.scriptTag = undefined;
   	}
   }

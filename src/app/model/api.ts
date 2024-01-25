@@ -20,8 +20,3 @@ export interface IRequestOptions {
 export interface ISimpleResponse {
 	success: boolean;
 }
-
-export interface IServerError {
-	statusCode: number;
-	message: string;
-}

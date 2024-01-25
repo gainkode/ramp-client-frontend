@@ -4866,7 +4866,6 @@ export enum UserRoleObjectCode {
   Messages = 'MESSAGES',
   Notifications = 'NOTIFICATIONS',
   QuickCheckout = 'QUICK_CHECKOUT',
-  Reconciliation = 'RECONCILIATION',
   Risks = 'RISKS',
   Roles = 'ROLES',
   RollingReserves = 'ROLLING_RESERVES',

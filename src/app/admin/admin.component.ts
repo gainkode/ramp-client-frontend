@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { Subject } from 'rxjs';
 import { EnvService } from '../services/env.service';
 import { SwitcherService } from './services/switcher.service';
 
@@ -10,8 +9,6 @@ import { SwitcherService } from './services/switcher.service';
 	styleUrls: ['admin.component.scss']
 })
 export class AdminComponent {
-	private destroy$ = new Subject();
-
 	constructor(
 		@Inject(DOCUMENT) private document: Document,
 		public switcherService: SwitcherService,

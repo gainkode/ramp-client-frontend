@@ -8,11 +8,6 @@ import {
 	FeeTargetFilterList, TransactionTypeList
 } from './payment.model';
 
-export const AccountTypeFilterList: CommonTargetValue[] = [
-	{ title: 'Personal', imgClass: '', imgSource: '', id: UserType.Personal },
-	{ title: 'Merchant', imgClass: '', imgSource: '', id: UserType.Merchant }
-];
-
 export const TransactionSourceFilterList: CommonTargetValue[] = [
 	{ id: TransactionSource.Widget, title: 'Widget', imgClass: '', imgSource: '' },
 	{ id: TransactionSource.Wallet, title: 'Wallet', imgClass: '', imgSource: '' },

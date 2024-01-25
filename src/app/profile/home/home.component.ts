@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { TransactionsFilter } from 'model/filter.model';
-import { SettingsCurrency, SettingsCurrencyWithDefaults, User, UserType } from 'model/generated-models';
+import { SettingsCurrency, SettingsCurrencyWithDefaults, UserType } from 'model/generated-models';
 import { ProfileItemContainer } from 'model/profile-item.model';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';

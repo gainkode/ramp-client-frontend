@@ -1504,14 +1504,6 @@ export function getCountryByCode3(code3: string): Country | null {
 	return null;
 }
 
-export function getCountryDialCode(countryName: string): string {
-	const found = getCountry(countryName);
-	if (found !== null) {
-		return found.dial_code;
-	}
-	return '';
-}
-
 export const CountryFilterList: CommonTargetValue[] = Countries.map(c => {
 	const item = new CommonTargetValue();
 	item.id = c.code3;

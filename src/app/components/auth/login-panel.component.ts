@@ -189,7 +189,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     }
 
     openForgotPasswordPage(): void {
-      window.open(`/${this.userTypeSection}/auth/restore`);
+    	window.open(`/${this.userTypeSection}/auth/restore`);
     }
 
     private loadAccountData(): void {
@@ -202,8 +202,6 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     				this.auth.setUser(data.me as User);
     				this.auth.notifyUserUpdated();
     			}
-    		}, (error) => {
-    
     		})
     	);
     }
@@ -229,7 +227,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     		const login = this.emailField?.value;
     		try {
     			const widgetID =  this.widgetId !== '' ? this.widgetId : undefined;
-					//Depending on login type(widget or not) we didn't check recaptcha
+    			//Depending on login type(widget or not) we didn't check recaptcha
     			const loginData = this.isWidget ? this.auth.authenticateWidget(this.widgetId !== '', login, this.passwordField?.value, false, widgetID) : this.auth.authenticate(this.widgetId !== '', login, this.passwordField?.value, false, widgetID);
     			this.progressChange.emit(true);
     			this.subscriptions.add(
@@ -241,9 +239,9 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     							this.auth.setLoginUser(userData);
     							this.twoFa = true;
     							this.socialLogin = true;
-									this.done = false;
+    							this.done = false;
     						} else if (userData.authTokenAction === 'UserInfoRequired') {
-									this.done = false;
+    							this.done = false;
     							this.showSignupPanel(userData);
     						} else {
     							this.authenticated.emit(userData);

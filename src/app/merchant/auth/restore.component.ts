@@ -14,7 +14,7 @@ export class MerchantRestoreComponent {
 
 	constructor(public router: Router) { }
 
-	onError(error: string) {
+	onError(error: string): void {
 		this.errorMessage = error;
 	}
 
