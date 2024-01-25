@@ -56,7 +56,9 @@ import {
 	QueryGetMessagesArgs,
 	TransactionLifelineStatusItem,
 	TransactionUpdateInput,
-	LiquidityProviderEntity
+	LiquidityProviderEntity,
+  DashboardMerchantStats,
+  QueryGetDashboardMerchantStatsArgs
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -265,6 +267,38 @@ const GET_DASHBOARD_STATS = gql`
       liquidityProviderBalances {
         currency, balance
       }
+    }
+  }
+`;
+
+const GET_DASHBOARD_MERCHANT_STATS = gql`
+  query etDashboardMerchantStats(
+    $createdDateInterval: DateTimeInterval
+    $completedDateInterval: DateTimeInterval
+    $updateDateInterval: DateTimeInterval
+    $userIdsOnly: [String!]
+    $widgetIdsOnly: [String!]
+    $sourcesOnly: [TransactionSource!]
+    $countriesOnly: [String!]
+    $countryCodeType: CountryCodeType
+    $accountTypesOnly: [UserType!]
+    $fiatCurrency: String
+  ) {
+    getDashboardMerchantStats(
+      createdDateInterval: $createdDateInterval
+      completedDateInterval: $completedDateInterval
+      updateDateInterval: $updateDateInterval
+      userIdsOnly: $userIdsOnly
+      widgetIdsOnly: $widgetIdsOnly
+      sourcesOnly: $sourcesOnly
+      countriesOnly: $countriesOnly
+      countryCodeType: $countryCodeType
+      accountTypesOnly: $accountTypesOnly
+      fiatCurrency: $fiatCurrency
+    ) {
+      transactionsAmount,
+      transactionsTotal,
+      usersTotal
     }
   }
 `;
@@ -2760,6 +2794,29 @@ export class AdminDataService {
 			return result.data.getDashboardStats;
 		}));
 	}
+
+  getDashboardMerchantStats(filter: Filter): Observable<DashboardMerchantStats> {
+		const vars: QueryGetDashboardStatsArgs = {
+			createdDateInterval: filter.createdDateInterval,
+			completedDateInterval: filter.completedDateInterval,
+			updateDateInterval: filter.updatedDateInterval,
+			userIdsOnly: filter.user ? [filter.user] : [],
+			widgetIdsOnly: filter.widgetNames,
+			sourcesOnly: filter.sources,
+			countriesOnly: filter.countries,
+			countryCodeType: CountryCodeType.Code3,
+			accountTypesOnly: filter.accountTypes,
+			fiatCurrency: filter.fiatCurrency
+		};
+		return this.watchQuery<{ getDashboardMerchantStats: DashboardMerchantStats; }, QueryGetDashboardMerchantStatsArgs>({
+			query: GET_DASHBOARD_MERCHANT_STATS,
+			variables: vars,
+			fetchPolicy: 'network-only'
+		}).pipe(map(result => {
+			return result.data.getDashboardMerchantStats;
+		}));
+	}
+  
 
 	getFeeSettings(): Observable<{ list: Array<FeeScheme>; count: number; }> {
 		return this.watchQuery<{ getSettingsFee: SettingsFeeListResult; }, QueryGetSettingsFeeArgs>({

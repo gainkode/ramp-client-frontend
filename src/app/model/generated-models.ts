@@ -476,6 +476,13 @@ export type CustodyWithdrawalOrderInfo = {
   transferHash?: Maybe<Scalars['String']['output']>;
 };
 
+export type DashboardMerchantStats = {
+  __typename?: 'DashboardMerchantStats';
+  transactionsAmount?: Maybe<Scalars['Float']['output']>;
+  transactionsTotal?: Maybe<Scalars['Int']['output']>;
+  usersTotal?: Maybe<Scalars['Int']['output']>;
+};
+
 export type DashboardStats = {
   __typename?: 'DashboardStats';
   balances?: Maybe<Array<BalanceStats>>;
@@ -2260,6 +2267,8 @@ export type Query = {
   getCustodyWithdrawalOrderStatus?: Maybe<CustodyWithdrawalOrderInfo>;
   /** Get custody withdrawal orders */
   getCustodyWithdrawalOrders?: Maybe<Array<CustodyWithdrawalOrderInfo>>;
+  /** Get toolbar merchant statistics */
+  getDashboardMerchantStats?: Maybe<DashboardMerchantStats>;
   /** Get toolbar statistics */
   getDashboardStats?: Maybe<DashboardStats>;
   getDevices?: Maybe<UserDeviceListResult>;
@@ -2544,6 +2553,21 @@ export type QueryGetCustodyWithdrawalOrderStatusArgs = {
 export type QueryGetCustodyWithdrawalOrdersArgs = {
   custodyProviderName: Scalars['String']['input'];
   transferOrdersTrackingTimedeltaDays: Scalars['Int']['input'];
+};
+
+
+export type QueryGetDashboardMerchantStatsArgs = {
+  accountTypesOnly?: InputMaybe<Array<UserType>>;
+  completedDateInterval?: InputMaybe<DateTimeInterval>;
+  countriesOnly?: InputMaybe<Array<Scalars['String']['input']>>;
+  countryCodeType?: InputMaybe<CountryCodeType>;
+  createdDateInterval?: InputMaybe<DateTimeInterval>;
+  fiatCurrency?: InputMaybe<Scalars['String']['input']>;
+  sourcesOnly?: InputMaybe<Array<TransactionSource>>;
+  transactionDateOnly?: InputMaybe<Scalars['DateTime']['input']>;
+  updateDateInterval?: InputMaybe<DateTimeInterval>;
+  userIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
+  widgetIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 
@@ -4833,6 +4857,7 @@ export enum UserRoleObjectCode {
   CreateNewTransaction = 'CREATE_NEW_TRANSACTION',
   Customers = 'CUSTOMERS',
   Dashboard = 'DASHBOARD',
+  DashboardMerchant = 'DASHBOARD_MERCHANT',
   DashboardWalletBalances = 'DASHBOARD_WALLET_BALANCES',
   Exchanger = 'EXCHANGER',
   Fees = 'FEES',
