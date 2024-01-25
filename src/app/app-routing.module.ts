@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ComponentsModule } from './components/components.module';
 import { ProfileModule } from './profile/profile.module';
-import { TermsComponent } from './terms.component';
 import { WidgetModule } from './widget/widget.module';
 
 const routes: Routes = [
@@ -24,8 +23,6 @@ const routes: Routes = [
 	{
 		path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
 	},
-	{ path: 'terms/:id', component: TermsComponent },
-	{ path: 'terms', component: TermsComponent },
 	{ path: '**', redirectTo: '/personal/auth/login' }
 ];
 
@@ -36,7 +33,7 @@ const routes: Routes = [
 		ProfileModule,
 		WidgetModule
 	],
-	declarations: [TermsComponent],
+	declarations: [],
 	exports: [RouterModule]
 })
 export class AppRoutingModule { }
