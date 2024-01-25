@@ -29,7 +29,6 @@ import { ProfileHomeComponent } from '../profile/home/home.component';
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
 import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
-import { ProfilePriceListComponent } from '../profile/pricelist/data/price-list.component';
 
 const routing = RouterModule.forChild([
 	// Auth pages
@@ -50,7 +49,6 @@ const routing = RouterModule.forChild([
 			{ path: 'contactlist', component: ProfileContactsComponent },
 			{ path: 'transactions/:wallet', component: ProfileTransactionsComponent },
 			{ path: 'transactions', component: ProfileTransactionsComponent },
-			{ path: 'pricelist', component: ProfilePriceListComponent },
 			{ path: '**', redirectTo: 'home' }
 		],
 		canActivate: [MerchantGuard]

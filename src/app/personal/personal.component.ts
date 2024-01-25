@@ -166,7 +166,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     		const section = segments[2].path;
     		let personalVerified = false;
     		if (path1 === 'personal' && path2 === 'main') {
-    			if (section === 'home' || section === 'wallets' || section === 'contactlist' || section === 'transactions' || section === 'pricelist') {
+    			if (section === 'home' || section === 'wallets' || section === 'contactlist' || section === 'transactions') {
     				personalVerified = true;
     			}
     		}

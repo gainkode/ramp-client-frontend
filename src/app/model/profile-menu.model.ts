@@ -29,13 +29,6 @@ export const PersonalProfileMenuItems: Array<MenuItem> = [
 		icon: 'group',
 		code: 'CONTACTS'
 	},
-	// {
-	//     id: 'pricelist',
-	//     name: 'Crypto Pricelist',
-	//     url: '/personal/main/pricelist',
-	//     icon: 'insights',
-	//     code: ''
-	// }
 ];
 
 export const MerchantProfileMenuItems: Array<MenuItem> = [
@@ -67,13 +60,6 @@ export const MerchantProfileMenuItems: Array<MenuItem> = [
 		icon: 'group',
 		code: 'CONTACTS'
 	},
-	// {
-	//     id: 'pricelist',
-	//     name: 'Crypto Pricelist',
-	//     url: '/merchant/main/pricelist',
-	//     icon: 'insights',
-	//     code: ''
-	// }
 ];
 
 export const PersonalProfilePopupMenuItems: Array<MenuItem> = [

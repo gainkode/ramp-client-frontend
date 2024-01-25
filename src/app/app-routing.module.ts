@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ComponentsModule } from './components/components.module';
-import { IntroComponent } from './intro.component';
 import { ProfileModule } from './profile/profile.module';
 import { TermsComponent } from './terms.component';
 import { WidgetModule } from './widget/widget.module';
@@ -37,7 +36,7 @@ const routes: Routes = [
 		ProfileModule,
 		WidgetModule
 	],
-	declarations: [TermsComponent, IntroComponent],
+	declarations: [TermsComponent],
 	exports: [RouterModule]
 })
 export class AppRoutingModule { }

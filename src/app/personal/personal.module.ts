@@ -33,7 +33,6 @@ import { ProfileModule } from '../profile/profile.module';
 import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
 import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
 import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
-import { ProfilePriceListComponent } from '../profile/pricelist/data/price-list.component';
 import { ProfileHomeComponent } from '../profile/home/home.component';
 import { ProfileNotificationsComponent } from '../profile/notifications/notifications.component';
 import { ProfileSettingsComponent } from '../profile/settings/settings.component';
@@ -58,7 +57,6 @@ const routing = RouterModule.forChild([
 			{ path: 'contactlist', component: ProfileContactsComponent },
 			{ path: 'transactions/:wallet', component: ProfileTransactionsComponent },
 			{ path: 'transactions', component: ProfileTransactionsComponent },
-			{ path: 'pricelist', component: ProfilePriceListComponent },
 			{ path: '**', redirectTo: 'home' }
 		],
 		canActivate: [PersonalGuard]
