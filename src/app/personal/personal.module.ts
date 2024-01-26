@@ -1,7 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,7 +17,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatListModule } from '@angular/material/list';
-import { PersonalGuard } from './personal.guard';
 import { PersonalComponent } from './personal.component';
 import { ComponentsModule } from '../components/components.module';
 import { DirectiveModule } from '../directives/directives.module';
@@ -30,51 +28,9 @@ import { PersonalConfirmDeviceComponent } from './auth/confirm-device.component'
 import { PersonalConfirmEmailComponent } from './auth/confirm-email.component';
 import { PersonalResetComponent } from './auth/reset.component';
 import { ProfileModule } from '../profile/profile.module';
-import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
-import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
-import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
-import { ProfileHomeComponent } from '../profile/home/home.component';
-import { ProfileNotificationsComponent } from '../profile/notifications/notifications.component';
-import { ProfileSettingsComponent } from '../profile/settings/settings.component';
 import { WidgetModule } from '../widget/widget.module';
-
-const routing = RouterModule.forChild([
-	// Auth pages
-	{ path: 'auth/login', component: PersonalLoginComponent },
-	{ path: 'auth/register', component: PersonalRegisterComponent },
-	{ path: 'auth/restore', component: PersonalRestoreComponent },
-	{ path: 'auth/confirm-email/:token', component: PersonalConfirmEmailComponent },
-	{ path: 'auth/confirm-device/:token', component: PersonalConfirmDeviceComponent },
-	{ path: 'auth/success/:type', component: PersonalSuccessComponent },
-	{ path: 'auth/new-password/:token', component: PersonalResetComponent },
-	// Authenticated main profile
-	{
-		path: 'main',
-		component: PersonalComponent,
-		children: [
-			{ path: 'home', component: ProfileHomeComponent },
-			{ path: 'wallets', component: ProfileWalletsComponent },
-			{ path: 'contactlist', component: ProfileContactsComponent },
-			{ path: 'transactions/:wallet', component: ProfileTransactionsComponent },
-			{ path: 'transactions', component: ProfileTransactionsComponent },
-			{ path: '**', redirectTo: 'home' }
-		],
-		canActivate: [PersonalGuard]
-	},
-	// Authenticated account profile
-	{
-		path: 'account',
-		component: PersonalComponent,
-		children: [
-			{ path: 'notifications', component: ProfileNotificationsComponent },
-			{ path: 'settings/:page', component: ProfileSettingsComponent },
-			{ path: 'settings', component: ProfileSettingsComponent },
-			{ path: '**', redirectTo: 'settings' }
-		],
-		canActivate: [PersonalGuard]
-	},
-	{ path: '**', redirectTo: 'main' }
-]);
+import { PersonalRoutingModule } from './personal-routing.module';
+import { PersonalGuard } from './personal.guard';
 
 const modules = [
 	MatTabsModule,
@@ -105,7 +61,7 @@ const modules = [
 export class MaterialModule { }
 
 @NgModule({
-	imports: [CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule, DirectiveModule],
+	imports: [CommonModule, FormsModule, ReactiveFormsModule, PersonalRoutingModule, MaterialModule, DirectiveModule],
 	declarations: [
 		// Auth
 		PersonalLoginComponent, PersonalRegisterComponent, PersonalRestoreComponent, PersonalResetComponent,

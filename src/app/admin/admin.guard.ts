@@ -20,7 +20,17 @@ export class AdminGuard {
 		}
 
 		if (route.data.defaultRoute === true) {
-			const path = `/admin/${this.findMainRouteWithAccess(routes)}`;
+			// If user opened default route we have to find first main route with access for this user
+			const mainRoutPath = this.findMainRouteWithAccess(routes);
+			let path = '';
+
+			// If user no access to any our main routes(or we don't have any main routes but we have default route) we have to redirect him to base route
+			if (mainRoutPath) {
+				path = `/admin/${mainRoutPath}`;
+			} else {
+				await this.router.navigateByUrl('/');
+				return false;
+			}
 	
 			if (state.url !== path) {
 				//here override navigation from merchant menu, so initially it navigates to admin/dashboard
@@ -45,8 +55,8 @@ export class AdminGuard {
 
 	private findMainRouteWithAccess(routeItems: Route[]): string {
 		let fullPath = '';
-		
 		for(const route of routeItems) {
+			// If this route is main we have to check if user has permission to open this route
 			if (route?.data?.main === true) {
 				const permission = this.auth.isPermittedObjectCode(route.data.code);
 
@@ -55,9 +65,11 @@ export class AdminGuard {
 					break;
 				}
 			} else if (route.children?.length) {
+				// if this is not main route but this route has children we have to check if some child route is main route
 				const childrenMainPath = this.findMainRouteWithAccess(route.children);
 				if (childrenMainPath != '') {
 					fullPath = `${route.path}${childrenMainPath}`;
+					break;
 				}
 			}
 		}

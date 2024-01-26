@@ -1,7 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -23,50 +22,7 @@ import { MerchantConfirmEmailComponent } from './auth/confirm-email.component';
 import { MerchantConfirmDeviceComponent } from './auth/confirm-device.component';
 import { WidgetModule } from '../widget/widget.module';
 import { ProfileModule } from '../profile/profile.module';
-import { ProfileNotificationsComponent } from '../profile/notifications/notifications.component';
-import { ProfileSettingsComponent } from '../profile/settings/settings.component';
-import { ProfileHomeComponent } from '../profile/home/home.component';
-import { ProfileWalletsComponent } from '../profile/wallets/wallets.component';
-import { ProfileContactsComponent } from '../profile/contacts/contacts.component';
-import { ProfileTransactionsComponent } from '../profile/transactions/transactions.component';
-
-const routing = RouterModule.forChild([
-	// Auth pages
-	{ path: 'auth/login', component: MerchantLoginComponent },
-	{ path: 'auth/register', component: MerchantRegisterComponent },
-	{ path: 'auth/restore', component: MerchantRestoreComponent },
-	{ path: 'auth/confirm-email/:token', component: MerchantConfirmEmailComponent },
-	{ path: 'auth/confirm-device/:token', component: MerchantConfirmDeviceComponent },
-	{ path: 'auth/success/:type', component: MerchantSuccessComponent },
-	{ path: 'auth/new-password/:token', component: MerchantResetComponent },
-	// Authenticated main profile
-	{
-		path: 'main',
-		component: MerchantComponent,
-		children: [
-			{ path: 'home', component: ProfileHomeComponent },
-			{ path: 'wallets', component: ProfileWalletsComponent },
-			{ path: 'contactlist', component: ProfileContactsComponent },
-			{ path: 'transactions/:wallet', component: ProfileTransactionsComponent },
-			{ path: 'transactions', component: ProfileTransactionsComponent },
-			{ path: '**', redirectTo: 'home' }
-		],
-		canActivate: [MerchantGuard]
-	},
-	// Authenticated account profile
-	{
-		path: 'account',
-		component: MerchantComponent,
-		children: [
-			{ path: 'notifications', component: ProfileNotificationsComponent },
-			{ path: 'settings/:page', component: ProfileSettingsComponent },
-			{ path: 'settings', component: ProfileSettingsComponent },
-			{ path: '**', redirectTo: 'settings' }
-		],
-		canActivate: [MerchantGuard]
-	},
-	{ path: '**', redirectTo: 'main' }
-]);
+import { MerchantRoutingModule } from './merchant-routing.module';
 
 const modules = [
 	MatTabsModule,
@@ -90,7 +46,7 @@ const modules = [
 export class MaterialModule { }
 
 @NgModule({
-	imports: [ CommonModule, FormsModule, ReactiveFormsModule, routing, MaterialModule ],
+	imports: [ CommonModule, FormsModule, ReactiveFormsModule, MerchantRoutingModule, MaterialModule ],
 	declarations: [
 		// Auth
 		MerchantLoginComponent, MerchantRegisterComponent, MerchantRestoreComponent, MerchantResetComponent,

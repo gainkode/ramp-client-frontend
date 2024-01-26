@@ -957,6 +957,15 @@ export class AuthService {
 		return result;
 	}
 
+	isAuthenticatedUserMode(mode: UserMode): boolean {
+		let result = false;
+		const user = this.getAuthenticatedUser();
+		if (user !== null) {
+			result = (user.mode === mode);
+		}
+		return result;
+	}
+
 	isAuthenticatedUserRole(roles: string[]): boolean {
 		let result = false;
 		const user: User | null = this.getAuthenticatedUser();
