@@ -39,14 +39,14 @@ export const routes: Routes = [
 					{
 						path: 'admin', 
 						// add proper roleCode 'DashboarAdmin'
-						data: { code: UserRoleObjectCode.Dashboard, main: true },
+						data: { code: UserRoleObjectCode.DashboardMerchant, main: true },
 						component: DashboardAdminComponent, 
 						canActivate: [AdminGuard]
 					},
 					{ 
 						path: 'merchant', 
 						// add proper roleCode 'DashboarMerchant'
-						data: { code: UserRoleObjectCode.DashboardMerchant, main: true },
+						data: { code: UserRoleObjectCode.Dashboard, main: true },
 						component: DashboardMerchantComponent, 
 						canActivate: [AdminGuard] 
 					}

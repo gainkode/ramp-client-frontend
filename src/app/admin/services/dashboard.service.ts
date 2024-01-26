@@ -1,12 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { delay, take } from 'rxjs/operators';
 import { getCurrencySign } from 'utils/utils';
 import { DashboardCardData, DashboardData } from 'admin/model/dashboard-data.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { Filter } from 'admin/model/filter.model';
 import { PaymentInstrumentList } from 'model/payment.model';
 import { EnvService } from 'services/env.service';
+import { DashboardMerchantStats } from 'model/generated-models';
 
 @Injectable()
 export class DashboardService implements OnDestroy {
@@ -44,12 +45,9 @@ export class DashboardService implements OnDestroy {
 		this.load();
 	}
 	
-	loadMerchant(): void {
-		this.loading = true;
-		const dashboardData$ = this.adminDataService.getDashboardMerchantStats(this.filter).pipe(take(1));
-		this.subscriptions.add(dashboardData$.subscribe(data => {
-			console.log(data)
-		}));
+	dashboardMerchantData(): Observable<DashboardMerchantStats> {
+		// imitate loading with delay
+		return this.adminDataService.getDashboardMerchantStats(this.filter).pipe(delay(1000),take(1));
 	}
 
 	load(): void {

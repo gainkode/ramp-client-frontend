@@ -8,7 +8,7 @@ import { RiskAlertCodeList } from 'admin/model/lists.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
 import { Countries } from 'model/country-code.model';
-import { SettingsKycTier, UserRoleObjectCode } from 'model/generated-models';
+import { SettingsKycTier } from 'model/generated-models';
 import { CurrencyView, KycStatusList, PaymentInstrumentList, RiskLevelViewList, TransactionKycStatusList, TransactionSourceList, TransactionStatusList, TransactionTypeList, UserActionTypeList, UserModeList, UserNotificationCodeList, UserStatusList, UserTypeList } from 'model/payment.model';
 import { AdminDateRangeComponent } from '../date-range/date-range.component';
 import { AuthService } from 'services/auth.service';
@@ -89,17 +89,6 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   	if (this.fields.includes('widgetName')) {
   		this.widgetNamesSearch();
   	}
-
-  	// UserRoleObjectCode doesn't contain ShowEmail
-  	// this.fields = this.fields.filter(item => {
-  	// 	if(item == 'user' || item == 'users'){
-  	// 		if(!this.auth.isPermittedObjectCode(UserRoleObjectCode.ShowEmail)){
-  	// 			item = undefined;
-  	// 		}
-  	// 	}
-  	// 	return item;
-  	// })
-  	// console.log(this.fields)
   }
 
   ngOnDestroy(): void {
@@ -112,11 +101,11 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
   		if (this.adminAdditionalSettings) {
-				this.userModeOptions = this.userModeOptions.filter(item => this.adminAdditionalSettings?.userMode[item.id] == true);
-				this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings?.userType[item.id] == true);
-				this.paymentInstrumentsOptions = this.paymentInstrumentsOptions.filter(item => this.adminAdditionalSettings?.paymentMethods[item.id] == true);
-				this.transactionTypeOptions = this.transactionTypeOptions.filter(item => this.adminAdditionalSettings?.transactionType[item.id] == true);
-			}
+  			this.userModeOptions = this.userModeOptions.filter(item => this.adminAdditionalSettings?.userMode[item.id] == true);
+  			this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings?.userType[item.id] == true);
+  			this.paymentInstrumentsOptions = this.paymentInstrumentsOptions.filter(item => this.adminAdditionalSettings?.paymentMethods[item.id] == true);
+  			this.transactionTypeOptions = this.transactionTypeOptions.filter(item => this.adminAdditionalSettings?.transactionType[item.id] == true);
+  		}
 			
   	}
   }
@@ -339,7 +328,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   	if (this.fields.includes('search')) {
   		controlsConfig.search = [''];
   	}
-		if (this.fields.includes('from')) {
+  	if (this.fields.includes('from')) {
   		controlsConfig.from = [''];
   	}
   	if (this.fields.includes('verifyWhenPaid')) {
@@ -361,7 +350,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   		this.filterForm.controls.search.setValue(this.filterData.search);
   	}
 
-		if (this.filterData?.from) {
+  	if (this.filterData?.from) {
   		this.filterForm.controls.from.setValue(this.filterData.from);
   	}
 
@@ -491,7 +480,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
   		if (this.fields.includes('from')) {
   			this.filterForm.controls.from.setValue('');
   		}
-			if (this.fields.includes('search')) {
+  		if (this.fields.includes('search')) {
   			this.filterForm.controls.search.setValue('');
   		}
   		if (this.fields.includes('verifyWhenPaid')) {

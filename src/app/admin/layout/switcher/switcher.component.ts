@@ -35,10 +35,11 @@ export class AdminSwitcherComponent implements OnInit {
   	switcher.customClickFn();
   	switcher.updateChanges();
   }
-  reset(){
+  reset(): void{
   	sessionStorage.clear(); 
-  	const html:any = document.querySelector('html');
+  	const html: any = document.querySelector('html');
   	const body = document.querySelector('body');
+
   	html.style = ''; 
   	body?.classList.remove('dark-theme');
   	body?.classList.remove('transparent-theme');
@@ -280,7 +281,7 @@ export class AdminSwitcherComponent implements OnInit {
   	switcher.updateChanges();
   }
 
-  bgImage(e: any) {
+  bgImage(e: any): void {
   	const transparent = document.getElementById('myonoffswitchTransparent') as HTMLInputElement;
   	transparent.checked = true;
 

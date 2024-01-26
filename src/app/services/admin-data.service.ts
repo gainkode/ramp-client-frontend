@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef, WatchQueryOptions } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
 import {
@@ -2808,6 +2808,12 @@ export class AdminDataService {
 			accountTypesOnly: filter.accountTypes,
 			fiatCurrency: filter.fiatCurrency
 		};
+    return of({
+      transactionsAmount: 10000019,
+      transactionsTotal: 1000,
+      usersTotal: 99,
+    } as DashboardMerchantStats);
+    
 		return this.watchQuery<{ getDashboardMerchantStats: DashboardMerchantStats; }, QueryGetDashboardMerchantStatsArgs>({
 			query: GET_DASHBOARD_MERCHANT_STATS,
 			variables: vars,

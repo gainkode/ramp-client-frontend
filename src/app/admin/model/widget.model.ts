@@ -21,8 +21,8 @@ export class WidgetItem {
 	currenciesFiat: Array<string> = [];
 	destinationAddress: Array<WidgetDestination> = [];
 	merchantFeeDestinationAddress: Array<WidgetDestination> = [];
-	merchantFeeMinAmount: number = 0;
-  merchantFeePercent: number = 0;
+	merchantFeeMinAmount = 0;
+	merchantFeePercent = 0;
 	destinationAddresses: Array<string> = [];
 	countriesCode2: Array<string> = [];
 	countries: Array<string> = [];
@@ -93,7 +93,7 @@ export class WidgetItem {
 
 			this.destinationAddress = data.destinationAddress;
 
-			if(data.merchantFeeAddress && data.merchantFeeAddress.length != 0){
+			if(data.merchantFeeAddress?.length !== 0){
 				this.merchantFeeDestinationAddress = data.merchantFeeAddress;
 			}
       

@@ -3,6 +3,7 @@ import {
 	ViewEncapsulation,
 	HostListener,
 	ElementRef,
+	OnInit,
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Menu, NavService } from '../../services/nav.service';
@@ -16,7 +17,7 @@ import { EnvService } from 'services/env.service';
 	styleUrls: ['./sidebar.component.scss'],
 	encapsulation: ViewEncapsulation.None,
 })
-export class AdminSidebarComponent {
+export class AdminSidebarComponent implements OnInit {
 	public menuItems!: Menu[];
 	public url: any;
 	public logoSrc = `${EnvService.image_host}/images/logo-dark.png`;
@@ -64,7 +65,7 @@ export class AdminSidebarComponent {
 	}
 
 	// Active NavBar State
-	setNavActive(item: any) {
+	setNavActive(item: any): void {
 		this.menuItems.filter((menuItem) => {
 			if (menuItem !== item) {
 				menuItem.active = false;
@@ -72,12 +73,12 @@ export class AdminSidebarComponent {
 				document.querySelector('.app')?.classList.remove('sidenav-toggled1');
 				this.navServices.collapseSidebar = false;
 			}
-			if (menuItem.children && menuItem.children.includes(item)) {
+			if (menuItem.children?.includes(item)) {
 				menuItem.active = true;
 			}
 			if (menuItem.children) {
 				menuItem.children.filter((submenuItems) => {
-					if (submenuItems.children && submenuItems.children.includes(item)) {
+					if (submenuItems.children?.includes(item)) {
 						menuItem.active = true;
 						submenuItems.active = true;
 					}
@@ -87,7 +88,7 @@ export class AdminSidebarComponent {
 	}
 
 	// Click Toggle menu
-	toggleNavActive(item: any) {
+	toggleNavActive(item: any): void {
 		if (!item.active) {
 			this.menuItems.forEach((a: any) => {
 				if (this.menuItems.includes(item)) {
@@ -130,13 +131,13 @@ export class AdminSidebarComponent {
 		});
 	}
 
-	goToMainPage() {
+	goToMainPage(): void {
 		this.router.navigate([this.auth.getUserMainPage()]).catch((e) => {
 			throw new Error(e);
 		});
 	}
 
-	sidebarClose() {
+	sidebarClose(): void {
 		if ((this.navServices.collapseSidebar === true)) {
 			document.querySelector('.app')?.classList.remove('sidenav-toggled');
 			this.navServices.collapseSidebar = false;
@@ -146,13 +147,13 @@ export class AdminSidebarComponent {
 	scrolled = false;
 
 	@HostListener('window:scroll', [])
-	onWindowScroll() {
+	onWindowScroll(): void {
 		this.scrolled = window.scrollY > 70;
 	}
 
 	private filterMenuItemsByPermissions(items: Menu[]): Menu[] {
 		const filteredItems: Menu[] = [];
-		for (let menuItem of items) {
+		for (const menuItem of items) {
 			if (menuItem.code) {
 				// If a menu item has a code, we shouldn't rely on the codes of the child elements
 				if (this.auth.isPermittedObjectCode(menuItem.code)) {

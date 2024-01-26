@@ -12,14 +12,14 @@ export class RoleSelector {
 	templateUrl: './role-select.component.html'
 })
 export class AdminRoleSelectComponent {
-  @Input() set roleList(vals: UserRole[]) {
-    this.roleListInternal = vals;
-    this.updateState();
-  }
-  @Input() set userRoles(vals: string[]) {
-    this.userRolesInternal = vals;
-    this.updateState();
-  }
+	@Input() set roleList(vals: UserRole[]) {
+		this.roleListInternal = vals;
+		this.updateState();
+	}
+	@Input() set userRoles(vals: string[]) {
+		this.userRolesInternal = vals;
+		this.updateState();
+	}
 
   @Output() changed = new EventEmitter<string[]>();
 
@@ -42,11 +42,11 @@ export class AdminRoleSelectComponent {
   }
 
   onChanged(): void {
-    const selectedRoles = this.roleItems
-      .filter(x => x.selected === true)
-      .map(x => x.id);
-    this.changed.emit(
-      [ ... selectedRoles
-      ]);
+  	const selectedRoles = this.roleItems
+  		.filter(x => x.selected === true)
+  		.map(x => x.id);
+  	this.changed.emit(
+  		[ ... selectedRoles
+  		]);
   }
 }
