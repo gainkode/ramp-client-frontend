@@ -23,20 +23,17 @@ export class AdminDashboardCardComponent implements OnInit, OnDestroy {
   	this.subscriptions.add(
   		this.dashboardService.data.subscribe(data => {
   			this.data = data[this.source];
-  			if(this.source === 'fees'){
-  				if(this.data?.rows){
-  					for(const row of this.data?.rows){
-  						row.volume = `€${parseFloat((<string>row.volume)?.split('€')[1]).toFixed(2)}`;
-  					}
+
+  			if(this.source === 'fees' && this.data?.rows){
+  				for(const row of this.data?.rows){
+  					row.volume = `€${parseFloat((<string>row.volume)?.split('€')[1]).toFixed(2)}`;
   				}
   			}
   			if(this.data?.columns){{
   				for(const col of this.data?.columns){
   					for(const row of this.data?.rows){
-  						if(col.type === 'count-volume'){
-  							if(row[col.key + 'Volume']){
-  								row[col.key + 'Volume'] = typeof row[col.key + 'Volume'] == 'string' ? parseFloat((<string>row[col.key + 'Volume'])).toFixed(2) : (<number>row[col.key + 'Volume']).toFixed(2);
-  							}
+  						if(col.type === 'count-volume' && row[col.key + 'Volume']){
+  							row[col.key + 'Volume'] = typeof row[col.key + 'Volume'] == 'string' ? parseFloat((<string>row[col.key + 'Volume'])).toFixed(2) : (<number>row[col.key + 'Volume']).toFixed(2);
   						}
   					}
   				}
@@ -51,6 +48,6 @@ export class AdminDashboardCardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-  	this.subscriptions.unsubscribe();
+  	// this.subscriptions.unsubscribe();
   }
 }

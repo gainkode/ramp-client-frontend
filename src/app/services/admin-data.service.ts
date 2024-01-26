@@ -2809,11 +2809,11 @@ export class AdminDataService {
 			accountTypesOnly: filter.accountTypes,
 			fiatCurrency: filter.fiatCurrency
 		};
-    // return of({
-    //   transactionsAmount: 10000019,
-    //   transactionsTotal: 1000,
-    //   usersTotal: 99,
-    // } as DashboardMerchantStats);
+    return of({
+      transactionsAmount: 10000019,
+      transactionsTotal: 1000,
+      usersTotal: 99,
+    } as DashboardMerchantStats);
     
 		return this.watchQuery<{ getDashboardMerchantStats: DashboardMerchantStats; }, QueryGetDashboardMerchantStatsArgs>({
 			query: GET_DASHBOARD_MERCHANT_STATS,
