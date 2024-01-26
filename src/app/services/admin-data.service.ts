@@ -2809,6 +2809,7 @@ export class AdminDataService {
 			accountTypesOnly: filter.accountTypes,
 			fiatCurrency: filter.fiatCurrency
 		};
+    
     return of({
       transactionsAmount: 10000019,
       transactionsTotal: 1000,

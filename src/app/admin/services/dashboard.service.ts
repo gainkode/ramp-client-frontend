@@ -7,7 +7,7 @@ import { AdminDataService } from 'services/admin-data.service';
 import { Filter } from 'admin/model/filter.model';
 import { PaymentInstrumentList } from 'model/payment.model';
 import { EnvService } from 'services/env.service';
-import { DashboardMerchantStats } from 'model/generated-models';
+import { DashboardMerchantStats, DateTimeInterval } from 'model/generated-models';
 
 @Injectable()
 export class DashboardService implements OnDestroy {
@@ -45,8 +45,9 @@ export class DashboardService implements OnDestroy {
 		this.load();
 	}
 	
-	dashboardMerchantData(): Observable<DashboardMerchantStats> {
-		// imitate loading with delay
+	dashboardMerchantData(from: string, to: string): Observable<DashboardMerchantStats> {
+		this.filter.completedDateInterval = <DateTimeInterval>{ from, to };
+	
 		return this.adminDataService.getDashboardMerchantStats(this.filter).pipe(delay(1000),take(1));
 	}
 

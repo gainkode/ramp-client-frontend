@@ -6,8 +6,7 @@ import { DashboardService } from '../../services/dashboard.service';
 @Component({
 	selector: 'app-admin-dashboard-card',
 	templateUrl: './dashboard-card.component.html',
-	styleUrls: ['./dashboard-card.component.scss'],
-	providers: [DashboardService]
+	styleUrls: ['./dashboard-card.component.scss']
 })
 export class AdminDashboardCardComponent implements OnInit, OnDestroy {
   @Input() title = '';

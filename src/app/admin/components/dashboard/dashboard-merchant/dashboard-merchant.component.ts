@@ -1,32 +1,43 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { DashboardService } from 'admin/services/dashboard.service';
+import { DashboardMerchantStats } from 'model/generated-models';
+import { BehaviorSubject, Observable, Subscription, switchMap } from 'rxjs';
 import { AuthService } from 'services/auth.service';
-import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 
 @Component({
 	selector: 'app-dashboard-merchant',
 	templateUrl: './dashboard-merchant.component.html',
 	styleUrls: ['./dashboard-merchant.component.scss'],
 	providers: [DashboardService],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardMerchantComponent implements OnInit, OnDestroy {
+	currentDate = new Date();
+	dateRangeForm = new FormGroup({
+		from: new FormControl<Date | null>(new Date(Date.UTC(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1, 0, 0, 0, 0))),
+		to: new FormControl<Date | null>(new Date(Date.UTC(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1, 0, 0, 0, 0))),
+	});
+	dashboardData$: Observable<DashboardMerchantStats>;
+
 	private subscriptions: Subscription = new Subscription();
-	date = new Date();
-	dashboardData$ = this.dashboardService.dashboardMerchantData();
-	dateRange = new FormGroup({
-		from: new FormControl<Date | null>(new Date()),
-		to: new FormControl<Date | null>(new Date()),
+	private dateRangeSubject = new BehaviorSubject<{ from: Date; to: Date; }>({
+		from: this.dateRangeForm.controls.from.value,
+		to: this.dateRangeForm.controls.to.value,
 	});
 
 	constructor(
 		public dashboardService: DashboardService,
 		private auth: AuthService) {
-	}
-
-	get dateRangeChange(): AbstractControl{
-		// console.log(this.dateRange.controls)
-		return this.dateRange.controls.from;
+		
+		this.dashboardData$ = this.dateRangeSubject.pipe(
+			switchMap(range => 
+			  this.dashboardService.dashboardMerchantData(
+					this.getISOString(range.from),
+					this.getISOString(range.to)
+			  )
+			)
+		  );
 	}
 
 	ngOnInit(): void {
@@ -35,5 +46,18 @@ export class DashboardMerchantComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
+	}
+
+	onRangeApply(): void {
+		this.dateRangeSubject.next(
+			{ 
+				from: this.dateRangeForm.controls.from.value, 
+				to: this.dateRangeForm.controls.to.value
+			}
+		);
+	}
+
+	private getISOString(date: Date): string {
+		return date.toISOString();
 	}
 }
