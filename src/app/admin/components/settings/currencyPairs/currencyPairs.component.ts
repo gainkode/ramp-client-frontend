@@ -9,7 +9,6 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
-import { CommonDataService } from 'services/common-data.service';
 
 @Component({
 	selector: 'app-admin-currencypairs',
@@ -49,7 +48,6 @@ export class AdminCurrencyPairsComponent implements OnInit, OnDestroy, AfterView
   	private modalService: NgbModal,
   	private auth: AuthService,
   	private adminService: AdminDataService,
-  	private commonService: CommonDataService,
   	private clipboard: Clipboard,
   	private router: Router
   ) {
@@ -107,11 +105,7 @@ export class AdminCurrencyPairsComponent implements OnInit, OnDestroy, AfterView
   	this.errorMessage = '';
   	const deleteKeyData$ = this.adminService.deleteCurrencyPair(currencyPairLiquidityProviderId);
   	this.subscriptions.add(
-  		deleteKeyData$.subscribe(({ data }) => {
-  			this.loadPairs();
-  		}, (error) => {
-  			this.errorMessage = error;
-  		})
+  		deleteKeyData$.subscribe(() => this.loadPairs(), (error) => this.errorMessage = error)
   	);
   }
 
@@ -128,7 +122,6 @@ export class AdminCurrencyPairsComponent implements OnInit, OnDestroy, AfterView
   	this.subscriptions.add(
   		listData$.subscribe(({ list, count }) => {
   			this.currencyPairs = list;
-  			console.log(list);
   			this.keyCount = count;
   			this.inProgress = false;
   		}, (error) => {

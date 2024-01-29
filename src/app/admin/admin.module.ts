@@ -62,10 +62,6 @@ import { AdminMessagesComponent } from './components/message/messages.component'
 import { AdminMessageDetailsComponent } from './components/message/message-details.component';
 import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 import { AdminWidgetDetailsComponent } from './components/widgets/widget-details.component';
-import { AdminApiKeysComponent } from './components/settings/apikeys/apikeys.component';
-import { AdminCurrencyPairsComponent } from './components/settings/currencyPairs/currencyPairs.component';
-import { AdminApiKeyDetailsComponent } from './components/settings/apikeys/apikey-details.component';
-import { AdminCurrencyPairDetailsComponent } from './components/settings/currencyPairs/currencyPair-details.component';
 import { AdminCountryBlackListComponent } from './components/kyc/blacklist/countries.component';
 import { AdminCountryBlackListDetailsComponent } from './components/kyc/blacklist/blacklist-details.component';
 import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
@@ -79,11 +75,9 @@ import { AdminCostSchemeDetailsComponent } from './components/costs/schemes/cost
 import { AdminFeeSchemesComponent } from './components/fees/fees.component';
 import { AdminFeeSchemeDetailsComponent } from './components/fees/details/fee-details.component';
 import { AdminFeeAssignCostComponent } from './components/fees/assign-cost/fee-assign-cost.component';
-import { AdminCommonSettingsComponent } from './components/settings/common/common.component';
 import { AdminDashboardCardComponent } from './misc/dashboard-card/dashboard-card.component';
 import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
 import { AdminDeviceDetailsComponent } from './components/users/devices/device-details.component';
-import { AdminWithdrawalAddressComponent } from './components/settings/common/withdrawal-address.component';
 import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 import { AdminKycTierDetailsComponent } from './components/kyc/tiers/tier-details.component';
 import { AdminUserActionsComponent } from './components/users/actions/actions.component';
@@ -103,7 +97,20 @@ import {
 import { JobStatusPipe } from 'pipes/job-status/job-status.pipe';
 import { MatStepperModule } from '@angular/material/stepper';
 import { RawJsonModule } from 'shared/raw-json/raw-json.module';
-import { AdminDashboardWrapperComponent, DashboardAdminComponent, DashboardMerchantComponent } from './components/dashboard';
+import { 
+	AdminDashboardWrapperComponent, 
+	DashboardAdminComponent, 
+	DashboardMerchantComponent
+} from './components/dashboard';
+import { 
+	AdminApiKeyDetailsComponent, 
+	AdminApiKeysComponent, 
+	AdminCommonSettingsComponent, 
+	AdminCurrencyPairDetailsComponent, 
+	AdminCurrencyPairsComponent, 
+	AdminWithdrawalAddressComponent,
+	FaqPageComponent
+} from './components/settings';
 
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
@@ -191,7 +198,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminCommonSettingsComponent, AdminWithdrawalAddressComponent,
 		AdminApiKeysComponent, AdminApiKeyDetailsComponent, 
 		AdminCurrencyPairsComponent, AdminCurrencyPairDetailsComponent,
-		JobStatusPipe
+		JobStatusPipe, FaqPageComponent
 	],
 	providers: [
 		AdminGuard,

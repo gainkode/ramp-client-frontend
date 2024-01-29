@@ -1,4 +1,4 @@
-<app-admin-page-header [title]="'API Keys'" [items]="['Home', 'Settings']" [active_item]="'API Keys'">
+<app-admin-page-header [title]="'Currency Pairs'" [items]="['Home', 'Settings']" [active_item]="'Currency Pairs'">
 </app-admin-page-header>
 
 <div class="row row-sm">
@@ -19,18 +19,10 @@
               [dataSource]="currencyPairs">
               <!-- Lock Column -->
               <ng-container matColumnDef="lock" sticky>
-                <!-- <th mat-header-cell *matHeaderCellDef class="mat-column-currencypairs-table mat-column-currencypairs-table-lock">
-                </th>
-                <td mat-cell *matCellDef="let element">
-                  <button mat-icon-button class="row-button" (click)="addCurrencyPair(create_content, element.currencyPairLiquidityProviderId)"
-                    matTooltip="Transaction details" matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">wysiwyg</i>
-                  </button>
-                </td> -->
                 <th mat-header-cell *matHeaderCellDef class="mat-column-apikey-table mat-column-apikey-table-lock">
                 </th>
                 <td mat-cell *matCellDef="let element">
-                  <i *ngIf="element.disabled" class="material-icons" style="font-size: 20px;">
+                  <i *ngIf="element.disabled" class="material-icons tx-20">
                     lock
                   </i>
                 </td>
@@ -89,10 +81,10 @@
                 <th mat-header-cell *matHeaderCellDef class="mat-column-currencypairs-table mat-column-currencypairs-table-delete">
                 </th>
                 <td mat-cell *matCellDef="let element">
-                  <button mat-icon-button class="row-button" (click)="deleteCurrencyPair(element, delete_content)"
+                  <button type="button" mat-icon-button class="row-button" (click)="deleteCurrencyPair(element, delete_content)"
                     [attr.aria-label]="'Delete API Key'" [attr.aria-pressed]="!!selectedPair" matTooltip="Delete API Key"
                     matTooltipClass="info-tooltip">
-                    <i class="material-icons" style="font-size: 20px;">
+                    <i class="material-icons tx-20">
                       delete
                     </i>
                   </button>
@@ -155,7 +147,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <h4 style="text-align: center;">
+              <h4 class="tx-center">
                 You are going to remove the API key. Confirm operation.
               </h4>
               <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
@@ -163,7 +155,7 @@
                   (click)="modal.dismiss('Reject')">
                   Reject
                 </button>
-                <button class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
+                <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
                   Confirm
                 </button>
               </div>

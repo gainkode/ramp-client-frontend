@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { AdminGuard } from './admin.guard';
-import { AdminApiKeysComponent } from './components/settings/apikeys/apikeys.component';
-import { AdminCurrencyPairsComponent } from './components/settings/currencyPairs/currencyPairs.component';
 import { AdminBankAccountsComponent } from './components/costs/bank-accounts/accounts.component';
 import { AdminCountryBlackListComponent } from './components/kyc/blacklist/countries.component';
 import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
@@ -17,13 +15,13 @@ import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallet
 import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.component';
 import { AdminFeeSchemesComponent } from './components/fees/fees.component';
-import { AdminCommonSettingsComponent } from './components/settings/common/common.component';
 import { AdminUserDevicesComponent } from './components/users/devices/devices.component';
 import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 import { AdminUserActionsComponent } from './components/users/actions/actions.component';
-import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, TransactionLifelineComponent } from './components/transactions';
 import { UserRoleObjectCode } from 'model/generated-models';
+import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, TransactionLifelineComponent } from './components/transactions';
 import { AdminDashboardWrapperComponent, DashboardAdminComponent, DashboardMerchantComponent } from './components/dashboard';
+import { AdminApiKeysComponent, AdminCommonSettingsComponent, AdminCurrencyPairsComponent, FaqPageComponent } from './components/settings';
 
 export const routes: Routes = [
 	{
@@ -56,6 +54,12 @@ export const routes: Routes = [
 				path: 'common',
 				component: AdminCommonSettingsComponent,
 				data: { header: 'Settings' }
+			},
+
+			{
+				path: 'faq',
+				component: FaqPageComponent,
+				data: { header: 'FAQ' }
 			},
 			{
 				path: 'transactions',
