@@ -35,7 +35,7 @@
         <mat-card-actions class="mt-3 ml-2">
           <div class="d-sm-flex align-items-sm-center justify-content-md-between w-100">
             <div class="d-sm-flex align-items-sm-center">
-              5 KYC pending
+              {{ data.usersKycWaitingTotal }} KYC pending
             </div>
 
             <div class="avatar-sm flex-shrink-0">
@@ -60,7 +60,7 @@
         </mat-card-content>
         <mat-card-actions class="mt-3 ml-2">
           <div class="d-sm-flex align-items-sm-center justify-content-md-between w-100">
-            <a class="d-sm-flex align-items-sm-center">
+            <a href='/admin/transactions' class="d-sm-flex align-items-sm-center">
               View transactions
             </a>
 
