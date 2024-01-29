@@ -2810,10 +2810,9 @@ export class AdminDataService {
 			fiatCurrency: filter.fiatCurrency
 		};
     
-    console.log('123')
     // return of({
     //   transactionsAmount: 10000019,
-    //   transactionsTotal: 1000,
+    //   transactionsTotal: 13325,
     //   usersTotal: 99,
     // } as DashboardMerchantStats);
     
