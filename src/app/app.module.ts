@@ -31,6 +31,7 @@ import { EnvServiceProvider, EnvService, EnvServiceFactory } from './services/en
 import { shareReplay } from 'rxjs/operators';
 import { TableModule } from 'components/data-list/table/table.module';
 import { TranslocoRootModule } from 'transloco-root.module';
+import { AppGuard } from 'app.guard';
 
 function socialConfigFactory(): SocialAuthServiceConfig {
 	EnvServiceFactory.call(undefined);
@@ -60,6 +61,7 @@ function socialConfigFactory(): SocialAuthServiceConfig {
 		TableModule
 	],
 	providers: [
+		AppGuard,
 		EnvServiceProvider,
 		Apollo,
 		{
