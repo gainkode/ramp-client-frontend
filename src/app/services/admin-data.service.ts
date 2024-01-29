@@ -299,6 +299,7 @@ const GET_DASHBOARD_MERCHANT_STATS = gql`
       transactionsAmount,
       transactionsTotal,
       usersTotal,
+      usersKycWaitingTotal,
       currency
     }
   }

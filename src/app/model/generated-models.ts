@@ -481,6 +481,7 @@ export type DashboardMerchantStats = {
   currency?: Maybe<Scalars['String']['output']>;
   transactionsAmount?: Maybe<Scalars['Float']['output']>;
   transactionsTotal?: Maybe<Scalars['Int']['output']>;
+  usersKycWaitingTotal?: Maybe<Scalars['Int']['output']>;
   usersTotal?: Maybe<Scalars['Int']['output']>;
 };
 
