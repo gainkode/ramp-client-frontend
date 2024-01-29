@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
-import { delay, take } from 'rxjs/operators';
+import { BehaviorSubject, Observable, ReplaySubject, Subscription, of } from 'rxjs';
+import { catchError, delay, take } from 'rxjs/operators';
 import { getCurrencySign } from 'utils/utils';
 import { DashboardCardData, DashboardData } from 'admin/model/dashboard-data.model';
 import { AdminDataService } from 'services/admin-data.service';
@@ -8,6 +8,7 @@ import { Filter } from 'admin/model/filter.model';
 import { PaymentInstrumentList } from 'model/payment.model';
 import { EnvService } from 'services/env.service';
 import { DashboardMerchantStats, DateTimeInterval } from 'model/generated-models';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class DashboardService implements OnDestroy {
@@ -34,7 +35,7 @@ export class DashboardService implements OnDestroy {
 		accountTypesOnly: []
 	});
 
-	constructor(private adminDataService: AdminDataService) { }
+	constructor(private adminDataService: AdminDataService, private _snackBar: MatSnackBar) { }
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();
@@ -47,8 +48,18 @@ export class DashboardService implements OnDestroy {
 	
 	dashboardMerchantData(from: string, to: string): Observable<DashboardMerchantStats> {
 		this.filter.completedDateInterval = <DateTimeInterval>{ from, to };
-	
-		return this.adminDataService.getDashboardMerchantStats(this.filter).pipe(delay(1000),take(1));
+		return this.adminDataService.getDashboardMerchantStats(this.filter)
+			.pipe(
+				delay(1000),take(1),
+				catchError(() => {
+					this._snackBar.open('There was an error getting dashboard data. Please contact R&D', null, { duration: 5000 });
+					
+					return of({
+						transactionsAmount: 0,
+						transactionsTotal: 0,
+						usersTotal: 0
+					});
+				}),);
 	}
 
 	load(): void {

@@ -15,8 +15,8 @@ import { AuthService } from 'services/auth.service';
 export class DashboardMerchantComponent implements OnInit, OnDestroy {
 	currentDate = new Date();
 	dateRangeForm = new FormGroup({
-		from: new FormControl<Date | null>(new Date(Date.UTC(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1, 0, 0, 0, 0))),
-		to: new FormControl<Date | null>(new Date(Date.UTC(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1, 0, 0, 0, 0))),
+		from: new FormControl<Date | null>(this.getFirstDateOfCurrentMonth()),
+		to: new FormControl<Date | null>(this.getLastDateOfCurrentMonth()),
 	});
 	dashboardData$: Observable<DashboardMerchantStats>;
 
@@ -58,6 +58,19 @@ export class DashboardMerchantComponent implements OnInit, OnDestroy {
 	}
 
 	private getISOString(date: Date): string {
-		return date.toISOString();
+		return date?.toISOString();
 	}
+
+	private getFirstDateOfCurrentMonth(): Date {
+		const currentDate = new Date();
+		return new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0));
+	  }
+	  
+	  private getLastDateOfCurrentMonth(): Date {
+		const currentDate = new Date();
+		const year = currentDate.getFullYear();
+		const month = currentDate.getMonth();
+	  
+		return new Date(Date.UTC(year, month + 1, 0, 23, 59, 59, 999));
+	  }
 }
