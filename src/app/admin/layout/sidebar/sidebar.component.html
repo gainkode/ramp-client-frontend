@@ -3,9 +3,9 @@
 <!-- Sidemenu -->
 <div class="sticky" [ngClass]="{ 'sticky-pin': scrolled }">
   <aside class="app-sidebar">
-    <div class="main-sidebar-header active">
-      <div style="display: flex;">
-        <img class="__admin-top-menu-logo" [src]="logoSrc" [alt]="logoAlt" width="140" (click)="goToMainPage()">
+    <div class="main-sidebar-header active p-0">
+      <div style="display: flex; padding: 0 30px;">
+        <img class="__admin-top-menu-logo logo-fix" [src]="logoSrc" [alt]="logoAlt" (click)="goToMainPage()">
       </div>
     </div>
     <perfect-scrollbar>

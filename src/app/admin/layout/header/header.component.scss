@@ -94,3 +94,9 @@ li::marker {
   color: $color_purple_800;
   cursor: pointer;
 }
+
+.logo-fix {
+  margin: 0 auto !important;
+  margin-top: 10px !important;
+  max-height: 50px !important;
+}
