@@ -153,9 +153,9 @@ export class NavService implements OnDestroy {
 				{ path: '/admin/common', title: 'Common', type: 'link' },
 				{ path: '/admin/api-keys', title: 'API keys', type: 'link' },
 				{ path: '/admin/currency-pairs', title: 'Currency pairs', type: 'link' },
-				{ path: '/admin/faq', title: 'FAQ', type: 'link' },
 			]
-		}
+		},
+		{ path: '/admin/faq', icon: 'payment', title: 'FAQ', type: 'link' },
 	];
 
 
