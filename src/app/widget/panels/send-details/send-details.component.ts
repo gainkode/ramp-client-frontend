@@ -78,7 +78,8 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   	transaction: [TransactionType.Buy, { validators: [], updateOn: 'change' }],
   	wallet: [undefined, { validators: [Validators.required], updateOn: 'change' }],
   	address: [undefined, { validators: [Validators.required], updateOn: 'change' }],
-  	contact: [undefined, { validators: [], updateOn: 'change' }]
+  	contact: [undefined, { validators: [], updateOn: 'change' }],
+		treatAsGrossAmount: [true]
   }, {
   	validators: [
   		WalletValidator.addressValidator(
@@ -108,6 +109,10 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
 
   get contactField(): AbstractControl | null {
   	return this.dataForm.get('contact');
+  }
+
+	get treatAsGrossAmountField(): AbstractControl | null {
+  	return this.dataForm.get('treatAsGrossAmount');
   }
 
   constructor(
@@ -341,6 +346,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   		data.currencyFrom = this.currencyField?.value;
   		data.address = this.addressField?.value;
   		data.vaultId = this.walletField?.value;
+			data.treatAsGrossAmount = this.treatAsGrossAmountField?.value;
   		this.done = true;
   		this.onComplete.emit(data);
   	}

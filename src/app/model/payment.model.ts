@@ -617,6 +617,7 @@ export class CheckoutSummary {
 	quoteLimit = 0;
 	verifyWhenPaid = false;
 	sourceAddress: string = undefined;
+	treatAsGrossAmount = true;
 
 	get isFromCrypto(): boolean {
 		let result = false;

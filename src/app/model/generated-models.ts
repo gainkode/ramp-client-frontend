@@ -380,6 +380,8 @@ export type CreateLiquidityExchangeOrderParams = {
   amountToSpend?: InputMaybe<Scalars['Float']['input']>;
   currencyToReceive?: InputMaybe<Scalars['String']['input']>;
   currencyToSpend?: InputMaybe<Scalars['String']['input']>;
+  extraAmountToReceive?: InputMaybe<Scalars['Float']['input']>;
+  extraAmountToSpend?: InputMaybe<Scalars['Float']['input']>;
   rate?: InputMaybe<Scalars['Float']['input']>;
   side?: InputMaybe<LiquidityExchangeOrderSide>;
   transactionId?: InputMaybe<Scalars['String']['input']>;
@@ -903,6 +905,7 @@ export type LiquidityExchangeOrder = {
   error?: Maybe<Scalars['String']['output']>;
   executed?: Maybe<Scalars['DateTime']['output']>;
   executingResult?: Maybe<Scalars['String']['output']>;
+  extraVolume: Scalars['Float']['output'];
   orderId?: Maybe<Scalars['String']['output']>;
   originalOrderId?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
@@ -3798,6 +3801,7 @@ export type Transaction = {
   transferOrder?: Maybe<TransferOrder>;
   transferOrderBlockchainLink?: Maybe<Scalars['String']['output']>;
   transferOrderId?: Maybe<Scalars['String']['output']>;
+  treatAsGrossAmount?: Maybe<Scalars['Boolean']['output']>;
   type: TransactionType;
   updated?: Maybe<Scalars['DateTime']['output']>;
   user?: Maybe<User>;
@@ -3845,6 +3849,7 @@ export type TransactionInput = {
   source: TransactionSource;
   sourceAddress?: InputMaybe<Scalars['String']['input']>;
   sourceVaultId?: InputMaybe<Scalars['String']['input']>;
+  treatAsGrossAmount?: InputMaybe<Scalars['Boolean']['input']>;
   type: TransactionType;
   verifyWhenPaid?: InputMaybe<Scalars['Boolean']['input']>;
   widgetUserParamsId?: InputMaybe<Scalars['String']['input']>;
@@ -3921,6 +3926,7 @@ export type TransactionMerchantInput = {
   sourceVaultId?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<TransactionStatus>;
   transactionChangedCallback?: InputMaybe<Scalars['String']['input']>;
+  treatAsGrossAmount?: InputMaybe<Scalars['Boolean']['input']>;
   type: TransactionType;
   widgetUserParamsId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -4185,6 +4191,7 @@ export type TransactionUpdateInput = {
   status?: InputMaybe<TransactionStatus>;
   subStatus?: InputMaybe<Scalars['String']['input']>;
   transferOrderChanges?: InputMaybe<TransactionUpdateTransferOrderChanges>;
+  treatAsGrossAmount?: InputMaybe<Scalars['Boolean']['input']>;
   type?: InputMaybe<TransactionType>;
   widgetId?: InputMaybe<Scalars['String']['input']>;
   widgetUserParamsChanges?: InputMaybe<WidgetUserParamsChanges>;

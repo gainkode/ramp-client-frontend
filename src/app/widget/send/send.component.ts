@@ -160,6 +160,7 @@ export class SendWidgetComponent implements OnInit, OnDestroy {
   	this.summary.amountFrom = data.amountFrom;
   	this.summary.vaultId = data.vaultId;
   	this.summary.address = data.address;
+		this.summary.treatAsGrossAmount = data.treatAsGrossAmount;
   	this.createTransaction();
   }
   // =======================
@@ -177,7 +178,8 @@ export class SendWidgetComponent implements OnInit, OnDestroy {
 			paymentProvider: undefined,
 			widgetUserParamsId: undefined,
 			destination: this.summary.address,
-			verifyWhenPaid: false
+			verifyWhenPaid: false,
+			treatAsGrossAmount: this.summary.treatAsGrossAmount
 		}
 
 		this.createTransactionInternal();

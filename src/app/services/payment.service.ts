@@ -319,8 +319,9 @@ mutation CreateTransaction(
   $instrumentDetails: String,
   $paymentProvider: String,
   $widgetUserParamsId: String,
-  $destination: String
-  $verifyWhenPaid: Boolean
+  $destination: String,
+  $verifyWhenPaid: Boolean,
+  $treatAsGrossAmount: Boolean
 ) {
   createTransaction(transaction: {
     type: $transactionType
@@ -336,6 +337,7 @@ mutation CreateTransaction(
     widgetUserParamsId: $widgetUserParamsId
     destination: $destination
     verifyWhenPaid: $verifyWhenPaid
+    treatAsGrossAmount: $treatAsGrossAmount
   }) {
     transactionId,
     code,

@@ -100,6 +100,20 @@
             </div>
         </div>
 
+        <div class="__tool-bar-double-sided-data-box-top">
+            <div class="__tool-bar-block">
+                <div class="__tool-bar-label">
+                    Network fee included
+                </div>
+            </div>
+            <div class="__tool-bar-block">
+                <div class="__toggle-switch">
+                    <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                        formControlName="treatAsGrossAmount">
+                </div>
+            </div>
+        </div>
+
         <!-- Buttons -->
         <div class="__widget-buttons-area">
             <button class="__main-button" type="submit" [disabled]="done || (!dataForm?.valid && !zeroAmount)">
