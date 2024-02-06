@@ -41,6 +41,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   submitted = false;
   createNew = false;
   saveInProgress = false;
+  deleteInProgress = false;
+	disableInProgress = false;
   errorMessage = '';
   defaultSchemeName = '';
   currencyOptions: CurrencyView[] = [];
@@ -52,6 +54,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   filteredProviders: PaymentProviderView[] = [];
   costSchemes: CostScheme[] = [];
   currency = '';
+	deleted = false; 
   targetEntity = ['', ''];
   targetSearchText = '';
   targetsTitle = '';
@@ -144,6 +147,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.form.reset();
   	this.defaultSchemeName = '';
   	this.currency = scheme?.currency ?? '';
+		this.deleted = !!scheme?.deleted;
   	if (scheme) {
   		this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
   		this.form.get('id')?.setValue(scheme?.id);
@@ -471,6 +475,47 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.subscriptions.add(
   		this.removeDialog.closed.subscribe(val => {
   			this.deleteSchemeConfirmed(this.settingsId ?? '');
+  		})
+  	);
+  }
+
+	onStateChangeScheme(): void {
+  	this.disableInProgress = true;
+  	if (this.deleted) {
+			this.enableScheme();
+		} else {
+			this.disableScheme();
+		}
+  }
+
+	disableScheme(): void {
+		const requestData$ = this.adminService.disableFeeSettings(this.settingsId);
+		
+  	this.subscriptions.add(
+  		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
+  			next: () => this.save.emit(),
+  			error: (errorMessage) => {
+  				this.errorMessage = errorMessage;
+  				if (this.auth.token === '') {
+  					void this.router.navigateByUrl('/');
+  				}
+  			},
+  		})
+  	);
+	}
+	enableScheme(): void {
+  	this.disableInProgress = true;
+  	const requestData$ = this.adminService.enableFeeSettings(this.settingsId);
+
+  	this.subscriptions.add(
+  		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
+  			next: () => this.save.emit(),
+  			error: (errorMessage) => {
+  				this.errorMessage = errorMessage;
+  				if (this.auth.token === '') {
+  					void this.router.navigateByUrl('/');
+  				}
+  			},
   		})
   	);
   }

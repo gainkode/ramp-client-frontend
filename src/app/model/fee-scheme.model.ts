@@ -33,6 +33,7 @@ export class FeeScheme {
 	details!: FeeShemeWireDetails;
 	currency!: string;
 	rateToEur!: number;
+	deleted?: Date;
 
 	constructor(data: SettingsFee | null) {
 		if (data !== null) {
@@ -46,6 +47,7 @@ export class FeeScheme {
 			this.currenciesFrom = data.targetCurrenciesFrom as Array<string> ?? [];
 			this.currenciesTo = data.targetCurrenciesTo as Array<string> ?? [];
 			this.rateToEur = data.rateToEur as number;
+			this.deleted = data?.deleted;
 			data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
 			data.targetPaymentProviders?.forEach(x => this.provider.push(x));
 			data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));
@@ -132,6 +134,20 @@ export class FeeScheme {
 			result = this.provider.join(', ');
 		}
 		return result;
+	}
+
+	get feeSchemasListDataColumnStyle(): string[] {
+		return [
+			`fee-schemas-list-column-${this.getColorStyles()}`
+		];
+	}
+
+	private getColorStyles(): string {
+		if (this.deleted) {
+			return 'grey';
+		} else {
+			return 'white';
+		}
 	}
 }
 

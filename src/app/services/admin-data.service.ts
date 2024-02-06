@@ -333,6 +333,7 @@ const GET_FEE_SETTINGS = gql`
         rateToEur
         targetCurrenciesFrom
         targetCurrenciesTo
+        deleted
       }
     }
   }
@@ -2715,6 +2716,22 @@ const DELETE_SETTINGS_FEE = gql`
   }
 `;
 
+const DISABLE_SETTINGS_FEE = gql`
+  mutation DisableSettingsFee($settingsId: ID!) {
+    disableSettingsFee(settingsId: $settingsId) {
+      settingsFeeId
+    }
+  }
+`;
+
+const ENABLE_SETTINGS_FEE = gql`
+  mutation EnableSettingsFee($settingsId: ID!) {
+   enableSettingsFee(settingsId: $settingsId) {
+      settingsFeeId
+    }
+  }
+`;
+
 const DELETE_SETTINGS_COST = gql`
   mutation DeleteSettingsCost($settingsId: ID!) {
     deleteSettingsCost(settingsId: $settingsId) {
@@ -4100,6 +4117,24 @@ export class AdminDataService {
 			}
 		});
 	}
+
+  disableFeeSettings(settingsId: string): Observable<any> {
+    return this.mutate({
+      mutation: DISABLE_SETTINGS_FEE,
+      variables: {
+        settingsId
+      }
+    });
+  }
+
+  enableFeeSettings(settingsId: string): Observable<any> {
+    return this.mutate({
+      mutation: ENABLE_SETTINGS_FEE,
+      variables: {
+        settingsId
+      }
+    });
+  }
 
 	deleteCostSettings(settingsId: string): Observable<any> {
 		return this.apollo.mutate({
