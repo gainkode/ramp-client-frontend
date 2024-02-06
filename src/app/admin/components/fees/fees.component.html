@@ -23,7 +23,7 @@
               <ng-container matColumnDef="details">
                 <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-details">
                 </th>
-                <td *matCellDef="let element" mat-cell>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
                   <button type="button" mat-icon-button class="row-button" 
                     matTooltip="Scheme details"
                     matTooltipClass="info-tooltip" [attr.aria-label]="'Scheme details'"
@@ -37,7 +37,7 @@
               <ng-container matColumnDef="default">
                 <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-details">
                 </th>
-                <td *matCellDef="let element" mat-cell>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
                   <div *ngIf="element.isDefault" class="row-icon">
                     <i class="material-icons tx-20">offline_bolt</i>
                   </div>
@@ -49,7 +49,7 @@
                 <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-name">
                   Name
                 </th>
-                <td *matCellDef="let element" mat-cell>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
                   {{element.name}}
                 </td>
               </ng-container>
@@ -59,7 +59,7 @@
                 <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-target">
                   Target
                 </th>
-                <td *matCellDef="let element" mat-cell>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
                   {{element.targetName}}
                 </td>
               </ng-container>
@@ -69,7 +69,7 @@
                 <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-trx-type">
                   Transaction type
                 </th>
-                <td *matCellDef="let element" mat-cell>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
                   {{element.transactionTypeList}}
                 </td>
               </ng-container>
@@ -79,7 +79,7 @@
                 <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-instrument">
                   Payment Method
                 </th>
-                <td *matCellDef="let element" mat-cell>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
                   {{element.instrumentList}}
                 </td>
               </ng-container>
@@ -89,7 +89,7 @@
                 <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-provider">
                   Provider
                 </th>
-                <td *matCellDef="let element" mat-cell>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
                   {{element.providerList}}
                 </td>
               </ng-container>

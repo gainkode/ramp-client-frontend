@@ -207,9 +207,14 @@
         </h4>
       </div>
       <div style="display: flex; justify-content: flex-end;">
+        {{currentScheme?.deleted}}
         <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit()">
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Save
+        </button>
+        <button *ngIf="!createNew" type="button" class="btn btn-secondary pd-x-30 me-2 mg-t-5" (click)="onStateChangeScheme()">
+          <span *ngIf="disableInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          {{deleted ? 'Enable' : 'Disable'}}
         </button>
         <button *ngIf="permission>1 && !createNew && defaultSchemeName===''" class="btn btn-danger pd-x-30 me-2 mg-t-5"
           type="button" (click)="deleteScheme(delete_content)">
