@@ -1600,6 +1600,115 @@ const ADD_SETTINGS_FEE = gql`
   }
 `;
 
+const SETTINGS_FEE_SIMILARS = gql`
+  mutation SettingsFeeSimilars(
+    $name: String!
+    $description: String
+    $targetFilterType: SettingsFeeTargetFilterType!
+    $targetFilterValues: [String!]
+    $targetInstruments: [PaymentInstrument!]
+    $targetUserTypes: [UserType!]
+    $targetUserModes: [UserMode!]
+    $targetTransactionTypes: [TransactionType!]
+    $targetPaymentProviders: [String!]
+    $targetCurrenciesFrom: [String!]
+    $targetCurrenciesTo: [String!]
+    $terms: String!
+    $wireDetails: String!
+  ) {
+    settingsFeeSimilars(
+      settings: {
+        name: $name
+        description: $description
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        targetInstruments: $targetInstruments
+        targetUserTypes: $targetUserTypes
+        targetUserModes: $targetUserModes
+        targetTransactionTypes: $targetTransactionTypes
+        targetPaymentProviders: $targetPaymentProviders
+        targetCurrenciesFrom: $targetCurrenciesFrom
+        targetCurrenciesTo: $targetCurrenciesTo
+        terms: $terms
+        wireDetails: $wireDetails
+      }
+    ) {
+      targetCurrenciesFrom {
+        title
+        feeData {
+          schema {
+            settingsFeeId
+          }
+          similarValues
+        }
+      }
+      targetCurrenciesTo {
+        title
+        feeData {
+          schema {
+            settingsFeeId
+          }
+          similarValues
+        }
+      }
+      targetFilterValues {
+        title
+        feeData {
+          schema {
+            settingsFeeId
+          }
+          similarValues
+        }
+      }
+      targetTransactionTypes {
+        title
+        feeData {
+          schema {
+            settingsFeeId
+          }
+          similarValues
+        }
+      }
+      targetInstruments {
+        title
+        feeData {
+          schema {
+            settingsFeeId
+          }
+          similarValues
+        }
+      }
+      targetPaymentProviders {
+        title
+        feeData {
+          schema {
+            settingsFeeId
+          }
+          similarValues
+        }
+      }
+      targetUserTypes {
+        title
+        feeData {
+          schema {
+            settingsFeeId
+          }
+          similarValues
+        }
+      }
+      targetUserModes {
+        title
+        feeData {
+          schema {
+            settingsFeeId
+          }
+          similarValues
+        }
+      }
+    }
+  }
+`;
+
 const ADD_SETTINGS_COST = gql`
   mutation AddSettingsCost(
     $name: String!
@@ -2864,7 +2973,7 @@ export class AdminDataService {
 			})
 		);
 	}
-
+  
 	getCostSettings(): QueryRef<any, EmptyObject> {
 		return this.apollo.watchQuery<any>({
 			query: GET_COST_SETTINGS,
@@ -3707,7 +3816,28 @@ export class AdminDataService {
 		});
 	}
 
-	saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
+	getFeeSettingsSimilar(feeScheme: FeeScheme): Observable<any> {
+		return this.mutate({
+      mutation: SETTINGS_FEE_SIMILARS,
+      variables: {
+        name: feeScheme.name,
+        description: feeScheme.description,
+        targetFilterType: feeScheme.target,
+        targetFilterValues: feeScheme.targetValues,
+        targetInstruments: feeScheme.instrument,
+        targetUserTypes: feeScheme.userType,
+        targetUserModes: feeScheme.userMode,
+        targetTransactionTypes: feeScheme.trxType,
+        targetPaymentProviders: feeScheme.provider,
+        targetCurrenciesFrom: feeScheme.currenciesFrom,
+        targetCurrenciesTo: feeScheme.currenciesTo,
+        terms: feeScheme.terms.getObject(),
+        wireDetails: feeScheme.details.getObject()
+      }
+    });
+	}
+
+  saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
 		return !feeScheme.id
 			? this.mutate({
 				mutation: ADD_SETTINGS_FEE,

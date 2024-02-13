@@ -10,7 +10,7 @@ import { CommonTargetValue } from 'model/common.model';
 import { CostScheme } from 'model/cost-scheme.model';
 import { CountryFilterList } from 'model/country-code.model';
 import { FeeScheme, TransactionSourceFilterList } from 'model/fee-scheme.model';
-import { PaymentInstrument, PaymentProvider, SettingsCostListResult, SettingsCurrencyWithDefaults, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCostListResult, SettingsCurrencyWithDefaults, SettingsFeeSimilarResult, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'model/generated-models';
 import { CurrencyView, FeeTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserModeList, UserTypeList } from 'model/payment.model';
 import { AuthService } from 'services/auth.service';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
@@ -66,6 +66,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   sourceTargetsOptions = TransactionSourceFilterList;
   minTargetsLengthTerm = 1;
   adminAdditionalSettings: Record<string, any> = {};
+	similarSchemas: SettingsFeeSimilarResult;
 
   form = this.formBuilder.group({
   	id: [''],
@@ -467,6 +468,14 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
+	onTest(): void {
+		this.submitted = true;
+  	if (this.form.valid) {
+			// this.feeService.setFeeInput(this.setSchemeData());
+  		this.getSimilarSchemes(this.setSchemeData());
+  	}
+	}
+
   deleteScheme(content: any): void {
   	this.removeDialog = this.modalService.open(content, {
   		backdrop: 'static',
@@ -528,6 +537,26 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.subscriptions.add(
   		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
   			next: () => this.save.emit(),
+  			error: (errorMessage) => {
+  				this.errorMessage = errorMessage;
+  				if (this.auth.token === '') {
+  					void this.router.navigateByUrl('/');
+  				}
+  			},
+  		})
+  	);
+  }
+
+	private getSimilarSchemes(scheme: FeeScheme): void {
+  	this.errorMessage = '';
+  	this.saveInProgress = true;
+  	const requestData$ = this.adminService.getFeeSettingsSimilar(scheme);
+  	
+  	this.subscriptions.add(
+  		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
+  			next: (data) => {
+					this.similarSchemas = data.data.settingsFeeSimilars;
+				},
   			error: (errorMessage) => {
   				this.errorMessage = errorMessage;
   				if (this.auth.token === '') {

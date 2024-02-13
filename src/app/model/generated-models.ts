@@ -1154,7 +1154,9 @@ export type Mutation = {
   deleteWidget?: Maybe<Widget>;
   deleteWireTransferBankAccount: WireTransferBankAccount;
   disable2fa: LoginResult;
+  disableSettingsFee: SettingsFee;
   enable2fa: LoginResult;
+  enableSettingsFee: SettingsFee;
   /** This endpoint can be used to execute a transaction */
   executeTransaction?: Maybe<TransactionShort>;
   exportTransactionsToCsv?: Maybe<Scalars['Boolean']['output']>;
@@ -1187,6 +1189,7 @@ export type Mutation = {
   setMyInfo: LoginResult;
   setPassword: Scalars['Boolean']['output'];
   setUserInfo: LoginResult;
+  settingsFeeSimilars?: Maybe<SettingsFeeSimilarResult>;
   signup: LoginResult;
   status: Scalars['String']['output'];
   /** Unbenchmarking Transactions */
@@ -1616,9 +1619,19 @@ export type MutationDisable2faArgs = {
 };
 
 
+export type MutationDisableSettingsFeeArgs = {
+  settingsId: Scalars['ID']['input'];
+};
+
+
 export type MutationEnable2faArgs = {
   code: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type MutationEnableSettingsFeeArgs = {
+  settingsId: Scalars['ID']['input'];
 };
 
 
@@ -1812,6 +1825,11 @@ export type MutationSetUserInfoArgs = {
   lastName?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   userId: Scalars['String']['input'];
+};
+
+
+export type MutationSettingsFeeSimilarsArgs = {
+  settings: SettingsFeeInput;
 };
 
 
@@ -3430,6 +3448,31 @@ export type SettingsFeeShort = {
   wireDetails: Scalars['String']['output'];
 };
 
+export type SettingsFeeSimilarObject = {
+  __typename?: 'SettingsFeeSimilarObject';
+  feeData?: Maybe<Array<Maybe<SettingsFeeSimilarSchema>>>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type SettingsFeeSimilarResult = {
+  __typename?: 'SettingsFeeSimilarResult';
+  currency?: Maybe<SettingsFeeSimilarObject>;
+  targetCurrenciesFrom?: Maybe<SettingsFeeSimilarObject>;
+  targetCurrenciesTo?: Maybe<SettingsFeeSimilarObject>;
+  targetFilterValues?: Maybe<SettingsFeeSimilarObject>;
+  targetInstruments?: Maybe<SettingsFeeSimilarObject>;
+  targetPaymentProviders?: Maybe<SettingsFeeSimilarObject>;
+  targetTransactionTypes?: Maybe<SettingsFeeSimilarObject>;
+  targetUserModes?: Maybe<SettingsFeeSimilarObject>;
+  targetUserTypes?: Maybe<SettingsFeeSimilarObject>;
+};
+
+export type SettingsFeeSimilarSchema = {
+  __typename?: 'SettingsFeeSimilarSchema';
+  schema: SettingsFee;
+  similarValues?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
 export enum SettingsFeeTargetFilterType {
   AccountId = 'AccountId',
   AccountType = 'AccountType',
@@ -4465,6 +4508,8 @@ export enum UserActionType {
   DeleteKycTierSettings = 'deleteKycTierSettings',
   DeleteUser = 'deleteUser',
   DeleteWireTransferBankAccount = 'deleteWireTransferBankAccount',
+  DisableFeeSettings = 'disableFeeSettings',
+  EnableFeeSettings = 'enableFeeSettings',
   Exchange = 'exchange',
   FlashfxApproved = 'flashfxApproved',
   FlashfxAutoReject = 'flashfxAutoReject',
