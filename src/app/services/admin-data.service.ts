@@ -335,6 +335,7 @@ const GET_FEE_SETTINGS = gql`
         targetCurrenciesFrom
         targetCurrenciesTo
         deleted
+        widgetIds
       }
     }
   }
@@ -1578,6 +1579,7 @@ const ADD_SETTINGS_FEE = gql`
     $targetCurrenciesTo: [String!]
     $terms: String!
     $wireDetails: String!
+    $widgetIds: [String]
   ) {
     addSettingsFee(
       settings: {
@@ -1594,6 +1596,7 @@ const ADD_SETTINGS_FEE = gql`
         targetCurrenciesTo: $targetCurrenciesTo
         terms: $terms
         wireDetails: $wireDetails
+        widgetIds: $widgetIds
       }
     ) {
       settingsFeeId
@@ -1616,6 +1619,7 @@ const SETTINGS_FEE_SIMILARS = gql`
     $targetCurrenciesTo: [String!]
     $terms: String!
     $wireDetails: String!
+    $widgetIds: [String]
   ) {
     settingsFeeSimilars(
       settings: {
@@ -1632,6 +1636,7 @@ const SETTINGS_FEE_SIMILARS = gql`
         targetCurrenciesTo: $targetCurrenciesTo
         terms: $terms
         wireDetails: $wireDetails
+        widgetIds: $widgetIds
       }
     ) {
       targetCurrenciesFrom {
@@ -3841,7 +3846,8 @@ export class AdminDataService {
 				targetCurrenciesFrom: feeScheme.currenciesFrom,
 				targetCurrenciesTo: feeScheme.currenciesTo,
 				terms: feeScheme.terms.getObject(),
-				wireDetails: feeScheme.details.getObject()
+				wireDetails: feeScheme.details.getObject(),
+        widgetIds: feeScheme.widgetIds
 			}
 		}).pipe(map(res => res.data['settingsFeeSimilars']));
 	}
@@ -3863,7 +3869,8 @@ export class AdminDataService {
 					targetCurrenciesFrom: feeScheme.currenciesFrom,
 					targetCurrenciesTo: feeScheme.currenciesTo,
 					terms: feeScheme.terms.getObject(),
-					wireDetails: feeScheme.details.getObject()
+					wireDetails: feeScheme.details.getObject(),
+          widgetIds: feeScheme.widgetIds
 				}
 			})
 			: this.mutate({
