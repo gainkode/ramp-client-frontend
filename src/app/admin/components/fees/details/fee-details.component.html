@@ -105,7 +105,11 @@
               [closeOnSelect]="false">
             </ng-select>
 
-            <mat-accordion *ngIf="(similarSchemas$ | async)?.targetCurrenciesFrom as targetCurrenciesFrom">
+            <app-fee-similiar-panel 
+              [targetField]="(similarSchemas$ | async)?.targetCurrenciesFrom">
+            </app-fee-similiar-panel>
+
+            <!-- <mat-accordion *ngIf=" as targetCurrenciesFrom">
               <mat-expansion-panel>
                 <mat-expansion-panel-header 
                   style="height: 30px; padding: 0 12px !important;">
@@ -121,7 +125,7 @@
                   <span style="color: rgba(0,0,0,.6); font-size: 11px;">Values: {{value.similarValues.join(', ')}}</span>
                 </div>
               </mat-expansion-panel>
-            </mat-accordion>
+            </mat-accordion> -->
           </div>
   
           <div class="form-group">

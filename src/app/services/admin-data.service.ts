@@ -3826,6 +3826,237 @@ export class AdminDataService {
 	}
 
 	getFeeSettingsSimilar(feeScheme: FeeScheme): Observable<SettingsFeeSimilarResult> {
+    const MOCK = {
+        "targetCurrenciesFrom": {
+        "title": "Currencies From",
+        "feeData": [
+          {
+          "schema": {
+            "name": "TEST NAME",
+            "settingsFeeId": "6329fef7-eb51-43e5-a8d9-c32739ae5d06",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "EUR",
+            "USD"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "a6ad9540-7f80-4b90-837f-f26240e12fa4",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "EUR"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "16d4a159-14fa-402c-8e99-a93349817017",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "EUR"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "6b5b1027-e414-4dfa-8a2c-208d69ce5960",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "EUR"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "5583cbf5-a27c-468e-92cc-1bdd0a124c8a",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "EUR"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "a447bfa5-823f-4a2e-8012-47223a98e51b",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "EUR"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "13a763fe-6e4e-4f49-91db-e49897a12d6d",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "EUR"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "c7fe597f-92ce-4941-b184-12c8698cb544",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "EUR"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          }
+        ],
+        "__typename": "SettingsFeeSimilarObject"
+        },
+        "targetCurrenciesTo": {
+        "title": "Currencies From",
+        "feeData": [],
+        "__typename": "SettingsFeeSimilarObject"
+        },
+        "targetFilterValues": {
+        "title": "Filter Target",
+        "feeData": [],
+        "__typename": "SettingsFeeSimilarObject"
+        },
+        "targetTransactionTypes": {
+        "title": "Currencies From",
+        "feeData": [
+          {
+          "schema": {
+            "settingsFeeId": "e5c9b7ce-293f-4be1-9df5-404eab4276c1",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "Deposit"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "5583cbf5-a27c-468e-92cc-1bdd0a124c8a",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "Deposit"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "6477fa02-b924-43c6-a25c-788dac4961cf",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "Deposit"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "703569f0-c756-452f-8ed6-81e7887646d7",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "Deposit"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "3c371c6d-8f87-4af7-9751-79dde8b5888b",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "Deposit"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "8086e5a0-1220-4b77-984e-2d73cb7fc723",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "Deposit"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "98dbdebf-6851-4a28-8f0e-b823a7860cf7",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "Deposit"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "177a7d6a-bcf5-47d5-a4b0-86dad98cea9d",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "Deposit"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "b351b6bf-25ef-4ffc-8c08-808b8c34588c",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "Deposit"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          },
+          {
+          "schema": {
+            "settingsFeeId": "f4908c60-0232-4cdc-9200-2069176c9510",
+            "__typename": "SettingsFee"
+          },
+          "similarValues": [
+            "Deposit"
+          ],
+          "__typename": "SettingsFeeSimilarSchema"
+          }
+        ],
+        "__typename": "SettingsFeeSimilarObject"
+        },
+        "targetInstruments": {
+        "title": "Currencies From",
+        "feeData": [],
+        "__typename": "SettingsFeeSimilarObject"
+        },
+        "targetPaymentProviders": {
+        "title": "Currencies From",
+        "feeData": [],
+        "__typename": "SettingsFeeSimilarObject"
+        },
+        "targetUserTypes": {
+        "title": "Currencies From",
+        "feeData": [],
+        "__typename": "SettingsFeeSimilarObject"
+        },
+        "targetUserModes": {
+        "title": "Currencies From",
+        "feeData": [],
+        "__typename": "SettingsFeeSimilarObject"
+        },
+        "__typename": "SettingsFeeSimilarResult"
+    };
+
+    
+		return of(MOCK as SettingsFeeSimilarResult);
+
 		return this.mutate({
 			mutation: SETTINGS_FEE_SIMILARS,
 			variables: {
