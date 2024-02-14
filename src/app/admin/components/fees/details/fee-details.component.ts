@@ -59,7 +59,9 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   targets = FeeTargetFilterList;
   isTargetsLoading = false;
   targetsSearchInput$ = new Subject<string>();
+	widgetsSearchInput$ = new Subject<string>();
   targetsOptions$: Observable<CommonTargetValue[]> = of([]);
+	widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
   sourceTargetsOptions = TransactionSourceFilterList;
   minTargetsLengthTerm = 1;
   adminAdditionalSettings: Record<string, any> = {};
@@ -80,7 +82,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	trxType: [undefined],
   	provider: [undefined, Validators.required],
   	transactionFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
+  	minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+		widgetIds: [undefined]
   });
 
   constructor(
@@ -108,6 +111,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.getPaymentProviders();
   	this.loadCostSchemeList();
   	this.loadCurrencies();
+		this.initWidgetSearch();
   }
 
   ngOnDestroy(): void {
@@ -159,6 +163,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('target')?.setValue(scheme?.target);
   		this.targetType = scheme?.target ?? SettingsFeeTargetFilterType.None;
   		this.setTargetValues(scheme?.targetValues);
+			this.setWidgets(scheme?.widgetIds);
+			
   		if (scheme.instrument && scheme.instrument.length > 0) {
   			const instrument = scheme.instrument[0];
   			this.form.get('instrument')?.setValue(instrument);
@@ -211,6 +217,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	data.isDefault = this.form.get('isDefault')?.value;
   	data.id = this.form.get('id')?.value;
   	data.setTarget(this.targetType, this.form.get('targetValues')?.value);
+		data.setWidgets(this.form.get('widgetIds')?.value);
   	data.userType = this.form.get('userType')?.value as UserType[];
   	data.userMode = this.form.get('userMode')?.value as UserMode[];
   	data.trxType = this.form.get('trxType')?.value as TransactionType[];
@@ -230,6 +237,17 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	return data;
   }
 
+	private setWidgets(values: string[]): void {
+		const filter = new Filter({
+			widgets: values
+		});
+		this.subscriptions.add(
+			this.getFilteredWidgets(filter).subscribe(result => {
+				this.widgetsOptions$ = of(result);
+				this.form.get('widgetIds')?.setValue(result);
+			})
+		);
+	}
   private setTargetValues(values: string[]): void {
   	if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
   		const filter = new Filter({
@@ -325,6 +343,22 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			switchMap(searchString => {
   				this.isTargetsLoading = false;
   				return this.filterTargets(searchString);
+  			})
+  		));
+  }
+
+	private initWidgetSearch(): void {
+  	this.widgetsOptions$ = concat(
+  		of([]),
+  		this.widgetsSearchInput$.pipe(
+  			filter(res => res !== null && res.length >= this.minTargetsLengthTerm),
+  			debounceTime(300),
+  			distinctUntilChanged(),
+  			tap(() => this.isTargetsLoading = true),
+  			switchMap(searchString => {
+  				this.isTargetsLoading = false;
+  				const filter = new Filter({ search: searchString });
+  				return this.getFilteredWidgets(filter);
   			})
   		));
   }

@@ -3318,6 +3318,7 @@ export type SettingsCost = {
   targetPaymentProviders?: Maybe<Array<Scalars['String']['output']>>;
   targetTransactionTypes?: Maybe<Array<Scalars['String']['output']>>;
   terms?: Maybe<Scalars['String']['output']>;
+  widgetIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
 export type SettingsCostInput = {
@@ -3332,6 +3333,7 @@ export type SettingsCostInput = {
   targetPaymentProviders?: InputMaybe<Array<Scalars['String']['input']>>;
   targetTransactionTypes?: InputMaybe<Array<TransactionType>>;
   terms?: InputMaybe<Scalars['String']['input']>;
+  widgetIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type SettingsCostListResult = {
@@ -3410,6 +3412,7 @@ export type SettingsFee = {
   targetUserModes?: Maybe<Array<UserMode>>;
   targetUserTypes?: Maybe<Array<UserType>>;
   terms: Scalars['String']['output'];
+  widgetIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   wireDetails: Scalars['String']['output'];
 };
 
@@ -3428,6 +3431,7 @@ export type SettingsFeeInput = {
   targetUserModes?: InputMaybe<Array<UserMode>>;
   targetUserTypes?: InputMaybe<Array<UserType>>;
   terms?: InputMaybe<Scalars['String']['input']>;
+  widgetIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   wireDetails?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3465,6 +3469,7 @@ export type SettingsFeeSimilarResult = {
   targetTransactionTypes?: Maybe<SettingsFeeSimilarObject>;
   targetUserModes?: Maybe<SettingsFeeSimilarObject>;
   targetUserTypes?: Maybe<SettingsFeeSimilarObject>;
+  widgetIds?: Maybe<SettingsFeeSimilarObject>;
 };
 
 export type SettingsFeeSimilarSchema = {
