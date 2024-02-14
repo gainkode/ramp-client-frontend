@@ -1719,6 +1719,16 @@ const SETTINGS_FEE_SIMILARS = gql`
           similarValues
         }
       }
+      widgetIds {
+        title
+        feeData {
+          schema {
+            name
+            settingsFeeId
+          }
+          similarValues
+        }
+      }
     }
   }
 `;

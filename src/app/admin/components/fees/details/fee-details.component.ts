@@ -3,7 +3,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
@@ -259,16 +259,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   				this.form.get('targetValues')?.setValue(result);
   			})
   		);
-  	} else if (this.targetType === SettingsFeeTargetFilterType.WidgetId) {
-  		const filter = new Filter({
-  			widgets: values
-  		});
-  		this.subscriptions.add(
-  			this.getFilteredWidgets(filter).subscribe(result => {
-  				this.targetsOptions$ = of(result);
-  				this.form.get('targetValues')?.setValue(result);
-  			})
-  		);
   	} else if (this.targetType === SettingsFeeTargetFilterType.Country) {
   		const data = values.map(x => {
   			const c = CountryFilterList.find(c => c.id === x);
@@ -312,12 +302,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			this.targetEntity = ['account', 'accounts'];
   			this.targetSearchText = 'Type email or user name';
   			this.targetsTitle = 'Accounts';
-  			break;
-  		}
-  		case SettingsFeeTargetFilterType.WidgetId: {
-  			this.targetEntity = ['widget', 'widgets'];
-  			this.targetSearchText = 'Type a widget name';
-  			this.targetsTitle = 'Widgets';
   			break;
   		}
   		case SettingsFeeTargetFilterType.InitiateFrom: {
@@ -403,9 +387,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			})
   			.filter(x => x.title.toLowerCase().includes(searchString.toLowerCase()))
   		);
-  	} else if (this.targetType === SettingsFeeTargetFilterType.WidgetId) {
-  		const filter = new Filter({ search: searchString });
-  		return this.getFilteredWidgets(filter);
   	} else if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
   		const filter = new Filter({ search: searchString });
   		return this.getFilteredAccounts(filter);
@@ -576,7 +557,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   private getSimilarSchemes(scheme: FeeScheme): void {
   	this.errorMessage = '';
   	this.saveInProgress = true;
-  	this.similarSchemas$ = this.adminService.getFeeSettingsSimilar(scheme).pipe(finalize(() => this.saveInProgress = false));
+  	this.similarSchemas$ = this.adminService.getFeeSettingsSimilar(scheme).pipe(finalize(() => this.saveInProgress = false), shareReplay(1));
   }
 
   deleteSchemeConfirmed(id: string): void {
