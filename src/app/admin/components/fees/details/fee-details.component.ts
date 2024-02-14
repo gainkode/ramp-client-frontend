@@ -32,17 +32,14 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
-
   private subscriptions: Subscription = new Subscription();
   private removeDialog: NgbModalRef | undefined = undefined;
   private settingsId = '';
-
   TARGET_TYPE: typeof SettingsFeeTargetFilterType = SettingsFeeTargetFilterType;
   submitted = false;
   createNew = false;
   saveInProgress = false;
-  deleteInProgress = false;
-	disableInProgress = false;
+  disableInProgress = false;
   errorMessage = '';
   defaultSchemeName = '';
   currencyOptions: CurrencyView[] = [];
@@ -54,7 +51,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   filteredProviders: PaymentProviderView[] = [];
   costSchemes: CostScheme[] = [];
   currency = '';
-	deleted = false; 
+  deleted = false; 
   targetEntity = ['', ''];
   targetSearchText = '';
   targetsTitle = '';
@@ -66,7 +63,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   sourceTargetsOptions = TransactionSourceFilterList;
   minTargetsLengthTerm = 1;
   adminAdditionalSettings: Record<string, any> = {};
-	similarSchemas: SettingsFeeSimilarResult;
+  similarSchemas$: Observable<SettingsFeeSimilarResult>;
 
   form = this.formBuilder.group({
   	id: [''],
@@ -148,7 +145,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.form.reset();
   	this.defaultSchemeName = '';
   	this.currency = scheme?.currency ?? '';
-		this.deleted = !!scheme?.deleted;
+  	this.deleted = !!scheme?.deleted;
   	if (scheme) {
   		this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
   		this.form.get('id')?.setValue(scheme?.id);
@@ -208,6 +205,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   private setSchemeData(): FeeScheme {
   	const data = new FeeScheme(null);
+
   	data.name = this.form.get('name')?.value;
   	data.description = this.form.get('description')?.value;
   	data.isDefault = this.form.get('isDefault')?.value;
@@ -268,11 +266,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	} else if (this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
   		const data = values.map(x => {
   			const c = TransactionSourceFilterList.find(c => c.id === x);
-  			if (c) {
-  				return c;
-  			} else {
-  				return new CommonTargetValue();
-  			}
+			  return c ?? new CommonTargetValue();
   		}).filter(x => x.id !== '');
   		this.targetsOptions$ = of(data);
   		this.form.get('targetValues')?.setValue(data);
@@ -468,13 +462,13 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-	onTest(): void {
-		this.submitted = true;
+  onTest(): void {
+  	this.submitted = true;
   	if (this.form.valid) {
-			// this.feeService.setFeeInput(this.setSchemeData());
+  		// this.feeService.setFeeInput(this.setSchemeData());
   		this.getSimilarSchemes(this.setSchemeData());
   	}
-	}
+  }
 
   deleteScheme(content: any): void {
   	this.removeDialog = this.modalService.open(content, {
@@ -482,23 +476,21 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		this.removeDialog.closed.subscribe(val => {
-  			this.deleteSchemeConfirmed(this.settingsId ?? '');
-  		})
+  		this.removeDialog.closed.subscribe(() => this.deleteSchemeConfirmed(this.settingsId ?? ''))
   	);
   }
 
-	onStateChangeScheme(): void {
+  onStateChangeScheme(): void {
   	this.disableInProgress = true;
   	if (this.deleted) {
-			this.enableScheme();
-		} else {
-			this.disableScheme();
-		}
+  		this.enableScheme();
+  	} else {
+  		this.disableScheme();
+  	}
   }
 
-	disableScheme(): void {
-		const requestData$ = this.adminService.disableFeeSettings(this.settingsId);
+  disableScheme(): void {
+  	const requestData$ = this.adminService.disableFeeSettings(this.settingsId);
 		
   	this.subscriptions.add(
   		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
@@ -511,8 +503,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			},
   		})
   	);
-	}
-	enableScheme(): void {
+  }
+  enableScheme(): void {
   	this.disableInProgress = true;
   	const requestData$ = this.adminService.enableFeeSettings(this.settingsId);
 
@@ -547,24 +539,10 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
-	private getSimilarSchemes(scheme: FeeScheme): void {
+  private getSimilarSchemes(scheme: FeeScheme): void {
   	this.errorMessage = '';
   	this.saveInProgress = true;
-  	const requestData$ = this.adminService.getFeeSettingsSimilar(scheme);
-  	
-  	this.subscriptions.add(
-  		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
-  			next: (data) => {
-					this.similarSchemas = data.data.settingsFeeSimilars;
-				},
-  			error: (errorMessage) => {
-  				this.errorMessage = errorMessage;
-  				if (this.auth.token === '') {
-  					void this.router.navigateByUrl('/');
-  				}
-  			},
-  		})
-  	);
+  	this.similarSchemas$ = this.adminService.getFeeSettingsSimilar(scheme).pipe(finalize(() => this.saveInProgress = false));
   }
 
   deleteSchemeConfirmed(id: string): void {

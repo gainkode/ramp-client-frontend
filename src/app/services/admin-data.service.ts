@@ -57,8 +57,9 @@ import {
 	TransactionLifelineStatusItem,
 	TransactionUpdateInput,
 	LiquidityProviderEntity,
-  DashboardMerchantStats,
-  QueryGetDashboardMerchantStatsArgs
+	DashboardMerchantStats,
+	QueryGetDashboardMerchantStatsArgs,
+	SettingsFeeSimilarResult
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -2923,7 +2924,7 @@ export class AdminDataService {
 		}));
 	}
 
-  getDashboardMerchantStats(filter: Filter): Observable<DashboardMerchantStats> {
+	getDashboardMerchantStats(filter: Filter): Observable<DashboardMerchantStats> {
 		const vars: QueryGetDashboardStatsArgs = {
 			createdDateInterval: filter.createdDateInterval,
 			completedDateInterval: filter.completedDateInterval,
@@ -2937,11 +2938,11 @@ export class AdminDataService {
 			fiatCurrency: filter.fiatCurrency
 		};
     
-    // return of({
-    //   transactionsAmount: 10000019,
-    //   transactionsTotal: 13325,
-    //   usersTotal: 99,
-    // } as DashboardMerchantStats);
+		// return of({
+		//   transactionsAmount: 10000019,
+		//   transactionsTotal: 13325,
+		//   usersTotal: 99,
+		// } as DashboardMerchantStats);
     
 		return this.watchQuery<{ getDashboardMerchantStats: DashboardMerchantStats; }, QueryGetDashboardMerchantStatsArgs>({
 			query: GET_DASHBOARD_MERCHANT_STATS,
@@ -3816,28 +3817,28 @@ export class AdminDataService {
 		});
 	}
 
-	getFeeSettingsSimilar(feeScheme: FeeScheme): Observable<any> {
+	getFeeSettingsSimilar(feeScheme: FeeScheme): Observable<SettingsFeeSimilarResult> {
 		return this.mutate({
-      mutation: SETTINGS_FEE_SIMILARS,
-      variables: {
-        name: feeScheme.name,
-        description: feeScheme.description,
-        targetFilterType: feeScheme.target,
-        targetFilterValues: feeScheme.targetValues,
-        targetInstruments: feeScheme.instrument,
-        targetUserTypes: feeScheme.userType,
-        targetUserModes: feeScheme.userMode,
-        targetTransactionTypes: feeScheme.trxType,
-        targetPaymentProviders: feeScheme.provider,
-        targetCurrenciesFrom: feeScheme.currenciesFrom,
-        targetCurrenciesTo: feeScheme.currenciesTo,
-        terms: feeScheme.terms.getObject(),
-        wireDetails: feeScheme.details.getObject()
-      }
-    });
+			mutation: SETTINGS_FEE_SIMILARS,
+			variables: {
+				name: feeScheme.name,
+				description: feeScheme.description,
+				targetFilterType: feeScheme.target,
+				targetFilterValues: feeScheme.targetValues,
+				targetInstruments: feeScheme.instrument,
+				targetUserTypes: feeScheme.userType,
+				targetUserModes: feeScheme.userMode,
+				targetTransactionTypes: feeScheme.trxType,
+				targetPaymentProviders: feeScheme.provider,
+				targetCurrenciesFrom: feeScheme.currenciesFrom,
+				targetCurrenciesTo: feeScheme.currenciesTo,
+				terms: feeScheme.terms.getObject(),
+				wireDetails: feeScheme.details.getObject()
+			}
+		}).pipe(map(res => res.data));
 	}
 
-  saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
+	saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
 		return !feeScheme.id
 			? this.mutate({
 				mutation: ADD_SETTINGS_FEE,
@@ -4248,23 +4249,23 @@ export class AdminDataService {
 		});
 	}
 
-  disableFeeSettings(settingsId: string): Observable<any> {
-    return this.mutate({
-      mutation: DISABLE_SETTINGS_FEE,
-      variables: {
-        settingsId
-      }
-    });
-  }
+	disableFeeSettings(settingsId: string): Observable<any> {
+		return this.mutate({
+			mutation: DISABLE_SETTINGS_FEE,
+			variables: {
+				settingsId
+			}
+		});
+	}
 
-  enableFeeSettings(settingsId: string): Observable<any> {
-    return this.mutate({
-      mutation: ENABLE_SETTINGS_FEE,
-      variables: {
-        settingsId
-      }
-    });
-  }
+	enableFeeSettings(settingsId: string): Observable<any> {
+		return this.mutate({
+			mutation: ENABLE_SETTINGS_FEE,
+			variables: {
+				settingsId
+			}
+		});
+	}
 
 	deleteCostSettings(settingsId: string): Observable<any> {
 		return this.apollo.mutate({
