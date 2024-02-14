@@ -542,7 +542,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   private getSimilarSchemes(scheme: FeeScheme): void {
   	this.errorMessage = '';
   	this.saveInProgress = true;
-  	this.similarSchemas$ = this.adminService.getFeeSettingsSimilar(scheme).pipe(finalize(() => this.saveInProgress = false));
+  	this.similarSchemas$ = this.adminService.getFeeSettingsSimilar(scheme).pipe(finalize(() => this.saveInProgress = false))
   }
 
   deleteSchemeConfirmed(id: string): void {

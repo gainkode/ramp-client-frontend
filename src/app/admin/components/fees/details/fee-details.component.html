@@ -105,7 +105,7 @@
               [closeOnSelect]="false">
             </ng-select>
 
-            <mat-accordion *ngIf="(similarSchemas$ | async).targetCurrenciesFrom as targetCurrenciesFrom">
+            <mat-accordion *ngIf="(similarSchemas$ | async)?.targetCurrenciesFrom as targetCurrenciesFrom">
               <mat-expansion-panel>
                 <mat-expansion-panel-header 
                   style="height: 30px; padding: 0 12px !important;">

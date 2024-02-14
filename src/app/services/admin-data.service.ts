@@ -1638,6 +1638,7 @@ const SETTINGS_FEE_SIMILARS = gql`
         title
         feeData {
           schema {
+            name
             settingsFeeId
           }
           similarValues
@@ -1647,6 +1648,7 @@ const SETTINGS_FEE_SIMILARS = gql`
         title
         feeData {
           schema {
+            name
             settingsFeeId
           }
           similarValues
@@ -1656,6 +1658,7 @@ const SETTINGS_FEE_SIMILARS = gql`
         title
         feeData {
           schema {
+            name
             settingsFeeId
           }
           similarValues
@@ -1665,6 +1668,7 @@ const SETTINGS_FEE_SIMILARS = gql`
         title
         feeData {
           schema {
+            name
             settingsFeeId
           }
           similarValues
@@ -1674,6 +1678,7 @@ const SETTINGS_FEE_SIMILARS = gql`
         title
         feeData {
           schema {
+            name
             settingsFeeId
           }
           similarValues
@@ -1683,6 +1688,7 @@ const SETTINGS_FEE_SIMILARS = gql`
         title
         feeData {
           schema {
+            name
             settingsFeeId
           }
           similarValues
@@ -1692,6 +1698,7 @@ const SETTINGS_FEE_SIMILARS = gql`
         title
         feeData {
           schema {
+            name
             settingsFeeId
           }
           similarValues
@@ -1701,6 +1708,7 @@ const SETTINGS_FEE_SIMILARS = gql`
         title
         feeData {
           schema {
+            name
             settingsFeeId
           }
           similarValues
@@ -3835,7 +3843,7 @@ export class AdminDataService {
 				terms: feeScheme.terms.getObject(),
 				wireDetails: feeScheme.details.getObject()
 			}
-		}).pipe(map(res => res.data));
+		}).pipe(map(res => res.data['settingsFeeSimilars']));
 	}
 
 	saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
