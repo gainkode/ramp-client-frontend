@@ -1,17 +1,13 @@
-<mat-accordion *ngIf="targetField?.length">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header 
-        style="height: 30px; padding: 0 12px !important;">
-        <mat-panel-title>
-          <span style="
-          font-weight: 400;
-          color: rgba(0,0,0,.5);
-          font-size: 13px;">Similar Schemes</span>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div *ngFor="let value of targetField.feeData" style="margin: 0 -12px;">
-        <span style="color: rgba(0,0,0,.8); font-size: 13px;">Name: {{value.schema.name}}</span> <br>
-        <span style="color: rgba(0,0,0,.6); font-size: 11px;">Values: {{value.similarValues.join(', ')}}</span>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
+<mat-accordion class="fee-similiar-panel" *ngIf="targetField">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span>Similar Schemes</span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="fee-similiar-panel__body" *ngFor="let value of targetField.feeData">
+      <span>Name: {{value.schema.name}}</span> <br>
+      <span>Values: {{value.similarValues.join(', ')}}</span>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
