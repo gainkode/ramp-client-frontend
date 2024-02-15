@@ -1605,12 +1605,15 @@ const ADD_SETTINGS_FEE = gql`
 `;
 
 const SETTINGS_FEE_SIMILARS = gql`
-  fragment FeeDataFields on FeeData {
-    schema {
-      name
-      settingsFeeId
+  fragment FeeObjectDetails on SettingsFeeSimilarObject {
+    title
+    feeData {
+      schema {
+        name
+        settingsFeeId
+      }
+      similarValues
     }
-    similarValues
   }
 
   mutation SettingsFeeSimilars(
@@ -1648,58 +1651,31 @@ const SETTINGS_FEE_SIMILARS = gql`
       }
     ) {
       targetCurrenciesFrom {
-        title
-        feeData {
-          ...FeeDataFields
-        }
+        ...FeeObjectDetails
       }
       targetCurrenciesTo {
-        title
-        feeData {
-          ...FeeDataFields
-        }
+        ...FeeObjectDetails
       }
       targetFilterValues {
-        title
-        feeData {
-          ...FeeDataFields
-        }
+        ...FeeObjectDetails
       }
       targetTransactionTypes {
-        title
-        feeData {
-          ...FeeDataFields
-        }
+        ...FeeObjectDetails
       }
       targetInstruments {
-        title
-        feeData {
-          ...FeeDataFields
-        }
+        ...FeeObjectDetails
       }
       targetPaymentProviders {
-        title
-        feeData {
-          ...FeeDataFields
-        }
+        ...FeeObjectDetails
       }
       targetUserTypes {
-        title
-        feeData {
-          ...FeeDataFields
-        }
+        ...FeeObjectDetails
       }
       targetUserModes {
-        title
-        feeData {
-          ...FeeDataFields
-        }
+        ...FeeObjectDetails
       }
       widgetIds {
-        title
-        feeData {
-          ...FeeDataFields
-        }
+        ...FeeObjectDetails
       }
     }
   }
