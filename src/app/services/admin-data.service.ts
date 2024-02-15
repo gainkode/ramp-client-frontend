@@ -1605,6 +1605,14 @@ const ADD_SETTINGS_FEE = gql`
 `;
 
 const SETTINGS_FEE_SIMILARS = gql`
+  fragment FeeDataFields on FeeData {
+    schema {
+      name
+      settingsFeeId
+    }
+    similarValues
+  }
+
   mutation SettingsFeeSimilars(
     $name: String!
     $description: String
@@ -1642,91 +1650,55 @@ const SETTINGS_FEE_SIMILARS = gql`
       targetCurrenciesFrom {
         title
         feeData {
-          schema {
-            name
-            settingsFeeId
-          }
-          similarValues
+          ...FeeDataFields
         }
       }
       targetCurrenciesTo {
         title
         feeData {
-          schema {
-            name
-            settingsFeeId
-          }
-          similarValues
+          ...FeeDataFields
         }
       }
       targetFilterValues {
         title
         feeData {
-          schema {
-            name
-            settingsFeeId
-          }
-          similarValues
+          ...FeeDataFields
         }
       }
       targetTransactionTypes {
         title
         feeData {
-          schema {
-            name
-            settingsFeeId
-          }
-          similarValues
+          ...FeeDataFields
         }
       }
       targetInstruments {
         title
         feeData {
-          schema {
-            name
-            settingsFeeId
-          }
-          similarValues
+          ...FeeDataFields
         }
       }
       targetPaymentProviders {
         title
         feeData {
-          schema {
-            name
-            settingsFeeId
-          }
-          similarValues
+          ...FeeDataFields
         }
       }
       targetUserTypes {
         title
         feeData {
-          schema {
-            name
-            settingsFeeId
-          }
-          similarValues
+          ...FeeDataFields
         }
       }
       targetUserModes {
         title
         feeData {
-          schema {
-            name
-            settingsFeeId
-          }
-          similarValues
+          ...FeeDataFields
         }
       }
       widgetIds {
         title
         feeData {
-          schema {
-            name
-            settingsFeeId
-          }
-          similarValues
+          ...FeeDataFields
         }
       }
     }
