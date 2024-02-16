@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { map, Observable } from 'rxjs';
-import { KycProvider, OpenBankingDetails, PaymentBank, PaymentBankInput, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
+import { KycProvider, OpenBankingDetails, PaymentBankInput, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -743,7 +743,7 @@ export class PaymentDataService {
 	}
   
 	getProviders(fiatCurrency: string, widgetId: string | undefined, source: TransactionSource, transactionType: TransactionType, amount?: Number): QueryRef<any, EmptyObject> {
-		return this.apollo.watchQuery<any>({
+    return this.apollo.watchQuery<any>({
 			query: GET_PROVIDERS,
 			variables: {
 				fiatCurrency,

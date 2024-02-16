@@ -5,8 +5,10 @@
           <div class="widget-input__item-label"> {{label | transloco}}</div>
           <input
             class="widget-input__item-input"
-            type="text"
+            type="number"
             inputmode="decimal"
+            min="0"
+            step="0.01"
             placeholder="0.00"
             [formControlName]="boxFieldName"
             maxlength="14"
