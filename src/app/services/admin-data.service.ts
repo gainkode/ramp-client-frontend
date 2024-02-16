@@ -369,11 +369,6 @@ const GET_COST_SETTINGS = gql`
   }
 `;
 
-// targetCurrenciesFrom
-// targetCurrenciesTo
-// targetUserTypes
-// targetUserModes
-
 const GET_WIRE_TRANSFER_SETTINGS = gql`
 query GetWireTransferBankAccounts {
   getWireTransferBankAccounts {
