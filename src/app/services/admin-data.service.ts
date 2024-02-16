@@ -363,6 +363,7 @@ const GET_COST_SETTINGS = gql`
         targetInstruments
         targetTransactionTypes
         targetPaymentProviders
+        widgetIds
       }
     }
   }
@@ -1692,6 +1693,7 @@ const ADD_SETTINGS_COST = gql`
     $targetTransactionTypes: [TransactionType!]
     $targetPaymentProviders: [String!]
     $terms: String!
+    $widgetIds: [String]
   ) {
     addSettingsCost(
       settings: {
@@ -1704,6 +1706,7 @@ const ADD_SETTINGS_COST = gql`
         targetTransactionTypes: $targetTransactionTypes
         targetPaymentProviders: $targetPaymentProviders
         terms: $terms
+        widgetIds: $widgetIds
       }
     ) {
       settingsCostId
@@ -2586,6 +2589,7 @@ const UPDATE_SETTINGS_FEE = gql`
     $wireDetails: String!
     $targetCurrenciesFrom: [String!]
     $targetCurrenciesTo: [String!]
+    $widgetIds: [String]
   ) {
     updateSettingsFee(
       settingsId: $settingsId
@@ -2603,6 +2607,7 @@ const UPDATE_SETTINGS_FEE = gql`
         wireDetails: $wireDetails
         targetCurrenciesFrom: $targetCurrenciesFrom
         targetCurrenciesTo: $targetCurrenciesTo
+        widgetIds: $widgetIds
       }
     ) {
       settingsFeeId
@@ -2635,6 +2640,7 @@ const UPDATE_SETTINGS_COST = gql`
     $targetTransactionTypes: [TransactionType!]
     $targetPaymentProviders: [String!]
     $terms: String!
+    $widgetIds: [String]
   ) {
     updateSettingsCost(
       settingsId: $settingsId
@@ -2648,6 +2654,7 @@ const UPDATE_SETTINGS_COST = gql`
         targetTransactionTypes: $targetTransactionTypes
         targetPaymentProviders: $targetPaymentProviders
         terms: $terms
+        widgetIds: $widgetIds
       }
     ) {
       settingsCostId
@@ -3847,7 +3854,8 @@ export class AdminDataService {
 					terms: feeScheme.terms.getObject(),
 					wireDetails: feeScheme.details.getObject(),
 					targetCurrenciesFrom: feeScheme.currenciesFrom,
-					targetCurrenciesTo: feeScheme.currenciesTo
+					targetCurrenciesTo: feeScheme.currenciesTo,
+          widgetIds: feeScheme.widgetIds
 				}
 			});
 	}
@@ -3865,7 +3873,8 @@ export class AdminDataService {
 					targetInstruments: settings.instrument,
 					targetTransactionTypes: settings.trxType,
 					targetPaymentProviders: settings.provider,
-					terms: settings.terms.getObject()
+					terms: settings.terms.getObject(),
+          widgetIds: settings.widgetIds
 				}
 			})
 			: this.apollo.mutate({
@@ -3880,7 +3889,8 @@ export class AdminDataService {
 					targetInstruments: settings.instrument,
 					targetTransactionTypes: settings.trxType,
 					targetPaymentProviders: settings.provider,
-					terms: settings.terms.getObject()
+					terms: settings.terms.getObject(),
+          widgetIds: settings.widgetIds
 				}
 			});
 	}

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsFeeShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from '../model/generated-models';
+import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, SettingsFeeShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from '../model/generated-models';
 import { WidgetSettings, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { CheckoutSummary, PaymentProviderInstrumentView } from '../model/payment.model';
 import { AuthService } from './auth.service';
@@ -181,14 +181,12 @@ export class WidgetService {
 			this.onProgressChanged(true);
 		}
 
-		const settingsData$ = this.paymentService.mySettingsFee(
+		const settingsData$ = this.paymentService.mySettingsCost(
 			summary.transactionType,
-			this.getSource(widget),
 			PaymentInstrument.WireTransfer,
 			summary.providerView?.id ?? '',
-			summary.currencyTo,
-			summary.currencyFrom,
-			widget.widgetId).valueChanges.pipe(take(1));
+			widget.widgetId
+		).valueChanges.pipe(take(1));
 		this.pSubscriptions.add(
 			settingsData$.subscribe(({ data }) => {
 				if (this.onProgressChanged) {
@@ -196,41 +194,31 @@ export class WidgetService {
 				}
 				const wireTransferList: WireTransferPaymentCategoryItem[] = [];
 				let accountData: WireTransferBankAccountShort | undefined = undefined;
-				const settingsResult = data.mySettingsFee as SettingsFeeShort;
+				const costs = data.mySettingsCost as SettingsCostShort;
 
-				if(settingsResult.requiredFields && settingsResult.requiredFields.length > 0 && this.userInfoRequired){
-					this.userInfoRequired(settingsResult.requiredFields);
-				} else if (settingsResult.costs) {
-					if (settingsResult.costs.length > 0) {
-						const costs = settingsResult.costs[0];
-						if (costs.bankAccounts && (costs.bankAccounts?.length ?? 0 > 0)) {
-							accountData = costs.bankAccounts[0];
-
-							if (accountData.objectsDetails?.length !== 0) {
-								for(const object of accountData.objectsDetails){
-									wireTransferList.push({
-										title: object.title,
-										id: object.id,
-										data: JSON.stringify(object),
-										bankAccountId: accountData.bankAccountId
-									});
-								}
+				if (costs) {
+					if (costs.bankAccounts && (costs.bankAccounts?.length ?? 0 > 0)) {
+						accountData = costs.bankAccounts[0];
+	
+						if (accountData.objectsDetails?.length !== 0) {
+							for(const object of accountData.objectsDetails){
+								wireTransferList.push({
+									title: object.title,
+									id: object.id,
+									data: JSON.stringify(object),
+									bankAccountId: accountData.bankAccountId
+								});
 							}
 						}
-						if (this.onWireTranferListLoaded) {
-							this.onWireTranferListLoaded(wireTransferList, accountData?.bankAccountId);
-						}
-					} else {
-						if (this.onWireTranferListLoaded) {
-							this.onWireTranferListLoaded(wireTransferList, '');
-						}
+					}
+					if (this.onWireTranferListLoaded) {
+						this.onWireTranferListLoaded(wireTransferList, accountData?.bankAccountId);
 					}
 				} else {
 					if (this.onWireTranferListLoaded) {
 						this.onWireTranferListLoaded(wireTransferList, '');
 					}
 				}
-
 			}, (error) => {
 				if (this.onProgressChanged) {
 					this.onProgressChanged(false);

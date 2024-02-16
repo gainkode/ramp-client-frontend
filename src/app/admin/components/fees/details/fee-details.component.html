@@ -98,14 +98,6 @@
                 </app-dropdown-item>
               </ng-option>
             </ng-select>
-
-            <div
-              *ngIf="(form.controls.targetValues.touched || submitted) && (form.controls.targetValues.errors?.['required'])"
-              class="tx-danger">
-              <small>
-                Please specify at least one {{targetEntity[0]}}
-              </small>
-            </div>
             <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.widgetIds"> </app-fee-similiar-panel>
           </div>
 

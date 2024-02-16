@@ -3079,6 +3079,7 @@ export type QueryMySettingsCostArgs = {
   instrument: PaymentInstrument;
   paymentProvider?: InputMaybe<Scalars['String']['input']>;
   transactionType: TransactionType;
+  widgetId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3483,8 +3484,7 @@ export enum SettingsFeeTargetFilterType {
   AccountType = 'AccountType',
   Country = 'Country',
   InitiateFrom = 'InitiateFrom',
-  None = 'None',
-  WidgetId = 'WidgetId'
+  None = 'None'
 }
 
 export type SettingsKyc = {
