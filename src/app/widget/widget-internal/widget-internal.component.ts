@@ -848,7 +848,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   selectProvider(provider: PaymentProviderInstrumentView): void {
   	if(this.summary.transactionType === TransactionType.Buy){
-			this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
+  		this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
   			this.startPayment();
   		} else if (provider.instrument === PaymentInstrument.OpenBanking) {
@@ -858,7 +858,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		}
   	} else {
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
-				console.log(this.summary)
   			this.nextStage('sell_details', 'Bank details', 2, true);
   		} else {
   			this.createTransaction(provider.id, provider.instrument, '');
@@ -1281,6 +1280,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.errorMessage = message;
   	this.changeDetector.detectChanges();
   	if (this.pager.stageId !== 'order_details') {
+  		this.showTransactionError(title, message, !this.widget.orderDefault);
+  	} else if (this.pager.stageId === 'order_details' && this.isSingleOrderDetailsCompleted) {
   		this.showTransactionError(title, message, !this.widget.orderDefault);
   	}
   }
