@@ -1,0 +1,23 @@
+.fee-similiar-panel {
+    mat-expansion-panel-header {
+        height: 30px; 
+        padding: 0 12px !important;
+        mat-panel-title {
+            span {
+                font-weight: 400;
+                color: rgba(0,0,0,.5);
+                font-size: 13px;
+            }
+        }
+    }
+
+    &__body{
+        margin: 0 -12px;
+        span:first-child {
+            color: rgba(0,0,0,.8); font-size: 13px;
+        }
+        span:last-child {
+            color: rgba(0,0,0,.6); font-size: 11px;
+        }
+    }
+}

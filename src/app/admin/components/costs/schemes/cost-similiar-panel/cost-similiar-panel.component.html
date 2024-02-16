@@ -1,11 +1,11 @@
-<mat-accordion class="fee-similiar-panel" *ngIf="targetField?.feeData?.length">
+<mat-accordion class="fee-similiar-panel" *ngIf="targetField?.costData?.length">
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
         <span>Similar Schemes</span>
       </mat-panel-title>
     </mat-expansion-panel-header>
-    <div class="fee-similiar-panel__body" *ngFor="let value of targetField.feeData">
+    <div class="fee-similiar-panel__body" *ngFor="let value of targetField.costData">
       <span>Name: {{value.schema.name}}</span> <br>
       <span>Values: {{value.similarValues.join(', ')}}</span>
     </div>

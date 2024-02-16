@@ -59,7 +59,8 @@ import {
 	LiquidityProviderEntity,
 	DashboardMerchantStats,
 	QueryGetDashboardMerchantStatsArgs,
-	SettingsFeeSimilarResult
+	SettingsFeeSimilarResult,
+  SettingsCostSimilarResult
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -1705,6 +1706,66 @@ const ADD_SETTINGS_COST = gql`
       }
     ) {
       settingsCostId
+    }
+  }
+`;
+
+const SETTINGS_COST_SIMILARS = gql`
+  fragment CostObjectDetails on SettingsCostSimilarObject {
+    title
+    costData {
+      schema {
+        name
+        settingsCostId
+      }
+      similarValues
+    }
+  }
+
+  mutation SettingsCostSimilars(
+    $name: String!
+    $description: String
+    $bankAccountIds: [String!]
+    $targetFilterType: SettingsCostTargetFilterType!
+    $targetFilterValues: [String!]
+    $targetInstruments: [PaymentInstrument!]
+    $targetTransactionTypes: [TransactionType!]
+    $targetPaymentProviders: [String!]
+    $terms: String!
+    $widgetIds: [String]
+  ) {
+    settingsCostSimilars(
+      settings: {
+        name: $name
+        description: $description
+        bankAccountIds: $bankAccountIds
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        targetInstruments: $targetInstruments
+        targetTransactionTypes: $targetTransactionTypes
+        targetPaymentProviders: $targetPaymentProviders
+        terms: $terms
+        widgetIds: $widgetIds
+      }
+    ) {
+      targetFilterValues {
+        ...CostObjectDetails
+      }
+      targetTransactionTypes {
+        ...CostObjectDetails
+      }
+      targetInstruments {
+        ...CostObjectDetails
+      }
+      targetPaymentProviders {
+        ...CostObjectDetails
+      }
+      widgetIds {
+        ...CostObjectDetails
+      }
+      bankAccounts {
+        ...CostObjectDetails
+      }
     }
   }
 `;
@@ -3853,6 +3914,24 @@ export class AdminDataService {
           widgetIds: feeScheme.widgetIds
 				}
 			});
+	}
+
+  getCostSettingsSimilar(settings: CostScheme): Observable<SettingsCostSimilarResult> {
+		return this.mutate({
+			mutation: SETTINGS_COST_SIMILARS,
+			variables: {
+				name: settings.name,
+        description: settings.description,
+        bankAccountIds: settings.bankAccountIds,
+        targetFilterType: settings.target,
+        targetFilterValues: settings.targetValues,
+        targetInstruments: settings.instrument,
+        targetTransactionTypes: settings.trxType,
+        targetPaymentProviders: settings.provider,
+        terms: settings.terms.getObject(),
+        widgetIds: settings.widgetIds
+			}
+		}).pipe(map(res => res.data['settingsCostSimilars']));
 	}
 
 	saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {

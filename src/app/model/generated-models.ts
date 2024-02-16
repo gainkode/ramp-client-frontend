@@ -1189,6 +1189,7 @@ export type Mutation = {
   setMyInfo: LoginResult;
   setPassword: Scalars['Boolean']['output'];
   setUserInfo: LoginResult;
+  settingsCostSimilars?: Maybe<SettingsCostSimilarResult>;
   settingsFeeSimilars?: Maybe<SettingsFeeSimilarResult>;
   signup: LoginResult;
   status: Scalars['String']['output'];
@@ -1825,6 +1826,11 @@ export type MutationSetUserInfoArgs = {
   lastName?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   userId: Scalars['String']['input'];
+};
+
+
+export type MutationSettingsCostSimilarsArgs = {
+  settings: SettingsCostInput;
 };
 
 
@@ -3348,6 +3354,28 @@ export type SettingsCostShort = {
   bankAccounts?: Maybe<Array<WireTransferBankAccountShort>>;
   settingsCostId: Scalars['ID']['output'];
   terms?: Maybe<Scalars['String']['output']>;
+};
+
+export type SettingsCostSimilarObject = {
+  __typename?: 'SettingsCostSimilarObject';
+  costData?: Maybe<Array<Maybe<SettingsCostSimilarSchema>>>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type SettingsCostSimilarResult = {
+  __typename?: 'SettingsCostSimilarResult';
+  bankAccounts?: Maybe<SettingsCostSimilarObject>;
+  targetFilterValues?: Maybe<SettingsCostSimilarObject>;
+  targetInstruments?: Maybe<SettingsCostSimilarObject>;
+  targetPaymentProviders?: Maybe<SettingsCostSimilarObject>;
+  targetTransactionTypes?: Maybe<SettingsCostSimilarObject>;
+  widgetIds?: Maybe<SettingsCostSimilarObject>;
+};
+
+export type SettingsCostSimilarSchema = {
+  __typename?: 'SettingsCostSimilarSchema';
+  schema: SettingsCost;
+  similarValues?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
 export enum SettingsCostTargetFilterType {

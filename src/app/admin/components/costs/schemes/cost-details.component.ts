@@ -3,12 +3,12 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
 import { CostScheme } from 'model/cost-scheme.model';
 import { CountryFilterList } from 'model/country-code.model';
-import { PaymentInstrument, PaymentProvider, SettingsCostTargetFilterType, TransactionType, WireTransferBankAccountListResult } from 'model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCostSimilarResult, SettingsCostTargetFilterType, TransactionType, WireTransferBankAccountListResult } from 'model/generated-models';
 import { CostTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
 import { AuthService } from 'services/auth.service';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
@@ -59,6 +59,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 	widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
   minTargetsLengthTerm = 1;
   adminAdditionalSettings: Record<string, any> = {};
+	similarSchemas$: Observable<SettingsCostSimilarResult>;
 
   form = this.formBuilder.group({
   	id: [undefined],
@@ -128,11 +129,9 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 			this.setWidgets(scheme.widgetIds);
   		this.form.get('trxType')?.setValue(scheme?.trxType);
   		this.form.get('instrument')?.setValue(scheme.instrument);
-			console.log(scheme?.provider)
   		this.form.get('provider')?.setValue(scheme?.provider);
   		this.form.get('mdr')?.setValue(scheme?.terms.mdr);
   		this.form.get('transactionCost')?.setValue(scheme?.terms.transactionCost);
-			console.log(this.form);
   		this.filterPaymentProviders(scheme.instrument);
   		this.setTargetValidator();
   		this.setTargetValueParams();
@@ -315,9 +314,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   		data$.subscribe(({ data }) => {
   			const providers = data.getPaymentProviders as PaymentProvider[];
   			this.providers = providers?.map((val) => new PaymentProviderView(val));
-				if (this.providers?.length) {
-					this.filterPaymentProviders(this.form.get('instrument')?.value);
-				}
+				this.filterPaymentProviders(this.form.get('instrument')?.value);
   		})
   	);
   }
@@ -347,6 +344,14 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
+	onTest(): void {
+  	this.submitted = true;
+  	if (this.form.valid) {
+  		// this.feeService.setFeeInput(this.setSchemeData());
+  		this.getSimilarSchemes(this.setSchemeData());
+  	}
+  }
+
   deleteScheme(content: any): void {
   	this.removeDialog = this.modalService.open(content, {
   		backdrop: 'static',
@@ -373,6 +378,12 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   			}
   		})
   	);
+  }
+
+	private getSimilarSchemes(scheme: CostScheme): void {
+  	this.errorMessage = '';
+  	this.saveInProgress = true;
+  	this.similarSchemas$ = this.adminService.getCostSettingsSimilar(scheme).pipe(finalize(() => this.saveInProgress = false), shareReplay(1));
   }
 
   deleteSchemeConfirmed(id: string): void {
