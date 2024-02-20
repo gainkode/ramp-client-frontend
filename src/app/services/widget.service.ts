@@ -20,7 +20,6 @@ export class WidgetService {
 	private onConfirmEmailRequired: Function | undefined = undefined;  // (email: string)
 	private onKycStatusUpdate: Function | undefined = undefined;  // (status: boolean)
 	private onPaymentProvidersLoaded: Function | undefined = undefined;  // (status: boolean)
-	private onSellPaymentProvidersLoaded: Function | undefined = undefined;  // (status: boolean)
 	private onRecaptchaCallback: Function | undefined = undefined;  // (status: boolean)
 	private onWireTranferListLoaded: Function | undefined = undefined;  // (wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string)
 	private userInfoRequired: Function | undefined = undefined;
@@ -47,7 +46,6 @@ export class WidgetService {
 		wireTranferListLoadedCallback: Function | undefined,
 		userInfoRequired?: Function | undefined,
 		companyLevelVerificationHandler?: Function | undefined,
-		sellPaymentProvidersCallback?: Function | undefined,
 		recaptchaCallback?: Function | undefined,
 		quickcheckout?: boolean | undefined): void {
 		this.onProgressChanged = progressCallback;
@@ -59,7 +57,6 @@ export class WidgetService {
 		this.onConfirmEmailRequired = confirmEmailCallback;
 		this.onKycStatusUpdate = kycStatusCallback;
 		this.onPaymentProvidersLoaded = paymentProvidersCallback;
-		this.onSellPaymentProvidersLoaded = sellPaymentProvidersCallback;
 		this.onRecaptchaCallback = recaptchaCallback;
 		this.onWireTranferListLoaded = wireTranferListLoadedCallback;
 		this.userInfoRequired = userInfoRequired;
@@ -320,13 +317,8 @@ export class WidgetService {
 						}
 						this.onKycStatusUpdate(kycData[0] === true, kycData[1]);
 					}
-					if (summary.transactionType === TransactionType.Buy) {
-						this.loadPaymentProviders(summary, widget);
-					} else {
-						if (this.onError) {
-							this.onError(`Transaction type "${summary.transactionType}" is currently not supported`);
-						}
-					}
+
+					this.loadPaymentProviders(summary, widget);
 				}
 			}, (error) => {
 				if (this.onProgressChanged) {
@@ -335,12 +327,6 @@ export class WidgetService {
 				this.handleError(error, summary.email, 'Unable to load your identification status');
 			})
 		);
-	}
-
-	getSellSettings(summary: CheckoutSummary, widget: WidgetSettings): void {
-		if (summary.transactionType === TransactionType.Sell) {
-			this.loadPaymentProviders(summary, widget);
-		}
 	}
 
 	private loadPaymentProviders(summary: CheckoutSummary, widget: WidgetSettings): void {
@@ -365,15 +351,12 @@ export class WidgetService {
 				if (this.onProgressChanged) {
 					this.onProgressChanged(false);
 				}
-				if (this.onPaymentProvidersLoaded && summary.transactionType === TransactionType.Buy) {
-					this.onPaymentProvidersLoaded(this.getPaymentProviderList(
-						summary,
-						data.getAppropriatePaymentProviders as PaymentProviderByInstrument[]));
-				} else if (this.onSellPaymentProvidersLoaded && summary.transactionType === TransactionType.Sell) {
-					this.onSellPaymentProvidersLoaded(this.getPaymentProviderList(
-						summary,
-						data.getAppropriatePaymentProviders as PaymentProviderByInstrument[]));
-				}
+
+				this.onPaymentProvidersLoaded(this.getPaymentProviderList(
+					summary,
+					data.getAppropriatePaymentProviders as PaymentProviderByInstrument[]
+				));
+
 			}, (error) => {
 				if (this.onProgressChanged) {
 					this.onProgressChanged(false);
