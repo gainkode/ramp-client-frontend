@@ -1,6 +1,15 @@
 <div *ngIf="showRate && rate">
     <div class="__widget-rate-title">
-        1 {{currencyReceive}} ≈ {{rate}} {{currencySpend}}
+        1 {{
+            currentTransaction === TRANSACTION_TYPE.Sell ? 
+            spendComboValue?.display :
+            receiveComboValue?.display
+        }} ≈ {{rate}} 
+        {{
+            currentTransaction === TRANSACTION_TYPE.Sell ? 
+            receiveComboValue?.display :
+            spendComboValue?.display
+        }}
     </div>
 </div>
 
