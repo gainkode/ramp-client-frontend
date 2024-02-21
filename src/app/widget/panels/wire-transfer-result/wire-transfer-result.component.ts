@@ -45,7 +45,8 @@ export class WidgetWireTransferResultComponent {
     		'widget-wire-transfer-result.field_swift': bankDetails.swiftBic ?? '',
     		'widget-wire-transfer-result.field_routingNumber': bankDetails.routingNumber ?? '',
     		'widget-wire-transfer-result.field_creditTo': bankDetails.creditTo ?? '',
-    		'widget-wire-transfer-result.field_reference': bankDetails.reference ?? ''
+    		'widget-wire-transfer-result.field_reference': bankDetails.reference ?? '',
+			'widget-wire-transfer-result.field_bsb': bankDetails.bsb ?? ''
     	};
     }
 }
