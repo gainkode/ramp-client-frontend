@@ -141,6 +141,7 @@
   "widget-wire-transfer-result.field_beneficiaryAddress": "Dirección del beneficiario",
   "widget-wire-transfer-result.field_beneficiaryName": "Nombre del beneficiario",
   "widget-wire-transfer-result.field_iban": "IBAN",
+  "widget-wire-transfer-result.field_bsb": "BSB",
   "widget-wire-transfer-result.field_swift": "SWIFT / BIC",
   "widget-wire-transfer-result.field_routingNumber": "Número de enrutamiento",
   "widget-wire-transfer-result.field_creditTo": "Crédito a",

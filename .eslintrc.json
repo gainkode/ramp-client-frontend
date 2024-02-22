@@ -60,7 +60,7 @@
         ],
         "indent": "off",
         "@typescript-eslint/indent": [
-          "warn",
+          "off",
           "tab",
           {
             "SwitchCase": 1,

@@ -123,7 +123,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.onWireTransferListLoaded.bind(this),
   		this.userInfoRequired.bind(this),
   		this.companyLevelVerification.bind(this),
-  		this.sellSettingsCommonComplete.bind(this),
   		this.onRecaptchaCallback.bind(this),
   		this.quickCheckout
   	);
@@ -744,11 +743,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   // == Disclaimer =========
   disclaimerNext(): void {
   	this.summary.agreementChecked = true;
-  	if (this.summary.transactionType === TransactionType.Sell) {
-  		this.widgetService.getSellSettings(this.summary, this.widget);
-  	} else {
-  		this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
-  	}
+  	this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
   }
 
   introDisclaimerNext(): void {
@@ -790,25 +785,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.overLimitLevel = level;
   	}
   	this.requestKyc = state;
-  }
-
-  private sellSettingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
-  	this.paymentProviders = providers.map(val => val);
-
-  	const nextStage = 4;
-
-  	if (this.paymentProviders.length < 1) {
-  		this.setError(
-  			'Payment providers not found',
-  			`No supported payment providers found for "${this.summary.currencyTo}"`);
-  	} else if (this.paymentProviders.length > 1) {
-  		if (!this.notificationStarted) {
-  			this.startNotificationListener();
-  		}
-  		this.nextStage('payment', 'widget-pager.credit_card', nextStage, true);
-  	} else {
-  		this.selectProvider(this.paymentProviders[0]);
-  	}
   }
 
   private settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {

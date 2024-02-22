@@ -613,6 +613,8 @@ export class AuthService {
 				password: noPassword ? undefined : userpassword,
 				widgetId
 			};
+			
+			this.logout();
 
 			return this.apollo.mutate({
 				mutation: LOGIN,
@@ -633,6 +635,9 @@ export class AuthService {
 				password: noPassword ? undefined : userpassword,
 				widgetId
 			};
+
+			this.logout();
+			
 			return this.apollo.mutate({
 				mutation: LOGIN_WIDGET,
 				variables
@@ -648,6 +653,8 @@ export class AuthService {
 		const recaptcha = localStorage.getItem('recaptchaId') ?? EnvService.recaptchaId;
 
 		if (consentStatus) {
+			this.logout();
+			
 			return this.apollo.mutate({
 				mutation: SOCIAL_LOGIN,
 				variables: {

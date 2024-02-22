@@ -78,6 +78,7 @@ import { TranslocoRootModule } from 'transloco-root.module';
 import { WidgetPagerService } from 'services/widget-pager.service';
 import { TransactionDetailsComponent } from './panels/payment-provider/yapily/panels/transaction-details/transaction-details.component';
 import { PaymentInstructionComponent } from './panels/payment-provider/yapily/panels/payment-instruction/payment-instruction.component';
+import { WidgeInternalOverviewDetailsComponent } from './widget-internal/widget-internal-overview/widge-internal-overview-details/widge-internal-overview-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -168,6 +169,7 @@ export class MaterialModule {}
 		TransactionDetailsComponent,
 		PaymentInstructionComponent,
 
+		WidgeInternalOverviewDetailsComponent,
 		WidgetEmbeddedOverviewComponent,
 		WidgetEmbeddedComponent
 	],
@@ -184,6 +186,7 @@ export class MaterialModule {}
 		WidgetWizardComponent,
 		CompanyLevelVerificationComponent,
 
+		WidgeInternalOverviewDetailsComponent,
 		WidgetEmbeddedOverviewComponent,
 		WidgetEmbeddedComponent
 	],

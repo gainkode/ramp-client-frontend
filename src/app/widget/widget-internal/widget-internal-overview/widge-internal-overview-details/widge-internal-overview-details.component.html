@@ -1,0 +1,57 @@
+
+<div class="order-details__container mt-3">
+    <div class="order-details__header">
+        <span class="order-details__header-title">
+        {{amountSpendField.valid ? amountSpendField.value : ''}} {{spendComboValue?.display || ''}} 
+        <span>{{'widget-internal-overview.order-details_title' | transloco}}</span>
+        </span>
+        <button type="button" class="order-details__header-button" (click)="mobileSummary = !mobileSummary">
+        {{!mobileSummary ? ('widget-internal-overview.order-details_btn-details' | transloco) : 'widget-internal-overview.order-details_btn-hide' | transloco}} 
+        </button>
+    </div>
+    <div *ngIf="mobileSummary">
+        <hr class="order-details__divider mb-2">
+
+        <div class="order-details__item">
+            <span class="order-details__item-label">
+            {{'widget-internal-overview.order-details_label-transaction' | transloco}}
+            </span>
+            <span class="order-details__item-value">{{summary?.transaction}}</span>
+        </div>
+
+        <div class="order-details__item">
+            <span class="order-details__item-label">
+                {{'widget-internal-overview.order-details_label-spend' | transloco}}
+            </span>
+            <span class="order-details__item-value">{{summary?.amountFrom?.toFixed(summary?.amountFromPrecision) || 0}} {{spendComboValue?.display}}</span>
+        </div>
+
+        <div class="order-details__item">
+            <span class="order-details__item-label">
+                {{'widget-internal-overview.order-details_label-receive' | transloco}}
+            </span>
+            <span class="order-details__item-value">{{summary?.amountTo?.toFixed(summary?.amountToPrecision) || 0}} {{receiveComboValue?.display}}</span>
+        </div>
+
+        <div class="order-details__item">
+            <span class="order-details__item-label">
+                {{'widget-internal-overview.order-details_label-rate' | transloco}}
+            </span>
+            <span class="order-details__item-value">{{summary?.rate || '-'}}</span>
+        </div>
+
+        <div class="order-details__item" *ngIf="summary?.fee > 0">
+            <span class="order-details__item-label">
+                {{'widget-internal-overview.order-details_label-ewallet-fee' | transloco}}
+            </span>
+            <span class="order-details__item-value"> {{summary?.transactionFee}} {{summary?.transactionFeeCurrency}}</span>
+        </div>
+
+        <div class="order-details__item" *ngIf="summary?.networkFee > 0">
+            <span class="order-details__item-label">
+                {{'widget-internal-overview.order-details_label-network-fee' | transloco}}
+            </span>
+            <span class="order-details__item-value"> {{summary?.networkFee}} {{summary?.networkFeeCurrency}}</span>
+        </div>
+    </div>
+</div>

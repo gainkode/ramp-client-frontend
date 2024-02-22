@@ -198,10 +198,10 @@ export class CurrencyView {
 			this.code = data.displaySymbol;
 		}
 		this.currencyBlockchain = data.currencyBlockchain;
-		if (data.currencyBlockchain == CurrencyBlockchain.Ethereum) {
+		if (data.currencyBlockchain === CurrencyBlockchain.Ethereum) {
 			this.stable = true;
 			this.display = `${this.code} (ERC20)`;
-		} else if (data.currencyBlockchain == CurrencyBlockchain.Tron) {
+		} else if (data.currencyBlockchain === CurrencyBlockchain.Tron) {
 			this.stable = true;
 			this.display = `${this.code} (TRC20)`;
 		} else {

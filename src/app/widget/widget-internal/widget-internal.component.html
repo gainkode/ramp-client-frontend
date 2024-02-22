@@ -74,7 +74,7 @@
           </app-widget-sell-details>
 
           <app-sell-widget-complete *ngSwitchCase="'sell_widget_complete'" [address]="this.summary.sourceAddress" 
-          [amount]="this.summary.amountFrom" [currency]="this.summary.currencyFrom" (onFinish)="resetWizard()"
+          [amount]="this.summary.amountFrom" [currency]="this.summary.currencyFrom" (onFinish)="processingComplete()"
           (onProgress)="progressChanged($event)">
           </app-sell-widget-complete>
           <!-- Disclaimer -->
