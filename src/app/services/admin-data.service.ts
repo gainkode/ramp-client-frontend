@@ -2296,6 +2296,40 @@ mutation CreateUserTransaction(
 }
 `;
 
+const SIMULATE_TRANSACTION = gql`
+mutation SimulateTransaction(
+  $transactionType: TransactionType!,
+  $source: TransactionSource!,
+  $currencyToSpend: String!,
+  $currencyToReceive: String!,
+  $amountToSpend: Float!,
+  $instrument: PaymentInstrument,
+  $paymentProvider: String,
+  $rate: Float
+) {
+  simulateTransaction(
+    transaction: {
+      type: $transactionType
+      source: $source
+      currencyToSpend: $currencyToSpend
+      currencyToReceive: $currencyToReceive
+      amountToSpend: $amountToSpend
+      instrument: $instrument
+      paymentProvider: $paymentProvider
+    }
+    rate: $rate
+  ) {
+    costSchema {
+      settingsCostId
+    }
+
+    feeSchema {
+      settingsFeeId
+    }
+  }
+}
+`;
+
 const CANCEL_TRANSACTION = gql`
 mutation CancelTransaction(
   $transactionId: String!
@@ -4479,6 +4513,27 @@ export class AdminDataService {
 				instrument: transaction.instrument,
 				paymentProvider: transaction.paymentProvider,
 				userId: userId,
+				rate: rate
+			}
+		}).pipe(tap(() => {
+			this.snackBar.open(
+				`Transaction was created`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+  simulateTransaction(transaction: TransactionInput, userId: string, rate: number): Observable<any> {
+		return this.mutate({
+			mutation: SIMULATE_TRANSACTION,
+			variables: {
+				transactionType: transaction.type,
+				source: transaction.source,
+				currencyToSpend: transaction.currencyToSpend,
+				currencyToReceive: transaction.currencyToReceive,
+				amountToSpend: transaction.amountToSpend,
+				instrument: transaction.instrument,
+				paymentProvider: transaction.paymentProvider,
 				rate: rate
 			}
 		}).pipe(tap(() => {
