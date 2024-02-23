@@ -8,7 +8,7 @@ import { TransactionItemFull } from 'model/transaction.model';
 
 @Injectable()
 export class TransactionService implements OnDestroy {
-	private sizePerLoad = 10;
+	private sizePerLoad = 5;
 	private dataSubject = new ReplaySubject<{
 		list: TransactionItemFull[];
 		count: number;
