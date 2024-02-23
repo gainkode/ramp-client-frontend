@@ -12,11 +12,13 @@ import { TransactionItemFull } from 'model/transaction.model';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { ProfileDataService } from 'services/profile.service';
+import { TransactionService } from 'admin/services/transaction.service';
 
 @Component({
 	selector: 'app-admin-transactions',
 	templateUrl: 'transactions.component.html',
-	styleUrls: ['transactions.component.scss']
+	styleUrls: ['transactions.component.scss'],
+	providers: [TransactionService]
 })
 export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
@@ -71,6 +73,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   private detailsDialog: NgbModalRef | undefined = undefined;
 
   constructor(
+		public transactionService: TransactionService,
   	private modalService: NgbModal,
   	private auth: AuthService,
   	private commonDataService: CommonDataService,
@@ -87,6 +90,27 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnInit(): void {
+		this.subscriptions.add(
+			this.transactionService.data.subscribe(
+				{
+					next: ({ list, count}) => {
+						// If this is new stream we have to store full list in transactions object
+						this.transactions = this.inProgress ? list : [...this.transactions, ...list];
+						this.transactionCount = count;
+						this.transactions.forEach(val => {
+							val.statusInfo = this.userStatuses.find(x => x.key === val.status);
+						});
+						this.inProgress = false;
+					},
+					error: (error) => {
+						this.inProgress = false;
+						if (this.auth.token === '') {
+							void this.router.navigateByUrl('/');
+						}
+					}
+				}
+			)
+		);
   	this.loadCommonSettings();
   	this.loadList();
   }
@@ -190,28 +214,13 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 
   private loadTransactions(): void {
   	this.inProgress = true;
-  	const listData$ = this.adminService.getTransactions(
-  		this.pageIndex,
+		// Start transaction loading stream
+		void this.transactionService.load(this.pageIndex,
   		this.pageSize,
   		this.sortedField,
   		this.sortedDesc,
-  		this.filter).pipe(take(1));
-  	this.selectedForUnbenchmark = false;
-  	this.subscriptions.add(
-  		listData$.subscribe(({ list, count }) => {
-  			this.transactions = list;
-  			this.transactionCount = count;
-  			this.transactions.forEach(val => {
-  				val.statusInfo = this.userStatuses.find(x => x.key === val.status);
-  			});
-  			this.inProgress = false;
-  		}, (error) => {
-  			this.inProgress = false;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+  		this.filter
+		);
   }
 
   private loadTransactionStatuses(): void {

@@ -3203,19 +3203,20 @@ export class AdminDataService {
 			first: takeItems,
 			orderBy: [{ orderBy: orderField, desc: orderDesc }]
 		};
+    
 		return this.watchQuery<{ getTransactions: TransactionListResult; }, QueryGetTransactionsArgs>({
-			query: GET_TRANSACTIONS,
-			variables: vars,
-			fetchPolicy: 'network-only'
-		}).pipe(map(result => {
-			return result.data?.getTransactions?.list && result.data?.getTransactions?.count ? {
-				list: result.data.getTransactions.list.map(val => new TransactionItemFull(val)),
-				count: result.data.getTransactions.count
-			} :  {
-				list: [],
-				count: 0
-			};
-		}));
+      query: GET_TRANSACTIONS,
+      variables: vars,
+      fetchPolicy: 'network-only'
+    }).pipe(map(result => {
+      return result.data?.getTransactions?.list && result.data?.getTransactions?.count ? {
+        list: result.data.getTransactions.list.map(val => new TransactionItemFull(val)),
+        count: result.data.getTransactions.count
+      } :  {
+        list: [],
+        count: 0
+      };
+    }));
 	}
 
 	getTransactionLifeline(transactionId: string): Observable<TransactionLifelineStatusItem[]> {
@@ -4579,8 +4580,8 @@ export class AdminDataService {
 		this.updateIsBusy('on');
 
 		if (this.apollo.client !== undefined) {
-
-			return this.apollo.watchQuery<TData, TVariables>(options)
+      const result = new Observable<ApolloQueryResult<TData>>((sub) => {
+        this.apollo.watchQuery<TData, TVariables>(options)
 				.valueChanges
 				.pipe(
 					tap(() => this.updateIsBusy('off')),
@@ -4598,7 +4599,12 @@ export class AdminDataService {
 
 						return throwError(null);
 					})
-				);
+				).subscribe((data) => {
+          sub.next(data);
+          sub.complete();
+        });
+      });
+			return result;
 		}
 
 		this.snackBar.open('Apollo not ready', undefined, { duration: 5000 });
