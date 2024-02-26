@@ -8,7 +8,7 @@ import { TransactionItemFull } from 'model/transaction.model';
 
 @Injectable()
 export class TransactionService implements OnDestroy {
-	private sizePerLoad = 5;
+	private sizePerLoad = 10;
 	private dataSubject = new ReplaySubject<{
 		list: TransactionItemFull[];
 		count: number;
@@ -43,6 +43,7 @@ export class TransactionService implements OnDestroy {
 		let pageIndexInternal = pageIndex * pageSize / this.sizePerLoad;
 		
 		while (pageSize > 0) {
+			debugger
 			// If preseted size per load less then page size we should only query the remaining transactions
 			const currentSizePerLoad = this.sizePerLoad <= pageSize ? this.sizePerLoad : this.sizePerLoad - pageSize;
 			
@@ -57,10 +58,14 @@ export class TransactionService implements OnDestroy {
 			// Execute query and send to subscriber received data transactions
 			const data = await lastValueFrom(newVal$);
 			this.dataSubject.next(data);
-
-			// Reduce the page size by the received number of transactions
-			pageIndexInternal++;
-			pageSize -= currentSizePerLoad;
+			
+			if (data.count < pageSize) {
+				pageSize = -1;
+			} else {
+				// Reduce the page size by the received number of transactions
+				pageIndexInternal++;
+				pageSize -= currentSizePerLoad;
+			}
 		}
 	}
 }
