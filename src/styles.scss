@@ -873,8 +873,11 @@ img.payment-logo {
     font-size: 8px;
 }
 
-.modalCusSty {
+.modalCusSty-transacion {
     z-index: 1055 !important;
+    .modal-dialog {
+        max-width: 95% !important;
+    }
 }
 
 .cdk-overlay-container {

@@ -181,7 +181,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   createUserTransactionShow(content: any): void {
   	this.detailsDialog = this.modalService.open(content, {
   		backdrop: 'static',
-  		windowClass: 'modalCusSty',
+  		windowClass: 'modalCusSty-transacion',
   	});
   }
 
