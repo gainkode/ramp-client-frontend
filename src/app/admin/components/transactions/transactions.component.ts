@@ -215,35 +215,35 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   private loadTransactions(): void {
   	this.inProgress = true;
 		// Start transaction loading stream
-		void this.transactionService.load(this.pageIndex,
-  		this.pageSize,
-  		this.sortedField,
-  		this.sortedDesc,
-  		this.filter
-		);
-
-		// const listData$ = this.adminService.getTransactions(
-  	// 	this.pageIndex,
+		// void this.transactionService.load(this.pageIndex,
   	// 	this.pageSize,
   	// 	this.sortedField,
   	// 	this.sortedDesc,
-  	// 	this.filter).pipe(take(1));
-  	// this.selectedForUnbenchmark = false;
-  	// this.subscriptions.add(
-  	// 	listData$.subscribe(({ list, count }) => {
-  	// 		this.transactions = list;
-  	// 		this.transactionCount = count;
-  	// 		this.transactions.forEach(val => {
-  	// 			val.statusInfo = this.userStatuses.find(x => x.key === val.status);
-  	// 		});
-  	// 		this.inProgress = false;
-  	// 	}, (error) => {
-  	// 		this.inProgress = false;
-  	// 		if (this.auth.token === '') {
-  	// 			void this.router.navigateByUrl('/');
-  	// 		}
-  	// 	})
-  	// );
+  	// 	this.filter
+		// );
+
+		const listData$ = this.adminService.getTransactions(
+  		this.pageIndex,
+  		this.pageSize,
+  		this.sortedField,
+  		this.sortedDesc,
+  		this.filter).pipe(take(1));
+  	this.selectedForUnbenchmark = false;
+  	this.subscriptions.add(
+  		listData$.subscribe(({ list, count }) => {
+  			this.transactions = list;
+  			this.transactionCount = count;
+  			this.transactions.forEach(val => {
+  				val.statusInfo = this.userStatuses.find(x => x.key === val.status);
+  			});
+  			this.inProgress = false;
+  		}, (error) => {
+  			this.inProgress = false;
+  			if (this.auth.token === '') {
+  				void this.router.navigateByUrl('/');
+  			}
+  		})
+  	);
   }
 
   private loadTransactionStatuses(): void {
