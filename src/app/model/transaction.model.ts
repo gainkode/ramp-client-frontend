@@ -245,7 +245,7 @@ export class TransactionItemFull {
 			this.amountToReceive = data.transferOrder?.amount ?? paymentData.amountToReceive;
 			this.merchantAmountToReceive = data?.merchantTransferOrder?.amount ?? 0;
 			this.rate = data.rate ?? data.initialRate;
-			// this.calcMerchantFeePercent = data.merchantFeePercent ?? 0;
+			this.calcMerchantFeePercent = data.merchantFeePercent ?? 0;
 			this.feePercent = data.feePercent ?? 0;
 			if (data.type === TransactionType.Deposit) {
 				this.address = this.recipient ?? '-';
@@ -536,8 +536,7 @@ export class TransactionItemFull {
 	}
 
 	get amountHash(): number {
-		return getTransactionAmountHash(this.rate, this.amountToSpend, this.fees);
-		// return getTransactionAmountHash(this.rate, this.amountToSpend, this.feePercent, this.calcMerchantFeePercent); --->
+		return getTransactionAmountHash(this.rate, this.amountToSpend, this.feePercent, this.calcMerchantFeePercent);
 	}
 }
 

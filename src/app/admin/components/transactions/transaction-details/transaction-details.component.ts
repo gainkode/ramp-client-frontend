@@ -131,6 +131,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	comment: [undefined],
   	transactionType: [undefined],
   	merchantFeePercent: [undefined],
+		feePercent: [undefined]
   });
 
   get merchantFeePercentField(): AbstractControl | null {
@@ -146,7 +147,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 }
 
   get feePercentFiat(): string {
-	  return `${((this.feePercentField.value / 100) * this.data.amountToSpend).toFixed(2)}, ${this.data.currencyFiat}`;
+	  return `${((this.feePercentField?.value / 100) * this.data.amountToSpend).toFixed(2)}, ${this.data.currencyFiat}`;
   }
   
   widgetOptions$: Observable<CommonTargetValue[]>;
@@ -271,7 +272,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('screeningRiskscore')?.setValue(this.data.screeningRiskscore);
   		this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
   		this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
-  		this.form.get('merchantFeePercent')?.setValue(this.data.widgetUserParams?.merchantFeePercent);
+			this.form.get('merchantFeePercent')?.setValue(this.data.calcMerchantFeePercent);
+			this.form.get('feePercent')?.setValue(this.data.feePercent);
   		if(this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
   			this.scriningData = this.data?.screeningData?.paymentChecks[0];
   		}
@@ -343,7 +345,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		type: this.form.get('transactionType')?.value ?? undefined,
   		widgetUserParamsChanges,
   		comment: this.form.get('comment')?.value ?? '',
-  		flag: this.flag
+  		flag: this.flag,
+			feePercent: this.feePercentField?.value ?? undefined,
+			merchantFeePercent: this.merchantFeePercentField?.value ?? undefined
   	};
 
   	return transactionToUpdate;
@@ -416,8 +420,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		const amountHash = getTransactionAmountHash(
   			this.transactionToUpdate.rate ?? this.pDefaultRate,
   			this.transactionToUpdate.amountToSpend ?? 0,
-			// this.transactionToUpdate.merchantFeePercent ?? 0,   --->
-  			this.transactionToUpdate.feeFiat ?? 0);
+			this.transactionToUpdate.feePercent ?? 0,
+			this.transactionToUpdate.merchantFeePercent ?? 0);
   		this.statusChanged = this.pStatusHash !== statusHash;
   		this.amountChanged = this.pAmountHash !== amountHash;
 			

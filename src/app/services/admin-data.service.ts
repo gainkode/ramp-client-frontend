@@ -4577,8 +4577,6 @@ export class AdminDataService {
 			transactionId: transactionId,
 			launchAfterUpdate: restartTransaction,
 			recalculate: recalculateAmounts,
-      // merchantFeePercent: data.merchantFeePercent, --->
-      // feePercent: data.feePercent,
 			...data
 		};
 
