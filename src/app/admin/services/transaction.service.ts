@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subscription, forkJoin, lastValueFrom } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { Observable, ReplaySubject, Subscription, lastValueFrom } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
 import { Filter } from 'admin/model/filter.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,7 +7,7 @@ import { TransactionItemFull } from 'model/transaction.model';
 
 @Injectable()
 export class TransactionService implements OnDestroy {
-	private sizePerLoad = 10;
+	private sizePerLoad = 5;
 	private dataSubject = new ReplaySubject<{
 		list: TransactionItemFull[];
 		count: number;
@@ -43,7 +42,6 @@ export class TransactionService implements OnDestroy {
 		let pageIndexInternal = pageIndex * pageSize / this.sizePerLoad;
 		
 		while (pageSize > 0) {
-			debugger
 			// If preseted size per load less then page size we should only query the remaining transactions
 			const currentSizePerLoad = this.sizePerLoad <= pageSize ? this.sizePerLoad : this.sizePerLoad - pageSize;
 			
