@@ -746,8 +746,11 @@ const GET_TRANSACTIONS = gql`
           transferDetails
           transferHash
           originalOrderId
+          status
+          subStatus
         }
         benchmarkTransferOrderBlockchainLink
+        merchantFeeTransferOrderBlockchainLink
         code
         comment
         flag
@@ -770,8 +773,12 @@ const GET_TRANSACTIONS = gql`
         instrumentDetails
         kycStatus
         liquidityOrder { 
-          statusReason 
+          statusReason
+          status
+          state
           executingResult
+          orderId
+          originalOrderId
         }
         liquidityOrderId
         liquidityProvider
@@ -781,6 +788,7 @@ const GET_TRANSACTIONS = gql`
           captureOperationSn
           currency
           preauth
+          provider
           operations {
             operationId
             created
@@ -880,6 +888,7 @@ const GET_TRANSACTIONS = gql`
         canBeCancelled
         hasToBeRefunded
         canBeReviewed
+        merchantFeePercent
         senderName
         recipientName
       }
@@ -2201,6 +2210,8 @@ mutation UpdateTransaction(
   $comment: String
   $widgetId: String
   $flag: Boolean
+  $merchantFeePercent: Float
+  $feePercent: Float
   $type: TransactionType
   $paymentOrderChanges: TransactionUpdatePaymentOrderChanges
 ) {
@@ -2225,6 +2236,8 @@ mutation UpdateTransaction(
       widgetUserParamsChanges: $widgetUserParamsChanges
       comment: $comment
       flag: $flag
+      merchantFeePercent: $merchantFeePercent
+      feePercent: $feePercent
       type: $type
       paymentOrderChanges: $paymentOrderChanges
     }
@@ -4321,6 +4334,8 @@ export class AdminDataService {
 			transactionId: transactionId,
 			launchAfterUpdate: restartTransaction,
 			recalculate: recalculateAmounts,
+      // merchantFeePercent: data.merchantFeePercent, --->
+      // feePercent: data.feePercent,
 			...data
 		};
 

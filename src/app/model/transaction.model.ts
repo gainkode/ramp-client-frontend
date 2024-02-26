@@ -25,6 +25,7 @@ import {
 	TransactionStatusDescriptorMap,
 	TransactionStatusHistory,
 	TransactionType,
+	TransferOrder,
 	User,
 	UserMode,
 	WidgetUserParams,
@@ -71,9 +72,9 @@ export class TransactionItemFull {
 	currencyFiat = '';
 	amountToSpend = 0;
 	amountToReceive = 0;
-	merchantAmountToReceive = 0;
 	transferOrderId = '';
 	transferOriginalOrderId = '';
+	originalPaymentOrderId = '';
 	paymentOrderId = '';
 	transferOrderHash = '';
 	screeningAnswer: ScreeningAnswer;
@@ -81,6 +82,8 @@ export class TransactionItemFull {
 	screeningStatus = '';
 	screeningData: Record<string, any> = {};
 	transferFee = '';
+	transferOrder: {} | undefined;
+	benchmarkTransferOrder: {} | undefined;
 	benchmarkTransferOrderId = '';
 	benchmarkTransferOriginalOrderId = '';
 	benchmarkTransferOrderHash = '';
@@ -110,12 +113,32 @@ export class TransactionItemFull {
 	comment = '';
 	declineReason = '';
 	declineReasonExtra = '';
+	transferStatus = '';
+	transferSubStatus = '';
+	merchantAmountToReceive = 0;
+	merchantTransferOrder: TransferOrder | undefined;
+	merchantTransferStatus = '';
+	merchantTransferSubStatus = '';
+	merchantTransferOriginalOrderId = '';
+	merchantTransferHash = '';
+	merchantFeeTransferOrderBlockchainLink = '';
+	benchmarkStatus = '';
+	benchmarkSubStatus = '';
+	paymentStatus = '';
+	paymentStatusReason = '';
+	exchangeStatus = '';
+	exchangeState = '';
+	exchangeStatusReason = '';
 	vaultIds: string[] = [];
 	flag = false;
 	canBeCancelled = false;
 	hasToBeRefunded = false;
 	canBeReviewed = false;
+	exchangeOrderId = '';
 	widgetUserParams: WidgetUserParams;
+	calcMerchantFeePercent: number;
+	feePercent: number;
+	currencyCrypto = '';
 
 	constructor(data: Transaction | TransactionShort | null) {
 		if (data !== null) {
@@ -150,6 +173,7 @@ export class TransactionItemFull {
 				}
 			}
 			this.accountId = data.userId ?? '';
+			this.exchangeOrderId = data.liquidityOrder?.originalOrderId ?? '';
 			this.accountStatus = data.accountStatus ?? '';
 			this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
 			this.flag = data.flag ?? false;
@@ -169,6 +193,7 @@ export class TransactionItemFull {
 				this.accountName = this.user.fullName;
 				this.ip = transactionData.userIp as string;
 				this.userMode = transactionData.user?.mode as UserMode | undefined;
+				this.benchmarkTransferOrder = transactionData?.benchmarkTransferOrder;
 				this.benchmarkTransferOrderId =
           transactionData.benchmarkTransferOrder?.orderId ?? '';
 				this.benchmarkTransferOriginalOrderId =
@@ -186,7 +211,10 @@ export class TransactionItemFull {
 			}
 			this.widgetUserParams = transactionData.widgetUserParams;
 			this.comment = transactionData.comment ?? '';
-			this.paymentOrderId = transactionData.paymentOrderId ?? '';
+
+			this.paymentOrderId = transactionData.paymentOrderId ?? '-';
+			this.originalPaymentOrderId = transactionData.paymentOrder?.originalOrderId ?? '-';
+			this.transferOrder = data.transferOrder;
 			this.transferOrderId = data.transferOrder?.orderId ?? '';
 			this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
 			this.transferOrderHash = data.transferOrder?.transferHash ?? '';
@@ -202,13 +230,14 @@ export class TransactionItemFull {
         transactionData.benchmarkTransferOrderBlockchainLink ?? '';
 			this.type = data.type;
 			this.instrument = data.instrument ?? undefined;
-			this.paymentProvider = data.paymentProvider ?? '';
+			this.paymentProvider = data.paymentOrder?.provider?.toUpperCase() ?? '';
 			this.widgetId = data.widgetId ?? '';
 			this.source = data.source ?? undefined;
 			const paymentData = getPaymentData(data);
 			this.currencyToSpend = paymentData.currencyToSpend;
 			this.currencyToReceive = paymentData.currencyToReceive;
 			this.currencyFiat = paymentData.currencyFiat;
+			this.currencyCrypto = paymentData.currencyCrypto;
 			this.amountToSpend = paymentData.amountToSpend;
 			this.fees = paymentData.fees;
 			this.sender = paymentData.sender.title;
@@ -216,6 +245,8 @@ export class TransactionItemFull {
 			this.amountToReceive = data.transferOrder?.amount ?? paymentData.amountToReceive;
 			this.merchantAmountToReceive = data?.merchantTransferOrder?.amount ?? 0;
 			this.rate = data.rate ?? data.initialRate;
+			// this.calcMerchantFeePercent = data.merchantFeePercent ?? 0;
+			this.feePercent = data.feePercent ?? 0;
 			if (data.type === TransactionType.Deposit) {
 				this.address = this.recipient ?? '-';
 			} else if(data.type === TransactionType.Withdrawal) {
@@ -238,6 +269,19 @@ export class TransactionItemFull {
 				this.widgetName = widgetData.widgetName;
 			}
 			this.declineReason = '';
+			this.transferStatus = data.transferOrder?.status ?? '';
+			this.transferSubStatus = data.transferOrder?.subStatus ?? '';
+			this.benchmarkStatus =  transactionData.benchmarkTransferOrder?.status ?? '';
+			this.benchmarkSubStatus = transactionData.benchmarkTransferOrder?.subStatus ?? '';
+			this.paymentStatus =  data.paymentOrder?.status ?? '';
+			this.paymentStatusReason = data.paymentOrder?.statusReason && (this.paymentStatus?.toLowerCase() !== 'completed') ? data.paymentOrder?.statusReason : '' ;
+
+			this.exchangeStatus =  data.liquidityOrder?.status ?? '';
+			this.exchangeStatusReason = data.liquidityOrder?.statusReason && 
+				(this.exchangeStatus?.toLowerCase() !== 'completed' && this.exchangeStatus?.toLowerCase() !== 'closed') ? 
+				data.liquidityOrder?.statusReason : '' ;
+
+			this.exchangeState =  data.liquidityOrder?.state ?? '';
 			switch (this.status) {
 				case TransactionStatus.AddressDeclined:
 					this.declineReason = 'Invalid address';
@@ -306,7 +350,7 @@ export class TransactionItemFull {
 			}
 
 			if (data.paymentOrder) {
-				this.paymentOrderPreauth = data.paymentOrder.preauth && data.paymentOrder.status == 'AUTOREJECTED';
+				this.paymentOrderPreauth = data.paymentOrder.preauth && data.paymentOrder.status === 'AUTOREJECTED';
 				if (data.paymentOrder.paymentInfo) {
 					let payment = JSON.parse(data.paymentOrder.paymentInfo);
 					// sometimes it comes as a string with escape symbols.
@@ -493,6 +537,7 @@ export class TransactionItemFull {
 
 	get amountHash(): number {
 		return getTransactionAmountHash(this.rate, this.amountToSpend, this.fees);
+		// return getTransactionAmountHash(this.rate, this.amountToSpend, this.feePercent, this.calcMerchantFeePercent); --->
 	}
 }
 
@@ -528,6 +573,7 @@ export class TransactionItem {
 	transferOrderHash = '';
 	transferOrderBlockchainLink = '';
 	kycRejected = false;
+	feePercent: number;
 	private created!: Date;
 	private datepipe = new DatePipe('en-US');
 
@@ -557,6 +603,7 @@ export class TransactionItem {
 			this.transferOrderBlockchainLink = data.transferOrderBlockchainLink ?? '';
 			this.status = userStatus;
 			this.ip = data.userIp as string;
+			this.feePercent = data.feePercent ?? 0;
 			const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;
 			if (kycStatusValue !== TransactionKycStatus.KycApproved) {
 				this.kycStatus =

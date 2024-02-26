@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription, map } from 'rxjs';
@@ -133,6 +133,22 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	merchantFeePercent: [undefined],
   });
 
+  get merchantFeePercentField(): AbstractControl | null {
+	return this.form.get('merchantFeePercent');
+}
+
+  get merchantFeeFiat(): string {
+	  return `${((this.merchantFeePercentField.value / 100) * this.data.amountToSpend / this.data.rate).toFixed(8)}, ${this.data.currencyCrypto}`;
+  }
+
+  get feePercentField(): AbstractControl | null {
+	return this.form.get('feePercent');
+}
+
+  get feePercentFiat(): string {
+	  return `${((this.feePercentField.value / 100) * this.data.amountToSpend).toFixed(2)}, ${this.data.currencyFiat}`;
+  }
+  
   widgetOptions$: Observable<CommonTargetValue[]>;
   constructor(
   	private formBuilder: UntypedFormBuilder,
@@ -400,6 +416,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		const amountHash = getTransactionAmountHash(
   			this.transactionToUpdate.rate ?? this.pDefaultRate,
   			this.transactionToUpdate.amountToSpend ?? 0,
+			// this.transactionToUpdate.merchantFeePercent ?? 0,   --->
   			this.transactionToUpdate.feeFiat ?? 0);
   		this.statusChanged = this.pStatusHash !== statusHash;
   		this.amountChanged = this.pAmountHash !== amountHash;

@@ -143,11 +143,7 @@ export class FeeScheme {
 	}
 
 	private getColorStyles(): string {
-		if (this.deleted) {
-			return 'grey';
-		} else {
-			return 'white';
-		}
+		return this.deleted ? 'grey' : 'white';
 	}
 }
 
