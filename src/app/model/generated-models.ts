@@ -996,6 +996,17 @@ export type LoginResult = {
   user?: Maybe<User>;
 };
 
+export type ManuallyEditedFieldsType = {
+  __typename?: 'ManuallyEditedFieldsType';
+  manuallyEditedAccountStatus?: Maybe<Scalars['Boolean']['output']>;
+  manuallyEditedAmounts?: Maybe<Scalars['Boolean']['output']>;
+  manuallyEditedFee?: Maybe<Scalars['Boolean']['output']>;
+  manuallyEditedFeePercent?: Maybe<Scalars['Boolean']['output']>;
+  manuallyEditedKycStatus?: Maybe<Scalars['Boolean']['output']>;
+  manuallyEditedMerchantFeePercent?: Maybe<Scalars['Boolean']['output']>;
+  manuallyEditedStatus?: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type MerchantOrCustomerStats = BaseStat & {
   __typename?: 'MerchantOrCustomerStats';
   abandoned?: Maybe<TransactionStatsVolume>;
@@ -1154,7 +1165,9 @@ export type Mutation = {
   deleteWidget?: Maybe<Widget>;
   deleteWireTransferBankAccount: WireTransferBankAccount;
   disable2fa: LoginResult;
+  disableSettingsFee: SettingsFee;
   enable2fa: LoginResult;
+  enableSettingsFee: SettingsFee;
   /** This endpoint can be used to execute a transaction */
   executeTransaction?: Maybe<TransactionShort>;
   exportTransactionsToCsv?: Maybe<Scalars['Boolean']['output']>;
@@ -1616,9 +1629,19 @@ export type MutationDisable2faArgs = {
 };
 
 
+export type MutationDisableSettingsFeeArgs = {
+  settingsId: Scalars['ID']['input'];
+};
+
+
 export type MutationEnable2faArgs = {
   code: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type MutationEnableSettingsFeeArgs = {
+  settingsId: Scalars['ID']['input'];
 };
 
 
@@ -2677,6 +2700,7 @@ export type QueryGetRatesArgs = {
   currenciesFrom: Array<Scalars['String']['input']>;
   currencyTo: Scalars['String']['input'];
   provider?: InputMaybe<Scalars['String']['input']>;
+  reverse?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -3180,6 +3204,21 @@ export type Rate = {
   depositRate: Scalars['Float']['output'];
   originalRate: Scalars['Float']['output'];
   withdrawRate: Scalars['Float']['output'];
+};
+
+export type RateHistory = {
+  __typename?: 'RateHistory';
+  created?: Maybe<Scalars['String']['output']>;
+  currencyFrom?: Maybe<Scalars['String']['output']>;
+  currencyPair?: Maybe<Scalars['String']['output']>;
+  currencyTo?: Maybe<Scalars['String']['output']>;
+  provider?: Maybe<Scalars['String']['output']>;
+  rate?: Maybe<Scalars['Float']['output']>;
+  rateHistoryId: Scalars['String']['output'];
+  requestParams?: Maybe<Scalars['String']['output']>;
+  responseParams?: Maybe<Scalars['String']['output']>;
+  transactionId?: Maybe<Scalars['String']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
 };
 
 export type RefundInput = {
@@ -3767,8 +3806,10 @@ export type Transaction = {
   manuallyEditedAccountStatus?: Maybe<Scalars['Boolean']['output']>;
   manuallyEditedAmounts?: Maybe<Scalars['Boolean']['output']>;
   manuallyEditedFee?: Maybe<Scalars['Boolean']['output']>;
+  manuallyEditedFields?: Maybe<ManuallyEditedFieldsType>;
   manuallyEditedKycStatus?: Maybe<Scalars['Boolean']['output']>;
   manuallyEditedStatus?: Maybe<Scalars['Boolean']['output']>;
+  merchantFeePercent?: Maybe<Scalars['Float']['output']>;
   merchantFeeTransferOrder?: Maybe<TransferOrder>;
   merchantFeeTransferOrderBlockchainLink?: Maybe<Scalars['String']['output']>;
   merchantFeeTransferOrderId?: Maybe<Scalars['String']['output']>;
@@ -3989,6 +4030,7 @@ export type TransactionShort = {
   lifelineId?: Maybe<Scalars['String']['output']>;
   liquidityOrder?: Maybe<LiquidityExchangeOrder>;
   liquidityProvider?: Maybe<LiquidityProvider>;
+  merchantFeePercent?: Maybe<Scalars['Float']['output']>;
   merchantTransferOrder?: Maybe<TransferOrder>;
   paymentOrder?: Maybe<PaymentOrder>;
   paymentProvider?: Maybe<Scalars['String']['output']>;
@@ -4181,9 +4223,12 @@ export type TransactionUpdateInput = {
   currencyToSpend?: InputMaybe<Scalars['String']['input']>;
   destination?: InputMaybe<Scalars['String']['input']>;
   feeFiat?: InputMaybe<Scalars['Float']['input']>;
+  feePercent?: InputMaybe<Scalars['Float']['input']>;
   flag?: InputMaybe<Scalars['Boolean']['input']>;
   kycStatus?: InputMaybe<TransactionKycStatus>;
   launchAfterUpdate?: InputMaybe<Scalars['Boolean']['input']>;
+  merchantFeePercent?: InputMaybe<Scalars['Float']['input']>;
+  merchantFeeTransferOrderChanges?: InputMaybe<TransactionUpdateTransferOrderChanges>;
   paymentOrderChanges?: InputMaybe<TransactionUpdatePaymentOrderChanges>;
   rate?: InputMaybe<Scalars['Float']['input']>;
   requestParams?: InputMaybe<Scalars['String']['input']>;
@@ -4465,6 +4510,8 @@ export enum UserActionType {
   DeleteKycTierSettings = 'deleteKycTierSettings',
   DeleteUser = 'deleteUser',
   DeleteWireTransferBankAccount = 'deleteWireTransferBankAccount',
+  DisableFeeSettings = 'disableFeeSettings',
+  EnableFeeSettings = 'enableFeeSettings',
   Exchange = 'exchange',
   FlashfxApproved = 'flashfxApproved',
   FlashfxAutoReject = 'flashfxAutoReject',
