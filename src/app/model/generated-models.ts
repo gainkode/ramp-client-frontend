@@ -1200,6 +1200,8 @@ export type Mutation = {
   setMyInfo: LoginResult;
   setPassword: Scalars['Boolean']['output'];
   setUserInfo: LoginResult;
+  settingsCostSimilars?: Maybe<SettingsCostSimilarResult>;
+  settingsFeeSimilars?: Maybe<SettingsFeeSimilarResult>;
   signup: LoginResult;
   status: Scalars['String']['output'];
   /** Unbenchmarking Transactions */
@@ -1835,6 +1837,16 @@ export type MutationSetUserInfoArgs = {
   lastName?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   userId: Scalars['String']['input'];
+};
+
+
+export type MutationSettingsCostSimilarsArgs = {
+  settings: SettingsCostInput;
+};
+
+
+export type MutationSettingsFeeSimilarsArgs = {
+  settings: SettingsFeeInput;
 };
 
 
@@ -3085,6 +3097,7 @@ export type QueryMySettingsCostArgs = {
   instrument: PaymentInstrument;
   paymentProvider?: InputMaybe<Scalars['String']['input']>;
   transactionType: TransactionType;
+  widgetId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3339,6 +3352,7 @@ export type SettingsCost = {
   targetPaymentProviders?: Maybe<Array<Scalars['String']['output']>>;
   targetTransactionTypes?: Maybe<Array<Scalars['String']['output']>>;
   terms?: Maybe<Scalars['String']['output']>;
+  widgetIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
 export type SettingsCostInput = {
@@ -3353,6 +3367,7 @@ export type SettingsCostInput = {
   targetPaymentProviders?: InputMaybe<Array<Scalars['String']['input']>>;
   targetTransactionTypes?: InputMaybe<Array<TransactionType>>;
   terms?: InputMaybe<Scalars['String']['input']>;
+  widgetIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type SettingsCostListResult = {
@@ -3366,6 +3381,28 @@ export type SettingsCostShort = {
   bankAccounts?: Maybe<Array<WireTransferBankAccountShort>>;
   settingsCostId: Scalars['ID']['output'];
   terms?: Maybe<Scalars['String']['output']>;
+};
+
+export type SettingsCostSimilarObject = {
+  __typename?: 'SettingsCostSimilarObject';
+  costData?: Maybe<Array<Maybe<SettingsCostSimilarSchema>>>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type SettingsCostSimilarResult = {
+  __typename?: 'SettingsCostSimilarResult';
+  bankAccounts?: Maybe<SettingsCostSimilarObject>;
+  targetFilterValues?: Maybe<SettingsCostSimilarObject>;
+  targetInstruments?: Maybe<SettingsCostSimilarObject>;
+  targetPaymentProviders?: Maybe<SettingsCostSimilarObject>;
+  targetTransactionTypes?: Maybe<SettingsCostSimilarObject>;
+  widgetIds?: Maybe<SettingsCostSimilarObject>;
+};
+
+export type SettingsCostSimilarSchema = {
+  __typename?: 'SettingsCostSimilarSchema';
+  schema: SettingsCost;
+  similarValues?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
 export enum SettingsCostTargetFilterType {
@@ -3431,6 +3468,7 @@ export type SettingsFee = {
   targetUserModes?: Maybe<Array<UserMode>>;
   targetUserTypes?: Maybe<Array<UserType>>;
   terms: Scalars['String']['output'];
+  widgetIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   wireDetails: Scalars['String']['output'];
 };
 
@@ -3449,6 +3487,7 @@ export type SettingsFeeInput = {
   targetUserModes?: InputMaybe<Array<UserMode>>;
   targetUserTypes?: InputMaybe<Array<UserType>>;
   terms?: InputMaybe<Scalars['String']['input']>;
+  widgetIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   wireDetails?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3469,13 +3508,38 @@ export type SettingsFeeShort = {
   wireDetails: Scalars['String']['output'];
 };
 
+export type SettingsFeeSimilarObject = {
+  __typename?: 'SettingsFeeSimilarObject';
+  feeData?: Maybe<Array<Maybe<SettingsFeeSimilarSchema>>>;
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type SettingsFeeSimilarResult = {
+  __typename?: 'SettingsFeeSimilarResult';
+  currency?: Maybe<SettingsFeeSimilarObject>;
+  targetCurrenciesFrom?: Maybe<SettingsFeeSimilarObject>;
+  targetCurrenciesTo?: Maybe<SettingsFeeSimilarObject>;
+  targetFilterValues?: Maybe<SettingsFeeSimilarObject>;
+  targetInstruments?: Maybe<SettingsFeeSimilarObject>;
+  targetPaymentProviders?: Maybe<SettingsFeeSimilarObject>;
+  targetTransactionTypes?: Maybe<SettingsFeeSimilarObject>;
+  targetUserModes?: Maybe<SettingsFeeSimilarObject>;
+  targetUserTypes?: Maybe<SettingsFeeSimilarObject>;
+  widgetIds?: Maybe<SettingsFeeSimilarObject>;
+};
+
+export type SettingsFeeSimilarSchema = {
+  __typename?: 'SettingsFeeSimilarSchema';
+  schema: SettingsFee;
+  similarValues?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
 export enum SettingsFeeTargetFilterType {
   AccountId = 'AccountId',
   AccountType = 'AccountType',
   Country = 'Country',
   InitiateFrom = 'InitiateFrom',
-  None = 'None',
-  WidgetId = 'WidgetId'
+  None = 'None'
 }
 
 export type SettingsKyc = {

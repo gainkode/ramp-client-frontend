@@ -57,8 +57,10 @@ import {
 	TransactionLifelineStatusItem,
 	TransactionUpdateInput,
 	LiquidityProviderEntity,
-  DashboardMerchantStats,
-  QueryGetDashboardMerchantStatsArgs
+	DashboardMerchantStats,
+	QueryGetDashboardMerchantStatsArgs,
+	SettingsFeeSimilarResult,
+  SettingsCostSimilarResult
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -334,6 +336,7 @@ const GET_FEE_SETTINGS = gql`
         targetCurrenciesFrom
         targetCurrenciesTo
         deleted
+        widgetIds
       }
     }
   }
@@ -361,15 +364,11 @@ const GET_COST_SETTINGS = gql`
         targetInstruments
         targetTransactionTypes
         targetPaymentProviders
+        widgetIds
       }
     }
   }
 `;
-
-// targetCurrenciesFrom
-// targetCurrenciesTo
-// targetUserTypes
-// targetUserModes
 
 const GET_WIRE_TRANSFER_SETTINGS = gql`
 query GetWireTransferBankAccounts {
@@ -1586,6 +1585,7 @@ const ADD_SETTINGS_FEE = gql`
     $targetCurrenciesTo: [String!]
     $terms: String!
     $wireDetails: String!
+    $widgetIds: [String]
   ) {
     addSettingsFee(
       settings: {
@@ -1602,9 +1602,87 @@ const ADD_SETTINGS_FEE = gql`
         targetCurrenciesTo: $targetCurrenciesTo
         terms: $terms
         wireDetails: $wireDetails
+        widgetIds: $widgetIds
       }
     ) {
       settingsFeeId
+    }
+  }
+`;
+
+const SETTINGS_FEE_SIMILARS = gql`
+  fragment FeeObjectDetails on SettingsFeeSimilarObject {
+    title
+    feeData {
+      schema {
+        name
+        settingsFeeId
+      }
+      similarValues
+    }
+  }
+
+  mutation SettingsFeeSimilars(
+    $name: String!
+    $description: String
+    $targetFilterType: SettingsFeeTargetFilterType!
+    $targetFilterValues: [String!]
+    $targetInstruments: [PaymentInstrument!]
+    $targetUserTypes: [UserType!]
+    $targetUserModes: [UserMode!]
+    $targetTransactionTypes: [TransactionType!]
+    $targetPaymentProviders: [String!]
+    $targetCurrenciesFrom: [String!]
+    $targetCurrenciesTo: [String!]
+    $terms: String!
+    $wireDetails: String!
+    $widgetIds: [String]
+  ) {
+    settingsFeeSimilars(
+      settings: {
+        name: $name
+        description: $description
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        targetInstruments: $targetInstruments
+        targetUserTypes: $targetUserTypes
+        targetUserModes: $targetUserModes
+        targetTransactionTypes: $targetTransactionTypes
+        targetPaymentProviders: $targetPaymentProviders
+        targetCurrenciesFrom: $targetCurrenciesFrom
+        targetCurrenciesTo: $targetCurrenciesTo
+        terms: $terms
+        wireDetails: $wireDetails
+        widgetIds: $widgetIds
+      }
+    ) {
+      targetCurrenciesFrom {
+        ...FeeObjectDetails
+      }
+      targetCurrenciesTo {
+        ...FeeObjectDetails
+      }
+      targetFilterValues {
+        ...FeeObjectDetails
+      }
+      targetTransactionTypes {
+        ...FeeObjectDetails
+      }
+      targetInstruments {
+        ...FeeObjectDetails
+      }
+      targetPaymentProviders {
+        ...FeeObjectDetails
+      }
+      targetUserTypes {
+        ...FeeObjectDetails
+      }
+      targetUserModes {
+        ...FeeObjectDetails
+      }
+      widgetIds {
+        ...FeeObjectDetails
+      }
     }
   }
 `;
@@ -1620,6 +1698,7 @@ const ADD_SETTINGS_COST = gql`
     $targetTransactionTypes: [TransactionType!]
     $targetPaymentProviders: [String!]
     $terms: String!
+    $widgetIds: [String]
   ) {
     addSettingsCost(
       settings: {
@@ -1632,9 +1711,70 @@ const ADD_SETTINGS_COST = gql`
         targetTransactionTypes: $targetTransactionTypes
         targetPaymentProviders: $targetPaymentProviders
         terms: $terms
+        widgetIds: $widgetIds
       }
     ) {
       settingsCostId
+    }
+  }
+`;
+
+const SETTINGS_COST_SIMILARS = gql`
+  fragment CostObjectDetails on SettingsCostSimilarObject {
+    title
+    costData {
+      schema {
+        name
+        settingsCostId
+      }
+      similarValues
+    }
+  }
+
+  mutation SettingsCostSimilars(
+    $name: String!
+    $description: String
+    $bankAccountIds: [String!]
+    $targetFilterType: SettingsCostTargetFilterType!
+    $targetFilterValues: [String!]
+    $targetInstruments: [PaymentInstrument!]
+    $targetTransactionTypes: [TransactionType!]
+    $targetPaymentProviders: [String!]
+    $terms: String!
+    $widgetIds: [String]
+  ) {
+    settingsCostSimilars(
+      settings: {
+        name: $name
+        description: $description
+        bankAccountIds: $bankAccountIds
+        targetFilterType: $targetFilterType
+        targetFilterValues: $targetFilterValues
+        targetInstruments: $targetInstruments
+        targetTransactionTypes: $targetTransactionTypes
+        targetPaymentProviders: $targetPaymentProviders
+        terms: $terms
+        widgetIds: $widgetIds
+      }
+    ) {
+      targetFilterValues {
+        ...CostObjectDetails
+      }
+      targetTransactionTypes {
+        ...CostObjectDetails
+      }
+      targetInstruments {
+        ...CostObjectDetails
+      }
+      targetPaymentProviders {
+        ...CostObjectDetails
+      }
+      widgetIds {
+        ...CostObjectDetails
+      }
+      bankAccounts {
+        ...CostObjectDetails
+      }
     }
   }
 `;
@@ -2165,6 +2305,40 @@ mutation CreateUserTransaction(
 }
 `;
 
+const SIMULATE_TRANSACTION = gql`
+mutation SimulateTransaction(
+  $transactionType: TransactionType!,
+  $source: TransactionSource!,
+  $currencyToSpend: String!,
+  $currencyToReceive: String!,
+  $amountToSpend: Float!,
+  $instrument: PaymentInstrument,
+  $paymentProvider: String,
+  $rate: Float
+) {
+  simulateTransaction(
+    transaction: {
+      type: $transactionType
+      source: $source
+      currencyToSpend: $currencyToSpend
+      currencyToReceive: $currencyToReceive
+      amountToSpend: $amountToSpend
+      instrument: $instrument
+      paymentProvider: $paymentProvider
+    }
+    rate: $rate
+  ) {
+    costSchema {
+      settingsCostId
+    }
+
+    feeSchema {
+      settingsFeeId
+    }
+  }
+}
+`;
+
 const CANCEL_TRANSACTION = gql`
 mutation CancelTransaction(
   $transactionId: String!
@@ -2518,6 +2692,7 @@ const UPDATE_SETTINGS_FEE = gql`
     $wireDetails: String!
     $targetCurrenciesFrom: [String!]
     $targetCurrenciesTo: [String!]
+    $widgetIds: [String]
   ) {
     updateSettingsFee(
       settingsId: $settingsId
@@ -2535,6 +2710,7 @@ const UPDATE_SETTINGS_FEE = gql`
         wireDetails: $wireDetails
         targetCurrenciesFrom: $targetCurrenciesFrom
         targetCurrenciesTo: $targetCurrenciesTo
+        widgetIds: $widgetIds
       }
     ) {
       settingsFeeId
@@ -2567,6 +2743,7 @@ const UPDATE_SETTINGS_COST = gql`
     $targetTransactionTypes: [TransactionType!]
     $targetPaymentProviders: [String!]
     $terms: String!
+    $widgetIds: [String]
   ) {
     updateSettingsCost(
       settingsId: $settingsId
@@ -2580,6 +2757,7 @@ const UPDATE_SETTINGS_COST = gql`
         targetTransactionTypes: $targetTransactionTypes
         targetPaymentProviders: $targetPaymentProviders
         terms: $terms
+        widgetIds: $widgetIds
       }
     ) {
       settingsCostId
@@ -2827,7 +3005,7 @@ export class AdminDataService {
 		}));
 	}
 
-  getDashboardMerchantStats(filter: Filter): Observable<DashboardMerchantStats> {
+	getDashboardMerchantStats(filter: Filter): Observable<DashboardMerchantStats> {
 		const vars: QueryGetDashboardStatsArgs = {
 			createdDateInterval: filter.createdDateInterval,
 			completedDateInterval: filter.completedDateInterval,
@@ -2841,11 +3019,11 @@ export class AdminDataService {
 			fiatCurrency: filter.fiatCurrency
 		};
     
-    // return of({
-    //   transactionsAmount: 10000019,
-    //   transactionsTotal: 13325,
-    //   usersTotal: 99,
-    // } as DashboardMerchantStats);
+		// return of({
+		//   transactionsAmount: 10000019,
+		//   transactionsTotal: 13325,
+		//   usersTotal: 99,
+		// } as DashboardMerchantStats);
     
 		return this.watchQuery<{ getDashboardMerchantStats: DashboardMerchantStats; }, QueryGetDashboardMerchantStatsArgs>({
 			query: GET_DASHBOARD_MERCHANT_STATS,
@@ -2877,7 +3055,7 @@ export class AdminDataService {
 			})
 		);
 	}
-
+  
 	getCostSettings(): QueryRef<any, EmptyObject> {
 		return this.apollo.watchQuery<any>({
 			query: GET_COST_SETTINGS,
@@ -3721,6 +3899,28 @@ export class AdminDataService {
 		});
 	}
 
+	getFeeSettingsSimilar(feeScheme: FeeScheme): Observable<SettingsFeeSimilarResult> {
+		return this.mutate({
+			mutation: SETTINGS_FEE_SIMILARS,
+			variables: {
+				name: feeScheme.name,
+				description: feeScheme.description,
+				targetFilterType: feeScheme.target,
+				targetFilterValues: feeScheme.targetValues,
+				targetInstruments: feeScheme.instrument,
+				targetUserTypes: feeScheme.userType,
+				targetUserModes: feeScheme.userMode,
+				targetTransactionTypes: feeScheme.trxType,
+				targetPaymentProviders: feeScheme.provider,
+				targetCurrenciesFrom: feeScheme.currenciesFrom,
+				targetCurrenciesTo: feeScheme.currenciesTo,
+				terms: feeScheme.terms.getObject(),
+				wireDetails: feeScheme.details.getObject(),
+        widgetIds: feeScheme.widgetIds
+			}
+		}).pipe(map(res => res.data['settingsFeeSimilars']));
+	}
+
 	saveFeeSettings(feeScheme: FeeScheme): Observable<any> {
 		return !feeScheme.id
 			? this.mutate({
@@ -3738,7 +3938,8 @@ export class AdminDataService {
 					targetCurrenciesFrom: feeScheme.currenciesFrom,
 					targetCurrenciesTo: feeScheme.currenciesTo,
 					terms: feeScheme.terms.getObject(),
-					wireDetails: feeScheme.details.getObject()
+					wireDetails: feeScheme.details.getObject(),
+          widgetIds: feeScheme.widgetIds
 				}
 			})
 			: this.mutate({
@@ -3757,9 +3958,28 @@ export class AdminDataService {
 					terms: feeScheme.terms.getObject(),
 					wireDetails: feeScheme.details.getObject(),
 					targetCurrenciesFrom: feeScheme.currenciesFrom,
-					targetCurrenciesTo: feeScheme.currenciesTo
+					targetCurrenciesTo: feeScheme.currenciesTo,
+          widgetIds: feeScheme.widgetIds
 				}
 			});
+	}
+
+  getCostSettingsSimilar(settings: CostScheme): Observable<SettingsCostSimilarResult> {
+		return this.mutate({
+			mutation: SETTINGS_COST_SIMILARS,
+			variables: {
+				name: settings.name,
+        description: settings.description,
+        bankAccountIds: settings.bankAccountIds,
+        targetFilterType: settings.target,
+        targetFilterValues: settings.targetValues,
+        targetInstruments: settings.instrument,
+        targetTransactionTypes: settings.trxType,
+        targetPaymentProviders: settings.provider,
+        terms: settings.terms.getObject(),
+        widgetIds: settings.widgetIds
+			}
+		}).pipe(map(res => res.data['settingsCostSimilars']));
 	}
 
 	saveCostSettings(settings: CostScheme, create: boolean): Observable<any> {
@@ -3775,7 +3995,8 @@ export class AdminDataService {
 					targetInstruments: settings.instrument,
 					targetTransactionTypes: settings.trxType,
 					targetPaymentProviders: settings.provider,
-					terms: settings.terms.getObject()
+					terms: settings.terms.getObject(),
+          widgetIds: settings.widgetIds
 				}
 			})
 			: this.apollo.mutate({
@@ -3790,7 +4011,8 @@ export class AdminDataService {
 					targetInstruments: settings.instrument,
 					targetTransactionTypes: settings.trxType,
 					targetPaymentProviders: settings.provider,
-					terms: settings.terms.getObject()
+					terms: settings.terms.getObject(),
+          widgetIds: settings.widgetIds
 				}
 			});
 	}
@@ -4132,23 +4354,23 @@ export class AdminDataService {
 		});
 	}
 
-  disableFeeSettings(settingsId: string): Observable<any> {
-    return this.mutate({
-      mutation: DISABLE_SETTINGS_FEE,
-      variables: {
-        settingsId
-      }
-    });
-  }
+	disableFeeSettings(settingsId: string): Observable<any> {
+		return this.mutate({
+			mutation: DISABLE_SETTINGS_FEE,
+			variables: {
+				settingsId
+			}
+		});
+	}
 
-  enableFeeSettings(settingsId: string): Observable<any> {
-    return this.mutate({
-      mutation: ENABLE_SETTINGS_FEE,
-      variables: {
-        settingsId
-      }
-    });
-  }
+	enableFeeSettings(settingsId: string): Observable<any> {
+		return this.mutate({
+			mutation: ENABLE_SETTINGS_FEE,
+			variables: {
+				settingsId
+			}
+		});
+	}
 
 	deleteCostSettings(settingsId: string): Observable<any> {
 		return this.apollo.mutate({
@@ -4305,6 +4527,27 @@ export class AdminDataService {
 				instrument: transaction.instrument,
 				paymentProvider: transaction.paymentProvider,
 				userId: userId,
+				rate: rate
+			}
+		}).pipe(tap(() => {
+			this.snackBar.open(
+				`Transaction was created`,
+				undefined, { duration: 5000 }
+			);
+		}));
+	}
+
+  simulateTransaction(transaction: TransactionInput, userId: string, rate: number): Observable<any> {
+		return this.mutate({
+			mutation: SIMULATE_TRANSACTION,
+			variables: {
+				transactionType: transaction.type,
+				source: transaction.source,
+				currencyToSpend: transaction.currencyToSpend,
+				currencyToReceive: transaction.currencyToReceive,
+				amountToSpend: transaction.amountToSpend,
+				instrument: transaction.instrument,
+				paymentProvider: transaction.paymentProvider,
 				rate: rate
 			}
 		}).pipe(tap(() => {

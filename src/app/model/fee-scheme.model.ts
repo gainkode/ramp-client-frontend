@@ -34,9 +34,11 @@ export class FeeScheme {
 	currency!: string;
 	rateToEur!: number;
 	deleted?: Date;
+	widgetIds?: string[];
 
 	constructor(data: SettingsFee | null) {
 		if (data !== null) {
+			this.widgetIds = data.widgetIds;
 			this.name = data.name;
 			this.id = data.settingsFeeId;
 			this.isDefault = data.default as boolean;
@@ -73,6 +75,10 @@ export class FeeScheme {
 	setTarget(filter: SettingsFeeTargetFilterType, values: CommonTargetValue[]): void {
 		this.target = filter;
 		this.targetValues = values.map(x => x.id);
+	}
+
+	setWidgets(values: CommonTargetValue[]): void {
+		this.widgetIds = values.map(x => x.id);
 	}
 
 	setTargetOld(filter: SettingsFeeTargetFilterType, values: string[]): void {

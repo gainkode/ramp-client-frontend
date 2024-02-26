@@ -75,6 +75,30 @@
                 Please specify at least one {{targetEntity[0]}}
               </small>
             </div>
+            <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.targetFilterValues"> </app-fee-similiar-panel>
+          </div>
+
+          <!-- WidgetId -->
+          <div class="form-group">
+            <label class="main-content-label tx-11 tx-medium tx-gray-600">
+              Widgets
+              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+            </label>
+            <ng-select formControlName="widgetIds"
+              bindLabel="title"
+              required 
+              [minTermLength]="minTargetsLengthTerm"
+              notFoundText="No widgets found" 
+              [loading]="isTargetsLoading" 
+              [multiple]="true"
+              typeToSearchText="type widget name" 
+              placeholder="Start typing to search a widget" [typeahead]="widgetsSearchInput$">
+              <ng-option *ngFor="let item of widgetsOptions$ | async" [value]="item">
+                <app-dropdown-item [itemValue]="item.title" [imageClass]="item.imgClass" [imageSource]="item.imgSource">
+                </app-dropdown-item>
+              </ng-option>
+            </ng-select>
+            <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.widgetIds"> </app-fee-similiar-panel>
           </div>
 
           <div class="form-group">
@@ -84,6 +108,7 @@
             <ng-select bindLabel="name" bindValue="id" formControlName="trxType" placeholder="Select one or more types"
               [items]="transactionTypes" [multiple]="true" [closeOnSelect]="false">
             </ng-select>
+            <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.targetTransactionTypes"> </app-fee-similiar-panel>
           </div>
 
           <div class="form-group">
@@ -94,6 +119,7 @@
             <ng-select bindLabel="name" bindValue="id" formControlName="instrument" 
               placeholder="Select payment method" [items]="instruments" [clearable]=false required>
             </ng-select>
+            <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.targetInstruments"> </app-fee-similiar-panel>
           </div>
 
           <div class="form-group">
@@ -104,6 +130,7 @@
               [items]="currencyOptions" [clearable]=true [clearOnBackspace]=true [multiple]="true"
               [closeOnSelect]="false">
             </ng-select>
+            <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.targetCurrenciesFrom"> </app-fee-similiar-panel>
           </div>
   
           <div class="form-group">
@@ -114,6 +141,7 @@
               [items]="currencyOptions" [clearable]=true [clearOnBackspace]=true [multiple]="true"
               [closeOnSelect]="false">
             </ng-select>
+            <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.targetCurrenciesTo"> </app-fee-similiar-panel>
           </div>
 
           <div class="form-group">
@@ -130,6 +158,7 @@
               [closeOnSelect]="isWireTransfer"
               >
             </ng-select>
+            <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.targetPaymentProviders"> </app-fee-similiar-panel>
           </div>
 
           <div class="form-group">
@@ -139,6 +168,7 @@
             <ng-select bindLabel="name" bindValue="id" formControlName="userType" [items]="userTypeOptions"
               [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
             </ng-select>
+            <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.targetUserTypes"> </app-fee-similiar-panel>
           </div>
 
           <div class="form-group">
@@ -148,6 +178,7 @@
             <ng-select bindLabel="name" bindValue="id" formControlName="userMode" [items]="userModes" [clearable]=true
               [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
             </ng-select>
+            <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.targetUserModes"> </app-fee-similiar-panel>
           </div>
         </div>
 
@@ -212,11 +243,15 @@
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Save
         </button>
+        <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onTest()">
+          <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          TEST
+        </button>
         <button *ngIf="!createNew" type="button" class="btn btn-secondary pd-x-30 me-2 mg-t-5" (click)="onStateChangeScheme()">
           <span *ngIf="disableInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           {{deleted ? 'Enable' : 'Disable'}}
         </button>
-        <button *ngIf="permission>1 && !createNew && defaultSchemeName===''" class="btn btn-danger pd-x-30 me-2 mg-t-5"
+        <button *ngIf="permission > 1 && !createNew && defaultSchemeName === ''" class="btn btn-danger pd-x-30 me-2 mg-t-5"
           type="button" (click)="deleteScheme(delete_content)">
           Delete
         </button>

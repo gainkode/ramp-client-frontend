@@ -20,9 +20,11 @@ export class CostScheme {
 	instrument: Array<PaymentInstrument> = [];
 	provider: string[] = [];
 	terms!: CostShemeTerms;
+	widgetIds?: string[];
 
 	constructor(data: SettingsCost | null) {
 		if (data !== null) {
+			this.widgetIds = data.widgetIds;
 			this.name = data.name;
 			this.id = data.settingsCostId;
 			this.isDefault = data.default as boolean;
@@ -46,6 +48,10 @@ export class CostScheme {
 		} else {
 			this.terms = new CostShemeTerms('');
 		}
+	}
+
+	setWidgets(values: CommonTargetValue[]): void {
+		this.widgetIds = values.map(x => x.id);
 	}
 
 	setTarget(filter: SettingsCostTargetFilterType, values: CommonTargetValue[]): void {

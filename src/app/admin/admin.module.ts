@@ -111,6 +111,8 @@ import {
 	AdminWithdrawalAddressComponent,
 	FaqPageComponent
 } from './components/settings';
+import { FeeSimiliarPanelComponent } from './components/fees/details/fee-similiar-panel/fee-similiar-panel.component';
+import { CostSimiliarPanelComponent } from './components/costs/schemes/cost-similiar-panel/cost-similiar-panel.component';
 
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
@@ -159,7 +161,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		ComponentsModule,
 		AdminRoutingModule,
 		MaterialModule,
-		DirectiveModule
+		DirectiveModule,
+
+		FeeSimiliarPanelComponent,
+		CostSimiliarPanelComponent
 	],
 	declarations: [
 		AdminComponent,

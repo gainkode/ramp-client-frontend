@@ -99,12 +99,14 @@ const MY_SETTINGS_COST = gql`
 query MySettingsCost(
   $transactionType: TransactionType!
   $instrument: PaymentInstrument!
-  $currency: String
+  $paymentProvider: String
+  $widgetId: String
 ) {
   mySettingsCost(
     transactionType: $transactionType
     instrument: $instrument
-    currency: $currency
+    paymentProvider: $paymentProvider
+    widgetId: $widgetId
   ) {
     terms
     bankAccounts {
@@ -112,6 +114,10 @@ query MySettingsCost(
       au
       uk
       eu
+      objectsDetails{
+        id
+        title
+      }
     }
   }
 }
@@ -756,13 +762,14 @@ export class PaymentDataService {
 		});
 	}
 
-	mySettingsCost(transactionType: TransactionType, instrument: PaymentInstrument, currency: string): QueryRef<any, EmptyObject> {
+	mySettingsCost(transactionType: TransactionType, instrument: PaymentInstrument, paymentProvider: string, widgetId: string): QueryRef<any, EmptyObject> {
 		return this.apollo.watchQuery<any>({
 			query: MY_SETTINGS_COST,
 			variables: {
 				transactionType,
 				instrument,
-				currency
+        paymentProvider,
+        widgetId
 			},
 			fetchPolicy: 'network-only'
 		});

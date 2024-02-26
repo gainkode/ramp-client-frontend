@@ -3,15 +3,16 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
 import { CostScheme } from 'model/cost-scheme.model';
 import { CountryFilterList } from 'model/country-code.model';
-import { PaymentInstrument, PaymentProvider, SettingsCostTargetFilterType, TransactionType, WireTransferBankAccountListResult } from 'model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCostSimilarResult, SettingsCostTargetFilterType, TransactionType, WireTransferBankAccountListResult } from 'model/generated-models';
 import { CostTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
 import { AuthService } from 'services/auth.service';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
+import { Filter } from 'admin/model/filter.model';
 
 @Component({
 	selector: 'app-admin-cost-details',
@@ -53,9 +54,12 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   targets = CostTargetFilterList;
   isTargetsLoading = false;
   targetsSearchInput$ = new Subject<string>();
+	widgetsSearchInput$ = new Subject<string>();
   targetsOptions$: Observable<CommonTargetValue[]> = of([]);
+	widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
   minTargetsLengthTerm = 1;
   adminAdditionalSettings: Record<string, any> = {};
+	similarSchemas$: Observable<SettingsCostSimilarResult>;
 
   form = this.formBuilder.group({
   	id: [undefined],
@@ -70,6 +74,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	provider: [[]],
   	mdr: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
   	transactionCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+		widgetIds: [undefined]
   });
 
   constructor(
@@ -91,6 +96,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.loadCommonSettings();
   	this.getPaymentProviders();
   	this.getWireTransferAccounts();
+		this.initWidgetSearch();
   }
 
   ngOnDestroy(): void {
@@ -120,6 +126,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('target')?.setValue(scheme?.target);
   		this.targetType = scheme?.target ?? SettingsCostTargetFilterType.None;
   		this.setTargetValues(scheme?.targetValues);
+			this.setWidgets(scheme.widgetIds);
   		this.form.get('trxType')?.setValue(scheme?.trxType);
   		this.form.get('instrument')?.setValue(scheme.instrument);
   		this.form.get('provider')?.setValue(scheme?.provider);
@@ -146,12 +153,27 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
+	private setWidgets(values: string[]): void {
+		if (values?.length) {
+			const filter = new Filter({
+				widgets: values
+			});
+			this.subscriptions.add(
+				this.getFilteredWidgets(filter).subscribe(result => {
+					this.widgetsOptions$ = of(result);
+					this.form.get('widgetIds')?.setValue(result);
+				})
+			);
+		}
+	}
+
   private setSchemeData(): CostScheme {
   	const data = new CostScheme(null);
   	data.name = this.form.get('name')?.value;
   	data.description = this.form.get('description')?.value;
   	data.isDefault = this.form.get('isDefault')?.value;
   	data.id = this.form.get('id')?.value;
+		data.setWidgets(this.form.get('widgetIds')?.value);
   	data.setTarget(this.targetType, this.form.get('targetValues')?.value);
   	data.bankAccountIds = this.form.get('bankAccounts')?.value;
   	data.trxType = this.form.get('trxType')?.value as TransactionType[];
@@ -217,18 +239,38 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   		));
   }
 
-  private filterPaymentProviders(instruments: PaymentInstrument[]): void {
-  	this.filteredProviders = getProviderList(instruments, this.providers);
-  	this.showPaymentProvider = this.filteredProviders.length > 0;
-  	if (this.providers.length > 0) {
-  		this.form.get('provider')?.setValue(getCheckedProviderList(
-  			this.form.get('provider')?.value ?? [],
-  			this.filteredProviders));
-  	} else {
-  		this.form.get('provider')?.setValue(undefined);
-  	}
+	private initWidgetSearch(): void {
+  	this.widgetsOptions$ = concat(
+  		of([]),
+  		this.widgetsSearchInput$.pipe(
+  			filter(res => res !== null && res.length >= this.minTargetsLengthTerm),
+  			debounceTime(300),
+  			distinctUntilChanged(),
+  			tap(() => this.isTargetsLoading = true),
+  			switchMap(searchString => {
+  				this.isTargetsLoading = false;
+  				const filter = new Filter({ search: searchString });
+  				return this.getFilteredWidgets(filter);
+  			})
+  		));
   }
 
+  private filterPaymentProviders(instruments: PaymentInstrument[]): void {
+		if (instruments?.length) {
+			this.filteredProviders = getProviderList(instruments, this.providers);
+			this.showPaymentProvider = this.filteredProviders.length > 0;
+		}
+  }
+
+	private getFilteredWidgets(filter: Filter): Observable<CommonTargetValue[]> {
+  	return this.adminService.getWidgets(0, 100, 'widgetId', false, filter).pipe(
+  		map(result => result.list.map(widget => ({
+  			id: widget.id,
+  			title: widget.name
+  		} as CommonTargetValue)))
+  	);
+  }
+	
   private filterTargets(searchString: string): Observable<CommonTargetValue[]> {
   	if (this.targetType === SettingsCostTargetFilterType.Country) {
   		return of(CountryFilterList
@@ -272,7 +314,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   		data$.subscribe(({ data }) => {
   			const providers = data.getPaymentProviders as PaymentProvider[];
   			this.providers = providers?.map((val) => new PaymentProviderView(val));
-  			this.filterPaymentProviders(this.form.get('instrument')?.value);
+				this.filterPaymentProviders(this.form.get('instrument')?.value);
   		})
   	);
   }
@@ -302,6 +344,14 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
+	onTest(): void {
+  	this.submitted = true;
+  	if (this.form.valid) {
+  		// this.feeService.setFeeInput(this.setSchemeData());
+  		this.getSimilarSchemes(this.setSchemeData());
+  	}
+  }
+
   deleteScheme(content: any): void {
   	this.removeDialog = this.modalService.open(content, {
   		backdrop: 'static',
@@ -328,6 +378,12 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   			}
   		})
   	);
+  }
+
+	private getSimilarSchemes(scheme: CostScheme): void {
+  	this.errorMessage = '';
+  	this.saveInProgress = true;
+  	this.similarSchemas$ = this.adminService.getCostSettingsSimilar(scheme).pipe(finalize(() => this.saveInProgress = false), shareReplay(1));
   }
 
   deleteSchemeConfirmed(id: string): void {

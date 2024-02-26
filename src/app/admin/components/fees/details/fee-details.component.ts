@@ -3,14 +3,14 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
 import { CostScheme } from 'model/cost-scheme.model';
 import { CountryFilterList } from 'model/country-code.model';
 import { FeeScheme, TransactionSourceFilterList } from 'model/fee-scheme.model';
-import { PaymentInstrument, PaymentProvider, SettingsCostListResult, SettingsCurrencyWithDefaults, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCostListResult, SettingsCurrencyWithDefaults, SettingsFeeSimilarResult, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'model/generated-models';
 import { CurrencyView, FeeTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserModeList, UserTypeList } from 'model/payment.model';
 import { AuthService } from 'services/auth.service';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
@@ -32,17 +32,14 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
-
   private subscriptions: Subscription = new Subscription();
   private removeDialog: NgbModalRef | undefined = undefined;
   private settingsId = '';
-
   TARGET_TYPE: typeof SettingsFeeTargetFilterType = SettingsFeeTargetFilterType;
   submitted = false;
   createNew = false;
   saveInProgress = false;
-  deleteInProgress = false;
-	disableInProgress = false;
+  disableInProgress = false;
   errorMessage = '';
   defaultSchemeName = '';
   currencyOptions: CurrencyView[] = [];
@@ -54,7 +51,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   filteredProviders: PaymentProviderView[] = [];
   costSchemes: CostScheme[] = [];
   currency = '';
-	deleted = false; 
+  deleted = false; 
   targetEntity = ['', ''];
   targetSearchText = '';
   targetsTitle = '';
@@ -62,10 +59,13 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   targets = FeeTargetFilterList;
   isTargetsLoading = false;
   targetsSearchInput$ = new Subject<string>();
+	widgetsSearchInput$ = new Subject<string>();
   targetsOptions$: Observable<CommonTargetValue[]> = of([]);
+	widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
   sourceTargetsOptions = TransactionSourceFilterList;
   minTargetsLengthTerm = 1;
   adminAdditionalSettings: Record<string, any> = {};
+  similarSchemas$: Observable<SettingsFeeSimilarResult>;
 
   form = this.formBuilder.group({
   	id: [''],
@@ -82,7 +82,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	trxType: [undefined],
   	provider: [undefined, Validators.required],
   	transactionFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-  	minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }]
+  	minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
+		widgetIds: [undefined]
   });
 
   constructor(
@@ -110,6 +111,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.getPaymentProviders();
   	this.loadCostSchemeList();
   	this.loadCurrencies();
+		this.initWidgetSearch();
   }
 
   ngOnDestroy(): void {
@@ -147,7 +149,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.form.reset();
   	this.defaultSchemeName = '';
   	this.currency = scheme?.currency ?? '';
-		this.deleted = !!scheme?.deleted;
+  	this.deleted = !!scheme?.deleted;
   	if (scheme) {
   		this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
   		this.form.get('id')?.setValue(scheme?.id);
@@ -161,6 +163,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('target')?.setValue(scheme?.target);
   		this.targetType = scheme?.target ?? SettingsFeeTargetFilterType.None;
   		this.setTargetValues(scheme?.targetValues);
+			this.setWidgets(scheme?.widgetIds);
+			
   		if (scheme.instrument && scheme.instrument.length > 0) {
   			const instrument = scheme.instrument[0];
   			this.form.get('instrument')?.setValue(instrument);
@@ -207,11 +211,13 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   private setSchemeData(): FeeScheme {
   	const data = new FeeScheme(null);
+
   	data.name = this.form.get('name')?.value;
   	data.description = this.form.get('description')?.value;
   	data.isDefault = this.form.get('isDefault')?.value;
   	data.id = this.form.get('id')?.value;
   	data.setTarget(this.targetType, this.form.get('targetValues')?.value);
+		data.setWidgets(this.form.get('widgetIds')?.value);
   	data.userType = this.form.get('userType')?.value as UserType[];
   	data.userMode = this.form.get('userMode')?.value as UserMode[];
   	data.trxType = this.form.get('trxType')?.value as TransactionType[];
@@ -231,6 +237,17 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	return data;
   }
 
+	private setWidgets(values: string[]): void {
+		const filter = new Filter({
+			widgets: values
+		});
+		this.subscriptions.add(
+			this.getFilteredWidgets(filter).subscribe(result => {
+				this.widgetsOptions$ = of(result);
+				this.form.get('widgetIds')?.setValue(result);
+			})
+		);
+	}
   private setTargetValues(values: string[]): void {
   	if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
   		const filter = new Filter({
@@ -238,16 +255,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		});
   		this.subscriptions.add(
   			this.getFilteredAccounts(filter).subscribe(result => {
-  				this.targetsOptions$ = of(result);
-  				this.form.get('targetValues')?.setValue(result);
-  			})
-  		);
-  	} else if (this.targetType === SettingsFeeTargetFilterType.WidgetId) {
-  		const filter = new Filter({
-  			widgets: values
-  		});
-  		this.subscriptions.add(
-  			this.getFilteredWidgets(filter).subscribe(result => {
   				this.targetsOptions$ = of(result);
   				this.form.get('targetValues')?.setValue(result);
   			})
@@ -267,11 +274,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	} else if (this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
   		const data = values.map(x => {
   			const c = TransactionSourceFilterList.find(c => c.id === x);
-  			if (c) {
-  				return c;
-  			} else {
-  				return new CommonTargetValue();
-  			}
+			  return c ?? new CommonTargetValue();
   		}).filter(x => x.id !== '');
   		this.targetsOptions$ = of(data);
   		this.form.get('targetValues')?.setValue(data);
@@ -301,12 +304,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			this.targetsTitle = 'Accounts';
   			break;
   		}
-  		case SettingsFeeTargetFilterType.WidgetId: {
-  			this.targetEntity = ['widget', 'widgets'];
-  			this.targetSearchText = 'Type a widget name';
-  			this.targetsTitle = 'Widgets';
-  			break;
-  		}
   		case SettingsFeeTargetFilterType.InitiateFrom: {
   			this.targetEntity = ['source', 'sources'];
   			this.targetSearchText = '';
@@ -330,6 +327,22 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			switchMap(searchString => {
   				this.isTargetsLoading = false;
   				return this.filterTargets(searchString);
+  			})
+  		));
+  }
+
+	private initWidgetSearch(): void {
+  	this.widgetsOptions$ = concat(
+  		of([]),
+  		this.widgetsSearchInput$.pipe(
+  			filter(res => res !== null && res.length >= this.minTargetsLengthTerm),
+  			debounceTime(300),
+  			distinctUntilChanged(),
+  			tap(() => this.isTargetsLoading = true),
+  			switchMap(searchString => {
+  				this.isTargetsLoading = false;
+  				const filter = new Filter({ search: searchString });
+  				return this.getFilteredWidgets(filter);
   			})
   		));
   }
@@ -374,9 +387,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			})
   			.filter(x => x.title.toLowerCase().includes(searchString.toLowerCase()))
   		);
-  	} else if (this.targetType === SettingsFeeTargetFilterType.WidgetId) {
-  		const filter = new Filter({ search: searchString });
-  		return this.getFilteredWidgets(filter);
   	} else if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
   		const filter = new Filter({ search: searchString });
   		return this.getFilteredAccounts(filter);
@@ -467,29 +477,35 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
+  onTest(): void {
+  	this.submitted = true;
+  	if (this.form.valid) {
+  		// this.feeService.setFeeInput(this.setSchemeData());
+  		this.getSimilarSchemes(this.setSchemeData());
+  	}
+  }
+
   deleteScheme(content: any): void {
   	this.removeDialog = this.modalService.open(content, {
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		this.removeDialog.closed.subscribe(val => {
-  			this.deleteSchemeConfirmed(this.settingsId ?? '');
-  		})
+  		this.removeDialog.closed.subscribe(() => this.deleteSchemeConfirmed(this.settingsId ?? ''))
   	);
   }
 
-	onStateChangeScheme(): void {
+  onStateChangeScheme(): void {
   	this.disableInProgress = true;
   	if (this.deleted) {
-			this.enableScheme();
-		} else {
-			this.disableScheme();
-		}
+  		this.enableScheme();
+  	} else {
+  		this.disableScheme();
+  	}
   }
 
-	disableScheme(): void {
-		const requestData$ = this.adminService.disableFeeSettings(this.settingsId);
+  disableScheme(): void {
+  	const requestData$ = this.adminService.disableFeeSettings(this.settingsId);
 		
   	this.subscriptions.add(
   		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
@@ -502,8 +518,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			},
   		})
   	);
-	}
-	enableScheme(): void {
+  }
+  enableScheme(): void {
   	this.disableInProgress = true;
   	const requestData$ = this.adminService.enableFeeSettings(this.settingsId);
 
@@ -536,6 +552,12 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   			},
   		})
   	);
+  }
+
+  private getSimilarSchemes(scheme: FeeScheme): void {
+  	this.errorMessage = '';
+  	this.saveInProgress = true;
+  	this.similarSchemas$ = this.adminService.getFeeSettingsSimilar(scheme).pipe(finalize(() => this.saveInProgress = false), shareReplay(1));
   }
 
   deleteSchemeConfirmed(id: string): void {
