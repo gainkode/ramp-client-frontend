@@ -2314,7 +2314,8 @@ mutation SimulateTransaction(
   $amountToSpend: Float!,
   $instrument: PaymentInstrument,
   $paymentProvider: String,
-  $rate: Float
+  $rate: Float,
+  $userId: String
 ) {
   simulateTransaction(
     transaction: {
@@ -2327,6 +2328,7 @@ mutation SimulateTransaction(
       paymentProvider: $paymentProvider
     }
     rate: $rate
+    userId: $userId
   ) {
     costSchema {
       settingsCostId
@@ -4548,7 +4550,8 @@ export class AdminDataService {
 				amountToSpend: transaction.amountToSpend,
 				instrument: transaction.instrument,
 				paymentProvider: transaction.paymentProvider,
-				rate: rate
+				rate,
+        userId
 			}
 		}).pipe(tap(() => {
 			this.snackBar.open(

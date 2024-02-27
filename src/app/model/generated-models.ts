@@ -1203,6 +1203,8 @@ export type Mutation = {
   settingsCostSimilars?: Maybe<SettingsCostSimilarResult>;
   settingsFeeSimilars?: Maybe<SettingsFeeSimilarResult>;
   signup: LoginResult;
+  /** This endpoint can be used to simulate a transaction */
+  simulateTransaction?: Maybe<TransactionSimulatorResult>;
   status: Scalars['String']['output'];
   /** Unbenchmarking Transactions */
   unbenchmarkTransactions?: Maybe<Array<Transaction>>;
@@ -1866,6 +1868,13 @@ export type MutationSignupArgs = {
   recaptcha: Scalars['String']['input'];
   termsOfUse: Scalars['Boolean']['input'];
   type: UserType;
+};
+
+
+export type MutationSimulateTransactionArgs = {
+  rate?: InputMaybe<Scalars['Float']['input']>;
+  transaction?: InputMaybe<TransactionInput>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4138,6 +4147,12 @@ export type TransactionShortListResult = {
   __typename?: 'TransactionShortListResult';
   count?: Maybe<Scalars['Int']['output']>;
   list?: Maybe<Array<TransactionShort>>;
+};
+
+export type TransactionSimulatorResult = {
+  __typename?: 'TransactionSimulatorResult';
+  costSchema?: Maybe<SettingsCost>;
+  feeSchema?: Maybe<SettingsFee>;
 };
 
 export enum TransactionSource {
