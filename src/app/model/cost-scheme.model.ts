@@ -51,12 +51,12 @@ export class CostScheme {
 	}
 
 	setWidgets(values: CommonTargetValue[]): void {
-		this.widgetIds = values.map(x => x.id);
+		this.widgetIds = values?.map(x => x.id);
 	}
 
 	setTarget(filter: SettingsCostTargetFilterType, values: CommonTargetValue[]): void {
 		this.target = filter;
-		this.targetValues = values.map(x => x.id);
+		this.targetValues = values?.map(x => x.id);
 	}
 
 	setTargetOld(filter: SettingsCostTargetFilterType, values: string[]): void {

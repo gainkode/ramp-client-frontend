@@ -11,7 +11,7 @@ import { CountryFilterList } from 'model/country-code.model';
 import { PaymentInstrument, PaymentProvider, SettingsCostSimilarResult, SettingsCostTargetFilterType, TransactionType, WireTransferBankAccountListResult } from 'model/generated-models';
 import { CostTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
 import { AuthService } from 'services/auth.service';
-import { getCheckedProviderList, getProviderList } from 'utils/utils';
+import { getProviderList } from 'utils/utils';
 import { Filter } from 'admin/model/filter.model';
 
 @Component({
@@ -74,7 +74,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	provider: [[]],
   	mdr: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
   	transactionCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-		widgetIds: [undefined]
+	widgetIds: [undefined]
   });
 
   constructor(
@@ -96,7 +96,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.loadCommonSettings();
   	this.getPaymentProviders();
   	this.getWireTransferAccounts();
-		this.initWidgetSearch();
+	this.initWidgetSearch();
   }
 
   ngOnDestroy(): void {
@@ -126,7 +126,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('target')?.setValue(scheme?.target);
   		this.targetType = scheme?.target ?? SettingsCostTargetFilterType.None;
   		this.setTargetValues(scheme?.targetValues);
-			this.setWidgets(scheme.widgetIds);
+		this.setWidgets(scheme.widgetIds);
   		this.form.get('trxType')?.setValue(scheme?.trxType);
   		this.form.get('instrument')?.setValue(scheme.instrument);
   		this.form.get('provider')?.setValue(scheme?.provider);
@@ -173,7 +173,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   	data.description = this.form.get('description')?.value;
   	data.isDefault = this.form.get('isDefault')?.value;
   	data.id = this.form.get('id')?.value;
-		data.setWidgets(this.form.get('widgetIds')?.value);
+	data.setWidgets(this.form.get('widgetIds')?.value);
   	data.setTarget(this.targetType, this.form.get('targetValues')?.value);
   	data.bankAccountIds = this.form.get('bankAccounts')?.value;
   	data.trxType = this.form.get('trxType')?.value as TransactionType[];
@@ -346,8 +346,8 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 
 	onTest(): void {
   	this.submitted = true;
+	console.log(this.form)
   	if (this.form.valid) {
-  		// this.feeService.setFeeInput(this.setSchemeData());
   		this.getSimilarSchemes(this.setSchemeData());
   	}
   }

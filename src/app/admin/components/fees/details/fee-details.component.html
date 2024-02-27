@@ -82,11 +82,9 @@
           <div class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Widgets
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
             <ng-select formControlName="widgetIds"
               bindLabel="title"
-              required 
               [minTermLength]="minTargetsLengthTerm"
               notFoundText="No widgets found" 
               [loading]="isTargetsLoading" 
@@ -152,10 +150,10 @@
               bindLabel="name"
               bindValue="id"
               formControlName="provider"
-              [items]="!isWireTransfer ? filteredProviders : costSchemes"
-              [multiple]="!isWireTransfer" 
-              [placeholder]="!isWireTransfer ? 'Select one or more providers' : 'Select cost scheme'" 
-              [closeOnSelect]="isWireTransfer"
+              [items]="filteredProviders"
+              [multiple]="true" 
+              [placeholder]="'Select one or more providers'" 
+              [closeOnSelect]="false"
               >
             </ng-select>
             <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.targetPaymentProviders"> </app-fee-similiar-panel>

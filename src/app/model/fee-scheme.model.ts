@@ -74,11 +74,11 @@ export class FeeScheme {
 
 	setTarget(filter: SettingsFeeTargetFilterType, values: CommonTargetValue[]): void {
 		this.target = filter;
-		this.targetValues = values.map(x => x.id);
+		this.targetValues = values?.map(x => x.id);
 	}
 
 	setWidgets(values: CommonTargetValue[]): void {
-		this.widgetIds = values.map(x => x.id);
+		this.widgetIds = values?.map(x => x.id);
 	}
 
 	setTargetOld(filter: SettingsFeeTargetFilterType, values: string[]): void {
