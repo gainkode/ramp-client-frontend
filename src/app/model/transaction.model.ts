@@ -230,7 +230,7 @@ export class TransactionItemFull {
         transactionData.benchmarkTransferOrderBlockchainLink ?? '';
 			this.type = data.type;
 			this.instrument = data.instrument ?? undefined;
-			this.paymentProvider = data.paymentOrder?.provider?.toUpperCase() ?? '';
+			this.paymentProvider = data.paymentOrder?.provider?.toUpperCase() ?? data.paymentProvider.toUpperCase() ?? '';
 			this.widgetId = data.widgetId ?? '';
 			this.source = data.source ?? undefined;
 			const paymentData = getPaymentData(data);
