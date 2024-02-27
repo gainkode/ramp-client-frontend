@@ -89,7 +89,6 @@
             </label>
             <ng-select formControlName="widgetIds"
               bindLabel="title"
-              required 
               [minTermLength]="minTargetsLengthTerm"
               notFoundText="No widgets found" 
               [loading]="isTargetsLoading" 
@@ -137,7 +136,7 @@
             <app-cost-similiar-panel [targetField]="(similarSchemas$ | async)?.targetInstruments"> </app-cost-similiar-panel>
           </div>
 
-          <div *ngIf="showPaymentProvider===true" class="form-group">
+          <div *ngIf="showPaymentProvider" class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Payment providers
             </label>

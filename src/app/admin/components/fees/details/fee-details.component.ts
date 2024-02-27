@@ -2,19 +2,18 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { concat, Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
-import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
-import { CostScheme } from 'model/cost-scheme.model';
 import { CountryFilterList } from 'model/country-code.model';
 import { FeeScheme, TransactionSourceFilterList } from 'model/fee-scheme.model';
-import { PaymentInstrument, PaymentProvider, SettingsCostListResult, SettingsCurrencyWithDefaults, SettingsFeeSimilarResult, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, SettingsFeeSimilarResult, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'model/generated-models';
 import { CurrencyView, FeeTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserModeList, UserTypeList } from 'model/payment.model';
+import { Observable, Subject, Subscription, concat, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
-import { getCheckedProviderList, getProviderList } from 'utils/utils';
 import { CommonDataService } from 'services/common-data.service';
+import { getCheckedProviderList, getProviderList } from 'utils/utils';
 
 @Component({
 	selector: 'app-admin-fee-details',
@@ -49,7 +48,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   instruments = PaymentInstrumentList;
   providers: PaymentProviderView[] = [];
   filteredProviders: PaymentProviderView[] = [];
-  costSchemes: CostScheme[] = [];
   currency = '';
   deleted = false; 
   targetEntity = ['', ''];
@@ -59,9 +57,9 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   targets = FeeTargetFilterList;
   isTargetsLoading = false;
   targetsSearchInput$ = new Subject<string>();
-	widgetsSearchInput$ = new Subject<string>();
+  widgetsSearchInput$ = new Subject<string>();
   targetsOptions$: Observable<CommonTargetValue[]> = of([]);
-	widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
+  widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
   sourceTargetsOptions = TransactionSourceFilterList;
   minTargetsLengthTerm = 1;
   adminAdditionalSettings: Record<string, any> = {};
@@ -83,7 +81,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	provider: [undefined, Validators.required],
   	transactionFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
   	minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-		widgetIds: [undefined]
+	widgetIds: [undefined]
   });
 
   constructor(
@@ -93,11 +91,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	private auth: AuthService,
   	private commonService: CommonDataService,
   	private adminService: AdminDataService) {
-
-  }
-
-  get isWireTransfer(): boolean {
-  	return this.form.controls.instrument?.value === PaymentInstrument.WireTransfer;
   }
 
   ngOnInit(): void {
@@ -109,9 +102,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	);
   	this.loadCommonSettings();
   	this.getPaymentProviders();
-  	this.loadCostSchemeList();
   	this.loadCurrencies();
-		this.initWidgetSearch();
+	this.initWidgetSearch();
   }
 
   ngOnDestroy(): void {
@@ -163,17 +155,12 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('target')?.setValue(scheme?.target);
   		this.targetType = scheme?.target ?? SettingsFeeTargetFilterType.None;
   		this.setTargetValues(scheme?.targetValues);
-			this.setWidgets(scheme?.widgetIds);
+		this.setWidgets(scheme?.widgetIds);
 			
   		if (scheme.instrument && scheme.instrument.length > 0) {
   			const instrument = scheme.instrument[0];
   			this.form.get('instrument')?.setValue(instrument);
-
-  			if (instrument === PaymentInstrument.WireTransfer) {
-  				this.form.get('provider')?.setValue(scheme?.provider[0]);
-  			} else {
-  				this.form.get('provider')?.setValue(scheme?.provider);
-  			}
+			this.form.get('provider')?.setValue(scheme?.provider);
   		} else {
   			this.form.get('instrument')?.setValue(undefined);
   			this.form.get('provider')?.setValue([]);
@@ -217,7 +204,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	data.isDefault = this.form.get('isDefault')?.value;
   	data.id = this.form.get('id')?.value;
   	data.setTarget(this.targetType, this.form.get('targetValues')?.value);
-		data.setWidgets(this.form.get('widgetIds')?.value);
+	data.setWidgets(this.form.get('widgetIds')?.value);
   	data.userType = this.form.get('userType')?.value as UserType[];
   	data.userMode = this.form.get('userMode')?.value as UserMode[];
   	data.trxType = this.form.get('trxType')?.value as TransactionType[];
@@ -354,28 +341,22 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		return;
   	}
 
-  	if (!instruments.includes(PaymentInstrument.WireTransfer)) {
-  		this.filteredProviders = getProviderList(instruments, this.providers);
-  		
-  		if (this.filteredProviders.length) {
-  			this.form.controls.provider.enable();
-  		} else {
-  			this.form.controls.provider.disable();
-  		}
+	this.filteredProviders = getProviderList(instruments, this.providers);
 	
-  		if (this.providers.length > 0) {
-  			this.form.get('provider')?.setValue(getCheckedProviderList(
-  				this.form.get('provider')?.value ?? [],
-  				this.filteredProviders
-  			));
-  		} else {
-  			this.form.get('provider')?.setValue([]);
-  		}
-  	} else {
-  		if (this.costSchemes.length !== 0) {
-  			this.form.controls.provider.enable();
-  		}
-  	}
+	if (this.filteredProviders.length) {
+		this.form.controls.provider.enable();
+	} else {
+		this.form.controls.provider.disable();
+	}
+
+	if (this.providers.length > 0) {
+		this.form.get('provider')?.setValue(getCheckedProviderList(
+			this.form.get('provider')?.value ?? [],
+			this.filteredProviders
+		));
+	} else {
+		this.form.get('provider')?.setValue([]);
+	}
   }
 
   private filterTargets(searchString: string): Observable<CommonTargetValue[]> {
@@ -452,24 +433,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
-  private loadCostSchemeList(): void {
-  	const listData$ = this.adminService.getCostSettings().valueChanges.pipe(take(1));
-  	this.errorMessage = '';
-  	this.costSchemes = [];
-  	this.subscriptions.add(
-  		listData$.subscribe(({ data }) => {
-  			const settings = data.getSettingsCost as SettingsCostListResult;
-  			let itemCount = 0;
-  			if (settings !== null) {
-  				itemCount = settings?.count ?? 0;
-  				if (itemCount > 0) {
-  					this.costSchemes = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
-  				}
-  			}
-  		})
-  	);
-  }
-
   onSubmit(): void {
   	this.submitted = true;
   	if (this.form.valid) {
@@ -480,7 +443,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   onTest(): void {
   	this.submitted = true;
   	if (this.form.valid) {
-  		// this.feeService.setFeeInput(this.setSchemeData());
   		this.getSimilarSchemes(this.setSchemeData());
   	}
   }
