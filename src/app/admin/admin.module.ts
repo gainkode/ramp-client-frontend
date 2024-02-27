@@ -92,7 +92,8 @@ import {
 	AdminTransactionDetailsComponent, 
 	AdminTransactionStatusHistoryComponent, 
 	AdminTransactionCreateComponent,
-	TransactionLifelineComponent
+	TransactionLifelineComponent,
+	TransactionSimulationComponent
 } from './components/transactions';
 import { JobStatusPipe } from 'pipes/job-status/job-status.pipe';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -181,6 +182,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminDashboardWrapperComponent,
 
 		TransactionLifelineComponent,
+		TransactionSimulationComponent,
 		AdminTransactionsComponent, AdminTransactionDetailsComponent, AdminTransactionStatusHistoryComponent, AdminTransactionCreateComponent,
 		AdminFiatWalletsComponent, AdminFiatWalletDetailsComponent,
 		AdminCryptoWalletsComponent, AdminCryptoWalletDetailsComponent,

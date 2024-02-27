@@ -1,19 +1,19 @@
-<div class="horizontalMenucontainer">
-    <app-admin-switcher></app-admin-switcher>
-    <div class="page">
-        <div>
-            <!-- header -->
-            <app-admin-header></app-admin-header>
-            <!-- sidebar -->
-            <app-admin-sidebar appHoverEffectSidebar></app-admin-sidebar>
-        </div>
-        <div class="main-content app-content">
-            <div class="main-container container-fluid container-top" (click)="toggleSwitcherBody()">
-                <!-- contetnt  -->
-                <router-outlet >
-                    <!-- <app-loader></app-loader> -->
-                </router-outlet>
+<ng-container>
+    <div class="horizontalMenucontainer" *ngIf="hideRootWrapper; else emptyOutlet">
+        <app-admin-switcher></app-admin-switcher>
+        <div class="page">
+            <div>
+                <app-admin-header></app-admin-header>
+                <app-admin-sidebar appHoverEffectSidebar></app-admin-sidebar>
+            </div>
+            <div class="main-content app-content">
+                <div class="main-container container-fluid container-top" (click)="toggleSwitcherBody()">
+                    <router-outlet></router-outlet>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <ng-template #emptyOutlet>
+        <router-outlet></router-outlet>
+    </ng-template>
+</ng-container>

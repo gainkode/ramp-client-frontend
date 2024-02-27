@@ -174,4 +174,11 @@ export class AdminSidebarComponent implements OnInit {
 
 		return filteredItems;
 	}
+
+	simulate(): void {
+    //you may choose to deduct some value from current screen size
+		const popup = window.open("http://localhost:4000/admin/transaction-simulation", 'targetWindow', `width=${500},height=${700}`);
+		popup.blur();
+		window.focus();
+	}
 }

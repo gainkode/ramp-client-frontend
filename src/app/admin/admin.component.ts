@@ -1,18 +1,34 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy } from '@angular/core';
 import { EnvService } from '../services/env.service';
 import { SwitcherService } from './services/switcher.service';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
 	selector: 'app-admin-new',
 	templateUrl: 'admin.component.html',
 	styleUrls: ['admin.component.scss']
 })
-export class AdminComponent {
+export class AdminComponent implements OnDestroy {
+	hideRootWrapper = false;
+	private readonly _destroy$ = new Subject<void>();
 	constructor(
 		@Inject(DOCUMENT) private document: Document,
 		public switcherService: SwitcherService,
+		private readonly _router: Router,
+		public _cdr: ChangeDetectorRef,
 	) {
+		this.hideRootWrapper = this.needHideTabs(_router.url);
+
+		this._cdr.markForCheck();
+		this._router.events.pipe(takeUntil(this._destroy$)).subscribe(routeEvent => {
+			if (!(routeEvent instanceof NavigationEnd)) return;
+
+			this.hideRootWrapper = this.needHideTabs(routeEvent.urlAfterRedirects);
+			this._cdr.markForCheck();
+		});
+
 		this.loadFont();
 		const body = document.querySelector('body');
 		if (!body?.classList.contains('app')) {
@@ -24,6 +40,11 @@ export class AdminComponent {
 
 	toggleSwitcherBody(): void {
 		this.switcherService.emitChange(false);
+	}
+
+	ngOnDestroy(): void {
+		this._destroy$.next();
+		this._destroy$.complete();
 	}
 
 	private loadFont(): void {
@@ -44,5 +65,9 @@ export class AdminComponent {
 			head.appendChild(style);
 		}
 		this.document.documentElement.style.setProperty('--font_admin', adminFont);
+	}
+
+	private needHideTabs(url: string): boolean {
+		return !(url.includes('transaction-simulation'));
 	}
 }
