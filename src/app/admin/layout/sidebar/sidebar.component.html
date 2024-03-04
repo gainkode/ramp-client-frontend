@@ -72,8 +72,7 @@
                 </a>
 
                 <!-- 3rd Level menu -->
-                <ul class="sub-slide-menu" *ngIf="childrenItem.children" [ngClass]="{'open': childrenItem.active}"
-                  [ngClass]="{'open': childrenItem.active}">
+                <ul class="sub-slide-menu" *ngIf="childrenItem.children" [ngClass]="{'open': childrenItem.active}">
                   <li class="" *ngFor="let childrenSubItem of childrenItem.children"
                     [ngClass]="{'is-expanded': childrenSubItem.active}">
                     <!-- link -->
@@ -103,13 +102,19 @@
                   </li>
                 </ul>
               </li>
-
-             
             </ul>
           </li>
-          <li class="sub-slide">
-            <a class="sub-side-menu__item">
-              <span class="sub-side-menu__label" (click)="simulate()"> Simulate </span>
+          <li class="slide sidebar-bottom-item">
+            <a class="side-menu__item">
+              <span class="shape1"></span>
+              <span class="shape2"></span>
+              <span class="side-menu__icon">
+                <!-- <i class="fe fe-{{menuItem.icon}} "></i> -->
+                <span style="font-size: 18px;" class="material-icons">
+                  compare_arrows
+                </span>
+              </span>
+              <span class="side-menu__label" (click)="simulate()">Simulate Transaction</span>
             </a>
           </li>
         </ul>

@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
-import { PaymentInstrument, PaymentProvider, Rate, SettingsCurrencyWithDefaults, TransactionInput, TransactionSource, TransactionType } from 'model/generated-models';
-import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
+import { PaymentInstrument, PaymentProvider, Rate, SettingsCurrencyWithDefaults, TransactionInput, TransactionSimulatorResult, TransactionSource, TransactionType } from 'model/generated-models';
+import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionSourceList, TransactionTypeList } from 'model/payment.model';
 import { TransactionItemFull } from 'model/transaction.model';
-import { Observable, Subject, Subscription, concat, debounceTime, distinctUntilChanged, filter, finalize, map, of, switchMap, take, tap } from 'rxjs';
+import { EMPTY, Observable, Subject, Subscription, debounceTime, distinctUntilChanged, filter, finalize, map, of, switchMap, take } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { EnvService } from 'services/env.service';
-import { ExchangeRateService } from 'services/rate.service';
-import { getCheckedProviderList, getProviderList } from 'utils/utils';
+import { PaymentDataService } from 'services/payment.service';
+import { getProviderList } from 'utils/utils';
 
 const requiredTransactionTypes = [
 	TransactionType.Buy,
@@ -28,87 +28,97 @@ const requiredTransactionTypes = [
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionSimulationComponent implements OnInit, OnDestroy {
-  selectedTabIndex: number;
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   private subscriptions: Subscription = new Subscription();
-
   transactionTypes = TransactionTypeList.filter((item) => requiredTransactionTypes.includes(item.id));
   instrumentTypes = PaymentInstrumentList;
-  PAYMENT_INSTRUMENT: typeof PaymentInstrument = PaymentInstrument;
   submitted = false;
   saveInProgress = false;
   errorMessage = '';
   data: TransactionItemFull | undefined = undefined;
+  transactionSources = TransactionSourceList;
   transactionType: TransactionType = TransactionType.System;
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];
   currentRate = 0;
   amountToSpendTitle = `Amount To ${TransactionType.Buy}`;
   currencyOptions: CurrencyView[] = [];
-
   usersOptions$: Observable<CommonTargetValue[]> = of([]);
   usersSearchInput$ = new Subject<string>();
   isUsersLoading = false;
   minUsersLengthTerm = 1;
-  usersPreset: CommonTargetValue[] = [];
-
   pSpendAutoUpdated = false;
   pReceiveAutoUpdated = false;
   pAmountToSpend = 0;
   pAmountToReceive = 0;
-
   filteredProviders: PaymentProviderView[] = [];
   providers: PaymentProviderView[] = [];
-
-  form = this.formBuilder.group({
-  	currencyToSpend: [null, { validators: [Validators.required], updateOn: 'change' }],
-  	currencyToReceive: [null, { validators: [Validators.required], updateOn: 'change' }],
-  	amountToSpend: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-  	amountToReceive: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-  	rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-  	transactionType: [undefined, { validators: [Validators.required], updateOn: 'change' }],
-  	users: [undefined, { validators: [Validators.required], updateOn: 'change' }],
-  	fullAmount: [false],
-  	instrument:[PaymentInstrument.FiatVault, { validators: [Validators.required], updateOn: 'change' }],
-  	provider: [undefined],
+  form = this.fb.group({
+	type: this.fb.control<TransactionType>(TransactionType.Buy, Validators.required),
+	source: this.fb.control<TransactionSource>(TransactionSource.Wallet, Validators.required),
+	currencyToSpend: this.fb.control<string>(undefined, Validators.required),
+	currencyToReceive: this.fb.control<string>(undefined, Validators.required),
+	amountToSpend: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(this.pNumberPattern)]),
+	amountToReceive: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(this.pNumberPattern)]),
+	rate: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(this.pNumberPattern)]),
+	users: this.fb.control<CommonTargetValue>(undefined, Validators.required),
+	instrument: this.fb.control<PaymentInstrument>(PaymentInstrument.FiatVault, Validators.required),
+	provider: this.fb.control<string>(undefined),
+	widgetUserParamsId: this.fb.control<string>(undefined)
   });
+  transactionSimulation$: Observable<TransactionSimulatorResult>;
+  widgetOptions$ = this.adminService.getWidgets(0, 200, 'name', false, <Filter>{}).pipe(
+		map(result => result.list.map(widget => ({
+			id: widget.id,
+			title: widget.name
+		} as CommonTargetValue))));
+	
+  get transactionTypeField(): AbstractControl {
+  	return this.form.controls.type;
+  }
+  get rateField(): AbstractControl {
+  	return  this.form.controls.rate;
+  }
+  get amountToSpendField(): AbstractControl {
+  	return this.form.controls.amountToSpend;
+  }
+  get amountToReceiveField(): AbstractControl {
+  	return this.form.controls.amountToReceive;
+  }
+  get instrumentTypeField(): AbstractControl {
+  	return  this.form.controls.instrument;
+  }
 
-  get transactionTypeField(): AbstractControl | null {
-  	return this.form.get('transactionType');
+  getAmountToSpendMessage(): string {
+    if (this.amountToSpendField.hasError('required')) {
+      return `${this.amountToSpendTitle} is required`;
+    }
+
+    return this.amountToSpendField.hasError('pattern') ? ' Incorrect number value' : '';
   }
-  get currencyToSpendField(): AbstractControl | null {
-  	return this.form.get('currencyToSpend');
+
+  getAmountToRecievedMessage(): string {
+    if (this.amountToReceiveField.hasError('required')) {
+      return `Field is required`;
+    }
+    return this.amountToReceiveField.hasError('pattern') ? ' Incorrect number value' : '';
   }
-  get currencyToReceiveField(): AbstractControl | null {
-  	return this.form.get('currencyToReceive');
-  }
-  get rateField(): AbstractControl | null {
-  	return this.form.get('rate');
-  }
-  get amountToSpendField(): AbstractControl | null {
-  	return this.form.get('amountToSpend');
-  }
-  get amountToReceiveField(): AbstractControl | null {
-  	return this.form.get('amountToReceive');
-  }
-  get fullAmountField(): AbstractControl | null {
-  	return this.form.get('fullAmount');
-  }
-  get instrumentTypeField(): AbstractControl | null {
-  	return this.form.get('instrument');
-  }
-  get usersField(): AbstractControl | null {
-  	return this.form.get('users');
+
+  getRateMessage(): string {
+    if (this.rateField.hasError('required')) {
+      return `Rate is required`;
+    }
+    return this.rateField.hasError('pattern') ? ' Incorrect number value' : '';
   }
 
   showSetCurrentRate = EnvService.create_transaction_update_rate;
 
   constructor(
-  	private formBuilder: UntypedFormBuilder,
+  	private fb: FormBuilder,
   	private router: Router,
   	private auth: AuthService,
   	private cdr: ChangeDetectorRef,
-  	private exchangeRate: ExchangeRateService,
+	private readonly paymentDataService: PaymentDataService,
   	private commonService: CommonDataService,
   	private adminService: AdminDataService) { }
 
@@ -116,14 +126,21 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   	this.loadCurrencies();
   	this.usersSearch();
   	this.getPaymentProviders();
-  	this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
 
-  	this.subscriptions.add(
-  		this.form.get('currencyToSpend')?.valueChanges.subscribe((_) => this.startExchangeRate())
-  	);
-  	this.subscriptions.add(
-  		this.form.get('currencyToReceive')?.valueChanges.subscribe((_) => this.startExchangeRate())
-  	);
+	this.subscriptions.add(
+		this.form.controls.source.valueChanges
+			.subscribe(source => {
+				const widgetIdControl = this.form.controls.widgetUserParamsId;
+
+				if (source === TransactionSource.QuickCheckout || source === TransactionSource.Widget) {
+					widgetIdControl.setValidators(Validators.required);
+				} else {
+					widgetIdControl.clearValidators();
+				}
+
+				widgetIdControl.updateValueAndValidity();
+			})
+	);
 
   	this.subscriptions.add(this.transactionTypeField?.valueChanges
   		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
@@ -144,32 +161,20 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   	this.subscriptions.add(this.instrumentTypeField?.valueChanges
   		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
   		.subscribe(val => this.onFilterPaymentProviders(val)));
-    
-  	this.subscriptions.add(this.fullAmountField?.valueChanges
-  		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
-  		.subscribe(val => this.onFullAmount(val)));
   }
 
   ngOnDestroy(): void {
-  	this.exchangeRate.stop();
   	this.subscriptions.unsubscribe();
-  }
-
-  onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
-  	if (rate) {
-  		this.currentRate = rate.depositRate;
-  	}
   }
 
   private getPaymentProviders(): void {
   	this.providers = [];
-  	const data$ = this.adminService.getProviders()?.valueChanges;
+	
   	this.subscriptions.add(
-  		data$.subscribe(({ data }) => {
+		this.adminService.getProviders()?.valueChanges.subscribe(({ data }) => {
   			const providers = data.getPaymentProviders as PaymentProvider[];
   			this.providers = providers?.map((val) => new PaymentProviderView(val));
-  			const instrument = this.form.get('instrument')?.value;
-  			this.onFilterPaymentProviders(instrument);
+  			this.onFilterPaymentProviders(this.instrumentTypeField.value);
   		})
   	);
   }
@@ -180,38 +185,32 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   			next: ({ data }) =>  {
   				const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
   				this.currencyOptions = currencySettings.settingsCurrency?.list?.map((val) => new CurrencyView(val)) || [];
-          this.form.get('transactionType').patchValue(TransactionType.Buy);
+				this.transactionTypeField.patchValue(TransactionType.Buy);
   			},
   			error: (error) => this.errorMessage = error
   		})
   	);
   }
-
-  private onFullAmount(fullAmount: boolean): void {
-  	if (fullAmount) {
-  		this.amountToSpendField?.setValue(0);
-  		this.amountToReceiveField?.setValue(0);
-  	}
-  }
   
   private onFilterPaymentProviders(instrument: PaymentInstrument): void {
   	if (instrument?.length > 0) {
   		this.filteredProviders = getProviderList([instrument], this.providers);
-  		this.form.get('provider')?.setValue(
-		  this.providers.length > 0
-  				? getCheckedProviderList(this.form.get('provider')?.value ?? [], this.filteredProviders)
-  				: []
+
+		this.form.controls.provider.patchValue(
+			this.filteredProviders.length > 0
+  				? this.filteredProviders[0].id
+  				: null
   		);
   	} else {
-  		this.form.get('instrument')?.setValue(undefined);
-  		this.form.get('provider')?.setValue([]);
+		this.instrumentTypeField.patchValue(undefined);
+		this.form.controls.provider.patchValue(undefined);
   	}
   }
 
   private onTransactionTypeUpdate(transactionType: TransactionType): void {
   	this.transactionType = transactionType;
 
-  	if(transactionType === TransactionType.Buy || transactionType === TransactionType.Sell){
+  	if (transactionType === TransactionType.Buy || transactionType === TransactionType.Sell) {
   		this.onCurrenciesUpdate(transactionType);
   		this.setAmountToSpend(this.pAmountToSpend);
   	} else {
@@ -231,8 +230,8 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   		this.currenciesToSpend = this.currencyOptions.filter(item => !item.fiat);
   	}
 
-  	this.currencyToSpendField?.setValue(this.currenciesToSpend[0]?.symbol);
-  	this.currencyToReceiveField?.setValue(this.currenciesToReceive[0]?.symbol);
+	this.form.controls.currencyToSpend.patchValue(this.currenciesToSpend[0]?.symbol);
+	this.form.controls.currencyToReceive.patchValue(this.currenciesToReceive[0]?.symbol);
   }
 
   private setAmountToSpend(newAmount: number): void {
@@ -240,168 +239,132 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   	const rate = this.rateField?.value;
   	const amount = this.amountToSpendField?.value;
 
-  	if(rate && amount){
-  		if(this.transactionTypeField?.value === TransactionType.Buy){
+  	if (rate && amount) {
+  		if (this.transactionTypeField?.value === TransactionType.Buy) {
   			receiveAmount = amount / rate;
-  		} else if(this.transactionTypeField?.value === TransactionType.Sell){
+  		} else if (this.transactionTypeField?.value === TransactionType.Sell) {
   			receiveAmount = amount * rate;
   		}
   	}
 
   	this.pReceiveAutoUpdated = true;
   	this.pAmountToSpend = newAmount;
-  	this.amountToReceiveField?.setValue(receiveAmount);
+  	this.amountToReceiveField?.patchValue(receiveAmount);
   }
 
   private onAmountToSpendUpdate(val: number): void {
-  	if(!this.pSpendAutoUpdated && this.pAmountToSpend !== val){
+  	if (!this.pSpendAutoUpdated && this.pAmountToSpend !== val) {
   		this.setAmountToSpend(val);
   	}
+
   	this.pSpendAutoUpdated = false;
   }
 
   private onAmountToReceiveUpdate(val: number): void {
-  	if(!this.pReceiveAutoUpdated && this.pAmountToReceive !== val){
+  	if (!this.pReceiveAutoUpdated && this.pAmountToReceive !== val) {
   		let receiveAmount = 0;
   		const rate = this.rateField?.value;
   		const amount = this.amountToReceiveField?.value;
       
-  		if(rate && amount){
-  			if(this.transactionTypeField?.value === TransactionType.Buy){
+  		if (rate && amount) {
+  			if (this.transactionTypeField?.value === TransactionType.Buy) {
   				receiveAmount = amount * rate;
-  			}else if(this.transactionTypeField?.value === TransactionType.Sell){
+  			} else if (this.transactionTypeField?.value === TransactionType.Sell) {
   				receiveAmount = amount / rate;
   			}
   		}
 
   		this.pSpendAutoUpdated = true;
   		this.pAmountToReceive = val;
-  		this.amountToSpendField?.setValue(receiveAmount);
+  		this.amountToSpendField?.patchValue(receiveAmount);
   	}
+
   	this.pReceiveAutoUpdated = false;
   }
 
   private usersSearch(): void {
-  	let searchItems:CommonTargetValue[] = [];
-  	if(this.usersPreset && this.usersPreset.length !== 0){
-  		searchItems = this.usersPreset;
-  	}
-  	this.usersOptions$ = concat(
-  		of(searchItems),
-  		this.usersSearchInput$.pipe(
-  			filter(res => {
-  				return res !== null && res.length >= this.minUsersLengthTerm;
-  			}),
-  			debounceTime(300),
-  			distinctUntilChanged(),
-  			tap(() => {
-  				this.isUsersLoading = true;
-  			}),
-  			switchMap(searchString => {
-  				this.isUsersLoading = false;
-  				return this.adminService.getUsers(
-  					[],
-  					0,
-  					100,
-  					'email',
-  					false,
-  					new Filter({ search: searchString })
-  				).pipe(map(result => {
-  					return result.list.map(x => {
-  						return {
-  							id: x.id,
-  							title: (x.fullName !== '') ? `${x.fullName} (${x.email})` : x.email
-  						} as CommonTargetValue;
-  					});
-  				}));
-  			})
-  		));
+	this.usersOptions$ = this.form.controls.users.valueChanges.pipe(
+		distinctUntilChanged(),
+		filter(value => {
+			const name = typeof value === 'string' ? value : value?.title;
+			return name.length >= this.minUsersLengthTerm;
+		}),
+		debounceTime(300),
+		switchMap(search => {
+			if (typeof search !== 'string') {
+				return EMPTY;
+			}
+			
+			this.isUsersLoading = false;
+
+			return this.adminService.getUsers([], 0, 100, 'email', false, new Filter({ search })).pipe(
+				map(result => result.list.map(x => ({
+				  id: x.id,
+				  title: x.fullName ? `${x.fullName} (${x.email})` : x.email
+				}) as CommonTargetValue)),
+				finalize(() => this.isUsersLoading = false)
+			);
+		})
+	);
   }
 
-  private startExchangeRate(): void {
-  	if (this.currenciesToSpend.length === 0) {
-  		return;
-  	}
-  	const currencyToSpendSymbol = this.data?.currencyToSpend;
-  	const currencyToSpend = this.currenciesToSpend.find(x => x.symbol === currencyToSpendSymbol);
-  	const spendFiat = currencyToSpend?.fiat ?? false;
-  	const spend = this.form.get('currencyToSpend')?.value;
-  	const receive = this.form.get('currencyToReceive')?.value;
-  	if (spendFiat) {
-  		this.exchangeRate.setCurrency(spend, receive, TransactionType.Buy);
-  	} else {
-  		this.exchangeRate.setCurrency(receive, spend, TransactionType.Sell);
-  	}
-  	this.exchangeRate.update();
+  displayUserTitleFn(user: CommonTargetValue): string {
+    return user?.title;
   }
 
   getTransactionToCreate(): TransactionInput{
-  	const transactionToCreate = {
-  		type: this.form.get('transactionType')?.value,
-  		source: TransactionSource.Wallet,
-  		currencyToSpend: this.form.get('currencyToSpend')?.value,
-  		currencyToReceive: this.form.get('currencyToReceive')?.value,
-  		amountToSpend: parseFloat(this.form.get('amountToSpend')?.value ?? '0'),
-  		instrument: this.form.get('instrument')?.value,
-  		paymentProvider: this.form.get('provider')?.value,
-  	} as TransactionInput;
+	const formValue = this.form.value;
 
-  	return transactionToCreate;
+	const amountToSpend = parseFloat(formValue.amountToSpend.toString());
+
+	if (isNaN(amountToSpend)) {
+	  formValue.amountToSpend = 0;
+	}
+
+  	return <TransactionInput>{
+		...formValue,
+		amountToSpend: isNaN(amountToSpend) ? 0 : amountToSpend,
+	};
   }
 
-  updateRate(): void {
-  	if (this.currentRate) {
-  		this.form.get('rate')?.setValue(this.currentRate);
-  	}
-  }
+  updateRate(): void {	
+	let currencyFrom;
+	let currencyTo;
 
-  setParamsIfRequired(): void{
-  	if(this.transactionType === TransactionType.Deposit || this.transactionType === TransactionType.Withdrawal){
-  		this.form.get('currencyToReceive')?.setValue(this.currencyToSpendField?.value);
-  		this.form.get('amountToReceive')?.setValue(this.amountToSpendField?.value);
-  	}
+	if (this.transactionTypeField.value === TransactionType.Buy) {
+		currencyFrom = this.form.controls.currencyToReceive.value;
+		currencyTo = this.form.controls.currencyToSpend.value;
+	}
+	
+	this.paymentDataService.getRates([currencyFrom], currencyTo)
+		.valueChanges.subscribe(({ data }) => {
+			const rates = data.getRates as Rate[];
+			if (rates.length > 0) {
+				this.currentRate = rates[0].depositRate;
+				if (this.currentRate) {
+					this.rateField.patchValue(this.currentRate);
+				}
+			}
+		});
   }
 
   onSubmit(): void {
   	this.submitted = true;
-  	this.setParamsIfRequired();
-    
-  	if (this.form.valid) {
-  		this.createUserTransaction();
-  	}
+	this.createUserTransaction();
+	this.cdr.markForCheck();
   }
 
   private createUserTransaction(): void {
-  	const rate = this.rateField?.value;
-
-    const transactionToCreate = this.getTransactionToCreate();
     this.saveInProgress = true;
 
-    const requestData = this.adminService.simulateTransaction(transactionToCreate, this.usersField?.value, parseFloat(rate))
-      .pipe(finalize(() => {
-        this.saveInProgress = false;
-        this.cdr.markForCheck();
-      } ));
-    this.subscriptions.add(requestData.subscribe({
-      next: () => {
-        // navigate to tab
-        this.selectedTabIndex = 1;
-      },
-      error: (error) => {
-        this.errorMessage = error;
-        if (this.auth.token === '') {
-          void this.router.navigateByUrl('/');
-        }
-      }
-    }));
-    
+   this.transactionSimulation$ = 
+   	this.adminService.simulateTransaction(
+		this.getTransactionToCreate(), 
+		this.form.controls.users.value.id, 
+		parseFloat(this.rateField?.value)
+	) .pipe(finalize(() => {
+		this.saveInProgress = false;
+		this.cdr.markForCheck();
+	}));
   }
 }
-
-// widgetID only for Widget or QuickCheckout available
-// source 
-// export enum TransactionSource {
-//   QuickCheckout = 'QuickCheckout',
-//   Wallet = 'Wallet',
-//   Widget = 'Widget'
-// }

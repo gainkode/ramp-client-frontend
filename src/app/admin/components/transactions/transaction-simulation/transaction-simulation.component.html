@@ -1,164 +1,147 @@
+<mat-card>
+  <mat-card-header class="pd-15-f">
+    <mat-card-title >Transaction Details</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form"> 
+      <mat-form-field appearance="outline" class="size-wider">
+        <mat-label>Transaction type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option *ngFor="let type of transactionTypes" [value]="type.id">
+            {{ type.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
+      <mat-form-field appearance="outline" class="size-smaller">
+        <mat-label>Source</mat-label>
+        <mat-select formControlName="source">
+          <mat-option *ngFor="let type of transactionSources" [value]="type.id">
+            {{ type.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-<mat-tab-group mat-stretch-tabs="false" [selectedIndex]="selectedTabIndex">
-    <mat-tab label="Transaction data">
-        <ng-template matTabContent>
-            <div class="row">
-                <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
-                  <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()"> 
-                    <div class="card card-body pd-20 pd-md-40 border shadow-none">
-                      <h5 class="card-title mg-b-20">
-                        Payment Data
-                      </h5>
-                      <!-- Transaction Type -->
-                      <div class="form-group">
-                        <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                          Transaction type
-                          <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                        </label>
-                        <ng-select [items]="transactionTypes" bindLabel="name" bindValue="id" formControlName="transactionType"
-                          [clearable]=false [clearOnBackspace]=false required>
-                        </ng-select>
-                      </div>
-              
-                      <!-- Customer -->
-                      <div class="form-group">
-                        <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                            Customer search
-                            <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                        </label>
-                        <ng-select [items]="usersOptions$ | async" bindLabel="title" bindValue="id"
-                            [minTermLength]="minUsersLengthTerm" notFoundText="No users found"
-                            [loading]="isUsersLoading" formControlName="users"
-                            typeToSearchText="Type email or user name"
-                            placeholder="Start typing to search users"
-                            [typeahead]="usersSearchInput$">
-                        </ng-select>
-                      </div>
-                        
-                       <div class="form-group">
-                        <div class="row">
-                          <div class="col-sm-12">
-                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                              {{amountToSpendTitle}}
-                              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                            </label>
-                            <div class="row">
-                              <div class="col-sm-7">
-                                <input class="form-control"
-                                  [ngClass]="{'has-error': !form.controls.amountToSpend.valid}" type="text"
-                                  formControlName="amountToSpend" required>
-                                <div
-                                  *ngIf="(form.controls.amountToSpend.touched || submitted) && (form.controls.amountToSpend.errors?.['required'])"
-                                  class="tx-danger">
-                                  <small>
-                                    {{amountToSpendTitle}} is required
-                                  </small>
-                                </div>
-                                <div *ngIf="form.controls.amountToSpend.errors?.['pattern']" class="tx-danger">
-                                  <small>
-                                    Incorrect number value
-                                  </small>
-                                </div>
-                              </div>
-                              <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                                <ng-select [items]="currenciesToSpend" [clearable]=false [clearOnBackspace]=false bindLabel="display"
-                                  bindValue="symbol" formControlName="currencyToSpend" required>
-                                </ng-select>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-              
-                      <div *ngIf="transactionType != 'Deposit' && transactionType != 'Withdrawal'" class="form-group">
-                        <div class="row">
-                          <div class="col-sm-12">
-                            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                              Amount To Receive
-                              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                            </label>
-                            <div class="row">
-                              <div *ngIf="fullAmountField?.value !== true" class="col-sm-7">
-                                <input class="form-control"
-                                  [ngClass]="{'has-error': !form.controls.amountToReceive.valid}" type="text"
-                                  formControlName="amountToReceive" required>
-                              </div>
-                              <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                                <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false
-                                  bindLabel="display" bindValue="symbol" formControlName="currencyToReceive" required>
-                                </ng-select>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <!-- Rate -->
-                      <div *ngIf="transactionType !== 'Deposit' && transactionType !== 'Withdrawal'" class="form-group">
-                        <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                          Exchange rate
-                          <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                          <a 
-                            *ngIf="showSetCurrentRate"
-                            class="tx-12 mg-l-10"
-                            [routerLink]="" 
-                            (click)="updateRate()">
-                            Set current
-                          </a>
-                        </label>
-                        <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="text"
-                          formControlName="rate" required>
-                        <div *ngIf="(form.controls.rate.touched || submitted) && (form.controls.rate.errors?.['required'])"
-                          class="tx-danger">
-                          <small>
-                            Rate is required
-                          </small>
-                        </div>
-                        <div *ngIf="form.controls.rate.errors?.['pattern']" class="tx-danger">
-                          <small>
-                            Incorrect number value
-                          </small>
-                        </div>
-                      </div>
-                      <!-- Payment Methods -->
-                      <div class="form-group">
-                        <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                          Payment Methods
-                          <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                        </label>
-                        <ng-select [items]="instrumentTypes" bindLabel="name" bindValue="id" formControlName="instrument"
-                          [clearable]=false [clearOnBackspace]=false required>
-                        </ng-select>
-                      </div>
-                      <!-- Payment Providers -->
-                      <div class="form-group">
-                        <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                          Payment providers
-                        </label>
-                        <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id"
-                          [closeOnSelect]="true" formControlName="provider" placeholder="Select provider">
-                        </ng-select>
-                      </div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                      <div style="display: flex; justify-content: flex-end;">
-                        <button
-                          class="btn btn-primary pd-x-30 me-2 mg-t-5">
-                          <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-                            aria-hidden="true"></span>
-                          Save
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-            </div>
-        </ng-template>
-    </mat-tab>
-    <mat-tab label="Cost and Fee Schemes">
-        <ng-template matTabContent>
-          HELLO
-        </ng-template>
-    </mat-tab>
-</mat-tab-group>
+        <mat-form-field appearance="outline" *ngIf="form.controls.source.value !== 'Wallet'">
+          <mat-label>Widget ID</mat-label>
+          <mat-select formControlName="widgetUserParamsId">
+            <mat-option *ngFor="let widget of widgetOptions$ | async" [value]="widget.id">
+              {{ widget.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Customer search </mat-label>
+          <input matInput
+                 [matAutocomplete]="auto"
+                 formControlName="users"
+                 placeholder="Start typing to search users">
+                 
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUserTitleFn">
+            <mat-option *ngFor="let user of usersOptions$ | async" [value]="user">
+              {{ user.title }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+       
+        <div class="mt-2">
+          <mat-form-field appearance="outline" class="size-wider">
+            <mat-label>{{amountToSpendTitle}}</mat-label>
+            <input matInput type="text" formControlName="amountToSpend" required/>
+            <mat-error class="field-error" *ngIf="amountToSpendField.invalid">{{getAmountToSpendMessage()}}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="size-smaller">
+            <mat-label>{{amountToSpendTitle}}</mat-label>
+            <mat-select formControlName="currencyToSpend">
+              <mat-option *ngFor="let c of currenciesToSpend" [value]="c.symbol">
+                {{ c.display }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="mt-2" *ngIf="transactionType !== 'Deposit' && transactionType !== 'Withdrawal'">
+          <mat-form-field appearance="outline" class="size-wider">
+            <mat-label>Amount To Receive</mat-label>
+            <input matInput type="text" formControlName="amountToReceive" required/>
+            <mat-error class="field-error" *ngIf="amountToReceiveField.invalid">{{getAmountToRecievedMessage()}}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="size-smaller">
+            <mat-select formControlName="currencyToReceive">
+              <mat-option *ngFor="let c of currenciesToReceive" [value]="c.symbol">
+                {{ c.display }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div>
+          <a 
+            *ngIf="showSetCurrentRate"
+            class="tx-12 mg-l-10"
+            [routerLink]="" 
+            (click)="updateRate()">
+            Set current
+          </a>
+          <mat-form-field appearance="outline">
+            <mat-label>Exchange rate</mat-label>
+            <input matInput type="text" formControlName="rate"/>
+            <mat-error class="field-error" *ngIf="rateField.invalid">{{getRateMessage()}}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="mt-2">
+          <mat-form-field appearance="outline" class="size-wider">
+            <mat-label>Payment Methods</mat-label>
+            <mat-select formControlName="instrument">
+              <mat-option *ngFor="let type of instrumentTypes" [value]="type.id">
+                {{ type.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" class="size-smaller">
+            <mat-label>Payment providers</mat-label>
+            <mat-select formControlName="provider">
+              <mat-option *ngFor="let type of filteredProviders" [value]="type.id">
+                {{ type.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+    </form>
+
+    <ng-container *ngIf="transactionSimulation$ | async as data">
+      <mat-divider class="mb-3"></mat-divider>
+  
+      <mat-form-field *ngIf="data?.costSchema?.name" appearance="outline">
+        <mat-label>Used Cost Scheme</mat-label>
+        <input matInput type="text" [value]="data.costSchema.name" readonly/>
+      </mat-form-field>
+  
+      <mat-form-field *ngIf="data?.feeSchema?.name" appearance="outline">
+        <mat-label>Used Fee Scheme</mat-label>
+        <input matInput type="text" [value]="data.feeSchema.name" readonly/>
+      </mat-form-field>
+  
+      <mat-divider></mat-divider>
+    </ng-container>
+
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button
+      [disabled]="!form.valid"
+      type="button"
+      class="btn btn-primary me-sm-4 mb-sm-4" (click)="onSubmit()">
+      <span 
+        *ngIf="saveInProgress" 
+        class="spinner-border spinner-border-sm" role="status"
+        aria-hidden="true"></span>
+      Simulate
+    </button>
+  </mat-card-actions>
+</mat-card>

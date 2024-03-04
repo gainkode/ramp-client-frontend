@@ -1,0 +1,29 @@
+mat-form-field {
+    margin: 0 16px;
+    width: calc(100% - 40px) !important;
+  
+    &.size-third {
+      width: calc(33.33% - 22px) !important;
+    }
+  
+    &.size-two-third {
+      width: calc(66.66% - 22px) !important;
+    }
+  
+    &.size-smaller {
+      width: calc(44% - 22px) !important;
+    }
+  
+    &.size-wider {
+      width: calc(50% - 22px) !important;
+    }
+}
+
+.field-error {
+  font-size: 12px;
+  margin: 0 -15px;
+}
+
+.border-none {
+  border: none !important;
+}
