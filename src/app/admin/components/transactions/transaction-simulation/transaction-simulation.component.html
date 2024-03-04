@@ -22,96 +22,97 @@
         </mat-select>
       </mat-form-field>
 
-        <mat-form-field appearance="outline" *ngIf="form.controls.source.value !== 'Wallet'">
-          <mat-label>Widget ID</mat-label>
-          <mat-select formControlName="widgetUserParamsId">
-            <mat-option *ngFor="let widget of widgetOptions$ | async" [value]="widget.id">
-              {{ widget.title }}
+      <mat-form-field appearance="outline" *ngIf="form.controls.source.value !== 'Wallet'">
+        <mat-label>Widget ID</mat-label>
+        <mat-select formControlName="widgetUserParamsId">
+          <mat-option *ngFor="let widget of widgetOptions$ | async" [value]="widget.id">
+            {{ widget.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Customer search </mat-label>
+        <input matInput
+                [matAutocomplete]="auto"
+                formControlName="users"
+                placeholder="Start typing to search users">
+                
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUserTitleFn">
+          <mat-option *ngFor="let user of usersOptions$ | async" [value]="user">
+            {{ user.title }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      
+      <div class="mt-2">
+        <mat-form-field appearance="outline" class="size-wider">
+          <mat-label>{{amountToSpendTitle}}</mat-label>
+          <input matInput type="text" formControlName="amountToSpend" required/>
+          <mat-error class="field-error" *ngIf="amountToSpendField.invalid">{{getAmountToSpendMessage()}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="size-smaller">
+          <mat-label>{{amountToSpendTitle}}</mat-label>
+          <mat-select formControlName="currencyToSpend">
+            <mat-option *ngFor="let c of currenciesToSpend" [value]="c.symbol">
+              {{ c.display }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="mt-2" *ngIf="transactionType !== 'Deposit' && transactionType !== 'Withdrawal'">
+        <mat-form-field appearance="outline" class="size-wider">
+          <mat-label>Amount To Receive</mat-label>
+          <input matInput type="text" formControlName="amountToReceive" required/>
+          <mat-error class="field-error" *ngIf="amountToReceiveField.invalid">{{getAmountToRecievedMessage()}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="size-smaller">
+          <mat-select formControlName="currencyToReceive">
+            <mat-option *ngFor="let c of currenciesToReceive" [value]="c.symbol">
+              {{ c.display }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="size-two-third">
+          <mat-label>Exchange rate</mat-label>
+          <input matInput type="text" formControlName="rate"/>
+          <mat-error class="field-error" *ngIf="rateField.invalid">{{getRateMessage()}}</mat-error>
+        </mat-form-field>
+
+        <button 
+          *ngIf="showSetCurrentRate" 
+          class="fs-5"
+          type="button" 
+          mat-flat-button
+          (click)="updateRate()">Set current
+        </button>
+      </div>
+
+      <div class="mt-2">
+        <mat-form-field appearance="outline" class="size-wider">
+          <mat-label>Payment Methods</mat-label>
+          <mat-select formControlName="instrument">
+            <mat-option *ngFor="let type of instrumentTypes" [value]="type.id">
+              {{ type.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Customer search </mat-label>
-          <input matInput
-                 [matAutocomplete]="auto"
-                 formControlName="users"
-                 placeholder="Start typing to search users">
-                 
-          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUserTitleFn">
-            <mat-option *ngFor="let user of usersOptions$ | async" [value]="user">
-              {{ user.title }}
+        <mat-form-field appearance="outline" class="size-smaller">
+          <mat-label>Payment providers</mat-label>
+          <mat-select formControlName="provider">
+            <mat-option *ngFor="let type of filteredProviders" [value]="type.id">
+              {{ type.name }}
             </mat-option>
-          </mat-autocomplete>
+          </mat-select>
         </mat-form-field>
-       
-        <div class="mt-2">
-          <mat-form-field appearance="outline" class="size-wider">
-            <mat-label>{{amountToSpendTitle}}</mat-label>
-            <input matInput type="text" formControlName="amountToSpend" required/>
-            <mat-error class="field-error" *ngIf="amountToSpendField.invalid">{{getAmountToSpendMessage()}}</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="size-smaller">
-            <mat-label>{{amountToSpendTitle}}</mat-label>
-            <mat-select formControlName="currencyToSpend">
-              <mat-option *ngFor="let c of currenciesToSpend" [value]="c.symbol">
-                {{ c.display }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div class="mt-2" *ngIf="transactionType !== 'Deposit' && transactionType !== 'Withdrawal'">
-          <mat-form-field appearance="outline" class="size-wider">
-            <mat-label>Amount To Receive</mat-label>
-            <input matInput type="text" formControlName="amountToReceive" required/>
-            <mat-error class="field-error" *ngIf="amountToReceiveField.invalid">{{getAmountToRecievedMessage()}}</mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="size-smaller">
-            <mat-select formControlName="currencyToReceive">
-              <mat-option *ngFor="let c of currenciesToReceive" [value]="c.symbol">
-                {{ c.display }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <div>
-          <a 
-            *ngIf="showSetCurrentRate"
-            class="tx-12 mg-l-10"
-            [routerLink]="" 
-            (click)="updateRate()">
-            Set current
-          </a>
-          <mat-form-field appearance="outline">
-            <mat-label>Exchange rate</mat-label>
-            <input matInput type="text" formControlName="rate"/>
-            <mat-error class="field-error" *ngIf="rateField.invalid">{{getRateMessage()}}</mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="mt-2">
-          <mat-form-field appearance="outline" class="size-wider">
-            <mat-label>Payment Methods</mat-label>
-            <mat-select formControlName="instrument">
-              <mat-option *ngFor="let type of instrumentTypes" [value]="type.id">
-                {{ type.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-  
-          <mat-form-field appearance="outline" class="size-smaller">
-            <mat-label>Payment providers</mat-label>
-            <mat-select formControlName="provider">
-              <mat-option *ngFor="let type of filteredProviders" [value]="type.id">
-                {{ type.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+      </div>
     </form>
 
     <ng-container *ngIf="transactionSimulation$ | async as data">
@@ -137,11 +138,11 @@
       [disabled]="!form.valid"
       type="button"
       class="btn btn-primary me-sm-4 mb-sm-4" (click)="onSubmit()">
-      <span 
-        *ngIf="saveInProgress" 
-        class="spinner-border spinner-border-sm" role="status"
-        aria-hidden="true"></span>
       Simulate
     </button>
   </mat-card-actions>
+
+  <ng-container *ngIf="isProgress">
+    <app-spinner [isTransparent]="true"></app-spinner>
+  </ng-container>
 </mat-card>

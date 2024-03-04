@@ -1,14 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
 import { PaymentInstrument, PaymentProvider, Rate, SettingsCurrencyWithDefaults, TransactionInput, TransactionSimulatorResult, TransactionSource, TransactionType } from 'model/generated-models';
 import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionSourceList, TransactionTypeList } from 'model/payment.model';
-import { TransactionItemFull } from 'model/transaction.model';
 import { EMPTY, Observable, Subject, Subscription, debounceTime, distinctUntilChanged, filter, finalize, map, of, switchMap, take } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
-import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { EnvService } from 'services/env.service';
 import { PaymentDataService } from 'services/payment.service';
@@ -32,10 +29,8 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
   transactionTypes = TransactionTypeList.filter((item) => requiredTransactionTypes.includes(item.id));
   instrumentTypes = PaymentInstrumentList;
-  submitted = false;
-  saveInProgress = false;
+  isProgress = false;
   errorMessage = '';
-  data: TransactionItemFull | undefined = undefined;
   transactionSources = TransactionSourceList;
   transactionType: TransactionType = TransactionType.System;
   currenciesToSpend: CurrencyView[] = [];
@@ -115,8 +110,6 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
 
   constructor(
   	private fb: FormBuilder,
-  	private router: Router,
-  	private auth: AuthService,
   	private cdr: ChangeDetectorRef,
 	private readonly paymentDataService: PaymentDataService,
   	private commonService: CommonDataService,
@@ -167,9 +160,7 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   	this.subscriptions.unsubscribe();
   }
 
-  private getPaymentProviders(): void {
-  	this.providers = [];
-	
+  private getPaymentProviders(): void {	
   	this.subscriptions.add(
 		this.adminService.getProviders()?.valueChanges.subscribe(({ data }) => {
   			const providers = data.getPaymentProviders as PaymentProvider[];
@@ -330,14 +321,16 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   updateRate(): void {	
 	let currencyFrom;
 	let currencyTo;
-
+	
 	if (this.transactionTypeField.value === TransactionType.Buy) {
 		currencyFrom = this.form.controls.currencyToReceive.value;
 		currencyTo = this.form.controls.currencyToSpend.value;
 	}
 	
+	this.isProgress = true;
 	this.paymentDataService.getRates([currencyFrom], currencyTo)
-		.valueChanges.subscribe(({ data }) => {
+		.valueChanges
+		.subscribe(({ data }) => {
 			const rates = data.getRates as Rate[];
 			if (rates.length > 0) {
 				this.currentRate = rates[0].depositRate;
@@ -345,26 +338,22 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
 					this.rateField.patchValue(this.currentRate);
 				}
 			}
+			this.isProgress = false;
+			this.cdr.markForCheck();
 		});
   }
 
   onSubmit(): void {
-  	this.submitted = true;
-	this.createUserTransaction();
-	this.cdr.markForCheck();
-  }
+	this.isProgress = true;
 
-  private createUserTransaction(): void {
-    this.saveInProgress = true;
-
-   this.transactionSimulation$ = 
-   	this.adminService.simulateTransaction(
-		this.getTransactionToCreate(), 
-		this.form.controls.users.value.id, 
-		parseFloat(this.rateField?.value)
-	) .pipe(finalize(() => {
-		this.saveInProgress = false;
-		this.cdr.markForCheck();
-	}));
+	this.transactionSimulation$ = 
+		this.adminService.simulateTransaction(
+		 this.getTransactionToCreate(), 
+		 this.form.controls.users.value.id, 
+		 parseFloat(this.rateField?.value)
+	 ) .pipe(finalize(() => {
+		 this.isProgress = false;
+		 this.cdr.markForCheck();
+	 }));
   }
 }

@@ -175,7 +175,7 @@ export class AdminSidebarComponent implements OnInit {
 	}
 
 	simulate(): void {
-		const popup = window.open(`${window.location.origin}/admin/transaction-simulation`, 'targetWindow', `resizable=no, width=${515}, height=${605}`);
+		const popup = window.open(`${window.location.origin}/admin/transaction-simulation`, 'targetWindow', 'resizable=0, width=515, height=585');
 		popup.blur();
 		window.focus();
 	}

@@ -7,5 +7,6 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpinnerComponent {
+	@Input() isTransparent = false;
 	@Input() message: string = null;
 }
