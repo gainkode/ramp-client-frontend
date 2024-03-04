@@ -60,7 +60,8 @@ import {
 	DashboardMerchantStats,
 	QueryGetDashboardMerchantStatsArgs,
 	SettingsFeeSimilarResult,
-  SettingsCostSimilarResult
+  SettingsCostSimilarResult,
+  TransactionSimulatorResult
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -80,6 +81,7 @@ import { ApiKeyItem } from 'model/apikey.model';
 import { CurrencyPairItem } from 'model/currencyPairs.model';
 import { LiquidityProviderEntityItem } from 'model/liquidity-provider.model';
 import { MessageItem } from 'model/message.model';
+import { CommonTargetValue } from 'model/common.model';
 
 /* region queries */
 
@@ -2333,10 +2335,12 @@ mutation SimulateTransaction(
     userId: $userId
   ) {
     costSchema {
+      name
       settingsCostId
     }
 
     feeSchema {
+      name
       settingsFeeId
     }
   }
@@ -4542,8 +4546,8 @@ export class AdminDataService {
 		}));
 	}
 
-  simulateTransaction(transaction: TransactionInput, userId: string, rate: number): Observable<any> {
-		return this.mutate({
+  simulateTransaction(transaction: TransactionInput, userId: string, rate: number): Observable<TransactionSimulatorResult> {
+		return this.mutate<{ simulateTransaction: TransactionSimulatorResult; }, any>({
 			mutation: SIMULATE_TRANSACTION,
 			variables: {
 				transactionType: transaction.type,
@@ -4556,12 +4560,7 @@ export class AdminDataService {
 				rate,
         userId
 			}
-		}).pipe(tap(() => {
-			this.snackBar.open(
-				`Transaction was created`,
-				undefined, { duration: 5000 }
-			);
-		}));
+		}).pipe(map((result) => result.data.simulateTransaction));
 	}
 
 	unbenchmarkTransaction(ids: string[]): Observable<any> {

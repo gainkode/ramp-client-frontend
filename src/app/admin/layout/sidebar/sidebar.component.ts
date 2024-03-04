@@ -19,7 +19,6 @@ import { EnvService } from 'services/env.service';
 })
 export class AdminSidebarComponent implements OnInit {
 	public menuItems!: Menu[];
-	public url: any;
 	public logoSrc = `${EnvService.image_host}/images/logo-dark.png`;
 	public logoAlt = EnvService.product;
 
@@ -176,8 +175,7 @@ export class AdminSidebarComponent implements OnInit {
 	}
 
 	simulate(): void {
-    //you may choose to deduct some value from current screen size
-		const popup = window.open("http://localhost:4000/admin/transaction-simulation", 'targetWindow', `width=${500},height=${700}`);
+		const popup = window.open(`${window.location.origin}/admin/transaction-simulation`, 'targetWindow', `resizable=no, width=${515}, height=${605}`);
 		popup.blur();
 		window.focus();
 	}
