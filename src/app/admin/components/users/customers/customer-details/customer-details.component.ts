@@ -33,8 +33,8 @@ import {
 	UserStatusList,
 } from 'model/payment.model';
 import { GenderList, UserItem } from 'model/user.model';
-import { Observable, Subscription, map } from 'rxjs';
-import { finalize, take } from 'rxjs/operators';
+import { Observable, Subject, Subscription, concat, map, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, finalize, switchMap, take, tap } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
@@ -89,6 +89,11 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   tiers: CommonTargetValue[] = [];
   totalBalance = '';
   flag = false;
+	usersOptions$: Observable<CommonTargetValue[]> = of([]);
+	minUsersLengthTerm = 1;
+	isUsersLoading = false;
+
+	usersSearchInput$ = new Subject<string>();
   minBirthdayDate: NgbDateStruct = {
   	year: 1900,
   	month: 1,
@@ -137,7 +142,8 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   	crypto: ['', { validators: [Validators.required], updateOn: 'change' }],
   	comment: ['', { validators: [], updateOn: 'change' }],
   	company: ['', { validators: [], updateOn: 'change' }],
-  	widgetId: [undefined]
+  	widgetId: [undefined],
+		affiliate: [null, { validators: [Validators.required], updateOn: 'change' }],
   });
   widgetOptions$: Observable<CommonTargetValue[]>;
 
@@ -154,6 +160,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+		this.initUserSearch();
   	this.loadCommonSettings();
   	this.widgetOptions$ = this.getFilteredWidgets();
   }
@@ -211,6 +218,12 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   		if(data.widgetId) {
   			this.dataForm.get('widgetId')?.setValue(data.widgetId);
   		}
+
+			if(data.affiliateId) {
+				this.setAffilate(data.affiliateId);
+  			// this.dataForm.get('affiliate')?.setValue(data.affiliateId);
+  		}
+
   		if (data.userType?.id === UserType.Merchant) {
   			this.dataForm.get('company')?.setValue(data?.company);
   			this.dataForm.get('firstName')?.setValue(data?.company);
@@ -257,6 +270,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   		this.dataForm.get('lastName')?.setValue('');
   		this.dataForm.get('birthday')?.setValue(undefined);
   		this.dataForm.get('widgetId')?.setValue(undefined);
+			this.dataForm.get('affiliate')?.setValue(undefined);
   		this.dataForm.get('gender')?.setValue(undefined);
   		this.dataForm.get('risk')?.setValue(RiskLevel.Medium);
   		this.dataForm.get('accountStatus')?.setValue(AccountStatus.Closed);
@@ -364,7 +378,8 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   		comment: this.dataForm.get('comment')?.value,
   		companyName: this.dataForm.get('company')?.value,
   		flag: this.flag,
-  		widgetId: this.dataForm.get('widgetId')?.value
+  		widgetId: this.dataForm.get('widgetId')?.value,
+			affiliateId: this.dataForm.get('affiliate')?.value
   	} as UserInput;
   	return data;
   }
@@ -459,6 +474,44 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
+	private initUserSearch(): void {
+  	this.usersOptions$ = concat(
+  		of([]),
+  		this.usersSearchInput$.pipe(
+  			filter(res => {
+  				return res !== null && res.length >= this.minUsersLengthTerm;
+  			}),
+  			debounceTime(300),
+  			distinctUntilChanged(),
+  			tap(() => {
+  				this.isUsersLoading = true;
+  			}),
+  			switchMap(searchString => {
+  				this.isUsersLoading = false;
+  				return this.adminService.findUsers(new Filter({
+  					search: searchString,
+  					accountTypes: [UserType.Merchant]
+  				})).pipe(map(result => result.list.map(user => ({
+						id: user.id,
+						title: user.email
+					} as CommonTargetValue))));
+  			})
+  		));
+  }
+
+	private setAffilate(affilateId: string) {
+		this.adminService.findUsers(new Filter({
+			users: [affilateId]
+		}))
+		.pipe(map(result => result.list.map(user => ({
+			id: user.id,
+			title: user.email
+		} as CommonTargetValue))))
+		.subscribe(result => {
+			this.usersOptions$ = of(result);
+			this.dataForm.get('affiliate')?.patchValue(affilateId);
+		});
+	}
   private onSave(id: string, customer: UserInput, content: any): void {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.saveCustomer(id, customer);

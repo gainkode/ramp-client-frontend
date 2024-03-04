@@ -299,6 +299,7 @@ export enum CallbackStatus {
 }
 
 export enum CallbackType {
+  ExternalMonoovaPayoutCallback = 'ExternalMonoovaPayoutCallback',
   ExternalAu10tixCallback = 'externalAu10tixCallback',
   ExternalCoriunderCallback = 'externalCoriunderCallback',
   ExternalFibonatixCallback = 'externalFibonatixCallback',
@@ -4789,6 +4790,7 @@ export type UserInput = {
   accountStatus?: InputMaybe<AccountStatus>;
   addressEndDate?: InputMaybe<Scalars['DateTime']['input']>;
   addressStartDate?: InputMaybe<Scalars['DateTime']['input']>;
+  affiliateId?: InputMaybe<Scalars['String']['input']>;
   avatar?: InputMaybe<Scalars['String']['input']>;
   birthday?: InputMaybe<Scalars['DateTime']['input']>;
   buildingName?: InputMaybe<Scalars['String']['input']>;

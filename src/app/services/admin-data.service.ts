@@ -2109,6 +2109,7 @@ mutation UpdateUser(
   $flag: Boolean
   $companyName: String
   $widgetId: String
+  $affiliateId: String
 ) {
   updateUser(
     userId: $userId
@@ -2140,6 +2141,7 @@ mutation UpdateUser(
       flag: $flag
       companyName: $companyName
       widgetId: $widgetId
+      affiliateId: $affiliateId
     }
   ) {
     userId
@@ -4327,7 +4329,8 @@ export class AdminDataService {
 					comment: customer.comment,
 					flag: customer.flag,
 					companyName: customer.companyName,
-					widgetId: customer.widgetId
+					widgetId: customer.widgetId,
+          affiliateId: customer.affiliateId
 				}
 			}).pipe(tap(() => {
 				this.snackBar.open(`User was updated`, undefined, { duration: 5000 });
