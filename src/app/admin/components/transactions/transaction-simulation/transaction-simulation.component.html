@@ -116,8 +116,10 @@
     </form>
 
     <ng-container *ngIf="transactionSimulation$ | async as data">
-      <mat-divider class="mb-3"></mat-divider>
-  
+      <mat-card-header class="pd-15-f">
+        <mat-card-title>Results</mat-card-title>
+      </mat-card-header>
+    
       <mat-form-field *ngIf="data?.costSchema?.name" appearance="outline">
         <mat-label>Used Cost Scheme</mat-label>
         <input matInput type="text" [value]="data.costSchema.name" readonly/>
@@ -128,9 +130,8 @@
         <input matInput type="text" [value]="data.feeSchema.name" readonly/>
       </mat-form-field>
   
-      <mat-divider></mat-divider>
+      <mat-divider class="mb-2"></mat-divider>
     </ng-container>
-
   </mat-card-content>
 
   <mat-card-actions align="end">
