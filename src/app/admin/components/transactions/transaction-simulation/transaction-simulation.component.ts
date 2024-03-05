@@ -30,7 +30,6 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   transactionTypes = TransactionTypeList.filter((item) => requiredTransactionTypes.includes(item.id));
   instrumentTypes = PaymentInstrumentList;
   isProgress = false;
-  errorMessage = '';
   transactionSources = TransactionSourceList;
   transactionType: TransactionType = TransactionType.System;
   currenciesToSpend: CurrencyView[] = [];
@@ -177,8 +176,7 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   				const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
   				this.currencyOptions = currencySettings.settingsCurrency?.list?.map((val) => new CurrencyView(val)) || [];
 				this.transactionTypeField.patchValue(TransactionType.Buy);
-  			},
-  			error: (error) => this.errorMessage = error
+  			}
   		})
   	);
   }
@@ -330,16 +328,23 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
 	this.isProgress = true;
 	this.paymentDataService.getRates([currencyFrom], currencyTo)
 		.valueChanges
-		.subscribe(({ data }) => {
-			const rates = data.getRates as Rate[];
-			if (rates.length > 0) {
-				this.currentRate = rates[0].depositRate;
-				if (this.currentRate) {
-					this.rateField.patchValue(this.currentRate);
+		.subscribe({
+			next: ({ data }) =>  {
+				const rates = data.getRates as Rate[];
+				if (rates.length > 0) {
+					this.currentRate = rates[0].depositRate;
+					if (this.currentRate) {
+						this.rateField.patchValue(this.currentRate);
+					}
 				}
+
+				this.isProgress = false;
+				this.cdr.markForCheck();
+			},
+			error: () => {
+				this.isProgress = false;
+				this.cdr.markForCheck();
 			}
-			this.isProgress = false;
-			this.cdr.markForCheck();
 		});
   }
 
