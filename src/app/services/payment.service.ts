@@ -123,47 +123,6 @@ query MySettingsCost(
 }
 `;
 
-const MY_SETTINGS_FEE = gql`
-query MySettingsFee(
-  $transactionType: TransactionType!
-  $transactionSource: TransactionSource!
-  $instrument: PaymentInstrument!
-  $paymentProvider: String
-  $currencyTo: String
-  $currencyFrom: String
-  $widgetId: String
-) {
-  mySettingsFee(
-    transactionType: $transactionType
-    transactionSource: $transactionSource
-    paymentProvider: $paymentProvider
-    instrument: $instrument
-    currencyTo: $currencyTo
-    currencyFrom: $currencyFrom
-    widgetId: $widgetId,
-  ) {
-    terms
-    wireDetails
-    currency
-    rateToEur
-    costs {
-      terms
-      bankAccounts {
-        bankAccountId
-        name
-        description
-        paymentProviders
-        objectsDetails{
-          id
-          title
-        }
-      }
-    },
-    requiredFields
-  }
-}
-`;
-
 const MY_BANK_CATEGORIES = gql`
 query MyBankCategories(
   $transactionType: TransactionType!
@@ -181,35 +140,6 @@ query MyBankCategories(
     transactionSource
     instrument
     countryCode
-  }
-}
-`;
-
-const GET_SETTINGS_KYC_TIERS = gql`
-query GetSettingsKycTiers {
-  getSettingsKycTiers {
-    count
-    list {
-      settingsKycTierId
-      name
-      description
-      amount
-      levelId
-      level {
-        settingsKycLevelId
-        name
-        original_level_name
-        original_flow_name
-        description
-        data
-      }
-      default
-      requireUserFullName
-      requireUserPhone
-      requireUserBirthday
-      requireUserAddress
-      requireUserFlatNumber
-    }
   }
 }
 `;
@@ -549,18 +479,6 @@ mutation CalculateInvoice(
 }
 `;
 
-const ABANDON_TRANSACTION = gql`
-mutation AbandonTransaction(
-  $transactionId: String!
-) {
-  abandonTransaction(
-    transactionId: $transactionId
-  ) {
-    transactionId
-  }
-}
-`;
-
 const ABANDON_CRYPTO_INVOICE = gql`
 mutation AbandonCryptoInvoice(
   $cryptoInvoiceId: String!
@@ -597,13 +515,6 @@ export class PaymentDataService {
 		return this.apollo.watchQuery<any>({
 			query: GET_ONE_TO_MANY_RATES,
 			variables,
-			fetchPolicy: 'network-only'
-		});
-	}
-
-	getSettingsKycTiers(): QueryRef<any, EmptyObject> {
-		return this.apollo.watchQuery<any>({
-			query: GET_SETTINGS_KYC_TIERS,
 			fetchPolicy: 'network-only'
 		});
 	}
@@ -731,14 +642,6 @@ export class PaymentDataService {
 		});
 	}
 
-	abandonTransaction(transactionId: string): Observable<any> {
-		const variables = { transactionId };
-		return this.apollo.mutate({
-			mutation: ABANDON_TRANSACTION,
-			variables
-		});
-	}
-  
 	abandonCryptoInvoice(cryptoInvoiceId: string): Observable<any> {
 		const variables = { cryptoInvoiceId };
 
@@ -784,29 +687,6 @@ export class PaymentDataService {
 		}).pipe(map(response => response.data));
 	}
 
-	mySettingsFee(
-		transactionType: TransactionType,
-		transactionSource: TransactionSource,
-		instrument: PaymentInstrument,
-		paymentProvider: string,
-		currencyTo: string,
-		currencyFrom: string,
-		widgetId: string): QueryRef<any, EmptyObject> {
-		const vars = {
-			transactionType,
-			transactionSource,
-			instrument,
-			paymentProvider: (paymentProvider === '') ? undefined : paymentProvider,
-			currencyTo,
-			currencyFrom,
-			widgetId
-		};
-		return this.apollo.watchQuery<any>({
-			query: MY_SETTINGS_FEE,
-			variables: vars,
-			fetchPolicy: 'network-only'
-		});
-	}
 
   myBankCategories(
 		transactionType: TransactionType,
