@@ -143,7 +143,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   	comment: ['', { validators: [], updateOn: 'change' }],
   	company: ['', { validators: [], updateOn: 'change' }],
   	widgetId: [undefined],
-		affiliate: [null, { validators: [Validators.required], updateOn: 'change' }],
+		affiliate: [undefined],
   });
   widgetOptions$: Observable<CommonTargetValue[]>;
 

@@ -13,7 +13,6 @@
     <div *ngIf="dataForm.controls.widgetId.value" class="form-group">
       <label class="main-content-label tx-11 tx-medium tx-gray-600">
         Widget ID
-        <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
       </label>
       <ng-select [items]="widgetOptions$ | async" 
         bindLabel="title" bindValue="id" 
@@ -30,24 +29,17 @@
     <div class="form-group">
       <label class="main-content-label tx-11 tx-medium tx-gray-600">
         Referrer
-        <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
       </label>
       <ng-select [items]="usersOptions$ | async" [minTermLength]="minUsersLengthTerm"
         bindLabel="title" bindValue="id" 
         notFoundText="No users found" [loading]="isUsersLoading" formControlName="affiliate"
         typeToSearchText="Type email or user name" placeholder="Start typing to search a user"
-        [typeahead]="usersSearchInput$" required>
+        [typeahead]="usersSearchInput$">
         <ng-template ng-option-tmp let-item="item">
           {{item.title}} <br />
           <small>{{item.id}}</small>
         </ng-template>
       </ng-select>
-      <div *ngIf="(dataForm.controls.affiliate.touched || submitted) && (dataForm.controls.affiliate.errors?.['required'])"
-        class="tx-danger">
-        <small>
-          Please specify a user
-        </small>
-      </div>
     </div>
 
     <app-admin-details-item
