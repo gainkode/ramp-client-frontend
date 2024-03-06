@@ -90,27 +90,6 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   }
 
   ngOnInit(): void {
-		this.subscriptions.add(
-			this.transactionService.data.subscribe(
-				{
-					next: ({ list, count}) => {
-						// If this is new stream we have to store full list in transactions object
-						this.transactions = this.inProgress ? list : [...this.transactions, ...list];
-						this.transactionCount = count;
-						this.transactions.forEach(val => {
-							val.statusInfo = this.userStatuses.find(x => x.key === val.status);
-						});
-						this.inProgress = false;
-					},
-					error: (error) => {
-						this.inProgress = false;
-						if (this.auth.token === '') {
-							void this.router.navigateByUrl('/');
-						}
-					}
-				}
-			)
-		);
   	this.loadCommonSettings();
   	this.loadList();
   }
