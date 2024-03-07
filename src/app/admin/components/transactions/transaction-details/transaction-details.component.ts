@@ -151,6 +151,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
   
   widgetOptions$: Observable<CommonTargetValue[]>;
+  isTransactionRefreshing = false;
   constructor(
   	private formBuilder: UntypedFormBuilder,
   	private router: Router,
@@ -253,7 +254,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	
   	this.transferOrderBlockchainLink = val?.transferOrderBlockchainLink ?? '';
   	this.benchmarkTransferOrderBlockchainLink = val?.benchmarkTransferOrderBlockchainLink ?? '';
-  	this.removable = true;//val?.statusInfo?.value.canBeCancelled ?? false;  // confirmed
+  	this.removable = true;
   	if (this.data) {
   		this.flag = this.data.flag === true;
   		this.form.get('transactionType')?.setValue(this.data.type);
@@ -309,6 +310,19 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 				
   		})
   	);
+  }
+
+  refreshTransaction(id: string): void {
+	this.isTransactionRefreshing = true;
+
+	this.subscriptions.add(
+		this.adminService.getTransaction(id).subscribe({
+			next: (transaction) => {
+				this.isTransactionRefreshing = false;
+				this.setFormData(transaction);
+			}
+		})
+	);
   }
 
   getTransactionToUpdate(): TransactionUpdateInput {

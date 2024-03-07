@@ -2,7 +2,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { TableColumnConfig } from 'components/data-list/table/table.model';
-import { Observable, Subject, Subscription, distinctUntilChanged, filter, finalize, forkJoin, map, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, Subscription, distinctUntilChanged, filter, finalize, map, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs';
 import { customerDocumentsConfig } from '../customer-docs.config';
 import { CustomerDocument, DocumentTypeValue, DocumentType, DocumentSide } from '../models/customer-docs.model';
 import { CustomerDocsApi } from '../services/customer-docs.api';

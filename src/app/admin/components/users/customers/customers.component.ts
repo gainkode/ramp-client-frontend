@@ -291,7 +291,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	this.selectedCustomer = customer;
   	this.detailsDialog = this.modalService.open(content, {
   		backdrop: 'static',
-  		windowClass: 'modalCusSty',
+  		windowClass: 'modalCusSty-customer',
   	});
   }
 

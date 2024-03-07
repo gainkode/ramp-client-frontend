@@ -113,3 +113,22 @@
 .textarea-resize-none {
     resize: none;
 }
+
+.kyc-status-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.input-success {
+    background-color: rgba(11, 156, 49, .2);
+    color: rgba(11, 156, 49, .8);
+}
+.input-warning {
+    background-color: #ffffa9;
+    color: rgba(0, 0, 0, .5);
+}
+.input-error {
+    background-color: rgba(255, 0, 0, .2);
+    color: rgba(255, 0, 0, .5);
+}

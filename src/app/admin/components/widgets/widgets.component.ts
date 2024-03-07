@@ -187,7 +187,7 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   	this.selectedWidget = widget;
   	this.detailsDialog = this.modalService.open(content, {
   		backdrop: 'static',
-  		windowClass: 'modalCusSty',
+  		windowClass: 'modalCusSty-widget',
   	});
   }
 

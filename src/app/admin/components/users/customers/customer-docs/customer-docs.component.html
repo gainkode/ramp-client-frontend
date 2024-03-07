@@ -1,4 +1,4 @@
-<div *ngIf="isEditDocument; else docsTable">
+<div *ngIf="isEditDocument; else docsTable" class="w-500px">
   <div [formGroup]="form" class="inputs-wrap" [@fade]="isEditDocument">
     <mat-form-field appearance="outline">
       <mat-label>Document Group</mat-label>
@@ -63,8 +63,7 @@
 <ng-template #docsTable>
   <button class="btn btn-primary mg-t-10 mg-b-10 tx-14" type="button" (click)="onAddDocument()">Add Document</button>
 
-  <div class="docs-wrapper" [class.emptyData]="!tableDataSource.data.length">
-
+  <div class="docs-wrapper w-500px" [class.emptyData]="!tableDataSource.data.length">
     <app-table
       [dataSource]="tableDataSource" 
       [columns]="columnsToDisplay">

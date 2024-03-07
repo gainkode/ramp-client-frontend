@@ -2,576 +2,589 @@
   <mat-tab label="Transaction info">
     <ng-template matTabContent>
       <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(update_confirm_content)">
-        <div style="display: flex; justify-content: flex-start;">
+        <div class="d-flex">
           <button *ngIf="permission > 0" class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="flagValue()">
             <span *ngIf="flagInProgress" class="spinner-border spinner-border-sm" role="status"
                 aria-hidden="true"></span>
             {{flagText()}}
           </button>
+
+          <button class="btn btn-outline-secondary pd-x-30 ml-3 mg-t-5" type="button" (click)="refreshTransaction(data?.id)">
+            Refresh Transaction
+          </button>
         </div>
 
-      <div class="row">
-        <div class="col-lg-5 col-md-12">
-          <div class="card card-body pd-20 pd-md-40 border shadow-none">
-            <h5 class="card-title mg-b-20">
-              Transaction info
-            </h5>
-          
-            <div class="row">
-              <div class="col-lg-4 col-md-12">
-                <app-admin-details-item label="ID" [value]="data?.code"></app-admin-details-item>
-              </div>
-              <div class="col-lg-4 col-md-12">
-                <app-admin-details-item label="Transaction Type" [value]="data?.transactionTypeName"></app-admin-details-item>
-              </div>
-              <div class="col-lg-4 col-md-12">
-                <app-admin-details-item label="Initiated from" [value]="data?.transactionSourceName"></app-admin-details-item>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-lg-4 col-md-12">
-                <app-admin-details-item label="Created At" [value]="data?.created"></app-admin-details-item>
-              </div>
-              <div class="col-lg-4 col-md-12">
-                <app-admin-details-item label="Completed At" [value]="data?.executed"></app-admin-details-item>
-              </div>
-              <div class="col-lg-4 col-md-12">
-                <app-admin-details-item label="Last Update At" [value]="data?.updated"></app-admin-details-item>
-              </div>
-            </div>
-          
-            <app-admin-details-item label="From" [value]="data?.sender"></app-admin-details-item>
-            <!-- *ngIf="data?.recipient !== data?.address"  -->
-            <app-admin-details-item label="To" [value]="data?.recipient"></app-admin-details-item>
-          </div>
-        </div>
-        <div class="col-lg-5 col-md-12">
-          <div class="card card-body pd-20 pd-md-40 border shadow-none">
-            <h5 class="card-title mg-b-20">
-              Customer
-            </h5>
-            <div class="row">
-              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
-                <app-admin-details-item label="First Name" [value]="data?.user?.firstName"></app-admin-details-item>
-              </div>
-              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
-                <app-admin-details-item label="Last Name" [value]="data?.user?.lastName"></app-admin-details-item>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <app-admin-details-item label="Email" [value]="data?.user?.email"></app-admin-details-item>
-              </div>
-            </div>
-            <div class="row">
-          
-              <div class="col-lg-9 col-md-12">
-                <div class="screening-status-wrapper">
-                  <app-admin-details-item 
-                    *ngIf="isTransactionNotDepositOrWithdrawal && !editableDestination"
-                    label="End User Address" 
-                    [value]="data?.address">
-                  </app-admin-details-item>
-        
-                  <div *ngIf="isTransactionNotDepositOrWithdrawal && editableDestination" class="form-group">
-                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                      End User Address <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                    </label>
-                    <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
-                      formControlName="address" required>
-                    <div *ngIf="(form.controls.address.touched || submitted) && (form.controls.address.errors?.['required'])"
-                      class="tx-danger">
-                      <small>
-                        Address is required
-                      </small>
-                    </div>
-                  </div>
-        
-                  <div
-                    *ngIf="data?.screeningAnswer === 'GREEN' || data?.screeningAnswer === 'RED'"
-                   class="btn pe-none pd-x-30 mg-t-5" [ngClass]="{'btn-success': data?.screeningAnswer === 'GREEN', 'btn-danger': data?.screeningAnswer === 'RED'}" >
-                    {{data?.screeningAnswer}}
-                  </div>
+        <div class="row">
+          <div class="col-lg-5 col-md-12">
+            <div class="card card-body pd-20 pd-md-40 border shadow-none">
+              <h5 class="card-title mg-b-20">
+                Transaction info
+              </h5>
+            
+              <div class="row">
+                <div class="col-lg-4 col-md-12">
+                  <app-admin-details-item label="ID" [value]="data?.code"></app-admin-details-item>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                  <app-admin-details-item label="Transaction Type" [value]="data?.transactionTypeName"></app-admin-details-item>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                  <app-admin-details-item label="Initiated from" [value]="data?.transactionSourceName"></app-admin-details-item>
                 </div>
               </div>
-              <div class="col-lg-3 col-md-12 mt-3">
-                <app-admin-details-item label="Wallet type" [value]="data?.userModeName"></app-admin-details-item>
-              </div>
-             
-            </div>
-            <div class="row">
-              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
-                <app-admin-details-item label="Country" [value]="data?.user?.country"></app-admin-details-item>
-              </div>
-              <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
-                <app-admin-details-item label="IP Address" [value]="data?.ip"></app-admin-details-item>
-              </div>
-              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <app-admin-details-item label="Customer ID" [value]="data?.accountId"></app-admin-details-item>
-              </div>
-            </div>
 
-            <app-admin-details-item label="Company" [value]="data?.user?.company"></app-admin-details-item> 
+              <div class="row">
+                <div class="col-lg-4 col-md-12">
+                  <app-admin-details-item label="Created At" [value]="data?.created"></app-admin-details-item>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                  <app-admin-details-item label="Completed At" [value]="data?.executed"></app-admin-details-item>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                  <app-admin-details-item label="Last Update At" [value]="data?.updated"></app-admin-details-item>
+                </div>
+              </div>
+            
+              <app-admin-details-item label="From" [value]="data?.sender"></app-admin-details-item>
+              <!-- *ngIf="data?.recipient !== data?.address"  -->
+              <app-admin-details-item label="To" [value]="data?.recipient"></app-admin-details-item>
+            </div>
           </div>
-        </div>
-        <div class="col-lg-2 col-md-12">
-          <div class="card card-body pd-20 pd-md-40 border shadow-none">
-            <h5 class="card-title mg-b-20">
-              KYC
-            </h5>
-            <div class="row">
-              <div class="col-lg-6 col-md-12">
-                <app-admin-details-item label="Account ID" [value]="data?.user?.referralCode"
-                [linkUrl]="'/admin/customers/'+ data?.user?.id" [smartLink]="true">
+          <div class="col-lg-5 col-md-12">
+            <div class="card card-body pd-20 pd-md-40 border shadow-none">
+              <h5 class="card-title mg-b-20">
+                Customer
+              </h5>
+              <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                  <app-admin-details-item label="First Name" [value]="data?.user?.firstName"></app-admin-details-item>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                  <app-admin-details-item label="Last Name" [value]="data?.user?.lastName"></app-admin-details-item>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                  <app-admin-details-item label="Email" [value]="data?.user?.email"></app-admin-details-item>
+                </div>
+              </div>
+              <div class="row">
+            
+                <div class="col-lg-9 col-md-12">
+                  <div class="screening-status-wrapper">
+                    <app-admin-details-item 
+                      *ngIf="isTransactionNotDepositOrWithdrawal && !editableDestination"
+                      label="End User Address" 
+                      [value]="data?.address">
+                    </app-admin-details-item>
+          
+                    <div *ngIf="isTransactionNotDepositOrWithdrawal && editableDestination" class="form-group">
+                      <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                        End User Address <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                      </label>
+                      <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
+                        formControlName="address" required>
+                      <div *ngIf="(form.controls.address.touched || submitted) && (form.controls.address.errors?.['required'])"
+                        class="tx-danger">
+                        <small>
+                          Address is required
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-12 mt-3">
+                  <app-admin-details-item label="Wallet type" [value]="data?.userModeName"></app-admin-details-item>
+                </div>
+              
+              </div>
+              <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                  <app-admin-details-item label="Country" [value]="data?.user?.country"></app-admin-details-item>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                  <app-admin-details-item label="IP Address" [value]="data?.ip"></app-admin-details-item>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                  <app-admin-details-item label="Customer ID" [value]="data?.accountId"></app-admin-details-item>
+                </div>
+              </div>
+
+              <app-admin-details-item label="Company" [value]="data?.user?.company"></app-admin-details-item> 
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-12">
+            <div class="card card-body pd-20 pd-md-40 border shadow-none">
+              <h5 class="card-title mg-b-20">
+                KYC
+              </h5>
+              <div class="row">
+                <div class="col-lg-6 col-md-12">
+                  <app-admin-details-item label="Account ID" [value]="data?.user?.referralCode"
+                  [linkUrl]="'/admin/customers/'+ data?.user?.id" [smartLink]="true">
+                </app-admin-details-item>
+                </div>
+                <div class="col-lg-6 col-md-12">
+                  <app-admin-details-item label="Verification Level" [value]="data?.kycTier"></app-admin-details-item>
+                </div>
+              </div>
+
+              <div class="form-group pe-none" *ngIf="transactionType === TRANSACTION_TYPE.Receive" >
+                <label class="main-content-label tx-11 tx-medium tx-gray-600 d-flex justify-content-between align-items-center">
+                  Docs Check
+                  <div class="transaction-status-dot" [ngClass]="data?.kycStatusColor ?? ''"></div>
+                </label>
+                <input class="form-control" type="text" [value]="kycStatus">
+              </div>
+
+              <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600 d-flex justify-content-between align-items-center">
+                  Docs Check
+                  <div class="transaction-status-dot" [ngClass]="data?.kycStatusColor ?? ''"></div>
+                </label>
+                <ng-select 
+                  [items]="kycStatuses" 
+                  [clearable]=false 
+                  [clearOnBackspace]=false 
+                  bindLabel="name" 
+                  bindValue="id"
+                  formControlName="kycStatus" required>
+                </ng-select>
+              </div>
+      
+              <!-- Account status -->
+              <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Account Status"
+                [value]="accountStatus">
               </app-admin-details-item>
+              <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                  Account Status
+                  <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                </label>
+                <ng-select [items]="accountStatuses" [clearable]=false [clearOnBackspace]=false bindLabel="name"
+                  bindValue="id" formControlName="accountStatus" required>
+                </ng-select>
               </div>
-              <div class="col-lg-6 col-md-12">
-                <app-admin-details-item label="Verification Level" [value]="data?.kycTier"></app-admin-details-item>
-              </div>
-            </div>
-
-            <!-- DocsCheck -->
-            <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Docs Check"
-              [value]="kycStatus">
-            </app-admin-details-item>
-            <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
-              <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                Docs Check
-                <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-              </label>
-              <ng-select [items]="kycStatuses" [clearable]=false [clearOnBackspace]=false bindLabel="name" bindValue="id"
-                formControlName="kycStatus" required>
-              </ng-select>
-            </div>
-    
-            <!-- Account status -->
-            <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Account Status"
-              [value]="accountStatus">
-            </app-admin-details-item>
-            <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
-              <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                Account Status
-                <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-              </label>
-              <ng-select [items]="accountStatuses" [clearable]=false [clearOnBackspace]=false bindLabel="name"
-                bindValue="id" formControlName="accountStatus" required>
-              </ng-select>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-lg-4 col-md-12">
-          <div class="card card-body pd-20 pd-md-40 border shadow-none">
-            <h5 class="card-title mg-b-20">
-             Status
-            </h5>
-            <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status" [value]="transactionStatusName"></app-admin-details-item>
-            
-            <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
-              <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                Transaction status
-                <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-              </label>
-              <ng-select [items]="transactionStatuses" bindLabel="name" bindValue="id" formControlName="transactionStatus"
-                [clearable]=false [clearOnBackspace]=false required>
-              </ng-select>
-            </div>
-    
-            <app-admin-details-item label="Transaction SubStatus" [value]="data?.subStatus"></app-admin-details-item>
-          
-            <div class="form-group pe-none">
-              <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                Answer screening
-              </label>
-              <input class="form-control" type="text" formControlName="screeningAnswer">
-            </div>
-
-            <div class="form-group pe-none">
-              <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                Riscscore screening
-              </label>
-              <input class="form-control" type="number" formControlName="screeningRiskscore">
-            </div>
-            
-            <div class="form-group pe-none">
-              <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                Status screening
-              </label>
-              <input class="form-control" type="text" formControlName="screeningStatus">
-            </div>
-
-          </div>
-        </div>
-        <div class="col-lg-5 col-md-12">
-          <div class="card card-body pd-20 pd-md-40 border shadow-none">
-            <h5 class="card-title mg-b-20">
-              Payment Details
-            </h5>
-            <div *ngIf="form.controls.widgetId.value" class="form-group">
-              <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                Widget ID
-                <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-              </label>
-              <ng-select [items]="widgetOptions$ | async" 
-                bindLabel="title" bindValue="id" 
-                formControlName="widgetId"
-                [searchFn]="widgetSearchFn"
-                [clearable]=false [clearOnBackspace]=false required>
-                <ng-template ng-option-tmp let-item="item">
-                  {{item.title}} <br />
-                  <small>{{item.id}}</small>
-                </ng-template>
-              </ng-select>
-            </div>
-           
-            <div class="row">
-              <div class="col-lg-6 col-md-12">
-                <app-admin-details-item label="Payment Method" [value]="data?.instrumentName"></app-admin-details-item>
-              </div>
-              <div class="col-lg-6 col-md-12">
-                <app-admin-details-item label="Payment Provider" [value]="data?.paymentProvider"></app-admin-details-item>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-8 col-md-12">
-                <app-admin-details-item label="Original Payment Order Id" [value]="data?.originalPaymentOrderId"></app-admin-details-item>
-              </div>
-              <div class="col-lg-4 col-md-12">
-                <app-admin-details-item label="Payment Details" [value]="data?.instrumentDetails"></app-admin-details-item>
-              </div>
-            </div>
-           
-              <!-- Amounts -->
-          <div class="form-group">
-            <div class="row">
-              <div class="col-sm-12">
+        <div class="row">
+          <div class="col-lg-4 col-md-12">
+            <div class="card card-body pd-20 pd-md-40 border shadow-none">
+              <h5 class="card-title mg-b-20 d-flex justify-content-between">
+                Status
+                <div class="transaction-status-dot" [ngClass]="data?.transactionStatusColor ?? ''"></div>
+              </h5>
+              <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status" [value]="transactionStatusName"></app-admin-details-item>
+              
+              <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                  {{amountToSpendTitle}}
+                  Transaction status
                   <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                 </label>
-                <div class="row">
-                  <div class="col-sm-7">
-                    <p *ngIf="transactionType===TRANSACTION_TYPE.Receive" class="pd-t-10">
-                      {{data?.amountToSpend}}
-                    </p>
-                    <input *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-control"
-                      [ngClass]="{'has-error': !form.controls.amountToSpend.valid}" type="text"
-                      formControlName="amountToSpend" required>
-                    <div
-                      *ngIf="(form.controls.amountToSpend.touched || submitted) && (form.controls.amountToSpend.errors?.['required'])"
-                      class="tx-danger">
-                      <small>
-                        {{amountToSpendTitle}} is required
-                      </small>
-                    </div>
-                    <div *ngIf="form.controls.amountToSpend.errors?.['pattern']" class="tx-danger">
-                      <small>
-                        Incorrect number value
-                      </small>
-                    </div>
-                  </div>
-                  <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                    <ng-select [items]="currenciesToSpend" [clearable]=false [clearOnBackspace]=false bindLabel="display"
-                      bindValue="symbol" formControlName="currencyToSpend" required>
-                    </ng-select>
-                  </div>
-                </div>
+                <ng-select [items]="transactionStatuses" bindLabel="name" bindValue="id" formControlName="transactionStatus"
+                  [clearable]=false [clearOnBackspace]=false required>
+                </ng-select>
               </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="row">
-              <div class="col-sm-12">
-                <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                  End-user Amount
-                  <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                </label>
-                <div class="row">
-                  <div class="col-sm-7">
-                    <p class="pd-t-10">
-                      {{data?.amountToReceive}}
-                    </p>
-                  </div>
-                  <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                    <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false
-                      bindLabel="display" bindValue="symbol" formControlName="currencyToReceive" required>
-                    </ng-select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div *ngIf="data?.merchantAmountToReceive" class="form-group">
-            <div class="row">
-              <div class="col-sm-12">
-                <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                  Merchant fee amount
-                  <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                </label>
-                <div class="row">
-                  <div class="col-sm-7">
-                    <p class="pd-t-10">
-                      {{data?.merchantAmountToReceive}}
-                    </p>
-                  </div>
-                  <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                    <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false
-                      bindLabel="display" bindValue="symbol" formControlName="currencyToReceive" required>
-                    </ng-select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Rate -->
-          <div
-            *ngIf="transactionType===TRANSACTION_TYPE.Buy || transactionType===TRANSACTION_TYPE.Sell || transactionType===TRANSACTION_TYPE.Exchange"
-            class="form-group">
-            <label class="main-content-label tx-11 tx-medium tx-gray-600">
-              Exchange rate
-              <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-              <a [routerLink]="null" (click)="updateRate()" style="font-size: 12px;margin-left: 8px;">
-                Set current
-              </a>
-            </label>
-            <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="text"
-              formControlName="rate" required>
-            <div *ngIf="(form.controls.rate.touched || submitted) && (form.controls.rate.errors?.['required'])"
-              class="tx-danger">
-              <small>
-                Rate is required
-              </small>
-            </div>
-            <div *ngIf="form.controls.rate.errors?.['pattern']" class="tx-danger">
-              <small>
-                Incorrect number value
-              </small>
-            </div>
-          </div>
-
-          <!-- Fees -->
-
-          <div class="row">
-            <div class="col-lg-6 col-md-12" *ngIf="transactionType === TRANSACTION_TYPE.Receive" >
-              <app-admin-details-item  [label]="systemFeeTitle"
-              [value]="data?.fees"></app-admin-details-item>
-            </div>
-            <div class="col-lg-6 col-md-12"  *ngIf="data?.feePercent && transactionType===TRANSACTION_TYPE.Buy" >
-              <div class="form-group">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                      Fee, %
-                      <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                    </label>
-                    <div class="row">
-                      <div class="col-sm-7 mg-t-10 mg-sm-t-0">
-                        <input class="form-control" type="number" formControlName="feePercent">
-                      </div>
-                      <div class="col-sm-5">
-                        <p class="pd-t-10 float-end">
-                          ≈ {{feePercentFiat}}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6 col-md-12">
-              <div *ngIf="data?.calcMerchantFeePercent && transactionType===TRANSACTION_TYPE.Buy" class="form-group">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                      Merchant Fee, %
-                      <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                    </label>
-                    <div class="row">
-                      <div class="col-sm-7 mg-t-10 mg-sm-t-0">
-                        <input class="form-control" type="number" formControlName="merchantFeePercent">
-                      </div>
-                      <div class="col-sm-5">
-                        <p class="pd-t-10 float-end">
-                          ≈ {{merchantFeeFiat}}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <app-admin-details-item label="Blockchain fee" [value]="data?.transferFee"></app-admin-details-item>
-          
-          <div class="row">
-            <div class="col-lg-3 col-md-12">
-              <app-admin-details-item label="Payment status" [value]="data?.paymentStatus"></app-admin-details-item>
-            </div>
-            <div class="col-lg-9 col-md-12">
-              <app-admin-details-item label="Payment status reason" [value]="data?.paymentStatusReason"></app-admin-details-item>
-            </div>
-          </div>
-        
-          <app-admin-details-item label="Instrument details" [value]="data?.instrumentDetailsData">
-          </app-admin-details-item>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-12">
-          <div class="card card-body pd-20 pd-md-40 border shadow-none">
-            <h5 class="card-title mg-b-20">
-              Exchange
-            </h5>
-            <app-admin-details-item label="Original Exchange order ID" [value]="data?.exchangeOrderId"></app-admin-details-item>
-            <app-admin-details-item label="Exchanged At" [value]="data?.exchanged"></app-admin-details-item>
+      
+              <app-admin-details-item label="Transaction SubStatus" [value]="data?.subStatus"></app-admin-details-item>
             
-            <div class="form-group" *ngIf="data?.trades.length">
+              <div class="form-group pe-none">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                  Answer screening
+                </label>
+                <input class="form-control" [ngClass]="data?.screeningAnswerColor ?? ''" type="text" formControlName="screeningAnswer">
+              </div>
+
+              <div class="form-group pe-none">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                  Riscscore screening
+                </label>
+                <input class="form-control" type="number" formControlName="screeningRiskscore">
+              </div>
+              
+              <div class="form-group pe-none">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                  Status screening
+                </label>
+                <input class="form-control" type="text" formControlName="screeningStatus">
+              </div>
+
+            </div>
+          </div>
+          <div class="col-lg-5 col-md-12">
+            <div class="card card-body pd-20 pd-md-40 border shadow-none">
+              <h5 class="card-title mg-b-20">
+                Payment Details
+              </h5>
+              <div *ngIf="form.controls.widgetId.value" class="form-group">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                  Widget ID
+                  <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                </label>
+                <ng-select [items]="widgetOptions$ | async" 
+                  bindLabel="title" bindValue="id" 
+                  formControlName="widgetId"
+                  [searchFn]="widgetSearchFn"
+                  [clearable]=false [clearOnBackspace]=false required>
+                  <ng-template ng-option-tmp let-item="item">
+                    {{item.title}} <br />
+                    <small>{{item.id}}</small>
+                  </ng-template>
+                </ng-select>
+              </div>
+            
+              <div class="row">
+                <div class="col-lg-6 col-md-12">
+                  <app-admin-details-item label="Payment Method" [value]="data?.instrumentName"></app-admin-details-item>
+                </div>
+                <div class="col-lg-6 col-md-12">
+                  <app-admin-details-item label="Payment Provider" [value]="data?.paymentProvider"></app-admin-details-item>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-8 col-md-12">
+                  <app-admin-details-item label="Original Payment Order Id" [value]="data?.originalPaymentOrderId"></app-admin-details-item>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                  <app-admin-details-item label="Payment Details" [value]="data?.instrumentDetails"></app-admin-details-item>
+                </div>
+              </div>
+            
+                <!-- Amounts -->
+            <div class="form-group">
               <div class="row">
                 <div class="col-sm-12">
                   <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                    Original exchange trade IDs
+                    {{amountToSpendTitle}}
+                    <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                   </label>
-                  <mat-chip-listbox>
-                    <mat-chip *ngFor="let trade of data?.trades" class="widget-chip" (click)="navigateToKrakenTrades(trade)">
-                      <span class="tx-13">{{trade}}</span>
-                    </mat-chip>
-                  </mat-chip-listbox>
+                  <div class="row">
+                    <div class="col-sm-7">
+                      <p *ngIf="transactionType===TRANSACTION_TYPE.Receive" class="pd-t-10">
+                        {{data?.amountToSpend}}
+                      </p>
+                      <input *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-control"
+                        [ngClass]="{'has-error': !form.controls.amountToSpend.valid}" type="text"
+                        formControlName="amountToSpend" required>
+                      <div
+                        *ngIf="(form.controls.amountToSpend.touched || submitted) && (form.controls.amountToSpend.errors?.['required'])"
+                        class="tx-danger">
+                        <small>
+                          {{amountToSpendTitle}} is required
+                        </small>
+                      </div>
+                      <div *ngIf="form.controls.amountToSpend.errors?.['pattern']" class="tx-danger">
+                        <small>
+                          Incorrect number value
+                        </small>
+                      </div>
+                    </div>
+                    <div class="col-sm-5 mg-t-10 mg-sm-t-0">
+                      <ng-select [items]="currenciesToSpend" [clearable]=false [clearOnBackspace]=false bindLabel="display"
+                        bindValue="symbol" formControlName="currencyToSpend" required>
+                      </ng-select>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <app-admin-details-item label="Exchange state" [value]="data?.exchangeState"></app-admin-details-item>
-            <app-admin-details-item label="Exchange status" [value]="data?.exchangeStatus"></app-admin-details-item>
-            <app-admin-details-item label="Exchange status reason" [value]="data?.exchangeStatusReason"></app-admin-details-item>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-6 col-md-12" *ngIf="data?.benchmarkTransferOrder">
-          <div class="card card-body pd-20 pd-md-40 border shadow-none">
-            <h5 class="card-title mg-b-20">
-              Benchmark Transfer details
-            </h5>
-            <app-admin-details-item label="Original benchmark transfer ID" [value]="data?.benchmarkTransferOriginalOrderId"></app-admin-details-item>
-            <div *ngIf="showBenchmarkTransferHash" class="form-group">
-              <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                Benchmark transfer hash
-              </label>
-              <input class="form-control" type="text" formControlName="benchmarkTransferHash">
-            </div>
-            <app-admin-details-item label="Benchmark transfer blockchain Link" [value]="benchmarkTransferOrderBlockchainLink" [linkUrl]="benchmarkTransferOrderBlockchainLink"></app-admin-details-item>
-            <app-admin-details-item label="Benchmark transfer status" [value]="data?.benchmarkStatus"></app-admin-details-item>
-            <app-admin-details-item label="Benchmark transfer sub-status" [value]="data?.benchmarkSubStatus"></app-admin-details-item>
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-12" *ngIf="data?.transferOrder">
-          <div class="card card-body pd-20 pd-md-40 border shadow-none">
-            <h5 class="card-title mg-b-20">
-              End-user Transfer details
-            </h5>
-            <div *ngIf="showTransferHash" class="form-group">
-              <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                End-user transfer hash
-              </label>
-              <input class="form-control" type="text" formControlName="transferHash">
-            </div>
-            <app-admin-details-item label="End-user transfer blockchain Link" [value]="transferOrderBlockchainLink" [linkUrl]="transferOrderBlockchainLink"></app-admin-details-item>
-            <app-admin-details-item label="End-user transfer status" [value]="data?.transferStatus"></app-admin-details-item>
-            <app-admin-details-item label="End-user transfer sub-status" [value]="data?.transferSubStatus"></app-admin-details-item>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-lg-6 col-md-12">
-          <div class="card card-body pd-20 pd-md-40 border shadow-none" *ngIf="data?.merchantTransferOrder">
-            <h5 class="card-title mg-b-20">
-              Merchant fee transfer details
-            </h5>
-            
-            <app-admin-details-item label="Original merchant fee transfer ID" [value]="data?.merchantTransferOriginalOrderId"></app-admin-details-item>
-            <app-admin-details-item label="Merchant fee transfer hash" [value]="data?.merchantTransferHash"></app-admin-details-item>
-            <app-admin-details-item label="Merchant fee blockchain Link" [value]="data?.merchantFeeTransferOrderBlockchainLink" [linkUrl]="data?.merchantFeeTransferOrderBlockchainLink"></app-admin-details-item>
-            <app-admin-details-item label="Merchant fee transfer status" [value]="data?.merchantTransferStatus"></app-admin-details-item>
-            <app-admin-details-item label="Merchant fee transfer sub-status" [value]="data?.merchantTransferSubStatus"></app-admin-details-item>
-          </div>
-        </div>
-        <div class="col-lg-6 col-md-12">
-          <div class="card card-body pd-20 pd-md-40 border shadow-none">
             <div class="form-group">
-              <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                Actions
-              </label>
-              <textarea class="form-control" style="resize: none;" placeholder="Comment" rows="3"
-                formControlName="comment"></textarea>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <div style="display: flex; justify-content: flex-start;">
-                <button *ngIf="permission>1 && removable && data?.canBeCancelled == true" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
-                  (click)="onDelete(delete_confirm_content)">
-                  <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
-                    aria-hidden="true"></span>
-                  Cancel
-                </button>
-                <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && !notPaidStatuses.includes(transactionStatus)"
-                  class="btn btn-success pd-x-30 me-2 mg-t-5" type="button"
-                  (click)="onPaid(update_confirm_content)">
-                  <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-                    aria-hidden="true"></span>
-                  Paid
-                </button>
-                <button *ngIf="permission>1 && exchangeStatuses.includes(transactionStatus)"
-                  class="btn btn-info pd-x-30 me-2 mg-t-5" type="button"
-                  (click)="onExchange(update_confirm_content)">
-                  <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-                    aria-hidden="true"></span>
-                  Exchange
-                </button>
-                <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && data?.canBeReviewed == true"
-                  class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
-                  (click)="onDeclined(update_confirm_content)">
-                  <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-                    aria-hidden="true"></span>
-                  Decline Payment
-                </button>
-      
-                <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && data?.hasToBeRefunded == true"
-                  class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
-                  (click)="onRefunded(update_confirm_content)">
-                  <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-                    aria-hidden="true"></span>
-                  Refund
-                </button>
+              <div class="row">
+                <div class="col-sm-12">
+                  <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                    End-user Amount
+                    <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                  </label>
+                  <div class="row">
+                    <div class="col-sm-7">
+                      <p class="pd-t-10">
+                        {{data?.amountToReceive}}
+                      </p>
+                    </div>
+                    <div class="col-sm-5 mg-t-10 mg-sm-t-0">
+                      <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false
+                        bindLabel="display" bindValue="symbol" formControlName="currencyToReceive" required>
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div style="display: flex; justify-content: flex-end;">
-                <button *ngIf="permission > 1"
-                  class="btn btn-primary pd-x-30 me-2 mg-t-5">
-                  <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-                    aria-hidden="true"></span>
-                  Save
-                </button>
-                <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
-                  Close
-                </button>
+            </div>
+
+            <div *ngIf="data?.merchantAmountToReceive" class="form-group">
+              <div class="row">
+                <div class="col-sm-12">
+                  <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                    Merchant fee amount
+                    <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                  </label>
+                  <div class="row">
+                    <div class="col-sm-7">
+                      <p class="pd-t-10">
+                        {{data?.merchantAmountToReceive}}
+                      </p>
+                    </div>
+                    <div class="col-sm-5 mg-t-10 mg-sm-t-0">
+                      <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false
+                        bindLabel="display" bindValue="symbol" formControlName="currencyToReceive" required>
+                      </ng-select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Rate -->
+            <div
+              *ngIf="transactionType===TRANSACTION_TYPE.Buy || transactionType===TRANSACTION_TYPE.Sell || transactionType===TRANSACTION_TYPE.Exchange"
+              class="form-group">
+              <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                Exchange rate
+                <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                <a [routerLink]="null" (click)="updateRate()" style="font-size: 12px;margin-left: 8px;">
+                  Set current
+                </a>
+              </label>
+              <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="text"
+                formControlName="rate" required>
+              <div *ngIf="(form.controls.rate.touched || submitted) && (form.controls.rate.errors?.['required'])"
+                class="tx-danger">
+                <small>
+                  Rate is required
+                </small>
+              </div>
+              <div *ngIf="form.controls.rate.errors?.['pattern']" class="tx-danger">
+                <small>
+                  Incorrect number value
+                </small>
+              </div>
+            </div>
+
+            <!-- Fees -->
+
+            <div class="row">
+              <div class="col-lg-6 col-md-12" *ngIf="transactionType === TRANSACTION_TYPE.Receive" >
+                <app-admin-details-item  [label]="systemFeeTitle"
+                [value]="data?.fees"></app-admin-details-item>
+              </div>
+              <div class="col-lg-6 col-md-12"  *ngIf="data?.feePercent && transactionType===TRANSACTION_TYPE.Buy" >
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                        Fee, %
+                        <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                      </label>
+                      <div class="row">
+                        <div class="col-sm-7 mg-t-10 mg-sm-t-0">
+                          <input class="form-control" type="number" formControlName="feePercent">
+                        </div>
+                        <div class="col-sm-5">
+                          <p class="pd-t-10 float-end">
+                            ≈ {{feePercentFiat}}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 col-md-12">
+                <div *ngIf="data?.calcMerchantFeePercent && transactionType===TRANSACTION_TYPE.Buy" class="form-group">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                        Merchant Fee, %
+                        <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
+                      </label>
+                      <div class="row">
+                        <div class="col-sm-7 mg-t-10 mg-sm-t-0">
+                          <input class="form-control" type="number" formControlName="merchantFeePercent">
+                        </div>
+                        <div class="col-sm-5">
+                          <p class="pd-t-10 float-end">
+                            ≈ {{merchantFeeFiat}}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <app-admin-details-item label="Blockchain fee" [value]="data?.transferFee"></app-admin-details-item>
+            
+            <div class="row">
+              <div class="col-lg-3 col-md-12">
+                <app-admin-details-item label="Payment status" [value]="data?.paymentStatus"></app-admin-details-item>
+              </div>
+              <div class="col-lg-9 col-md-12">
+                <app-admin-details-item label="Payment status reason" [value]="data?.paymentStatusReason"></app-admin-details-item>
+              </div>
+            </div>
+          
+            <app-admin-details-item label="Instrument details" [value]="data?.instrumentDetailsData">
+            </app-admin-details-item>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-12" *ngIf="data?.exchangeOrderId">
+            <div class="card card-body pd-20 pd-md-40 border shadow-none">
+              <h5 class="card-title mg-b-20">
+                Exchange
+              </h5>
+              <app-admin-details-item label="Original Exchange order ID" [value]="data?.exchangeOrderId"></app-admin-details-item>
+              <app-admin-details-item label="Exchanged At" [value]="data?.exchanged"></app-admin-details-item>
+              
+              <div class="form-group" *ngIf="data?.trades.length">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                      Original exchange trade IDs
+                    </label>
+                    <mat-chip-listbox>
+                      <mat-chip *ngFor="let trade of data?.trades" class="widget-chip" (click)="navigateToKrakenTrades(trade)">
+                        <span class="tx-13">{{trade}}</span>
+                      </mat-chip>
+                    </mat-chip-listbox>
+                  </div>
+                </div>
+              </div>
+
+              <app-admin-details-item label="Exchange state" [value]="data?.exchangeState"></app-admin-details-item>
+              <app-admin-details-item label="Exchange status" [value]="data?.exchangeStatus"></app-admin-details-item>
+              <app-admin-details-item label="Exchange status reason" [value]="data?.exchangeStatusReason"></app-admin-details-item>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6 col-md-12" *ngIf="data?.benchmarkTransferOrder">
+            <div class="card card-body pd-20 pd-md-40 border shadow-none">
+              <h5 class="card-title mg-b-20">
+                Benchmark Transfer details
+              </h5>
+              <app-admin-details-item label="Original benchmark transfer ID" [value]="data?.benchmarkTransferOriginalOrderId"></app-admin-details-item>
+              <div *ngIf="showBenchmarkTransferHash" class="form-group">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                  Benchmark transfer hash
+                </label>
+                <input class="form-control" type="text" formControlName="benchmarkTransferHash">
+              </div>
+              <app-admin-details-item label="Benchmark transfer blockchain Link" [value]="benchmarkTransferOrderBlockchainLink" [linkUrl]="benchmarkTransferOrderBlockchainLink"></app-admin-details-item>
+              <app-admin-details-item label="Benchmark transfer status" [value]="data?.benchmarkStatus"></app-admin-details-item>
+              <app-admin-details-item label="Benchmark transfer sub-status" [value]="data?.benchmarkSubStatus"></app-admin-details-item>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12" *ngIf="data?.transferOrder">
+            <div class="card card-body pd-20 pd-md-40 border shadow-none">
+              <h5 class="card-title mg-b-20">
+                End-user Transfer details
+              </h5>
+              <app-admin-details-item label="Original End-user transfer ID" [value]="data?.transferOriginalOrderId"></app-admin-details-item>
+              <div *ngIf="showTransferHash" class="form-group">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                  End-user transfer hash
+                </label>
+                <input class="form-control" type="text" formControlName="transferHash">
+              </div>
+              <app-admin-details-item label="End-user transfer blockchain Link" [value]="transferOrderBlockchainLink" [linkUrl]="transferOrderBlockchainLink"></app-admin-details-item>
+              <app-admin-details-item label="End-user transfer status" [value]="data?.transferStatus"></app-admin-details-item>
+              <app-admin-details-item label="End-user transfer sub-status" [value]="data?.transferSubStatus"></app-admin-details-item>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6 col-md-12">
+            <div class="card card-body pd-20 pd-md-40 border shadow-none" *ngIf="data?.merchantTransferOrder">
+              <h5 class="card-title mg-b-20">
+                Merchant fee transfer details
+              </h5>
+              
+              <app-admin-details-item label="Original merchant fee transfer ID" [value]="data?.merchantTransferOriginalOrderId"></app-admin-details-item>
+              <app-admin-details-item label="Merchant fee transfer hash" [value]="data?.merchantTransferHash"></app-admin-details-item>
+              <app-admin-details-item label="Merchant fee blockchain Link" [value]="data?.merchantFeeTransferOrderBlockchainLink" [linkUrl]="data?.merchantFeeTransferOrderBlockchainLink"></app-admin-details-item>
+              <app-admin-details-item label="Merchant fee transfer status" [value]="data?.merchantTransferStatus"></app-admin-details-item>
+              <app-admin-details-item label="Merchant fee transfer sub-status" [value]="data?.merchantTransferSubStatus"></app-admin-details-item>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12">
+            <div class="card card-body pd-20 pd-md-40 border shadow-none">
+              <div class="form-group">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                  Actions
+                </label>
+                <textarea class="form-control" style="resize: none;" placeholder="Comment" rows="3"
+                  formControlName="comment"></textarea>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <div style="display: flex; justify-content: flex-start;">
+                  <button *ngIf="permission>1 && removable && data?.canBeCancelled == true" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
+                    (click)="onDelete(delete_confirm_content)">
+                    <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span>
+                    Cancel
+                  </button>
+                  <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && !notPaidStatuses.includes(transactionStatus)"
+                    class="btn btn-success pd-x-30 me-2 mg-t-5" type="button"
+                    (click)="onPaid(update_confirm_content)">
+                    <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span>
+                    Paid
+                  </button>
+                  <button *ngIf="permission>1 && exchangeStatuses.includes(transactionStatus)"
+                    class="btn btn-info pd-x-30 me-2 mg-t-5" type="button"
+                    (click)="onExchange(update_confirm_content)">
+                    <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span>
+                    Exchange
+                  </button>
+                  <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && data?.canBeReviewed == true"
+                    class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
+                    (click)="onDeclined(update_confirm_content)">
+                    <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span>
+                    Decline Payment
+                  </button>
+        
+                  <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && data?.hasToBeRefunded == true"
+                    class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
+                    (click)="onRefunded(update_confirm_content)">
+                    <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span>
+                    Refund
+                  </button>
+                </div>
+                <div style="display: flex; justify-content: flex-end;">
+                  <button *ngIf="permission > 1"
+                    class="btn btn-primary pd-x-30 me-2 mg-t-5">
+                    <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
+                      aria-hidden="true"></span>
+                    Save
+                  </button>
+                  <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-        
+          
         <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
           <h4 class="card-title2 mg-b-20 color_brown">
             {{errorMessage}}
           </h4>
         </div>
       </form>
+      <ng-container *ngIf="isTransactionRefreshing">
+        <app-spinner></app-spinner>
+      </ng-container>
     </ng-template>
   </mat-tab>
 
-  <mat-tab *ngIf="data?.screeningAnswer === 'GREEN' || data?.screeningAnswer === 'RED'" label="Transaction screening info">
+  <mat-tab *ngIf="data?.screeningAnswer && data?.screeningData?.paymentChecks?.length > 0" label="Transaction screening info">
     <ng-template matTabContent>
      <app-raw-json [data]="scriningData"></app-raw-json>
      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">

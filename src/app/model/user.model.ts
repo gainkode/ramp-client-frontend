@@ -15,6 +15,13 @@ import { CommonTargetValue } from './common.model';
 import { DatePipe } from '@angular/common';
 import { getCryptoSymbol } from '../utils/utils';
 
+export enum KycAnswer {
+	GREEN = 'GREEN',
+	RED = 'RED',
+	ERROR = 'ERROR',
+	YELLOW = 'YELLOW',
+}
+
 export class GenderView {
 	id!: Gender;
 	name = '';
@@ -71,7 +78,8 @@ export class UserItem {
 	kycPrivateComment = '';
 	kycReviewRejectedType = '';
 	kycReviewRejectedLabels: string[] = [];
-	kycReviewResult = '';
+	kycReviewResult!: KycAnswer;
+	kycReviewResultColor = '';
 	kycStatusUpdateRequired = 'No';
 	userType: UserTypeView | null = null;
 	userMode: UserModeView | null = null;
@@ -277,7 +285,8 @@ export class UserItem {
 				const kycReviewResultData = JSON.parse(data.kycReviewResult ?? '');
 				if (kycReviewResultData !== null) {
 					if (this.kycProvider === KycProvider.SumSub) {
-						this.kycReviewResult = kycReviewResultData.reviewAnswer ?? '';
+						this.kycReviewResult = <KycAnswer>kycReviewResultData.reviewAnswer ?? undefined;
+						this.kycReviewResultColor = this.getKycAnswerColor(this.kycReviewResult);
 					} else if (this.kycProvider === KycProvider.Shufti) {
 						this.kycReviewResult = kycReviewResultData.event ?? '';
 					} else if (this.kycProvider === KycProvider.Au10tix) {
@@ -305,6 +314,22 @@ export class UserItem {
 				? (data.defaultCryptoCurrency as string)
 				: '';
 		}
+	}
+
+	private getKycAnswerColor(screeningAnswer: KycAnswer | undefined): string {
+		if (screeningAnswer === KycAnswer.GREEN) {
+			return 'input-success';
+		}
+
+		if (screeningAnswer === KycAnswer.RED) {
+			return 'input-error';
+		}
+
+		if (screeningAnswer === KycAnswer.ERROR || screeningAnswer === KycAnswer.YELLOW) {
+			return 'input-warning';
+		}
+
+		return '';
 	}
 
 	private getTransactionResult(val: number, count: number): string {

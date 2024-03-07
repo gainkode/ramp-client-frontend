@@ -47,6 +47,8 @@ import { UserItem } from './user.model';
 export enum ScreeningAnswer {
 	GREEN = 'GREEN',
 	RED = 'RED',
+	ERROR = 'ERROR',
+	YELLOW = 'YELLOW',
 }
 
 export class TransactionItemFull {
@@ -77,7 +79,9 @@ export class TransactionItemFull {
 	originalPaymentOrderId = '';
 	paymentOrderId = '';
 	transferOrderHash = '';
-	screeningAnswer: ScreeningAnswer;
+	screeningAnswer!: ScreeningAnswer;
+	screeningAnswers = ScreeningAnswer;
+	screeningAnswerColor = '';
 	screeningRiskscore = 0;
 	screeningStatus = '';
 	screeningData: Record<string, any> = {};
@@ -106,6 +110,7 @@ export class TransactionItemFull {
 	accountStatusValue = AccountStatus.Closed;
 	kycStatus = '';
 	kycStatusValue = TransactionKycStatus.KycWaiting;
+	kycStatusColor: string;
 	kycTier = '';
 	widgetId = '';
 	widgetName = '';
@@ -219,6 +224,8 @@ export class TransactionItemFull {
 			this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
 			this.transferOrderHash = data.transferOrder?.transferHash ?? '';
 			this.screeningAnswer = <ScreeningAnswer>data?.screeningAnswer ?? undefined;
+			this.screeningAnswerColor = this.getScreeningAnswerColor(this.screeningAnswer);
+
 			this.screeningRiskscore = data?.screeningRiskscore ?? 0;
 			this.screeningStatus = data?.screeningStatus ?? '';
 			this.screeningData = JSON.parse(data?.screeningData ?? '{}');
@@ -261,6 +268,9 @@ export class TransactionItemFull {
 			this.kycStatusValue = kycStatus
 				? kycStatus.id
 				: TransactionKycStatus.KycWaiting;
+			
+			this.kycStatusColor = this.getKysStatusColor(this.kycStatusValue);
+
 			this.kycTier = data.userTier?.name ?? '';
 			this.status = data.status;
 			this.subStatus = data.subStatus ?? '';
@@ -389,6 +399,38 @@ export class TransactionItemFull {
 		}
 	}
 
+	getKysStatusColor(kycStatus: TransactionKycStatus | undefined): string {
+		if (kycStatus === TransactionKycStatus.KycApproved) {
+			return 'input-success';
+		}
+
+		if (kycStatus === TransactionKycStatus.KycRejected) {
+			return 'input-error';
+		}
+
+		if (kycStatus === TransactionKycStatus.KycWaiting) {
+			return 'input-warning';
+		}
+
+		return '';
+	}
+
+	getScreeningAnswerColor(screeningAnswer: ScreeningAnswer | undefined): string {
+		if (screeningAnswer === this.screeningAnswers.GREEN) {
+			return 'input-success';
+		}
+
+		if (screeningAnswer === this.screeningAnswers.RED) {
+			return 'input-error';
+		}
+
+		if (screeningAnswer === this.screeningAnswers.ERROR || screeningAnswer === this.screeningAnswers.YELLOW) {
+			return 'input-warning';
+		}
+
+		return '';
+	}
+
 	getInstrumentDetails(data: string): string[] {
 		const result: string[] = [];
 		try {
@@ -471,6 +513,10 @@ export class TransactionItemFull {
 			color = 'orange';
 		}
 		return color;
+	}
+
+	get transactionStatusColor(): string {
+		return `transaction-status-dot--${this.getTransactionStatusColor()}`;
 	}
 
 	get transactionListSelectorColumnStyle(): string[] {

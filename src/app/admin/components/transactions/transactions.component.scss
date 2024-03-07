@@ -60,3 +60,16 @@
 .ng-pagination-nav-icons {
   margin-top: 12px;
 }
+
+.input-success {
+  background-color: rgba(11, 156, 49, .2);
+  color: rgba(11, 156, 49, .8);
+}
+.input-warning {
+  background-color: #ffffa9;
+  color: rgba(0, 0, 0, .5);
+}
+.input-error {
+  background-color: rgba(255, 0, 0, .2);
+  color: rgba(255, 0, 0, .5);
+}

@@ -147,7 +147,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   });
   widgetOptions$: Observable<CommonTargetValue[]>;
 
-	get isMerchant() {
+	get isMerchant(): boolean {
 		return this.userData?.userType.id === UserType.Merchant;
 	}
   constructor(
