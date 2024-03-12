@@ -1,0 +1,26 @@
+<mat-card>
+    <mat-card-header class="pd-15-f">
+      <mat-card-title >Transaction Refund</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form"> 
+        <mat-form-field appearance="outline">
+            <mat-label>Amount to sell</mat-label>
+            <input matInput type="text" formControlName="amountToSell"/>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Source Wallet</mat-label>
+            <input matInput type="text" formControlName="sourceWallet"/>
+          </mat-form-field>
+        </form>
+    </mat-card-content>
+  
+    <mat-card-actions align="end">
+      <button
+        [disabled]="!form.valid"
+        type="button"
+        class="btn btn-primary me-sm-4 mb-sm-4" (click)="onSubmit()">
+        Proceed
+      </button>
+    </mat-card-actions>
+</mat-card>

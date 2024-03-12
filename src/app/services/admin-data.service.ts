@@ -857,6 +857,7 @@ const GET_TRANSACTIONS = gql`
           screeningRiskscore
           screeningStatus
           screeningData
+          sourceVaultId
         }
         merchantTransferOrder {
           amount

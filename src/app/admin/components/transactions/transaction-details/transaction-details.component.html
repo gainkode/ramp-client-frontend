@@ -1,7 +1,7 @@
 <mat-tab-group mat-stretch-tabs="false" [selectedIndex]="selectedTabIndex">
   <mat-tab label="Transaction info">
     <ng-template matTabContent>
-      <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(update_confirm_content)">
+      <form [formGroup]="form" >
         <div class="d-flex">
           <button *ngIf="permission > 0" class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="flagValue()">
             <span *ngIf="flagInProgress" class="spinner-border spinner-border-sm" role="status"
@@ -68,7 +68,7 @@
               </div>
               <div class="row">
             
-                <div class="col-lg-9 col-md-12">
+                <div class="col-lg-9 col-md-12" *ngIf="!isSellTransactionType">
                   <div class="screening-status-wrapper">
                     <app-admin-details-item 
                       *ngIf="isTransactionNotDepositOrWithdrawal && !editableDestination"
@@ -127,7 +127,7 @@
                 </div>
               </div>
 
-              <div class="form-group pe-none" *ngIf="transactionType === TRANSACTION_TYPE.Receive" >
+              <div class="form-group pe-none" *ngIf="isReceiveTransactionType">
                 <label class="main-content-label tx-11 tx-medium tx-gray-600 d-flex justify-content-between align-items-center">
                   Docs Check
                   <div class="transaction-status-dot" [ngClass]="data?.kycStatusColor ?? ''"></div>
@@ -135,7 +135,7 @@
                 <input class="form-control" type="text" [value]="kycStatus">
               </div>
 
-              <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+              <div *ngIf="!isReceiveTransactionType" class="form-group">
                 <label class="main-content-label tx-11 tx-medium tx-gray-600 d-flex justify-content-between align-items-center">
                   Docs Check
                   <div class="transaction-status-dot" [ngClass]="data?.kycStatusColor ?? ''"></div>
@@ -151,10 +151,9 @@
               </div>
       
               <!-- Account status -->
-              <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Account Status"
-                [value]="accountStatus">
-              </app-admin-details-item>
-              <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+              <app-admin-details-item *ngIf="isReceiveTransactionType" label="Account Status"[value]="accountStatus"></app-admin-details-item>
+
+              <div *ngIf="!isReceiveTransactionType" class="form-group">
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">
                   Account Status
                   <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
@@ -174,9 +173,9 @@
                 Status
                 <div class="transaction-status-dot" [ngClass]="data?.transactionStatusColor ?? ''"></div>
               </h5>
-              <app-admin-details-item *ngIf="transactionType===TRANSACTION_TYPE.Receive" label="Transaction status" [value]="transactionStatusName"></app-admin-details-item>
+              <app-admin-details-item *ngIf="isReceiveTransactionType" label="Transaction status" [value]="transactionStatusName"></app-admin-details-item>
               
-              <div *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-group">
+              <div *ngIf="!isReceiveTransactionType" class="form-group">
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">
                   Transaction status
                   <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
@@ -233,7 +232,7 @@
                 </ng-select>
               </div>
             
-              <div class="row">
+              <div class="row" *ngIf="!isSellTransactionType">
                 <div class="col-lg-6 col-md-12">
                   <app-admin-details-item label="Payment Method" [value]="data?.instrumentName"></app-admin-details-item>
                 </div>
@@ -260,10 +259,10 @@
                   </label>
                   <div class="row">
                     <div class="col-sm-7">
-                      <p *ngIf="transactionType===TRANSACTION_TYPE.Receive" class="pd-t-10">
+                      <p *ngIf="isReceiveTransactionType" class="pd-t-10">
                         {{data?.amountToSpend}}
                       </p>
-                      <input *ngIf="transactionType!==TRANSACTION_TYPE.Receive" class="form-control"
+                      <input *ngIf="!isReceiveTransactionType" class="form-control"
                         [ngClass]="{'has-error': !form.controls.amountToSpend.valid}" type="text"
                         formControlName="amountToSpend" required>
                       <div
@@ -334,14 +333,14 @@
                 </div>
               </div>
             </div>
-            <!-- Rate -->
+
             <div
-              *ngIf="transactionType===TRANSACTION_TYPE.Buy || transactionType===TRANSACTION_TYPE.Sell || transactionType===TRANSACTION_TYPE.Exchange"
+              *ngIf="transactionType===TRANSACTION_TYPE.Buy || isSellTransactionType || transactionType===TRANSACTION_TYPE.Exchange"
               class="form-group">
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
                 Exchange rate
                 <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                <a [routerLink]="null" (click)="updateRate()" style="font-size: 12px;margin-left: 8px;">
+                <a [routerLink]="null" (click)="updateRate()" class="tx-12-f ml-3">
                   Set current
                 </a>
               </label>
@@ -363,7 +362,7 @@
             <!-- Fees -->
 
             <div class="row">
-              <div class="col-lg-6 col-md-12" *ngIf="transactionType === TRANSACTION_TYPE.Receive" >
+              <div class="col-lg-6 col-md-12" *ngIf="isReceiveTransactionType" >
                 <app-admin-details-item  [label]="systemFeeTitle"
                 [value]="data?.fees"></app-admin-details-item>
               </div>
@@ -424,8 +423,9 @@
               </div>
             </div>
           
-            <app-admin-details-item label="Instrument details" [value]="data?.instrumentDetailsData">
-            </app-admin-details-item>
+            <app-admin-details-item *ngIf="isSellTransactionType" label="Interim wallet" [value]="data?.interimWallet"></app-admin-details-item>
+            <app-admin-details-item *ngIf="isSellTransactionType" label="Source wallet" [value]="data?.sourceWallet"></app-admin-details-item>
+
             </div>
           </div>
           <div class="col-lg-3 col-md-12" *ngIf="data?.exchangeOrderId">
@@ -465,7 +465,7 @@
                 Benchmark Transfer details
               </h5>
               <app-admin-details-item label="Original benchmark transfer ID" [value]="data?.benchmarkTransferOriginalOrderId"></app-admin-details-item>
-              <div *ngIf="showBenchmarkTransferHash" class="form-group">
+              <div *ngIf="data?.benchmarkTransferOrderId" class="form-group">
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">
                   Benchmark transfer hash
                 </label>
@@ -482,7 +482,7 @@
                 End-user Transfer details
               </h5>
               <app-admin-details-item label="Original End-user transfer ID" [value]="data?.transferOriginalOrderId"></app-admin-details-item>
-              <div *ngIf="showTransferHash" class="form-group">
+              <div *ngIf="data?.transferOrderId" class="form-group">
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">
                   End-user transfer hash
                 </label>
@@ -491,6 +491,14 @@
               <app-admin-details-item label="End-user transfer blockchain Link" [value]="transferOrderBlockchainLink" [linkUrl]="transferOrderBlockchainLink"></app-admin-details-item>
               <app-admin-details-item label="End-user transfer status" [value]="data?.transferStatus"></app-admin-details-item>
               <app-admin-details-item label="End-user transfer sub-status" [value]="data?.transferSubStatus"></app-admin-details-item>
+              <div class="row" *ngIf="isSellTransactionType">
+                <div class="col-lg-6 col-md-12">
+                  <app-admin-details-item label="Payment Method" [value]="data?.instrumentName"></app-admin-details-item>
+                </div>
+                <div class="col-lg-6 col-md-12">
+                  <app-admin-details-item label="Payment Provider" [value]="data?.paymentProvider"></app-admin-details-item>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -515,32 +523,35 @@
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">
                   Actions
                 </label>
-                <textarea class="form-control" style="resize: none;" placeholder="Comment" rows="3"
+                
+                <textarea class="form-control textarea-resize-none" placeholder="Comment" rows="3"
                   formControlName="comment"></textarea>
               </div>
-              <div style="display: flex; justify-content: space-between;">
-                <div style="display: flex; justify-content: flex-start;">
-                  <button *ngIf="permission>1 && removable && data?.canBeCancelled == true" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
+              <div class="d-flex justify-content-between" *ngIf="permission > 1">
+                <div class="d-flex">
+                  <button  type="button" 
+                    *ngIf="removable && data?.canBeCancelled" 
+                    class="btn btn-danger pd-x-30 me-2 mg-t-5"
                     (click)="onDelete(delete_confirm_content)">
                     <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Cancel
                   </button>
-                  <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && !notPaidStatuses.includes(transactionStatus)"
+                  <button *ngIf="!isReceiveTransactionType && !notPaidStatuses.includes(transactionStatus)"
                     class="btn btn-success pd-x-30 me-2 mg-t-5" type="button"
                     (click)="onPaid(update_confirm_content)">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Paid
                   </button>
-                  <button *ngIf="permission>1 && exchangeStatuses.includes(transactionStatus)"
+                  <button *ngIf="exchangeStatuses.includes(transactionStatus)"
                     class="btn btn-info pd-x-30 me-2 mg-t-5" type="button"
                     (click)="onExchange(update_confirm_content)">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Exchange
                   </button>
-                  <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && data?.canBeReviewed == true"
+                  <button *ngIf="!isReceiveTransactionType && data?.canBeReviewed"
                     class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
                     (click)="onDeclined(update_confirm_content)">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
@@ -548,7 +559,7 @@
                     Decline Payment
                   </button>
         
-                  <button *ngIf="permission>1 && transactionType!==TRANSACTION_TYPE.Receive && data?.hasToBeRefunded == true"
+                  <button *ngIf="!isReceiveTransactionType && data?.hasToBeRefunded"
                     class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
                     (click)="onRefunded(update_confirm_content)">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
@@ -556,14 +567,13 @@
                     Refund
                   </button>
                 </div>
-                <div style="display: flex; justify-content: flex-end;">
-                  <button *ngIf="permission > 1"
-                    class="btn btn-primary pd-x-30 me-2 mg-t-5">
+                <div class="d-flex justify-content-end">
+                  <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit(update_confirm_content)">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Save
                   </button>
-                  <button *ngIf="permission>1" class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+                  <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
                     Close
                   </button>
                 </div>
@@ -594,6 +604,7 @@
     </div>
     </ng-template>
   </mat-tab>
+  
   <mat-tab *ngIf="data?.widgetUserParams" label="Widget Params">
     <ng-template matTabContent>
      <app-raw-json [data]="data?.widgetUserParams"></app-raw-json>
@@ -609,14 +620,14 @@
     </button>
   </div>
   <div class="modal-body">
-    <h4 style="text-align: center;">
+    <h4 class="text-center">
       You are going to cancel selected transaction. Confirm operation.
     </h4>
-    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+    <div class="d-flex justify-content-center align-items-center">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmDelete()">
+      <button type="button" class="btn btn-danger pd-x-30 mg-t-5" (click)="onConfirmDelete()">
         Confirm
       </button>
     </div>
@@ -631,14 +642,14 @@
     </button>
   </div>
   <div class="modal-body">
-    <h4 style="text-align: center;">
+    <h4 class="text-center">
       You are going to update transaction data. Confirm operation.
     </h4>
-    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+    <div class="d-flex justify-content-center align-items-center">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button class="btn btn-primary pd-x-30 mg-t-5"
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" 
         (click)="onConfirmUpdate(status_confirm_content, amount_confirm_content, originalorderid_confirm_content)">
         Confirm
       </button>
@@ -658,11 +669,10 @@
       Original order Id
       <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
     </label>
-    <input class="form-control" type="text"
-    [(ngModel)]="originalOrderId" required>
+    <input class="form-control" type="text" [(ngModel)]="originalOrderId" required>
 
-    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-      <button class="btn btn-primary pd-x-30 mg-t-5" [disabled]="!originalOrderId" (click)="onChangeOriginaOrderlIdConfirm()">
+    <div class="d-flex justify-content-center align-items-center">
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" [disabled]="!originalOrderId" (click)="onChangeOriginaOrderlIdConfirm()">
         Save
       </button>
     </div>
@@ -677,15 +687,14 @@
     </button>
   </div>
   <div class="modal-body">
-    <h4 style="text-align: center;">
+    <h4 class="text-center">
       You are going to change the transaction status. Should we restart the transaction handling after saving?
     </h4>
-    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
-      <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
-        (click)="onChangeTransactionStatusConfirm(0)">
+    <div class="d-flex justify-content-center align-items-center">
+      <button type="button" class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" (click)="onChangeTransactionStatusConfirm(0)">
         No
       </button>
-      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionStatusConfirm(1)">
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionStatusConfirm(1)">
         Yes
       </button>
     </div>
@@ -700,15 +709,15 @@
     </button>
   </div>
   <div class="modal-body">
-    <h4 style="text-align: center;">
+    <h4 class="text-center">
       You are going to change the transaction amounts. Should we recalculate transaction after saving?
     </h4>
-    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+    <div class="d-flex justify-content-center align-items-center">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
         (click)="onChangeTransactionAmountConfirm(0)">
         No
       </button>
-      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionAmountConfirm(1)">
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionAmountConfirm(1)">
         Yes
       </button>
     </div>

@@ -13,6 +13,8 @@ import { ExchangeRateService } from 'services/rate.service';
 import { getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
+import { MatDialog } from '@angular/material/dialog';
+import { TransactionRefundModalComponent } from '../modals/transaction-refund-modal/transaction-refund-modal.component';
 
 @Component({
 	selector: 'app-admin-transaction-details',
@@ -24,14 +26,17 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   @Input() isScreeningInfo = false;
   @Input() set transaction(val: TransactionItemFull | undefined) {
   	this.setFormData(val);
-  	this.pStatusHash = val?.statusHash ?? 0;
+	this.setCurrencies(this.pCurrencies);
+  	
+	this.pStatusHash = val?.statusHash ?? 0;
   	this.pAmountHash = val?.amountHash ?? 0;
   	this.pDefaultRate = val?.rate ?? 0;
-  	this.setCurrencies(this.pCurrencies);
+
   	if (val?.type === TransactionType.Sell) {
   		this.amountToSpendTitle = 'Amount To Sell';
   		this.currencyToSpendTitle = 'Currency To Sell';
   	}
+
   	this.systemFeeTitle = `Fee, ${val?.currencyFiat}`;
   }
   @Input() set userStatuses(list: TransactionStatusDescriptorMap[]) {
@@ -42,6 +47,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			name: statusName
   		} as TransactionStatusView;
   	});
+
   	if (this.transactionStatus) {
   		this.transactionStatusName = this.transactionStatuses.find(x => x.id === this.transactionStatus)?.name ?? '';
   	}
@@ -97,17 +103,16 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   notPaidStatuses = [TransactionStatus.Completed, TransactionStatus.Paid, TransactionStatus.Exchanged, TransactionStatus.Exchanging, TransactionStatus.TransferBenchmarkWaiting];
   exchangeStatuses = [TransactionStatus.Paid];
   isTransactionNotDepositOrWithdrawal = false;
+  isSellTransactionType = false;
+  isReceiveTransactionType = false;
   kycStatus = '';
   accountStatus = '';
-  showTransferHash = false;
-  showBenchmarkTransferHash = false;
   transferOrderBlockchainLink = '';
   benchmarkTransferOrderBlockchainLink = '';
   amountToSpendTitle = 'Amount To Buy';
   currencyToSpendTitle = 'Currency To Buy';
   systemFeeTitle = 'Fee, EUR';
   editableDestination = false;
-  destroyed = false;
   flag = false;
   transactionTypeSetting: TransactionTypeSetting = undefined;
   originalOrderId = undefined;
@@ -131,7 +136,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	comment: [undefined],
   	transactionType: [undefined],
   	merchantFeePercent: [undefined],
-		feePercent: [undefined]
+	feePercent: [undefined]
   });
 
   get merchantFeePercentField(): AbstractControl | null {
@@ -149,7 +154,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   get feePercentFiat(): string {
 	  return `${((this.feePercentField?.value / 100) * this.data.amountToSpend).toFixed(2)}, ${this.data.currencyFiat}`;
   }
-  
+
   widgetOptions$: Observable<CommonTargetValue[]>;
   isTransactionRefreshing = false;
   constructor(
@@ -157,9 +162,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	private router: Router,
   	private auth: AuthService,
   	private modalService: NgbModal,
+	private dialog: MatDialog,
   	private errorHandler: ErrorService,
   	private exchangeRate: ExchangeRateService,
   	private adminService: AdminDataService) { }
+
+
 
   ngOnInit(): void {
   	this.getSettingsCommon();
@@ -192,6 +200,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
   widgetSearchFn(term: string, item: CommonTargetValue): boolean {
   	term = term.toLocaleLowerCase();
+
   	return item.title.toLocaleLowerCase().indexOf(term) > -1 ||
 		item.id && item.id.toLocaleLowerCase().indexOf(term) > -1;
   }
@@ -211,16 +220,19 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	if (this.currenciesToSpend.length === 0) {
   		return;
   	}
+
   	const currencyToSpendSymbol = this.data?.currencyToSpend;
   	const currencyToSpend = this.currenciesToSpend.find(x => x.symbol === currencyToSpendSymbol);
   	const spendFiat = currencyToSpend?.fiat ?? false;
   	const spend = this.form.get('currencyToSpend')?.value;
   	const receive = this.form.get('currencyToReceive')?.value;
+
   	if (spendFiat) {
   		this.exchangeRate.setCurrency(spend, receive, TransactionType.Buy);
   	} else {
   		this.exchangeRate.setCurrency(receive, spend, TransactionType.Buy);
   	}
+
   	this.exchangeRate.update();
   }
 
@@ -228,20 +240,23 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	if (this.data) {
   		const currencyToSpendSymbol = this.data?.currencyToSpend;
   		const currencyToSpend = list.find(x => x.symbol === currencyToSpendSymbol);
+
   		if (currencyToSpend) {
   			if (this.data.type === TransactionType.Receive || this.data.type === TransactionType.Transfer) {
-  				this.currenciesToSpend = list.filter(x => x.fiat === false);
-  				this.currenciesToReceive = list.filter(x => x.fiat === false);
+  				this.currenciesToSpend = list.filter(x => !x.fiat);
+  				this.currenciesToReceive = list.filter(x => !x.fiat);
   			} else if (this.data.type === TransactionType.Deposit || this.data.type === TransactionType.Withdrawal) {
-  				this.currenciesToSpend = list.filter(x => x.fiat === true);
-  				this.currenciesToReceive = list.filter(x => x.fiat === true);
+  				this.currenciesToSpend = list.filter(x => x.fiat);
+  				this.currenciesToReceive = list.filter(x => x.fiat);
   			} else {
   				this.currenciesToSpend = list.filter(x => x.fiat === currencyToSpend.fiat);
   				this.currenciesToReceive = list.filter(x => x.fiat === !currencyToSpend.fiat);
   			}
+
   			this.form.get('currencyToSpend')?.setValue(this.data?.currencyToSpend);
   			this.form.get('currencyToReceive')?.setValue(this.data?.currencyToReceive);
   		}
+
   		this.startExchangeRate();
   	}
   }
@@ -250,11 +265,15 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.data = val;
   	this.transactionId = val?.id ?? '';
   	this.transactionType = val?.type ?? TransactionType.System;
+
   	this.isTransactionNotDepositOrWithdrawal = this.transactionType !== this.TRANSACTION_TYPE.Deposit && this.transactionType !== this.TRANSACTION_TYPE.Withdrawal;
-  	
+  	this.isSellTransactionType = this.transactionType === this.TRANSACTION_TYPE.Sell;
+	this.isReceiveTransactionType = this.transactionType === this.TRANSACTION_TYPE.Receive;
+
   	this.transferOrderBlockchainLink = val?.transferOrderBlockchainLink ?? '';
   	this.benchmarkTransferOrderBlockchainLink = val?.benchmarkTransferOrderBlockchainLink ?? '';
   	this.removable = true;
+
   	if (this.data) {
   		this.flag = this.data.flag === true;
   		this.form.get('transactionType')?.setValue(this.data.type);
@@ -272,22 +291,25 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('screeningAnswer')?.setValue(this.data.screeningAnswer);
   		this.form.get('screeningRiskscore')?.setValue(this.data.screeningRiskscore);
   		this.form.get('screeningStatus')?.setValue(this.data.screeningStatus);
-  		this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
-			this.form.get('merchantFeePercent')?.setValue(this.data.calcMerchantFeePercent);
-			this.form.get('feePercent')?.setValue(this.data.feePercent);
+		this.form.get('benchmarkTransferHash')?.setValue(this.data.benchmarkTransferOrderHash);
+		this.form.get('merchantFeePercent')?.setValue(this.data.calcMerchantFeePercent);
+		this.form.get('feePercent')?.setValue(this.data.feePercent);
+
   		if(this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
   			this.scriningData = this.data?.screeningData?.paymentChecks[0];
   		}
+
   		this.form.get('comment')?.setValue(this.data.comment);
   		this.transactionStatus = this.data.status;
+
   		if (this.transactionStatuses.length > 0) {
   			this.transactionStatusName = this.transactionStatuses.find(x => x.id === this.transactionStatus)?.name ?? '';
   		}
-  		this.showTransferHash = (this.data.transferOrderId !== '');
-  		this.showBenchmarkTransferHash = (this.data.benchmarkTransferOrderId !== '');
+		
   		this.kycStatus = TransactionKycStatusList.find(x => x.id === this.data?.kycStatusValue)?.name ?? '';
   		this.accountStatus = UserStatusList.find(x => x.id === this.data?.accountStatusValue)?.name ?? '';
   	}
+
   	if (this.transactionType === TransactionType.Withdrawal || this.transactionType === TransactionType.Deposit) {
   		this.form.get('address')?.setValidators([]);
   		this.form.updateValueAndValidity();
@@ -301,11 +323,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			const additionalSettings = (settingsCommon.additionalSettings) ? JSON.parse(settingsCommon.additionalSettings) : undefined;
   			this.editableDestination = additionalSettings.admin?.editTransactionDestination ?? false;
 				
-  			if(settingsCommon.transactionTypeSettings && settingsCommon.transactionTypeSettings.length != 0){
-  				this.transactionTypeSetting = settingsCommon.transactionTypeSettings.find(item => item.transactionType == this.transactionType);
-  				this.transactionTypes = this.transactionTypes.filter(item => 
-  					settingsCommon.transactionTypeSettings.find(settingType => settingType.transactionType == item.id && settingType.allowChange == true)
-  				);
+  			if(settingsCommon.transactionTypeSettings && settingsCommon.transactionTypeSettings.length !== 0){
+  				this.transactionTypeSetting = settingsCommon.transactionTypeSettings.find(item => item.transactionType === this.transactionType);
+  				
+				this.transactionTypes = 
+					this.transactionTypes.filter(item =>settingsCommon.transactionTypeSettings.find(settingType => settingType.transactionType === item.id && settingType.allowChange));
   			}
 				
   		})
@@ -378,18 +400,22 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     
   	const requestData$ = this.adminService.updateTransactionFlag(this.flag, this.transactionId);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
-  			this.saveInProgress = false;
-  			this.flagInProgress = false;
-  			this.save.emit();
-  		}, (error) => {
-  			this.saveInProgress = false;
-  			this.flagInProgress = false;
-  			this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
+  		requestData$.subscribe({
+			next: () => {
+				this.saveInProgress = false;
+				this.flagInProgress = false;
+				this.save.emit();
+			},
+			error: error => {
+				this.saveInProgress = false;
+				this.flagInProgress = false;
+				this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
+
+				if (this.auth.token === '') {
+					void this.router.navigateByUrl('/');
+				}
+			}
+		})
   	);
   }
 
@@ -406,24 +432,30 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.transactionToUpdate,
   		this.restartTransaction,
   		this.recalculateAmounts);
+
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
-  			this.saveInProgress = false;
-  			this.flagInProgress = false;
-  			this.save.emit();
-  		}, (error) => {
-  			this.saveInProgress = false;
-  			this.flagInProgress = false;
-  			this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
+  		requestData$.subscribe({
+			next: () => {
+				this.saveInProgress = false;
+				this.flagInProgress = false;
+				this.save.emit();
+			},
+			error: error => {
+				this.saveInProgress = false;
+				this.flagInProgress = false;
+				this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
+
+				if (this.auth.token === '') {
+					void this.router.navigateByUrl('/');
+				}
+			}
+		})
   	);
   }
 
   onSubmit(content: any): void {
   	this.submitted = true;
+
   	if (this.form.valid) {
   		this.transactionToUpdate = this.getTransactionToUpdate();
   		
@@ -436,8 +468,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			this.transactionToUpdate.amountToSpend ?? 0,
 			this.transactionToUpdate.feePercent ?? 0,
 			this.transactionToUpdate.merchantFeePercent ?? 0);
-  		this.statusChanged = this.pStatusHash !== statusHash;
-  		this.amountChanged = this.pAmountHash !== amountHash;
+			this.statusChanged = this.pStatusHash !== statusHash;
+			this.amountChanged = this.pAmountHash !== amountHash;
 			
   		this.updateDialog = this.modalService.open(content, {
   			backdrop: 'static',
@@ -450,16 +482,20 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.cancelInProgress = true;
   	const requestData = this.adminService.deleteTransaction(this.transactionId);
   	this.subscriptions.add(
-  		requestData.subscribe(({ data }) => {
-  			this.cancelInProgress = false;
-  			this.save.emit();
-  		}, (error) => {
-  			this.errorMessage = error;
-  			this.cancelInProgress = false;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
+  		requestData.subscribe({
+			next: () => {
+				this.cancelInProgress = false;
+				this.save.emit();
+			},
+			error: (error) => {
+				this.errorMessage = error;
+				this.cancelInProgress = false;
+
+				if (this.auth.token === '') {
+					void this.router.navigateByUrl('/');
+				}
+			}
+		})
   	);
   }
 
@@ -468,10 +504,13 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	const adminStatus = status?.value.adminStatus;
   	const statusName = data.name;
   	let adminStatusName = 'Unknown';
+	
   	if (adminStatus) {
   		adminStatusName = AdminTransactionStatusList.find(x => x.id === adminStatus)?.name ?? 'Unknown';
   	}
+
   	status?.value.adminStatus ?? 'Unknown';
+	
   	return `${adminStatusName} (${statusName})`;
   }
 
@@ -519,8 +558,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			hash: this.data?.transferOrderHash
   		},
   	};
+
   	this.amountChanged = false;
   	this.statusChanged = true;
+
   	this.updateDialog = this.modalService.open(content, {
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
@@ -541,6 +582,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   onConfirmUpdate(statusContent: any, amountContent: any, originalOrderIdContent: any): void {
   	this.amountDialogContent = amountContent;
   	this.originalOrderIdDialogContent = originalOrderIdContent;
+
   	if (this.updateDialog) {
   		this.updateDialog.close('');
 
@@ -563,14 +605,15 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onChangeOriginaOrderlIdConfirm(): void {
-  	if(this.originalOrderDialog){
+  	if (this.originalOrderDialog) {
   		this.originalOrderDialog.close('');
   	}
 
-  	if(this.originalOrderId){
+  	if (this.originalOrderId) {
   		this.transactionToUpdate.paymentOrderChanges = {
   			originalOrderId: this.originalOrderId
   		};
+
   		this.originalOrderIdChanged = true;
   		this.onChangeTransactionStatusConfirm(Number(this.restartTransaction));
   	}
@@ -579,12 +622,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   onChangeTransactionStatusConfirm(restartTransaction: number): void {
   	let continueCurrentChange = true;
   	this.restartTransaction = (restartTransaction === 1);
+
+
   	if (this.statusDialog) {
   		this.statusDialog.close('');
   	}
 
-  	if ((!this.data.paymentOrderId || this.data.paymentOrderId == '') && !this.originalOrderIdChanged) {
-  		if(this.transactionToUpdate.status == TransactionStatus.Paid) {
+  	if ((!this.data.paymentOrderId || this.data.paymentOrderId === '') && !this.originalOrderIdChanged) {
+  		if(this.transactionToUpdate.status === TransactionStatus.Paid) {
   			continueCurrentChange = false;
   			this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
   				backdrop: 'static',
@@ -593,13 +638,21 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		}
   	}
 		
-  	if(continueCurrentChange){
-  		if(this.amountChanged) {
+  	if (continueCurrentChange) {
+  		if (this.amountChanged) {
   			this.amountDialog = this.modalService.open(this.amountDialogContent, {
   				backdrop: 'static',
   				windowClass: 'modalCusSty',
   			});
-  		} else {
+  		} if (this.transactionType === TransactionType.Sell && this.transactionToUpdate.status === TransactionStatus.Refund){ 
+			this.dialog.open(TransactionRefundModalComponent, {
+				width: '500px',
+				data: {
+					sourceWallet: this.data?.sourceWallet,
+					amountToSpend: this.form?.controls.amountToSpend.value
+				}
+			});
+		} else {
   			this.updateTransaction();
   		}
   	}

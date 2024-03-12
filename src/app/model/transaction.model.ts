@@ -86,8 +86,8 @@ export class TransactionItemFull {
 	screeningStatus = '';
 	screeningData: Record<string, any> = {};
 	transferFee = '';
-	transferOrder: {} | undefined;
-	benchmarkTransferOrder: {} | undefined;
+	transferOrder: TransferOrder | undefined;
+	benchmarkTransferOrder: TransferOrder | undefined;
 	benchmarkTransferOrderId = '';
 	benchmarkTransferOriginalOrderId = '';
 	benchmarkTransferOrderHash = '';
@@ -98,14 +98,12 @@ export class TransactionItemFull {
 	sender = '';
 	recipient = '';
 	ip = '';
-	euro = 0;
 	fees = 0;
 	rate = 0;
 	status: TransactionStatus | undefined = undefined;
 	subStatus = '';
 	statusInfo: TransactionStatusDescriptorMap | undefined = undefined;
 	user: UserItem | undefined;
-	balance = 0;
 	accountStatus = '';
 	accountStatusValue = AccountStatus.Closed;
 	kycStatus = '';
@@ -120,6 +118,8 @@ export class TransactionItemFull {
 	declineReasonExtra = '';
 	transferStatus = '';
 	transferSubStatus = '';
+	interimWallet = '';
+	sourceWallet = '';
 	merchantAmountToReceive = 0;
 	merchantTransferOrder: TransferOrder | undefined;
 	merchantTransferStatus = '';
@@ -178,11 +178,13 @@ export class TransactionItemFull {
 				}
 			}
 			this.accountId = data.userId ?? '';
+			this.interimWallet = data.sourceVaultId ?? '';
 			this.exchangeOrderId = data.liquidityOrder?.originalOrderId ?? '';
 			this.accountStatus = data.accountStatus ?? '';
 			this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
 			this.flag = data.flag ?? false;
 			const transactionData = data as Transaction;
+			const paymentData = getPaymentData(data);
 
 			if (data.canBeCancelled) {
 				this.canBeCancelled = true;
@@ -193,54 +195,60 @@ export class TransactionItemFull {
 			if (data.canBeReviewed) {
 				this.canBeReviewed = true;
 			}
+
 			if (transactionData.user) {
 				this.user = new UserItem(transactionData.user as User);
 				this.accountName = this.user.fullName;
 				this.ip = transactionData.userIp as string;
 				this.userMode = transactionData.user?.mode as UserMode | undefined;
+
 				this.benchmarkTransferOrder = transactionData?.benchmarkTransferOrder;
-				this.benchmarkTransferOrderId =
-          transactionData.benchmarkTransferOrder?.orderId ?? '';
-				this.benchmarkTransferOriginalOrderId =
-          transactionData.benchmarkTransferOrder?.originalOrderId ?? '';
-				this.benchmarkTransferOrderHash =
-          transactionData.benchmarkTransferOrder?.transferHash ?? '';
+
+				if (this.benchmarkTransferOrder) {
+					this.benchmarkTransferOrderId = this.benchmarkTransferOrder.orderId ?? '';
+					this.benchmarkTransferOriginalOrderId = this.benchmarkTransferOrder.originalOrderId ?? '';
+					this.benchmarkTransferOrderHash = this.benchmarkTransferOrder.transferHash ?? '';
+				}
 			}
-			if (
-				data.type === TransactionType.Sell ||
-        data.type === TransactionType.Withdrawal
-			) {
-				this.instrumentDetailsData = this.getInstrumentDetails(
-					data.instrumentDetails ?? '{}'
-				);
+
+			if (data.type === TransactionType.Sell || data.type === TransactionType.Withdrawal) {
+				this.instrumentDetailsData = this.getInstrumentDetails(data.instrumentDetails ?? '{}');
 			}
+
 			this.widgetUserParams = transactionData.widgetUserParams;
 			this.comment = transactionData.comment ?? '';
 
 			this.paymentOrderId = transactionData.paymentOrderId ?? '-';
 			this.originalPaymentOrderId = transactionData.paymentOrder?.originalOrderId ?? '-';
 			this.transferOrder = data.transferOrder;
-			this.transferOrderId = data.transferOrder?.orderId ?? '';
-			this.transferOriginalOrderId = data.transferOrder?.originalOrderId ?? '-';
-			this.transferOrderHash = data.transferOrder?.transferHash ?? '';
-			this.screeningAnswer = <ScreeningAnswer>data?.screeningAnswer ?? undefined;
+
+			if (this.transferOrder) {
+				this.sourceWallet = this.transferOrder.sourceVaultId ?? '';
+				this.transferOrderId =  this.transferOrder.orderId ?? '';
+				this.transferOriginalOrderId = this.transferOrder.originalOrderId ?? '-';
+				this.transferOrderHash = this.transferOrder.transferHash ?? '';
+				this.transferFee = this.transferOrder.feeCurrency?.toFixed(8) ?? '';
+				this.amountToReceive = this.transferOrder.amount ?? paymentData.amountToReceive;
+				this.transferStatus = this.transferOrder.status ?? '';
+				this.transferSubStatus = this.transferOrder.subStatus ?? '';
+			}
+
+			this.screeningAnswer = <ScreeningAnswer>data.screeningAnswer ?? undefined;
 			this.screeningAnswerColor = this.getScreeningAnswerColor(this.screeningAnswer);
 
-			this.screeningRiskscore = data?.screeningRiskscore ?? 0;
-			this.screeningStatus = data?.screeningStatus ?? '';
-			this.screeningData = JSON.parse(data?.screeningData ?? '{}');
-			this.widgetUserParams = data?.widgetUserParams ?? null;
-			this.transferFee = data.transferOrder?.feeCurrency?.toFixed(8) ?? '';
-			this.transferOrderBlockchainLink =
-        transactionData.transferOrderBlockchainLink ?? '';
-			this.benchmarkTransferOrderBlockchainLink =
-        transactionData.benchmarkTransferOrderBlockchainLink ?? '';
+			this.screeningRiskscore = data.screeningRiskscore ?? 0;
+			this.screeningStatus = data.screeningStatus ?? '';
+			this.screeningData = JSON.parse(data.screeningData ?? '{}');
+			this.widgetUserParams = data.widgetUserParams ?? null;
+	
+			this.transferOrderBlockchainLink = transactionData.transferOrderBlockchainLink ?? '';
+			this.benchmarkTransferOrderBlockchainLink = transactionData.benchmarkTransferOrderBlockchainLink ?? '';
 			this.type = data.type;
 			this.instrument = data.instrument ?? undefined;
-			this.paymentProvider = data.paymentOrder?.provider?.toUpperCase() ?? data?.paymentProvider?.toUpperCase() ?? '';
+			this.paymentProvider = data.paymentOrder?.provider?.toUpperCase() ?? data.paymentProvider?.toUpperCase() ?? '';
 			this.widgetId = data.widgetId ?? '';
 			this.source = data.source ?? undefined;
-			const paymentData = getPaymentData(data);
+	
 			this.currencyToSpend = paymentData.currencyToSpend;
 			this.currencyToReceive = paymentData.currencyToReceive;
 			this.currencyFiat = paymentData.currencyFiat;
@@ -249,11 +257,21 @@ export class TransactionItemFull {
 			this.fees = paymentData.fees;
 			this.sender = paymentData.sender.title;
 			this.recipient = paymentData.recipient.title;
-			this.amountToReceive = data.transferOrder?.amount ?? paymentData.amountToReceive;
-			this.merchantAmountToReceive = data?.merchantTransferOrder?.amount ?? 0;
+			this.merchantTransferOrder = data.merchantTransferOrder;
+
+			if (this.merchantTransferOrder) {
+				this.merchantAmountToReceive = this.merchantTransferOrder.amount ?? 0;
+				this.merchantTransferStatus = this.merchantTransferOrder.status ?? '';
+				this.merchantTransferSubStatus = this.merchantTransferOrder.subStatus ?? '';
+				this.merchantTransferOriginalOrderId = this.merchantTransferOrder.originalOrderId ?? '';
+				this.merchantTransferHash = this.merchantTransferOrder.transferHash ?? '';
+				this.merchantFeeTransferOrderBlockchainLink = transactionData.merchantFeeTransferOrderBlockchainLink ?? '';
+			}
+
 			this.rate = data.rate ?? data.initialRate;
 			this.calcMerchantFeePercent = data.merchantFeePercent ?? 0;
 			this.feePercent = data.feePercent ?? 0;
+
 			if (data.type === TransactionType.Deposit) {
 				this.address = this.recipient ?? '-';
 			} else if(data.type === TransactionType.Withdrawal) {
@@ -261,28 +279,28 @@ export class TransactionItemFull {
 			} else {
 				this.address = data.destination ?? '-';
 			}
-			const kycStatus = TransactionKycStatusList.find(
-				(x) => x.id === (data as Transaction).kycStatus
-			);
+
+			const kycStatus = TransactionKycStatusList.find((x) => x.id === (data as Transaction).kycStatus);
+
 			this.kycStatus = kycStatus ? kycStatus.name : '';
-			this.kycStatusValue = kycStatus
-				? kycStatus.id
-				: TransactionKycStatus.KycWaiting;
-			
+			this.kycStatusValue = kycStatus ? kycStatus.id : TransactionKycStatus.KycWaiting;
 			this.kycStatusColor = this.getKysStatusColor(this.kycStatusValue);
 
 			this.kycTier = data.userTier?.name ?? '';
 			this.status = data.status;
 			this.subStatus = data.subStatus ?? '';
 			const widgetData = JSON.parse(data.widget ?? '{}');
+
 			if (widgetData) {
 				this.widgetName = widgetData.widgetName;
 			}
-			this.declineReason = '';
-			this.transferStatus = data.transferOrder?.status ?? '';
-			this.transferSubStatus = data.transferOrder?.subStatus ?? '';
-			this.benchmarkStatus =  transactionData.benchmarkTransferOrder?.status ?? '';
-			this.benchmarkSubStatus = transactionData.benchmarkTransferOrder?.subStatus ?? '';
+
+			if (this.benchmarkTransferOrder) {
+				this.benchmarkStatus =  this.benchmarkTransferOrder.status ?? '';
+				this.benchmarkSubStatus = this.benchmarkTransferOrder.subStatus ?? '';
+			}
+
+		
 			this.paymentStatus =  data.paymentOrder?.status ?? '';
 			this.paymentStatusReason = data.paymentOrder?.statusReason && (this.paymentStatus?.toLowerCase() !== 'completed') ? data.paymentOrder?.statusReason : '' ;
 
@@ -292,6 +310,7 @@ export class TransactionItemFull {
 				data.liquidityOrder?.statusReason : '' ;
 
 			this.exchangeState =  data.liquidityOrder?.state ?? '';
+
 			switch (this.status) {
 				case TransactionStatus.AddressDeclined:
 					this.declineReason = 'Invalid address';
@@ -300,35 +319,25 @@ export class TransactionItemFull {
 					this.declineReason = data.paymentOrder?.statusReason ?? '';
 					break;
 				case TransactionStatus.TransferDeclined:
-					const transferOrderStatus = data.transferOrder?.status ?? '';
-					const transferOrderSubStatus =
-            (data.transferOrder?.subStatus ?? '') === ''
-            	? ''
-            	: ` (${data.transferOrder?.subStatus ?? ''})`;
-					this.declineReason = `${transferOrderStatus} ${transferOrderSubStatus}`;
-					if (
-						data.transferOrder?.executingResult &&
-            data.transferOrder?.executingResult !== null &&
-            data.transferOrder?.executingResult !== 'null'
-					) {
-						this.declineReasonExtra = data.transferOrder?.executingResult ?? '';
-					} else if (
-						data.transferOrder?.publishingResult &&
-            data.transferOrder?.publishingResult !== null &&
-            data.transferOrder?.publishingResult !== 'null'
-					) {
-						this.declineReasonExtra =
-              data.transferOrder?.publishingResult ?? '';
+					if (this.transferOrder) {
+						const transferOrderStatus = this.transferOrder.status ?? '';
+						const transferOrderSubStatus = (this.transferOrder.subStatus ?? '') === '' ? '' : ` (${this.transferOrder.subStatus ?? ''})`;
+						
+						this.declineReason = `${transferOrderStatus} ${transferOrderSubStatus}`;
+
+						if (data.transferOrder?.executingResult && data.transferOrder.executingResult !== 'null') {
+							this.declineReasonExtra = data.transferOrder.executingResult;
+						} else if (data.transferOrder?.publishingResult && data.transferOrder.publishingResult !== 'null') {
+							this.declineReasonExtra = data.transferOrder.publishingResult;
+						}
 					}
+
 					if (this.declineReasonExtra !== '') {
 						let dataExtra = JSON.parse(this.declineReasonExtra);
 						try {
 							dataExtra = JSON.parse(dataExtra);
 							const extraStatus = dataExtra?.status ?? '';
-							const extraSubStatus =
-                (dataExtra?.subStatus ?? '') === ''
-                	? ''
-                	: ` (${dataExtra?.subStatus ?? ''})`;
+							const extraSubStatus = (dataExtra?.subStatus ?? '') === '' ? '' : ` (${dataExtra?.subStatus ?? ''})`;
 							this.declineReasonExtra = `${extraStatus} ${extraSubStatus}`;
 						} catch (e) {
 							this.declineReasonExtra = dataExtra;
@@ -336,18 +345,15 @@ export class TransactionItemFull {
 					}
 					break;
 				case TransactionStatus.BenchmarkTransferDeclined:
-					const benchmarkTransferOrderStatus =
-            transactionData.benchmarkTransferOrder?.status ?? '';
-					const benchmarkTransferOrderSubStatus =
-            (transactionData.benchmarkTransferOrder?.subStatus ?? '') === ''
-            	? ''
-            	: ` (${transactionData.benchmarkTransferOrder?.subStatus ?? ''})`;
+					const benchmarkTransferOrderStatus = transactionData.benchmarkTransferOrder?.status ?? '';
+					const benchmarkTransferOrderSubStatus = transactionData.benchmarkTransferOrder?.subStatus ? ` (${transactionData.benchmarkTransferOrder.subStatus})` : '';
 					this.declineReason = `${benchmarkTransferOrderStatus} ${benchmarkTransferOrderSubStatus}`;
 					break;
 				case TransactionStatus.ExchangeDeclined:
 					this.declineReason = data.liquidityOrder?.statusReason ?? '';
 					break;
 			}
+
 			if (data.destVaultId) {
 				if (!this.vaultIds.includes(data.destVaultId)) {
 					this.vaultIds.push(data.destVaultId);
@@ -651,9 +657,7 @@ export class TransactionItem {
 			this.feePercent = data.feePercent ?? 0;
 			const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;
 			if (kycStatusValue !== TransactionKycStatus.KycApproved) {
-				this.kycStatus =
-          TransactionKycStatusList.find((x) => x.id === kycStatusValue)?.name ??
-          '';
+				this.kycStatus = TransactionKycStatusList.find((x) => x.id === kycStatusValue)?.name ?? '';
 				this.kycRejected = kycStatusValue === TransactionKycStatus.KycRejected;
 			}
 		}
@@ -680,9 +684,7 @@ export class TransactionItem {
 		if (this.status) {
 			const statusValue = this.status.value.userStatus;
 			if (statusValue) {
-				statusName =
-          UserTransactionStatusList.find((x) => x.id === statusValue)?.name ??
-          statusValue;
+				statusName = UserTransactionStatusList.find((x) => x.id === statusValue)?.name ?? statusValue;
 			}
 		}
 		return statusName;
@@ -693,10 +695,7 @@ export class TransactionItem {
 	}
 
 	get networkFees(): string {
-		if (
-			this.type === TransactionType.Deposit ||
-      this.type === TransactionType.Withdrawal
-		) {
+		if (this.type === TransactionType.Deposit || this.type === TransactionType.Withdrawal) {
 			return `${getCurrencySign(this.currencyFiat)}${this.networkFee}`;
 		} else {
 			return `${this.networkFee.toString()} ${this.currencyCrypto}`;
@@ -704,10 +703,7 @@ export class TransactionItem {
 	}
 
 	get systemFees(): string {
-		if (
-			this.type === TransactionType.Transfer ||
-      this.type === TransactionType.Receive
-		) {
+		if (this.type === TransactionType.Transfer || this.type === TransactionType.Receive) {
 			return '';
 		} else {
 			if (this.isFiatCurrency(this.currencyFiat)) {
@@ -728,13 +724,9 @@ export class TransactionItem {
 
 	get amountReceived(): string {
 		if (this.isFiatCurrency(this.currencyToReceive)) {
-			return `${getCurrencySign(this.currencyToReceive)}${
-				this.amountToReceive
-			}`;
+			return `${getCurrencySign(this.currencyToReceive)}${this.amountToReceive}`;
 		} else {
-			return `${this.amountToReceive} ${getCurrencySign(
-				this.currencyToReceive
-			)}`;
+			return `${this.amountToReceive} ${getCurrencySign(this.currencyToReceive)}`;
 		}
 	}
 
@@ -745,12 +737,12 @@ export class TransactionItem {
 	isFiatCurrency(currency: string): boolean {
 		return (
 			currency === 'USD' ||
-      currency === 'EUR' ||
-      currency === 'GBP' ||
-      currency === 'JPY' ||
-      currency === 'CHF' ||
-      currency === 'AUD' ||
-      currency === 'CAD'
+			currency === 'EUR' ||
+			currency === 'GBP' ||
+			currency === 'JPY' ||
+			currency === 'CHF' ||
+			currency === 'AUD' ||
+			currency === 'CAD'
 		);
 	}
 }
@@ -789,6 +781,7 @@ function getPaymentData(
 	result.amountToReceive = data.amountToReceiveWithoutFee ?? data.initialAmountToReceiveWithoutFee ?? 0;
 	let recepientImg = '';
 	let senderImg = '';
+
 	switch(data.type) {
 		case TransactionType.Buy: {
 			result.currencyFiat = result.currencyToSpend;
