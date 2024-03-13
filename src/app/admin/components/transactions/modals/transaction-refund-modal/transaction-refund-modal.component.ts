@@ -26,6 +26,6 @@ export class TransactionRefundModalComponent {
 
   onSubmit(): void {
     // run refund here
-    this._dialogRef.close();
+    this._dialogRef.close(this.form.value);
   }
 }

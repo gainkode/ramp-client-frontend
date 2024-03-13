@@ -2389,6 +2389,7 @@ mutation UpdateTransaction(
   $recalculate: Boolean
   $transferOrder: TransactionUpdateTransferOrderChanges
   $benchmarkTransferOrder: TransactionUpdateTransferOrderChanges
+  $refundTransferOrderChanges: TransactionUpdateRefundTransferOrderChanges
   $widgetUserParamsChanges: WidgetUserParamsChanges
   $comment: String
   $widgetId: String
@@ -2416,6 +2417,7 @@ mutation UpdateTransaction(
       launchAfterUpdate: $launchAfterUpdate
       transferOrderChanges: $transferOrder
       benchmarkTransferOrderChanges: $benchmarkTransferOrder
+      refundTransferOrderChanges: $refundTransferOrderChanges
       widgetUserParamsChanges: $widgetUserParamsChanges
       comment: $comment
       flag: $flag

@@ -136,7 +136,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	comment: [undefined],
   	transactionType: [undefined],
   	merchantFeePercent: [undefined],
-	feePercent: [undefined]
+		feePercent: [undefined],
+		refundOrderAddress: [undefined],
+		refundOrderAmount: [undefined]
   });
 
   get merchantFeePercentField(): AbstractControl | null {
@@ -378,6 +380,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			orderId: this.data?.benchmarkTransferOrderId,
   			hash: this.form.get('benchmarkTransferHash')?.value ?? ''
   		},
+			refundTransferOrderChanges: {
+				address: this.form.get('refundOrderAddress')?.value,
+				amount: this.form.get('refundOrderAmount')?.value
+			},
   		type: this.form.get('transactionType')?.value ?? undefined,
   		widgetUserParamsChanges,
   		comment: this.form.get('comment')?.value ?? '',
@@ -427,6 +433,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   updateTransaction(): void {
   	this.saveInProgress = true;
+		this.transactionToUpdate = this.getTransactionToUpdate();
+
   	const requestData$ = this.adminService.updateTransaction(
   		this.transactionId,
   		this.transactionToUpdate,
@@ -435,21 +443,21 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   	this.subscriptions.add(
   		requestData$.subscribe({
-			next: () => {
-				this.saveInProgress = false;
-				this.flagInProgress = false;
-				this.save.emit();
-			},
-			error: error => {
-				this.saveInProgress = false;
-				this.flagInProgress = false;
-				this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
+				next: () => {
+					this.saveInProgress = false;
+					this.flagInProgress = false;
+					this.save.emit();
+				},
+				error: error => {
+					this.saveInProgress = false;
+					this.flagInProgress = false;
+					this.errorMessage = (!error || error === '') ? this.errorHandler.getCurrentError() : error;
 
-				if (this.auth.token === '') {
-					void this.router.navigateByUrl('/');
+					if (this.auth.token === '') {
+						void this.router.navigateByUrl('/');
+					}
 				}
-			}
-		})
+			})
   	);
   }
 
@@ -457,7 +465,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.submitted = true;
 
   	if (this.form.valid) {
-  		this.transactionToUpdate = this.getTransactionToUpdate();
   		
   		const statusHash = getTransactionStatusHash(
   			this.transactionToUpdate.status,
@@ -538,26 +545,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
   
   fastStatusChange(newStatus: TransactionStatus, content: any): void {
-  	this.transactionToUpdate = {
-  		status: newStatus,
-  		destination: this.data?.address ?? '',
-  		feeFiat: this.data?.fees ?? 0,
-  		rate: undefined,
-  		currencyToSpend: this.data?.currencyToSpend ?? '',
-  		currencyToReceive: this.data?.currencyToReceive ?? '',
-  		amountToSpend: this.data?.amountToSpend ?? 0,
-  		kycStatus: this.data?.kycStatusValue ?? TransactionKycStatus.KycApproved,
-  		accountStatus: this.data?.accountStatusValue ?? AccountStatus.Live,
-  		benchmarkTransferOrderChanges: {
-  			orderId: this.data?.benchmarkTransferOrderId,
-  			hash: this.data?.benchmarkTransferOrderHash
-  		},
-  		comment: this.data?.comment ?? '',
-  		transferOrderChanges: {
-  			orderId: this.data?.transferOrderId,
-  			hash: this.data?.transferOrderHash
-  		},
-  	};
+		this.form.controls.transactionStatus.patchValue(newStatus);
 
   	this.amountChanged = false;
   	this.statusChanged = true;
@@ -622,14 +610,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   onChangeTransactionStatusConfirm(restartTransaction: number): void {
   	let continueCurrentChange = true;
   	this.restartTransaction = (restartTransaction === 1);
-
+		const transactionStatus = this.form.controls?.transactionStatus?.value;
 
   	if (this.statusDialog) {
   		this.statusDialog.close('');
   	}
 
   	if ((!this.data.paymentOrderId || this.data.paymentOrderId === '') && !this.originalOrderIdChanged) {
-  		if(this.transactionToUpdate.status === TransactionStatus.Paid) {
+  		if(transactionStatus === TransactionStatus.Paid) {
   			continueCurrentChange = false;
   			this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
   				backdrop: 'static',
@@ -644,15 +632,22 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   				backdrop: 'static',
   				windowClass: 'modalCusSty',
   			});
-  		} if (this.transactionType === TransactionType.Sell && this.transactionToUpdate.status === TransactionStatus.Refund){ 
-			this.dialog.open(TransactionRefundModalComponent, {
-				width: '500px',
-				data: {
-					sourceWallet: this.data?.sourceWallet,
-					amountToSpend: this.form?.controls.amountToSpend.value
-				}
-			});
-		} else {
+  		} if (this.transactionType === TransactionType.Sell && transactionStatus === TransactionStatus.Refund){ 
+				const dialogRef = this.dialog.open(TransactionRefundModalComponent, {
+					width: '500px',
+					data: {
+						sourceWallet: this.data?.sourceWallet,
+						amountToSpend: this.form?.controls.amountToSpend.value
+					}
+				});
+				this.subscriptions.add(
+					dialogRef.afterClosed().subscribe(result => {
+						this.form.controls.refundOrderAddress.patchValue(result.sourceWallet);
+						this.form.controls.refundOrderAmount.patchValue(result.amountToSell);
+						this.updateTransaction();
+					})
+				); 
+			} else {
   			this.updateTransaction();
   		}
   	}

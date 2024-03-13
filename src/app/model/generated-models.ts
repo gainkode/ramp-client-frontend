@@ -438,6 +438,7 @@ export type CryptoInvoiceListResult = {
 export enum CurrencyBlockchain {
   Avalanche = 'AVALANCHE',
   Bsc = 'BSC',
+  Btc = 'BTC',
   Cardano = 'CARDANO',
   Eos = 'EOS',
   Ethereum = 'ETHEREUM',
@@ -547,6 +548,14 @@ export type DepositOrWithdrawalStats = BaseStat & {
   inProcess?: Maybe<TransactionStatsVolume>;
   ratio?: Maybe<Scalars['Float']['output']>;
   refund?: Maybe<TransactionStatsVolume>;
+};
+
+export type DescriptorByTransactionType = {
+  __typename?: 'DescriptorByTransactionType';
+  canBeCancelled: Scalars['Boolean']['output'];
+  hasToBeRefunded: Scalars['Boolean']['output'];
+  lifeline?: Maybe<TransactionStatusLifelineDescriptor>;
+  type?: Maybe<TransactionType>;
 };
 
 export enum EntityType {
@@ -1113,6 +1122,8 @@ export type Mutation = {
   /** Create account if not exists */
   createAccount?: Maybe<Scalars['String']['output']>;
   createApmPayment: PaymentApmResult;
+  /** This endpoint can be used to create an order to refund money to previous address */
+  createCustodyRefundOrder?: Maybe<TransferOrder>;
   /** This endpoint can be used to create an order to withdraw from custody provider */
   createCustodyWithdrawalOrder?: Maybe<TransferOrder>;
   /** This endpoint can be used to create a crypto invoice */
@@ -1428,6 +1439,11 @@ export type MutationCreateAccountArgs = {
 
 export type MutationCreateApmPaymentArgs = {
   orderParams: PaymentApmInput;
+};
+
+
+export type MutationCreateCustodyRefundOrderArgs = {
+  params?: InputMaybe<CreateTransferOrderParams>;
 };
 
 
@@ -2709,6 +2725,7 @@ export type QueryGetOneToManyRatesArgs = {
 export type QueryGetOneToManyRatesMerchantArgs = {
   currenciesTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   currencyFrom?: InputMaybe<Scalars['String']['input']>;
+  reverse?: InputMaybe<Scalars['Boolean']['input']>;
   withFactor?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -4311,6 +4328,7 @@ export type TransactionUpdateInput = {
   merchantFeeTransferOrderChanges?: InputMaybe<TransactionUpdateTransferOrderChanges>;
   paymentOrderChanges?: InputMaybe<TransactionUpdatePaymentOrderChanges>;
   rate?: InputMaybe<Scalars['Float']['input']>;
+  refundTransferOrderChanges?: InputMaybe<TransactionUpdateRefundTransferOrderChanges>;
   requestParams?: InputMaybe<Scalars['String']['input']>;
   sourceVaultId?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<TransactionStatus>;
@@ -4325,6 +4343,11 @@ export type TransactionUpdateInput = {
 
 export type TransactionUpdatePaymentOrderChanges = {
   originalOrderId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TransactionUpdateRefundTransferOrderChanges = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  amount?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type TransactionUpdateTransferOrderChanges = {
