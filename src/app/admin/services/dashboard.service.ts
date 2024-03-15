@@ -64,6 +64,7 @@ export class DashboardService implements OnDestroy {
 
 	load(): void {
 		this.loading = true;
+		this.isLoadedSubject.next(false);
 		const dashboardData$ = this.adminDataService.getDashboardStats(this.filter).pipe(take(1));
 		this.subscriptions.add(dashboardData$.subscribe(rawData => {
 	
