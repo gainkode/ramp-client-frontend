@@ -159,6 +159,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   widgetOptions$: Observable<CommonTargetValue[]>;
   isTransactionRefreshing = false;
+  instrumentDetailsData: string[] = [];
   constructor(
   	private formBuilder: UntypedFormBuilder,
   	private router: Router,
@@ -316,6 +317,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('address')?.setValidators([]);
   		this.form.updateValueAndValidity();
   	}
+
+
+	if (this.transactionType === TransactionType.Sell || 
+		this.transactionType === TransactionType.Buy ||
+		this.transactionType === TransactionType.Deposit ||
+		this.transactionType === TransactionType.Withdrawal) {
+		this.instrumentDetailsData = this.getInstrumentDetails(this.data.instrumentDetailsRaw);
+	}
   }
 
   private getSettingsCommon(): void {
@@ -665,4 +674,58 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	const tradeURL = `https://www.kraken.com/u/trade/trades#txid=${uuid}`;
   	window.open(tradeURL, '_blank');
   }
+
+  getInstrumentDetails(data: string): string[] {
+	const result: string[] = [];
+	
+	try {
+		const details = JSON.parse(data);
+		if (details) {
+			let accountData;
+
+			if (typeof details.accountType === 'string') {
+				accountData = JSON.parse(details.accountType);
+			   } else {
+				accountData = details.accountType;
+			   }
+
+			if (accountData) {
+				const paymentData = JSON.parse(accountData.data);
+				if (paymentData) {
+					if (accountData.id === 'AU') {
+						result.push('Australian bank');
+					} else if (accountData.id === 'UK') {
+						result.push('United Kingdom bank');
+					} else if (accountData.id === 'EU') {
+						result.push('European bank');
+					} 
+
+					const addInstrumentDetail = (label: string, ...values): void => {
+						const value = values.find(v => v !== undefined && v !== null);
+						if (value) {
+							result.push(`${label}: ${value}`);
+						}
+					};
+
+					addInstrumentDetail('Account name', paymentData.bankAccountName, paymentData.accountName);
+					addInstrumentDetail('Account number', paymentData.bankAccountNumber, paymentData.accountNumber);
+					addInstrumentDetail('Bank name', paymentData.bankName);
+					addInstrumentDetail('Bank address', paymentData.bankAddress);
+					addInstrumentDetail('Beneficiary name', paymentData.beneficiaryName);
+					addInstrumentDetail('Beneficiary address', paymentData.beneficiaryAddress);
+					addInstrumentDetail('Holder', paymentData.bankAccountHolderName);
+					addInstrumentDetail('BSB', paymentData.bsb);
+					addInstrumentDetail('Sort code', paymentData.sortCode);
+					addInstrumentDetail('IBAN', paymentData.iban);
+					addInstrumentDetail('SWIFT / BIC', paymentData.swiftBic);
+					addInstrumentDetail('Routing Number', paymentData.routingNumber);
+					addInstrumentDetail('Reference', paymentData.reference);
+					addInstrumentDetail('Credit to', paymentData.creditTo);
+				}
+			}
+		}
+	} catch (e) {}
+
+	return result;
+}
 }

@@ -425,7 +425,8 @@
           
             <app-admin-details-item *ngIf="isSellTransactionType" label="Interim wallet" [value]="data?.interimWallet"></app-admin-details-item>
             <app-admin-details-item *ngIf="isSellTransactionType" label="Source wallet" [value]="data?.sourceWallet"></app-admin-details-item>
-
+            <app-admin-details-item label="Instrument details" [value]="instrumentDetailsData"></app-admin-details-item>
+            
             </div>
           </div>
           <div class="col-lg-3 col-md-12" *ngIf="data?.exchangeOrderId">
