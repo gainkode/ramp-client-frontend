@@ -76,6 +76,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   private pSpendChanged = false;
   private pReceiveChanged = false;
   private pTransactionChanged = false;
+  private amountReceiveChanged = false;
   private pSpendAutoUpdated = false;
   private pReceiveAutoUpdated = false;
   private currentQuoteEur = 0;
@@ -147,7 +148,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	verifyWhenPaid: [undefined],
   	walletSelector: [undefined, { validators: [], updateOn: 'change' }],
   	wallet: [undefined, { validators: [], updateOn: 'change' }]
-  }, { validator: WalletValidator.addressValidator('wallet', 'currencyReceive','transaction') } );
+  });
 
   termsLink = EnvService.terms_link;
   privacyLink = EnvService.privacy_link;
@@ -390,6 +391,16 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				currentCurrencySpendId = currentCurrencySpendId || defaultCryptoCurrency;
   			}
   			this.pCurrencies = currencyList?.list?.map(val => new CurrencyView(val)) || [];
+			
+			this.dataForm.setValidators(
+				WalletValidator.addressValidator(
+					'wallet',
+					'currencyReceive',
+					'transaction',
+					this.pCurrencies
+				)
+			);
+
   			this.addressInit = false;
 			
   			this.setCurrencyValues(
@@ -731,14 +742,12 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   private onCurrenciesUpdated(currency: string, typeCurrency: string): void{
   	if (!this.pTransactionChanged) {
   		if(typeCurrency === 'Spend'){
-  			this.pSpendChanged = true;
   			this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
 
   			if(!this.currentCurrencySpend?.fiat){
   				this.checkWalletExisting(currency);
   			}
   		} else if (typeCurrency === 'Receive'){
-  			this.pReceiveChanged = true;
   			this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
 		
   			if(!this.currentCurrencyReceive?.fiat){
@@ -780,7 +789,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				this.setReceiveValidators();
   			}
   		}
-  		this.pReceiveChanged = true;
+  		this.amountReceiveChanged = true;
 
   		this.updateCurrentAmounts();
   	}
@@ -881,7 +890,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.updateQuote();
   	this.validData = false;
   	let dst = 0;
-  	if (this.pReceiveChanged) {
+
+  	if (this.amountReceiveChanged) {
   		if (this.currentTransaction === TransactionType.Buy) {
   			if (receive && this.pDepositRate) {
   				const receiveWithouFee = this.defaultFee ? (receive + receive/100 * this.defaultFee) : receive;
@@ -906,33 +916,33 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			this.pSpendAutoUpdated = true;
   			this.amountSpendField?.setValue(val);
   		}
-  	}
-  	if (this.pSpendChanged) {
-  		if (this.currentTransaction === TransactionType.Buy) {
-  			if (spend && this.pDepositRate) {
-  				const rate = this.pDepositRate;
-  				if (rate === 0) {
-  					dst = 0;
-  				} else {
-  					const spendWithouFee = this.defaultFee ? (spend - spend/100 * this.defaultFee) : spend;
-  					dst = spendWithouFee / rate;
-  				}
-  				this.validData = true;
-  			}
-  		} else if (this.currentTransaction === TransactionType.Sell) {
-  			if (spend && this.pDepositRate) {
-  				const spendWithouFee = this.defaultFee ? (spend - spend/100 * this.defaultFee) : spend;
-  				dst = spendWithouFee * this.pDepositRate;
-  				this.validData = true;
-  			}
-  		}
-  		if (dst > 0) {
-  			const val = dst.toFixed(this.currentCurrencyReceive?.precision);
-  			receive = Number.parseFloat(val);
-  			this.pReceiveAutoUpdated = true;
-  			this.amountReceiveField?.setValue(val);
-  		}
-  	}
+  	} else {
+		if (this.currentTransaction === TransactionType.Buy) {
+			if (spend && this.pDepositRate) {
+				const rate = this.pDepositRate;
+				if (rate === 0) {
+					dst = 0;
+				} else {
+					const spendWithouFee = this.defaultFee ? (spend - spend/100 * this.defaultFee) : spend;
+					dst = spendWithouFee / rate;
+				}
+				this.validData = true;
+			}
+		} else if (this.currentTransaction === TransactionType.Sell) {
+			if (spend && this.pDepositRate) {
+				const spendWithouFee = this.defaultFee ? (spend - spend/100 * this.defaultFee) : spend;
+				dst = spendWithouFee * this.pDepositRate;
+				this.validData = true;
+			}
+		}
+		if (dst > 0) {
+			const val = dst.toFixed(this.currentCurrencyReceive?.precision);
+			receive = Number.parseFloat(val);
+			this.pReceiveAutoUpdated = true;
+			this.amountReceiveField?.setValue(val);
+		}
+	}
+
   	this.quoteExceedHidden = false;
 
   	if (this.currentTransaction === TransactionType.Buy || this.currentTransaction === TransactionType.Sell) {
@@ -947,6 +957,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		false;
   	this.pSpendChanged = false;
   	this.pReceiveChanged = false;
+	this.amountReceiveChanged = false;
   	this.sendData();
   }
 

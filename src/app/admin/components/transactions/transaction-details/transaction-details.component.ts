@@ -361,7 +361,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   getTransactionToUpdate(): TransactionUpdateInput {
   	const currentRateValue = this.form.get('rate')?.value;
   	let currentRate: number | undefined = undefined;
-  	if (currentRateValue !== undefined) {
+  	if (currentRateValue !== undefined && currentRateValue !== this.data.rate) {
   		currentRate = parseFloat(currentRateValue);
   	}
   	let widgetUserParamsChanges = undefined;
@@ -389,16 +389,16 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			orderId: this.data?.benchmarkTransferOrderId,
   			hash: this.form.get('benchmarkTransferHash')?.value ?? ''
   		},
-			refundTransferOrderChanges: {
-				address: this.form.get('refundOrderAddress')?.value,
-				amount: this.form.get('refundOrderAmount')?.value
-			},
+		refundTransferOrderChanges: {
+			address: this.form.get('refundOrderAddress')?.value,
+			amount: this.form.get('refundOrderAmount')?.value
+		},
   		type: this.form.get('transactionType')?.value ?? undefined,
   		widgetUserParamsChanges,
   		comment: this.form.get('comment')?.value ?? '',
   		flag: this.flag,
-			feePercent: this.feePercentField?.value ?? undefined,
-			merchantFeePercent: this.merchantFeePercentField?.value ?? undefined
+		feePercent: this.feePercentField?.value ?? undefined,
+		merchantFeePercent: this.merchantFeePercentField?.value ?? undefined
   	};
 
   	return transactionToUpdate;
@@ -474,11 +474,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.submitted = true;
 
   	if (this.form.valid) {
-  		
   		const statusHash = getTransactionStatusHash(
   			this.transactionToUpdate.status,
   			this.transactionToUpdate.kycStatus ?? TransactionKycStatus.KycWaiting,
   			this.transactionToUpdate.accountStatus ?? AccountStatus.Closed);
+
   		const amountHash = getTransactionAmountHash(
   			this.transactionToUpdate.rate ?? this.pDefaultRate,
   			this.transactionToUpdate.amountToSpend ?? 0,
@@ -554,7 +554,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
   
   fastStatusChange(newStatus: TransactionStatus, content: any): void {
-		this.form.controls.transactionStatus.patchValue(newStatus);
+	this.form.controls.transactionStatus.patchValue(newStatus);
 
   	this.amountChanged = false;
   	this.statusChanged = true;
@@ -599,7 +599,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   			}
   		}
   	}
-  }
+}
 
   onChangeOriginaOrderlIdConfirm(): void {
   	if (this.originalOrderDialog) {
@@ -675,57 +675,57 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	window.open(tradeURL, '_blank');
   }
 
-  getInstrumentDetails(data: string): string[] {
-	const result: string[] = [];
-	
-	try {
-		const details = JSON.parse(data);
-		if (details) {
-			let accountData;
+	getInstrumentDetails(data: string): string[] {
+		const result: string[] = [];
+		
+		try {
+			const details = JSON.parse(data);
+			if (details) {
+				let accountData;
 
-			if (typeof details.accountType === 'string') {
-				accountData = JSON.parse(details.accountType);
-			   } else {
-				accountData = details.accountType;
-			   }
+				if (typeof details.accountType === 'string') {
+					accountData = JSON.parse(details.accountType);
+				} else {
+					accountData = details.accountType;
+				}
 
-			if (accountData) {
-				const paymentData = JSON.parse(accountData.data);
-				if (paymentData) {
-					if (accountData.id === 'AU') {
-						result.push('Australian bank');
-					} else if (accountData.id === 'UK') {
-						result.push('United Kingdom bank');
-					} else if (accountData.id === 'EU') {
-						result.push('European bank');
-					} 
+				if (accountData) {
+					const paymentData = JSON.parse(accountData.data);
+					if (paymentData) {
+						if (accountData.id === 'AU') {
+							result.push('Australian bank');
+						} else if (accountData.id === 'UK') {
+							result.push('United Kingdom bank');
+						} else if (accountData.id === 'EU') {
+							result.push('European bank');
+						} 
 
-					const addInstrumentDetail = (label: string, ...values): void => {
-						const value = values.find(v => v !== undefined && v !== null);
-						if (value) {
-							result.push(`${label}: ${value}`);
-						}
-					};
+						const addInstrumentDetail = (label: string, ...values): void => {
+							const value = values.find(v => v !== undefined && v !== null);
+							if (value) {
+								result.push(`${label}: ${value}`);
+							}
+						};
 
-					addInstrumentDetail('Account name', paymentData.bankAccountName, paymentData.accountName);
-					addInstrumentDetail('Account number', paymentData.bankAccountNumber, paymentData.accountNumber);
-					addInstrumentDetail('Bank name', paymentData.bankName);
-					addInstrumentDetail('Bank address', paymentData.bankAddress);
-					addInstrumentDetail('Beneficiary name', paymentData.beneficiaryName);
-					addInstrumentDetail('Beneficiary address', paymentData.beneficiaryAddress);
-					addInstrumentDetail('Holder', paymentData.bankAccountHolderName);
-					addInstrumentDetail('BSB', paymentData.bsb);
-					addInstrumentDetail('Sort code', paymentData.sortCode);
-					addInstrumentDetail('IBAN', paymentData.iban);
-					addInstrumentDetail('SWIFT / BIC', paymentData.swiftBic);
-					addInstrumentDetail('Routing Number', paymentData.routingNumber);
-					addInstrumentDetail('Reference', paymentData.reference);
-					addInstrumentDetail('Credit to', paymentData.creditTo);
+						addInstrumentDetail('Account name', paymentData.bankAccountName, paymentData.accountName);
+						addInstrumentDetail('Account number', paymentData.bankAccountNumber, paymentData.accountNumber);
+						addInstrumentDetail('Bank name', paymentData.bankName);
+						addInstrumentDetail('Bank address', paymentData.bankAddress);
+						addInstrumentDetail('Beneficiary name', paymentData.beneficiaryName);
+						addInstrumentDetail('Beneficiary address', paymentData.beneficiaryAddress);
+						addInstrumentDetail('Holder', paymentData.bankAccountHolderName);
+						addInstrumentDetail('BSB', paymentData.bsb);
+						addInstrumentDetail('Sort code', paymentData.sortCode);
+						addInstrumentDetail('IBAN', paymentData.iban);
+						addInstrumentDetail('SWIFT / BIC', paymentData.swiftBic);
+						addInstrumentDetail('Routing Number', paymentData.routingNumber);
+						addInstrumentDetail('Reference', paymentData.reference);
+						addInstrumentDetail('Credit to', paymentData.creditTo);
+					}
 				}
 			}
-		}
-	} catch (e) {}
+		} catch (e) {}
 
-	return result;
-}
+		return result;
+	}
 }

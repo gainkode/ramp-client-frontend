@@ -1,20 +1,24 @@
-import { AbstractControl, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { TransactionType } from '../model/generated-models';
 import { EnvService } from '../services/env.service';
 import { getCryptoSymbol } from './utils';
+import { CurrencyView } from 'model/payment.model';
 
 const WAValidator = require('multicoin-address-validator');
 
 export class WalletValidator {
-	static addressValidator(addressField: string, currencyField: string, transactionField: string): ValidatorFn {
-		return (control: AbstractControl): ValidationErrors | null => {
-			const fg = control as UntypedFormGroup;
-			
-			const addressControl = fg.controls[addressField];
-			const currencyControl = fg.controls[currencyField];
-			const transactionControl = fg.controls[transactionField];
+	static addressValidator(
+		addressField: string, 
+		currencyField: string, 
+		transactionField: string,
+		currencies?: CurrencyView[]) {
+		return (control: AbstractControl): { [key: string]: any; } => {
+			const group = <UntypedFormGroup>control;
+			const addressControl = group.controls[addressField];
+			const currencyControl = group.controls[currencyField];
+			const transactionControl = group.controls[transactionField];
 
-			if (!addressControl || addressControl?.value?.length === 0 || addressControl?.value === '' || !currencyControl || !transactionControl) {
+			if (!addressControl || addressControl?.value?.length === 0 || addressControl?.value == '' || !currencyControl || !transactionControl) {
 				return null;
 			}
 			if (transactionControl.value !== TransactionType.Buy) {
@@ -29,9 +33,13 @@ export class WalletValidator {
 				return null;
 			}
 			// valid BTC wallet: 1KFzzGtDdnq5hrwxXGjwVnKzRbvf8WVxck
-			currency = getCryptoSymbol(currency).toLowerCase();
+			const currencyAsSymbol = currencies?.find(c => c.symbol === currency)?.validateAsSymbol;
+
+			currency = getCryptoSymbol(currencyAsSymbol ?? currency).toLowerCase();
+			
 			const networkType = EnvService.test_wallets ? 'both' : 'prod';
 			const valid = WAValidator.validate(address, currency, networkType);
+	
 			if (valid) {
 				return null;
 			} else {
