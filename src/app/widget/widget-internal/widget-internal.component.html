@@ -1,5 +1,5 @@
 <div *ngIf="!recentTransactions && showWidget" class="widget__wrapper" [class.widget__wrapper--single]="isSinglePage">
-    <div class="m-0 widget__container-1" [ngSwitch]="pager.stageId" *ngIf="!isSingleOrderDetailsCompleted && !transactionErrorMessage">
+    <div class="m-0 widget__container-1" [ngSwitch]="pager.stageId" *ngIf="!isSingleOrderDetailsCompleted && !transactionErrorTitle">
       <div *ngIf="widget.embedded && inProgress" class="__widget-embedded-progress-container">
         <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
       </div>
@@ -36,7 +36,7 @@
     </div>
 
     <div class="m-0 widget__container-2" 
-        [ngClass]="(isOrderDetailsComplete || transactionErrorMessage) ? 'd-flex' : 'd-none'" [ngSwitch]="pager.stageId">
+        [ngClass]="(isOrderDetailsComplete || transactionErrorTitle) ? 'd-flex' : 'd-none'" [ngSwitch]="pager.stageId">
     
       <div *ngIf="!widget.embedded && !recentTransactions && pager.stageId !== 'error'" class="__widget-progress-container">
         <app-widget-progress [step]="pager.step" [title]="pager.title" [progress]="inProgress"></app-widget-progress>
@@ -150,8 +150,7 @@
           <!-- Complete -->
           <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''"
             [textContent]="completeTextData" (onFinish)="resetWizard()"></app-widget-complete>
-          <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
-            [tryAgain]="transactionErrorTryAgain" (onFinish)="resetWizard()"></app-widget-error>
+          <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" (onFinish)="resetWizard()"></app-widget-error>
       </div>
 
     </div>

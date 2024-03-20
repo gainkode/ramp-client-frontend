@@ -29,7 +29,7 @@ import { WidgetService } from 'services/widget.service';
 export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';
   @Input() quickCheckout = false;
-	@Input() isWidget = false;
+  @Input() isWidget = false;
   @Input() settings: WidgetSettings | undefined = undefined;
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
@@ -43,15 +43,13 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   errorMessage = '';
   rateErrorMessage = '';
   transactionErrorTitle = '';
-  transactionErrorMessage = '';
-  transactionErrorTryAgain = true;
   inProgress = false;
   initLoading = true;
   initState = true;
   showSummary = true;
   mobileSummary = false;
   requiredExtraData = false;
-  initMessage = 'Loading...';
+  initMessage = 'global.widget_loading';
   summary = new CheckoutSummary();
   redirectUrl = '';
   widget = new WidgetSettings();
@@ -126,7 +124,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.onRecaptchaCallback.bind(this),
   		this.quickCheckout
   	);
-  	this.initMessage = 'Loading...';
+  	this.initMessage = 'global.widget_loading';
 
   	this.loadAccountData();
   	this.pager.init('initialization', 'widget-pager.initialization');
@@ -174,7 +172,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   private initData(data: Widget | undefined): void {
   	this.requiredExtraData = false;
-  	this.initMessage = 'Loading...';
+  	this.initMessage = 'global.widget_loading';
 
   	if (data) {
   		this.widget.allowToPayIfKycFailed = data.allowToPayIfKycFailed ?? false;
@@ -455,8 +453,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.isSingleOrderDetailsCompleted = false;
   		}
   	}
-
-  	this.transactionErrorMessage = undefined;
+	this.transactionErrorTitle = undefined;
   }
 
   capchaResult(event): void {
@@ -466,11 +463,10 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   }
 
   handleError(message: string): void {
-  	this.setError('Transaction failed', message);
+  	this.setError('widget-error.title-transaction-failed', message);
   }
 
   handleReject(): void {
-  	console.log(this.widget.kycFirst, this.widget.allowToPayIfKycFailed, this.paymentProviders);
   	this.loadAccountData();
 
   	if (this.widget.kycFirst && this.widget.allowToPayIfKycFailed) {
@@ -588,7 +584,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   					const validTransactionType = ['buy', 'sell'].includes(transactionType);
 
   					if (!validTransactionType) {
-  						this.showTransactionError('Wrong widget settings', 'Missing transaction type', false);
+  						this.showTransactionError('Wrong widget settings', 'Missing transaction type');
   						return;
   					}
   				}
@@ -611,7 +607,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			error: () => {
   				this.inProgress = false;
   				this.initData(undefined);
-  				this.showTransactionError('Wrong widget settings', 'Cannot load the widget', false);
+  				this.showTransactionError('Wrong widget settings', 'Cannot load the widget');
   				this.setOrderDetailsStep();
   			}
   		})
@@ -1022,7 +1018,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.errorMessage = '';
   	this.inProgress = true;
   	const tempStageId = this.pager.swapStage('initialization');
-  	this.initMessage = 'Processing...';
+  	this.initMessage = 'global.widget_processing';
   	this.pSubscriptions.add(
 		  this.dataService.createTransaction(this.transactionInput).subscribe(({ data }) => {
 			  if (!this.notificationStarted) {
@@ -1120,7 +1116,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		if(this.transactionInput.type === TransactionType.Buy) {
   			this.pager.swapStage(tempStageId);
   		} else if(this.transactionInput.type === TransactionType.Sell) {
-  			this.setError('Transaction handling failed', this.errorMessage);
+  			this.setError('widget-error.title-transaction-failed', this.errorMessage);
   		}
   	}
   }
@@ -1172,7 +1168,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   					if (this.widget.embedded) {
   						this.onError.emit({ errorMessage: this.errorMessage } as PaymentErrorDetails);
   					} else {
-  						this.setError('Transaction handling failed', this.errorMessage);
+  						this.setError('widget-error.title-transaction-failed', this.errorMessage);
   					}
   				}
   			}
@@ -1207,7 +1203,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   							errorMessage: this.errorMessage
   						} as PaymentErrorDetails);
   					} else {
-  						this.setError('Transaction handling failed', this.errorMessage);
+  						this.setError('widget-error.title-transaction-failed', this.errorMessage);
   					}
   				}
   			}
@@ -1239,7 +1235,10 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			selected: this.wireTransferList[0]
   		} as WireTransferUserSelection);
   	} else {
-  		this.setError('Transaction failed', 'No settings found for wire transfer');
+  		this.setError(
+			'widget-error.title-transaction-failed', 
+			'No settings found for wire transfer'
+		);
   	}
   }
 
@@ -1256,18 +1255,16 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.errorMessage = message;
   	this.changeDetector.detectChanges();
   	if (this.pager.stageId !== 'order_details') {
-  		this.showTransactionError(title, message, !this.widget.orderDefault);
+  		this.showTransactionError(title, message);
   	} else if (this.pager.stageId === 'order_details' && this.isSingleOrderDetailsCompleted) {
-  		this.showTransactionError(title, message, !this.widget.orderDefault);
+  		this.showTransactionError(title, message);
   	}
   }
 
-  private showTransactionError(messageTitle: string, messageText: string, tryAgain: boolean = true): void {
+  private showTransactionError(messageTitle: string, messageText: string): void {
   	console.log(messageText, messageTitle);
   	console.log('ERRROR');
-  	this.transactionErrorMessage = messageText;
   	this.transactionErrorTitle = messageTitle;
-  	this.transactionErrorTryAgain = tryAgain;
   	this.nextStage('error', 'widget-pager.error', 6, false);
   }
 

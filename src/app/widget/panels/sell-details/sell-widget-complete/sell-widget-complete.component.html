@@ -2,7 +2,7 @@
     <div *ngIf="qrCode!==''">
         <div class="__widget-data-three-column-grid">
             <div class="__widget-data-three-column-item-one">
-                Address:
+                {{'widget-sell-complete.field_address' | transloco}}
             </div>
             <div class="__widget-data-three-column-item-two">
                 <input class="__text-box-noborder" type="text" readonly [value]="address" />
@@ -16,7 +16,7 @@
 
         <div class="__widget-data-three-column-grid">
             <div class="__widget-data-three-column-item-one">
-                Amount:
+                {{'widget-sell-complete.field_amount' | transloco}}
             </div>
             <div class="__widget-data-three-column-item-two">
                 <input class="__text-box-noborder" type="text" readonly [value]="amount" />
@@ -29,7 +29,7 @@
         </div>
         <div class="__widget-data-three-column-grid">
             <div class="__widget-data-three-column-item-one">
-                Network:
+                {{'widget-sell-complete.field_network' | transloco}}
             </div>
             <div class="__widget-data-three-column-item-two">
                 <input class="__text-box-noborder" type="text" readonly [value]="sellectedCurrency?.name" />
@@ -47,7 +47,7 @@
 
     <div class="__widget-buttons-area">
         <button class="__main-button" type="button" (click)="onFinish.emit()">
-            done
+            {{'global.widget_btn-done' | transloco}}
         </button>
     </div>
 

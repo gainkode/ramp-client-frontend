@@ -133,8 +133,7 @@
     <!-- Complete -->
     <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''"
       [textContent]="completeTextData" (onFinish)="resetWizard()"></app-widget-complete>
-    <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" [errorMessage]="transactionErrorMessage"
-      [tryAgain]="transactionErrorTryAgain" (onFinish)="resetWizard()"></app-widget-error>
+    <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" (onFinish)="resetWizard()"></app-widget-error>
     </div>
   </div>
 </div>

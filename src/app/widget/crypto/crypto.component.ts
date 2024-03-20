@@ -28,7 +28,6 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
 
   errorMessage = '';
   transactionErrorTitle = '';
-  transactionErrorMessage = '';
   invoice: InvoiceView | undefined = undefined;
   inProgress = false;
   initState = true;
@@ -446,7 +445,6 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   }
 
   private showTransactionError(messageTitle: string, messageText: string): void {
-  	this.transactionErrorMessage = messageText;
   	this.transactionErrorTitle = messageTitle;
   	this.nextStage('error', 'Error', 6);
   }

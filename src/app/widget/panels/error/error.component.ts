@@ -7,7 +7,5 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class WidgetErrorComponent {
   @Input() title = '';
-  @Input() errorMessage = '';
-  @Input() tryAgain = true;
   @Output() onFinish = new EventEmitter();
 }

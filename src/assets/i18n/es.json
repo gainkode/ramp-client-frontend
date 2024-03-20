@@ -160,5 +160,17 @@
   "widget-payment-result.title": "Payment Details",
   "widget-payment-result.field_referenceId": "Reference ID",
   "widget-payment-result.field_bankName": "Bank Name",
-  "widget-payment-result.btn-done_label": "Done"
+  "widget-payment-result.btn-done_label": "Done",
+
+  "global.widget_processing": "_Processing...",
+  "global.widget_loading": "_Loading...",
+  "widget-error.title-transaction-failed":"_Transaction failed",
+  "widget-error.msg-1":"_Something went wrong.",
+  "widget-error.msg-2":"_Unfortunately we aren't able to process your transaction at this moment.",
+  "widget-error.msg-3":"_Please try again later.",
+  "widget-error.btn_try":"_TRY AGAIN",
+
+  "widget-sell-complete.field_address": "_Address:",
+  "widget-sell-complete.field_amount": "_Amount:",
+  "widget-sell-complete.field_network": "_Network:"
 }
