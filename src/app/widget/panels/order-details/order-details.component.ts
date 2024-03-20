@@ -368,12 +368,12 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private loadRates(): void {
   	const rateCurrencies = this.pCurrencies.filter(x => x.fiat === true && x.symbol !== 'EUR').map((val) => val.symbol);
 
-  	const rateData = this.paymentService.getOneToManyRates('EUR', rateCurrencies, false);
+  	const rateData = this.paymentService.getRates(rateCurrencies, 'EUR', true);
 
   	this.pSubscriptions.add(
   		rateData.valueChanges.subscribe(
   			({ data }) => {
-  				const rates = data.getOneToManyRates as Rate[];
+  				const rates = data.getRates as Rate[];
   				this.pCurrencies.forEach(c => {
   					if (c.symbol === 'EUR') {
   						c.rateFactor = 1;

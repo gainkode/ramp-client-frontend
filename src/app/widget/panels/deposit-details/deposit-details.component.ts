@@ -115,11 +115,11 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   	this.amountFrom?.setValue(val);
 
   	const rateCurrencies = this.currencies.filter(x => x.fiat === true && x.symbol !== 'EUR').map((val) => val.symbol);
-  	const rateData = this.paymentService.getOneToManyRates('EUR', rateCurrencies, false);
+  	const rateData = this.paymentService.getRates(rateCurrencies, 'EUR', true);
   	this.pSubscriptions.add(
   		rateData.valueChanges.subscribe(
   			({ data }) => {
-  				const rates = data.getOneToManyRates as Rate[];
+  				const rates = data.getRates as Rate[];
   				this.currencies.forEach(c => {
   					if (c.symbol === 'EUR') {
   						c.rateFactor = 1;

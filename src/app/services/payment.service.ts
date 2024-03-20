@@ -6,10 +6,11 @@ import { KycProvider, OpenBankingDetails, PaymentBankInput, PaymentInstrument, T
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
-query GetRates($currenciesFrom: [String!]!, $currencyTo: String!) {
+query GetRates($currenciesFrom: [String!]!, $currencyTo: String!, $reverse: Boolean) {
   getRates(
     currenciesFrom: $currenciesFrom,
     currencyTo: $currencyTo
+    reverse: $reverse
   ) {
     currencyFrom
     currencyTo
@@ -495,8 +496,12 @@ mutation AbandonCryptoInvoice(
 export class PaymentDataService {
 	constructor(private apollo: Apollo) { }
 
-	getRates(currenciesFrom: string[], currencyTo: string): QueryRef<any, EmptyObject> {
-		const variables = { currenciesFrom, currencyTo };
+	getRates(currenciesFrom: string[], currencyTo: string, reverse?: boolean): QueryRef<any, EmptyObject> {
+		const variables = {
+			currenciesFrom,
+			currencyTo,
+      reverse
+		};
 
 		return this.apollo.watchQuery<any>({
 			query: GET_RATES,
