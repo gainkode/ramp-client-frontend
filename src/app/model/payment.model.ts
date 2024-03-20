@@ -414,7 +414,8 @@ export const AdminTransactionStatusList: Array<AdminTransactionStatusView> = [
 	{ id: AdminTransactionStatus.ExchangeDeclined, name: 'Exchange declined' },
 	{ id: AdminTransactionStatus.TransferDeclined, name: 'Transfer declined' },
 	{ id: AdminTransactionStatus.BenchmarkTransferDeclined, name: 'Benchmark transfer declined' },
-	{ id: AdminTransactionStatus.KycDeclined, name: 'KycDeclined' }
+	{ id: AdminTransactionStatus.KycDeclined, name: 'KycDeclined' },
+	{ id: AdminTransactionStatus.Refund, name: 'Refund' }
 ];
 
 export const TransactionKycStatusList: Array<TransactionKycStatusView> = [
