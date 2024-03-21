@@ -1,0 +1,29 @@
+.far {
+    font-size: 68px;
+}
+
+.app_bl {
+    width: 600px;
+    margin: 0 auto;
+}
+
+.shadow {
+    box-shadow: 0 10px 21px -5px rgba(0,0,0,.15);
+    color: #000;
+    transition: box-shadow .3s;
+}
+  
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+  
+.white_on_mobile {
+    background: transparent;
+}
+
+@media (max-width:767px){
+    .white_on_mobile {
+        background: #fff !important;
+    }
+}
