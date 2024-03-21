@@ -32,6 +32,8 @@ import { shareReplay } from 'rxjs/operators';
 import { TableModule } from 'components/data-list/table/table.module';
 import { TranslocoRootModule } from 'transloco-root.module';
 import { AppGuard } from 'app.guard';
+import { Router } from '@angular/router';
+import { ForbiddenComponent } from 'components/common/forbidden/forbidden.component';
 
 function socialConfigFactory(): SocialAuthServiceConfig {
 	EnvServiceFactory.call(undefined);
@@ -48,7 +50,8 @@ function socialConfigFactory(): SocialAuthServiceConfig {
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
+		ForbiddenComponent
 	],
 	imports: [
 		BrowserModule,
@@ -85,16 +88,11 @@ export class AppModule {
 	errorLink = onError(({ forward, graphQLErrors, networkError, operation }) => {
 		if (graphQLErrors) {
 			for (const err of graphQLErrors) {
-
-				//console.log('GrapQL error occured: ', operation.operationName, err);
-
+	
 				if (err.extensions !== null) {
 					const code = err.extensions?.code as string;
 					if (code.toUpperCase() === 'UNAUTHENTICATED') {
 						const forceRefreshToken = true;
-						// if (operation.operationName !== 'MyStateTest') {
-						//   console.error('UNAUTHENTICATED');
-						// }
 						if (operation.operationName === 'RefreshToken') {
 							console.error('RefreshToken failed', err);
 							return undefined;
@@ -102,22 +100,32 @@ export class AppModule {
 						if (forceRefreshToken) {
 							const refreshToken = this.authService.refreshToken().pipe(shareReplay(1)).toPromise();
 							return fromPromise(
-								refreshToken.catch(error => {
+								refreshToken.catch(() => {
 									this.authService.logout();
 									return forward(operation);
 								})
-							).filter(value => Boolean(value)).flatMap(accessToken => {
-								return forward(operation);
-							});
+							).filter(value => Boolean(value)).flatMap(() => forward(operation));
 						}
 					}
-					if(code == 'auth.recaptcha_invalid'){
+
+					if (code === 'auth.recaptcha_invalid'){
 						localStorage.removeItem('recaptchaId');
 					}
+
+					if (code === 'auth.account_banned_or_closed'){
+						this.authService.logout();
+
+						localStorage.setItem('LAST_SAVED_URL', `${this.router.url}`);
+						
+						void this.router.navigate(['/forbidden']);
+					}
+
 					let codeValue = err.extensions?.code ?? 'INTERNAL_SERVER_ERROR';
+
 					if (codeValue === 'INTERNAL_SERVER_ERROR' && err.message) {
 						codeValue = err.message;
 					}
+
 					if (operation.operationName === 'GetRates') {
 						sessionStorage.setItem('currentRateErrorCode', codeValue);
 						sessionStorage.setItem('currentRateError', err.message);
@@ -128,6 +136,7 @@ export class AppModule {
 				}
 			}
 		}
+
 		if (networkError) {
 			console.log('Network error occured: ', operation.operationName, networkError);
 
@@ -142,6 +151,7 @@ export class AppModule {
 				sessionStorage.setItem('currentError', networkError.message);
 			}
 		}
+
 		return undefined;
 	});
 
@@ -165,11 +175,8 @@ export class AppModule {
 			};
 		} else {
 			const token = localStorage.getItem('currentToken');
-			if (token === null) {
-				return {};
-			} else {
-				return { headers: { Authorization: `Bearer ${token}` } };
-			}
+			
+			return token === null ? {} : { headers: { Authorization: `Bearer ${token}` } };
 		}
 	});
 
@@ -182,6 +189,7 @@ export class AppModule {
 	});
 
 	constructor(
+		private router: Router,
 		private apollo: Apollo,
 		private httpLink: HttpLink,
 		private authService: AuthService) {

@@ -442,7 +442,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   updateTransaction(): void {
   	this.saveInProgress = true;
-		this.transactionToUpdate = this.getTransactionToUpdate();
+	this.transactionToUpdate = this.getTransactionToUpdate();
 
   	const requestData$ = this.adminService.updateTransaction(
   		this.transactionId,
@@ -474,6 +474,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   	this.submitted = true;
 
   	if (this.form.valid) {
+		this.transactionToUpdate = this.getTransactionToUpdate();
+
   		const statusHash = getTransactionStatusHash(
   			this.transactionToUpdate.status,
   			this.transactionToUpdate.kycStatus ?? TransactionKycStatus.KycWaiting,

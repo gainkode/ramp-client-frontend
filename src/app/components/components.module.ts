@@ -32,7 +32,6 @@ import { LineBreakPipe } from '../utils/line-break.pipe';
 import { NumberFillPipe } from '../utils/number-fill.pipe';
 
 import { DropdownItemComponent } from './common/dropdown-item.component';
-import { TabLabelComponent } from './common/tablabel.component';
 import { LoginPanelComponent } from './auth/login-panel.component';
 import { RestorePanelComponent } from './auth/restore-panel.component';
 import { NavPopupComponent } from './common/nav-popup/nav-popup.component';
@@ -144,7 +143,6 @@ const formControlComponents = [
 		[...kycComponents],
 		[...formControlComponents],
 		DropdownItemComponent,
-		TabLabelComponent,
 		ContactFormComponent,
 		FileUploadComponent,
 		RecaptchaComponent,
@@ -177,7 +175,6 @@ const formControlComponents = [
 		[...kycComponents],
 		[...formControlComponents],
 		DropdownItemComponent,
-		TabLabelComponent,
 		ContactFormComponent,
 		FileUploadComponent,
 		RecaptchaComponent,

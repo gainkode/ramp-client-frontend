@@ -5,6 +5,7 @@ import { ProfileModule } from './profile/profile.module';
 import { WidgetModule } from './widget/widget.module';
 import { AppComponent } from 'app.component';
 import { AppGuard } from 'app.guard';
+import { ForbiddenComponent } from 'components/common/forbidden/forbidden.component';
 
 const routes: Routes = [
 	{
@@ -25,7 +26,8 @@ const routes: Routes = [
 	{
 		path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
 	},
-	{ path: '**', component: AppComponent, canActivate: [AppGuard]}
+	{ path: 'forbidden', component: ForbiddenComponent },
+	{ path: '**', component: AppComponent, canActivate: [AppGuard] }
 ];
 
 @NgModule({
