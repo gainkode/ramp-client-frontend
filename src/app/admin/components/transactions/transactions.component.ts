@@ -270,7 +270,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   	if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
   		void this.router.navigateByUrl(`/admin/fiat-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
   	} else {
-  		void this.router.navigateByUrl(`/admin/crypto-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+  		// void this.router.navigateByUrl(`/admin/crypto-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
   	}
   }
 

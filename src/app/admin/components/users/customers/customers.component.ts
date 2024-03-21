@@ -125,7 +125,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   showWallets(id: string): void {
-  	void this.router.navigateByUrl(`/admin/crypto-wallets/users/${id}`);
+  	// void this.router.navigateByUrl(`/admin/crypto-wallets/users/${id}`);
   }
 
   selectAll(): void {

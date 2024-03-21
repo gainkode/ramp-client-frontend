@@ -105,7 +105,7 @@ export class NavService implements OnDestroy {
 		},
 		{
 			title: 'Wallets', icon: 'wallet_membership', type: 'sub', active: false, code: UserRoleObjectCode.Wallets, children: [
-				{ path: '/admin/crypto-wallets', title: 'Crypto wallets', type: 'link' },
+				// { path: '/admin/crypto-wallets', title: 'Crypto wallets', type: 'link' },
 				{ path: '/admin/fiat-wallets', title: 'FIat wallets', type: 'link' }
 			]
 		},

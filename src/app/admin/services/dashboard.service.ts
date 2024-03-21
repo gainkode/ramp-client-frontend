@@ -7,7 +7,7 @@ import { AdminDataService } from 'services/admin-data.service';
 import { Filter } from 'admin/model/filter.model';
 import { PaymentInstrumentList } from 'model/payment.model';
 import { EnvService } from 'services/env.service';
-import { DashboardMerchantStats, DateTimeInterval } from 'model/generated-models';
+import { DashboardMerchantStats, DateTimeInterval, DashboardStats, TransferStats } from 'model/generated-models';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
@@ -67,7 +67,8 @@ export class DashboardService implements OnDestroy {
 		this.isLoadedSubject.next(false);
 		const dashboardData$ = this.adminDataService.getDashboardStats(this.filter).pipe(take(1));
 		this.subscriptions.add(dashboardData$.subscribe(rawData => {
-	
+			rawData = this.filterCardData(rawData);
+
 			// region Total
 			const totalData: DashboardCardData = {
 				columns: [
@@ -198,7 +199,6 @@ export class DashboardService implements OnDestroy {
 				totalData.rows.splice(totalData.rows.findIndex(x => x.type === 'Deposit'), 1);
 				totalData.rows.splice(totalData.rows.findIndex(x => x.type === 'Withdrawal'), 1);
 			}
-			// endregion
 
 			// region Buys
 			const buysData: DashboardCardData = {
@@ -258,7 +258,6 @@ export class DashboardService implements OnDestroy {
 						};
 					}) : []
 			};
-			// endregion
 
 			// region Deposits
 			const depositsData: DashboardCardData = {
@@ -318,7 +317,6 @@ export class DashboardService implements OnDestroy {
 						};
 					}) : []
 			};
-			// endregion
 
 			// region Transfers
 			const transfersData: DashboardCardData = {
@@ -390,7 +388,6 @@ export class DashboardService implements OnDestroy {
 					}
 				]
 			};
-			// endregion
 
 			// region Receives
 			const receivesData: DashboardCardData = {
@@ -431,38 +428,23 @@ export class DashboardService implements OnDestroy {
 						type: 'percent'
 					}
 				],
-				rows: [
+				rows: rawData.receives ? [
 					{
-						type: 'To merchants',
-						approvedCount: rawData.receives?.toMerchant?.approved?.count ?? null,
-						approvedVolume: rawData.receives?.toMerchant?.approved?.volume ?? null,
-						declinedCount: rawData.receives?.toMerchant?.declined?.count ?? null,
-						declinedVolume: rawData.receives?.toMerchant?.declined?.volume ?? null,
-						abandonedCount: rawData.receives?.toMerchant?.abandoned?.count ?? null,
-						abandonedVolume: rawData.receives?.toMerchant?.abandoned?.volume ?? null,
-						failedCount: rawData.transfers?.toMerchant?.failed?.count ?? null,
-						failedVolume: rawData.transfers?.toMerchant?.failed?.volume ?? null,
-						chargedBackCount: rawData.transfers?.toMerchant?.chargedBack?.count ?? null,
-						chargedBackVolume: rawData.transfers?.toMerchant?.chargedBack?.volume ?? null,
-						ratio: rawData.receives?.toMerchant?.ratio ?? null
+						type: 'Wire transfer',
+						approvedCount: rawData.receives?.approved?.count ?? null,
+						approvedVolume: rawData.receives?.approved?.volume ?? null,
+						declinedCount: rawData.receives?.declined?.count ?? null,
+						declinedVolume: rawData.receives?.declined?.volume ?? null,
+						abandonedCount: rawData.receives?.abandoned?.count ?? null,
+						abandonedVolume: rawData.receives?.abandoned?.volume ?? null,
+						failedCount: rawData.transfers?.failed?.count ?? null,
+						failedVolume: rawData.transfers?.failed?.volume ?? null,
+						chargedBackCount: rawData.transfers?.chargedBack?.count ?? null,
+						chargedBackVolume: rawData.transfers?.chargedBack?.volume ?? null,
+						ratio: rawData.receives?.ratio ?? null
 					},
-					{
-						type: 'To customers',
-						approvedCount: rawData.receives?.toCustomer?.approved?.count ?? null,
-						approvedVolume: rawData.receives?.toCustomer?.approved?.volume ?? null,
-						declinedCount: rawData.receives?.toCustomer?.declined?.count ?? null,
-						declinedVolume: rawData.receives?.toCustomer?.declined?.volume ?? null,
-						abandonedCount: rawData.receives?.toCustomer?.abandoned?.count ?? null,
-						abandonedVolume: rawData.receives?.toCustomer?.abandoned?.volume ?? null,
-						failedCount: rawData.transfers?.toMerchant?.failed?.count ?? null,
-						failedVolume: rawData.transfers?.toMerchant?.failed?.volume ?? null,
-						chargedBackCount: rawData.transfers?.toMerchant?.chargedBack?.count ?? null,
-						chargedBackVolume: rawData.transfers?.toMerchant?.chargedBack?.volume ?? null,
-						ratio: rawData.receives?.toCustomer?.ratio ?? null
-					}
-				]
+				] : []
 			};
-			// endregion
 
 			// region Withdrawals
 			const withdrawalsData: DashboardCardData = {
@@ -522,7 +504,6 @@ export class DashboardService implements OnDestroy {
 						};
 					}) : []
 			};
-			// endregion
 
 			// region Sells
 			const sellsData: DashboardCardData = {
@@ -582,7 +563,6 @@ export class DashboardService implements OnDestroy {
 						};
 					}) : []
 			};
-			// endregion
 
 			// region Fees
 			const feesData: DashboardCardData = {
@@ -645,7 +625,6 @@ export class DashboardService implements OnDestroy {
 				feesData.rows.splice(feesData.rows.findIndex(x => x.source === 'Deposit'), 1);
 				feesData.rows.splice(feesData.rows.findIndex(x => x.source === 'Withdrawal'), 1);
 			}
-			//  endregion
 
 			// region Balances
 			const balancesData: DashboardCardData = {
@@ -758,8 +737,6 @@ export class DashboardService implements OnDestroy {
 					}) : []
 			};
 
-			//  endregion
-
 			const data = {
 				total: totalData,
 				buys: buysData,
@@ -791,10 +768,34 @@ export class DashboardService implements OnDestroy {
 	}
 
 	getFeeValue(val: number | null): string | null {
-		if (val === null) {
-			return null;
-		} else {
-			return `${getCurrencySign('EUR')}${val}`;
+		return val ? `${getCurrencySign('EUR')}${val}` : null;
+	}
+
+	private filterCardData(dashboardData: DashboardStats): DashboardStats {
+		if (!dashboardData) {
+			return dashboardData;
 		}
+
+		const rawData = { ...dashboardData };
+
+		if (!rawData.receives?.approved?.count &&
+			!rawData.receives?.declined?.count &&
+			!rawData.receives?.abandoned?.count &&
+			!rawData.transfers?.failed?.count &&
+			!rawData.transfers?.chargedBack?.count
+		) {
+			rawData.receives = null;
+		}
+
+		if (!rawData.transfers?.approved?.count &&
+			!rawData.transfers?.declined?.count &&
+			!rawData.transfers?.abandoned?.count &&
+			!rawData.transfers?.failed?.count &&
+			!rawData.transfers?.chargedBack?.count
+		) {
+			rawData.transfers = null;
+		}
+
+		return rawData;
 	}
 }

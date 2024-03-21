@@ -152,28 +152,28 @@ export const routes: Routes = [
 				component: AdminUserDevicesComponent,
 				data: { header: 'White List' }
 			},
-			{
-				path: 'crypto-wallets',
-				data: { code: UserRoleObjectCode.Wallets },
-				canActivate: [AdminGuard],
-				children: [
-					{
-						path: 'users/:userid',
-						component: AdminCryptoWalletsComponent,
-						data: { header: 'Customer crypto wallets' }
-					},
-					{
-						path: 'vaults/:vaultids',
-						component: AdminCryptoWalletsComponent,
-						data: { header: 'Transaction crypto wallets' }
-					},
-					{
-						path: '',
-						component: AdminCryptoWalletsComponent,
-						data: { header: 'Wallets' }
-					},
-				]
-			},
+			// {
+			// 	path: 'crypto-wallets',
+			// 	data: { code: UserRoleObjectCode.Wallets },
+			// 	canActivate: [AdminGuard],
+			// 	children: [
+			// 		{
+			// 			path: 'users/:userid',
+			// 			component: AdminCryptoWalletsComponent,
+			// 			data: { header: 'Customer crypto wallets' }
+			// 		},
+			// 		{
+			// 			path: 'vaults/:vaultids',
+			// 			component: AdminCryptoWalletsComponent,
+			// 			data: { header: 'Transaction crypto wallets' }
+			// 		},
+			// 		{
+			// 			path: '',
+			// 			component: AdminCryptoWalletsComponent,
+			// 			data: { header: 'Wallets' }
+			// 		},
+			// 	]
+			// },
 			{
 				path: 'fiat-wallets',
 				data: { code: UserRoleObjectCode.Wallets },
