@@ -181,7 +181,7 @@ export class WidgetService {
 		const settingsData$ = this.paymentService.mySettingsCost(
 			summary.transactionType,
 			PaymentInstrument.WireTransfer,
-			summary.providerView?.id ?? '',
+			'',
 			widget.widgetId
 		).valueChanges.pipe(take(1));
 		this.pSubscriptions.add(
