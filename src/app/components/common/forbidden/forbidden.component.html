@@ -1,19 +1,24 @@
 <section class="app_bl">
 	<div>
         <div class="row justify-content-center">
-            <div class="col-sm-12 col-xs-12 bg-white shadow p-5 mt-5">
-                <h1 class="text-blue mb-3">Your account has been banned or closed.</h1>
+            <div class="col-sm-12 col-xs-12 bg-white shadow p-5 mt-5 d-flex align-items-center">
+                <div>
+                    <h1 class="text-blue mb-3 d-flex align-items-baseline">
+                        <i class="fa fa-exclamation-triangle mr-1" aria-hidden="true"></i>
+                        Your account has been banned or closed.
+                    </h1>
 
-                <p class="mt-4">
-                    <span class="text-muted text-sm-80 mt-4">
-                        Please contact our support team.
-                    </span>
-                </p>
-                <p class="mb-0 pt-5 text-center">
-                    <button type="button" class="btn btn-primary" (click)="navigateTo()">
-                        Back to {{navigatToLabel}}
-                    </button>
-                </p>
+                    <p class="mt-4 ml-4">
+                        <span class="text-muted text-sm-80">
+                            Please contact our support team.
+                        </span>
+                    </p>
+                    <p class="mb-0 pt-4 text-center">
+                        <button type="button" class="btn btn-primary" (click)="navigateTo()">
+                            Back to {{navigatToLabel}}
+                        </button>
+                    </p>
+                </div>
             </div>
         </div>
 	</div>
