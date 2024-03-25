@@ -207,9 +207,9 @@ export class UserItem {
 			this.comment = data.comment ?? '';
 			this.roles = data.roles?.map(val => val.code) ?? [];
 			this.risk = data.risk ?? '';
-			this.riskCodes = data.riskCodes?.map(code => {
-				const riskData = JSON.parse(code);
-				return riskData.code ?? '';
+			this.riskCodes = data.riskCodes?.map(riskAlert => {
+				const riskData = JSON.parse(riskAlert);
+				return riskData.riskAlertTypeCode ?? '';
 			}) ?? [];
 			this.totalTransactionCount = data.totalTransactionCount ?? 0;
 			this.averageTransaction = data.averageTransaction ?? 0;

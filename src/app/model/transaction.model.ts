@@ -8,14 +8,10 @@ import {
 } from '../utils/utils';
 import { CommonTargetValue } from './common.model';
 import {
-	WireTransferBankAccountAu,
-	WireTransferBankAccountEu,
-	WireTransferBankAccountUk,
-} from './cost-scheme.model';
-import {
 	AccountStatus,
 	AdminTransactionStatus,
 	PaymentInstrument,
+	RiskLevel,
 	Transaction,
 	TransactionKycStatus,
 	TransactionSh,
@@ -83,6 +79,8 @@ export class TransactionItemFull {
 	screeningAnswers = ScreeningAnswer;
 	screeningAnswerColor = '';
 	screeningRiskscore = 0;
+	risk: RiskLevel;
+	riskCodes: string[] = [];
 	screeningStatus = '';
 	screeningData: Record<string, any> = {};
 	transferFee = '';
@@ -231,6 +229,9 @@ export class TransactionItemFull {
 
 			this.screeningAnswer = <ScreeningAnswer>data.screeningAnswer ?? undefined;
 			this.screeningAnswerColor = this.getScreeningAnswerColor(this.screeningAnswer);
+
+			this.risk = data?.risk;
+			this.riskCodes = data?.riskCodes.map(riskAlert => JSON.parse(riskAlert).riskAlertTypeCode) ?? undefined;
 
 			this.screeningRiskscore = data.screeningRiskscore ?? 0;
 			this.screeningStatus = data.screeningStatus ?? '';

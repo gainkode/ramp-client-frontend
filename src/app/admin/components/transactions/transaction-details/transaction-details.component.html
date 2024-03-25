@@ -208,6 +208,15 @@
                 <input class="form-control" type="text" formControlName="screeningStatus">
               </div>
 
+              <div class="row">
+                <div class="col-lg-2 col-md-12">
+                  <app-admin-details-item label="Risk Level" [value]="data?.risk"></app-admin-details-item>
+                </div>
+                <div class="col-lg-10 col-md-12">
+                  <app-admin-details-item label="Risk Codes" [value]="data?.riskCodes"></app-admin-details-item>
+                </div>
+              </div>
+
             </div>
           </div>
           <div class="col-lg-5 col-md-12">

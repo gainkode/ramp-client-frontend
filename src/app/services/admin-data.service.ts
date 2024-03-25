@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef, WatchQueryOptions } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
 import {
@@ -81,7 +81,6 @@ import { ApiKeyItem } from 'model/apikey.model';
 import { CurrencyPairItem } from 'model/currencyPairs.model';
 import { LiquidityProviderEntityItem } from 'model/liquidity-provider.model';
 import { MessageItem } from 'model/message.model';
-import { CommonTargetValue } from 'model/common.model';
 
 /* region queries */
 
@@ -884,6 +883,8 @@ const GET_TRANSACTIONS = gql`
         widget
         widgetId
         screeningAnswer
+        risk
+        riskCodes
         screeningRiskscore
         screeningStatus
         screeningData
