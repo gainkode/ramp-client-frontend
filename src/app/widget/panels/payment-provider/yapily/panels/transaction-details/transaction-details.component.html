@@ -8,22 +8,22 @@
 
     <div class="payment-details__content mt-3">
         <span class="__widget-disclaimer-line"  *ngIf="isPaymentSuccess">
-            Dear Customer,
+            {{'widget-payment-transaction-details.msg-1' | transloco}},
             <br>
-            Thank you for choosing {{productName}}!
+            {{'widget-payment-transaction-details.msg-2' | transloco}} {{productName}}!
         </span>
 
         <div *ngIf="isPaymentSuccess" class="__widget-disclaimer-container">
             <span class="__widget-disclaimer-line">
-                Your payment has been successfully completed.
+                {{'widget-payment-transaction-details.msg-success' | transloco}}
             </span>
         </div>
 
         <div *ngIf="!isPaymentSuccess" class="__widget-disclaimer-container">
             <span class="__widget-disclaimer-line">
-                Please note that your order has been Canceled due to order time limit exceeded.<br>
+                {{'widget-payment-transaction-details.msg-failed-1' | transloco}}<br>
                 <p></p>
-                To refund the received crypto assets please contact us: <a [href]="supportEmailLink">{{supportEmail}}</a>
+                {{'widget-payment-transaction-details.msg-failed-2' | transloco}}: <a [href]="supportEmailLink">{{supportEmail}}</a>
             </span>
         </div>
 
@@ -62,7 +62,7 @@
  
     <div class="payment-details__actions">
        <button class="__main-button mg-l-20" type="button" (click)="onReturn()">
-          {{'widget-payment-result.btn-done_label' | transloco}}
+          {{'global.widget_btn-done' | transloco}}
        </button>
     </div>
  </div>

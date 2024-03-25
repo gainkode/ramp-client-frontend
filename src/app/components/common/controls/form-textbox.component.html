@@ -8,7 +8,7 @@
 <div *ngIf="!multiple" class="__form-textbox-border">
     <input
         [ngClass]="{'__form-text-box': control?.valid || !initialized, '__form-text-box-error': !control?.valid && initialized, '__form-uppercase-input': upperCase}"
-        [type]="boxType" [placeholder]="placeholder" [formControl]="control" [maxlength]="maxlength"
+        [type]="boxType" [placeholder]="placeholder | transloco" [formControl]="control" [maxlength]="maxlength"
         [readonly]="!active" [onlyNumber]="numberField" [attr.inputmode]="inputMode" [pattern]="inputPattern"
         autocomplete="off" />
     <div *ngIf="!control?.valid && initialized" class="__form-input-error-icon-container">

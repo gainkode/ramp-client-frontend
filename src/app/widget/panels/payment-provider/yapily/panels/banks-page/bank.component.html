@@ -2,7 +2,9 @@
   <div class="widget-list__header">
     <div class="widget-list__header-search">
         <mat-form-field appearance="outline">
-          <mat-label>Select country</mat-label>
+          <mat-label>
+            {{'widget-payment-bank.field_country' | transloco}}
+          </mat-label>
           <mat-select appendTo="body" [formControl]="searchCountryControl">
             <mat-option *ngFor="let country of bankCountries" [value]="country.countryCode2">
               <div class="bank-country">
@@ -41,7 +43,9 @@
 
 <div class="__dialog-wizard-data-container tx-center" *ngIf="yapilyRedirectObject">
   <div class="__dialog-message">
-      Scan this QR code to authenticate with the {{yapilyRedirectObject.bankName}} account.
+     {{'widget-payment-bank.scan_qr-1' | transloco}}
+     {{yapilyRedirectObject.bankName}} 
+     {{'widget-payment-bank.scan_qr-2' | transloco}}
   </div>
   <div class="__dialog-wizard-qr-code-container">
       <qrcode 
@@ -56,7 +60,7 @@
 
   <div class="button-proceed-wrapper">
     <button type="button" mat-raised-button (click)="onYapilyNavigate(yapilyRedirectObject.yapilyAuthUrl)">
-            Use the desktop login
+          {{'widget-payment-bank.scan_qr-btn' | transloco}}
     </button>
   </div>
 </div>

@@ -158,6 +158,5 @@
   
   "widget-payment-result.title": "Payment Details",
   "widget-payment-result.field_referenceId": "Reference ID",
-  "widget-payment-result.field_bankName": "Bank Name",
-  "widget-payment-result.btn-done_label": "Done"
+  "widget-payment-result.field_bankName": "Bank Name"
 }

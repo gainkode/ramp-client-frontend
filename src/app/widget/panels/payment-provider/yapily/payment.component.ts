@@ -1,9 +1,8 @@
-import { HttpClient, HttpUrlEncodingCodec } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { PaymentBank, PaymentBankInput, PaymentPreauthResultShort, TransactionInput, TransactionShort, TransactionSource, TransactionType, YapilyAuthorizationRequestStatus } from 'model/generated-models';
 import { CheckoutSummary } from 'model/payment.model';
-import { Subscription, finalize, map, switchMap } from 'rxjs';
-import { EnvService } from 'services/env.service';
+import { Subscription, finalize } from 'rxjs';
 import { NotificationService } from 'services/notification.service';
 import { PaymentDataService } from 'services/payment.service';
 import { WidgetPaymentPagerService } from 'services/widget-payment-pager.service';
@@ -51,7 +50,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   	this.pSubscriptions.unsubscribe();
   }
 
-  isLoadingfunc(value: boolean) {
+  isLoadingfunc(value: boolean): void {
   	this.isLoading = value;
   	this.cdr.markForCheck();
   }
@@ -93,7 +92,6 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   	this.pPaymentStatusSchangedSubscription = this.notification.subscribeToPaymentStatusChanged()
   		.subscribe({
   			next: ({ data }) => {
-  				console.log(data.paymentStatusChanged.status, YapilyAuthorizationRequestStatus.AwaitingAuthorization)
   				if (data.paymentStatusChanged.status === YapilyAuthorizationRequestStatus.AwaitingAuthorization) {
   					this.isLoading = true;
   					this.cdr.markForCheck();
@@ -162,7 +160,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   			paymentBankInput
   		).pipe(finalize(() => this.isLoading = false))
   			.subscribe({
-  				next: ({data}) => {
+  				next: ({ data }) => {
   					const order = data.preauth as PaymentPreauthResultShort;
   					this.yapilyRedirectObject = {
   						yapilyQrCodeUrl: order.openBankingObject.yapily.qrCodeUrl,

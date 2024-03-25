@@ -158,7 +158,6 @@
   "widget-payment-result.title": "Payment Details",
   "widget-payment-result.field_referenceId": "Reference ID",
   "widget-payment-result.field_bankName": "Bank Name",
-  "widget-payment-result.btn-done_label": "Done",
 
   "global.widget_processing": "Processing...",
   "global.widget_loading": "Loading...",
@@ -170,5 +169,37 @@
 
   "widget-sell-complete.field_address": "Address:",
   "widget-sell-complete.field_amount": "Amount:",
-  "widget-sell-complete.field_network": "Network:"
+  "widget-sell-complete.field_network": "Network:",
+
+  "login-panel.field_email": "Email",
+  "login-panel.field_email-placeholder": "Enter your email here",
+  "login-panel.field_code": "2FA Confirmation code",
+  "login-panel.field_code-placeholder": "Enter your confirmation code",
+  "login-panel.field_password": "Password",
+  "login-panel.field_password-placeholder": "Enter your password here",
+  "login-panel.btn_login": "Login",
+  "login-panel.btn_send": "Send",
+  "login-panel.forgot_password": "Forgot your password?",
+  "login-panel.not_member": "Not a member yet?",
+  "login-panel.create_account": "Create an account",
+
+  "widget-payment-instruction.title": "Follow Instructions to proceed transaction",
+  "widget-payment-instruction.field_format_list_bulleted": "Choose Bank from the list",
+  "widget-payment-instruction.field_verified_user-1": " Authentication in your bank by",
+  "widget-payment-instruction.field_verified_user-2": "QRcode or direct link",
+  "widget-payment-instruction.field_file_copy": "Check transaction details",
+
+  "widget-payment-bank.field_country": "Select country",
+  "widget-payment-bank.scan_qr-1": "Scan this QR code to authenticate with the",
+  "widget-payment-bank.scan_qr-2": "account.",
+  "widget-payment-bank.scan_qr-btn": "Use the desktop login",
+
+  "widget-payment-transaction-details.msg-1": "Dear Customer",
+  "widget-payment-transaction-details.msg-2": " Thank you for choosing",
+  "widget-payment-transaction-details.msg-success": "Your payment has been successfully completed.",
+  "widget-payment-transaction-details.msg-failed-1": "Please note that your order has been Canceled due to order time limit exceeded.",
+  "widget-payment-transaction-details.msg-failed-2": "To refund the received crypto assets please contact us",
+
+  "kyc.btn_verify-later":"Verify Later",
+  "widget-pager.bank-details": "Bank details"
 }

@@ -18,7 +18,14 @@ export class TranslocoHttpLoader implements TranslocoLoader {
 	) {}
 
 	getTranslation(lang: string): Observable<Translation> {
-		return this.http.get<Translation>(`/assets/i18n/${lang}.json?v=${Date.now()}`);
+		const url = window.location.href;
+		const applyTransalate = (url.includes('/payment/widget/') || url.includes('/payment/quickcheckout'));
+
+		if (applyTransalate) {
+			return this.http.get<Translation>(`/assets/i18n/${lang}.json?v=${Date.now()}`);
+		} else {
+			return this.http.get<Translation>(`/assets/i18n/en.json?v=${Date.now()}`);
+		}
 	}
 }
 

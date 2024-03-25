@@ -158,7 +158,7 @@
   
 <ng-template #recaptcha let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">Recaptcha</h5>
+    <h5 class="modal-title">{{'recaptcha.title' | transloco}}</h5>
   </div>
   <div class="modal-body">
     <div class="recaptcha-container">
@@ -175,5 +175,4 @@
 
 <div *ngIf="widgetLink">
   <iframe [src]="widgetLink | safeurl" frameborder="0" allow="camera" class="widget-iframe"></iframe>
-  <!-- <app-widget-iframe [widgetLink]="widgetLink"></app-widget-iframe> -->
 </div>

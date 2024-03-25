@@ -4,7 +4,9 @@
         (onAuthError)="onAuthError.emit()" (onProgress)="onProgress.emit($event)" (onReject)="handleReject()">
     </app-kyc-panel>
     <div class="__widget-buttons-area">
-        <button *ngIf="allowToPayIfKycFailed && rejectKyc" class="__main-button" type="button" (click)="onReject.emit()">Verify Later</button>
+        <button *ngIf="allowToPayIfKycFailed && rejectKyc" class="__main-button" type="button" (click)="onReject.emit()">
+            {{'kyc.btn_verify-later' | transloco}}
+        </button>
     </div>
 
     <div class="__widget-data-error">

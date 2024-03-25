@@ -4,8 +4,6 @@
     </h2>
     <form [formGroup]="infoForm" (ngSubmit)="onSubmit()">
         <div class="__form-separator"></div>
-        
-        <!-- Company name (Merchant) -->
         <div>
             <app-form-textbox [label]="'widget-company-level-verification.field_company'" [boxType]="'text'" [placeholder]="'Company Name'" [maxlength]="80"
                 formControlName="companyName" [errorMessages]="companyNameErrorMessages" [asterisk]="true" [separator]="true">

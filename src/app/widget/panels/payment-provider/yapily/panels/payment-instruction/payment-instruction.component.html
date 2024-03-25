@@ -1,24 +1,27 @@
 
 <div class="payment-instruction__wrapper">
    <div class="payment-instruction__header">
-      <h3>Follow Instructions to proceed transaction</h3>
+      <h3>
+         {{'widget-payment-instruction.title' | transloco}}
+      </h3>
    </div>
    <mat-card>
       <mat-card-content>
          <mat-list class="p-0">
             <mat-list-item>
                <mat-icon matListItemIcon class="mg-y-0-f mg-x-10-f">format_list_bulleted</mat-icon> 
-               Choose Bank from the list
+               {{'widget-payment-instruction.field_format_list_bulleted' | transloco}}
             </mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item class="mg-y-10-f">
                <mat-icon matListItemIcon class="mg-y-0-f mg-x-10-f">verified_user</mat-icon> 
-               Authentication in your bank by <br> QRcode or direct link
+               {{'widget-payment-instruction.field_verified_user-1' | transloco}} <br> 
+               {{'widget-payment-instruction.field_verified_user-2' | transloco}}
             </mat-list-item>
             <mat-divider></mat-divider>
             <mat-list-item>
                <mat-icon matListItemIcon class="mg-y-0-f mg-x-10-f">file_copy</mat-icon> 
-               Check transaction details
+               {{'widget-payment-instruction.field_file_copy' | transloco}}
             </mat-list-item>
           </mat-list>
       </mat-card-content>
@@ -26,10 +29,10 @@
 
    <div class="payment-instruction__actions">
       <button class="__outlined-button" type="button" (click)="onBack.emit()">
-         Back
+         {{'global.widget_btn-back' | transloco}}
       </button>
       <button class="__main-button mg-l-20" type="button" (click)="nextStep.emit()">
-         Confirm
+         {{'global.widget_btn-next' | transloco}}
       </button>
    </div>
 </div>

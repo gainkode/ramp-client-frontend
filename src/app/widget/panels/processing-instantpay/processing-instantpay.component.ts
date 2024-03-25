@@ -1,7 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PaymentApmResult } from 'model/generated-models';
-import { InstantpayDetails } from 'model/payment-base.model';
 
 @Component({
 	selector: 'app-widget-processing-instantpay',

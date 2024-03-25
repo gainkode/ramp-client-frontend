@@ -1,13 +1,24 @@
 <div *ngIf="!twoFa && !extraData">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <!-- Email -->
-        <app-form-textbox [label]="'Email'" [boxType]="'email'" [placeholder]="'Enter your email here'" [maxlength]="50"
-            formControlName="email" [errorMessages]="emailErrorMessages" [separator]="true">
+        <app-form-textbox 
+            [label]="'login-panel.field_email'" 
+            [boxType]="'email'" 
+            [placeholder]="'login-panel.field_email-placeholder'" 
+            [maxlength]="50"
+            formControlName="email" 
+            [errorMessages]="emailErrorMessages" 
+            [separator]="true">
         </app-form-textbox>
 
         <!-- Password -->
-        <app-form-password [label]="'Password'" [placeholder]="'Enter your password here'" [maxlength]="50"
-            formControlName="password" [errorMessages]="passwordErrorMessages" [separator]="true">
+        <app-form-password 
+            [label]="'login-panel.field_password'" 
+            [placeholder]="'login-panel.field_password-placeholder'" 
+            [maxlength]="50"
+            formControlName="password" 
+            [errorMessages]="passwordErrorMessages" 
+            [separator]="true">
         </app-form-password>
 
         <app-recaptcha *ngIf="isWidget === false" (completed)="capchaResult($event)"></app-recaptcha>
@@ -22,45 +33,25 @@
         <!-- Buttons for a wizard -->
         <div *ngIf="wizardButtons" class="__auth-buttons-wizard-area">
             <button class="__outlined-button" type="button" (click)="onBack.emit()">
-                BACK
+                {{'global.widget_btn-back' | transloco}}
             </button>
             <button class="__main-button __button-separator" type="submit" [disabled]="done">
-                login
+                {{'login-panel.btn_login' | transloco}}
             </button>
         </div>
         <!-- Default Buttons -->
         <div *ngIf="!wizardButtons" class="__auth-buttons-wizard-area">
             <button class="__main-button __button-login-wide __main-button-auth" type="submit" [disabled]="done">
-                login
+                {{'login-panel.btn_login' | transloco}}
             </button>
         </div>
         <div class="__form-separator"></div>
         <div class="__auth-buttons-wizard-area">
-          <span class="fake_link" (click)="openForgotPasswordPage()">Forgot your password?</span>
+            <span class="fake_link" (click)="openForgotPasswordPage()">
+                {{'login-panel.forgot_password' | transloco}}
+            </span>
         </div>
     </form>
-    <!-- <div *ngIf="socialButtons">
-        <div class="__auth-social-delimitter">
-            <div class="__auth-social-delimitter-line-container">
-                <div class="__auth-social-delimitter-line"></div>
-            </div>
-            <div class="__auth-social-delimitter-title-container">
-                <span class="__auth-social-delimitter-title">or</span>
-            </div>
-        </div>
-        <div class="__auth-buttons-wizard-area">
-            <button class="__google-button" (click)="socialSignIn('Google')" [disabled]="done">
-                <div class="__google-button-icon"></div>
-                <span class="__google-button-title">Log in with Google</span>
-            </button>
-        </div>
-        <div class="__auth-buttons-wizard-area">
-            <button class="__facebook-button" (click)="socialSignIn('Facebook')">
-                <div class="__facebook-button-icon"></div>
-                <span class="__facebook-button-title">Log in with Facebook</span>
-            </button>
-        </div>
-    </div> -->
 </div>
 
 <app-signup-info-panel #signupInfo *ngIf="extraData" buttonTitle="SAVE" (error)="registerError($event)"
@@ -69,8 +60,12 @@
 <div *ngIf=twoFa>
     <form [formGroup]="twoFaForm" (ngSubmit)="onTwoFaSubmit()">
         <!-- 2FA code -->
-        <app-form-textbox [label]="'2FA Confirmation code'" [boxType]="'text'"
-            [placeholder]="'Enter your confirmation code'" [maxlength]="20" formControlName="code"
+        <app-form-textbox 
+            [label]="'login-panel.field_code'" 
+            [boxType]="'text'"
+            [placeholder]="'login-panel.field_code-placeholder'" 
+            [maxlength]="20" 
+            formControlName="code"
             [errorMessages]="twoFaErrorMessages" [separator]="true">
         </app-form-textbox>
         <!-- Errors -->
@@ -81,12 +76,16 @@
             <div class="__form-separator"></div>
         </div>
         <button class="__main-button __button-wide" type="submit" [disabled]="done2Fa">
-            send
+            {{'login-panel.btn_send' | transloco}}
         </button>
     </form>
 </div>
 
 <div *ngIf="!twoFa && !extraData && !wizardButtons && allowCreate" class="__auth-footer-area">
-    <span class="__auth-footer-text">Not a member yet?</span>
-    <a href="/{{userTypeSection}}/auth/register">Create an account</a>
+    <span class="__auth-footer-text">
+        {{'login-panel.not_member' | transloco}}
+    </span>
+    <a href="/{{userTypeSection}}/auth/register">
+        {{'login-panel.create_account' | transloco}}
+    </a>
 </div>

@@ -554,6 +554,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			{
   				next: ({ data }) => {
   					this.inProgress = false;
+					console.log(data)
   					if (data.getTextPages) {
   						const pagesData = data.getTextPages as TextPage[];
   						this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
@@ -824,13 +825,13 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
   			this.startPayment();
   		} else if (provider.instrument === PaymentInstrument.OpenBanking) {
-  			this.nextStage(`payment_${provider.name}`, 'Payment', 5, true);
+  			this.nextStage(`payment_${provider.name}`, 'widget-pager.wire_transfer_result', 5, true);
   		} else {
   			this.createTransaction(provider.id, provider.instrument, '');
   		}
   	} else {
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
-  			this.nextStage('sell_details', 'Bank details', 2, true);
+  			this.nextStage('sell_details', 'widget-pager.bank-details', 2, true);
   		} else {
   			this.createTransaction(provider.id, provider.instrument, '');
   		}
@@ -1076,14 +1077,14 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				this.selectedWireTransfer.data = instrumentDetails.accountType.data;
   			}
 				
-  			this.nextStage('wire_transfer_result', 'Payment', 5, false);
+  			this.nextStage('wire_transfer_result', 'widget-pager.wire_transfer_result', 5, false);
   		} else {
   			this.startPayment();
   		}
   	} else if(this.transactionInput.type === TransactionType.Sell){
   		if(this.isWidget && order.sourceAddress) {
   			this.summary.sourceAddress = order.sourceAddress;
-  			this.nextStage('sell_widget_complete', 'Complete', 5, false);
+  			this.nextStage('sell_widget_complete', 'widget-pager.complete', 5, false);
   		}else{
   			this.processingComplete();
   		}
@@ -1111,7 +1112,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
   		}
   		this.transactionIdConfirmationCode = order.transactionId;
-  		this.nextStage('code_auth', 'Authorization', 3, true);
+  		this.nextStage('code_auth', 'widget-pager.login_auth', 3, true);
   	} else {
   		if(this.transactionInput.type === TransactionType.Buy) {
   			this.pager.swapStage(tempStageId);
@@ -1155,7 +1156,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   					}
   				} else {
   					this.apmResult = preAuthResult;
-  					this.nextStage('processing-instantpay', 'Payment', this.pager.step, false);
+  					this.nextStage('processing-instantpay', 'widget-pager.processing-instantpay', this.pager.step, false);
   				}
 				
   			},
