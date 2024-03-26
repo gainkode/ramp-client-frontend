@@ -2087,6 +2087,11 @@ export type OrderBy = {
   orderBy: Scalars['String']['input'];
 };
 
+export enum PageType {
+  Complete = 'Complete',
+  Disclaimer = 'Disclaimer'
+}
+
 export type PaymentApmInput = {
   instrument: PaymentInstrument;
   transactionId: Scalars['String']['input'];
@@ -2205,6 +2210,19 @@ export type PaymentOrder = {
   statusReason?: Maybe<Scalars['String']['output']>;
   transactionId?: Maybe<Scalars['String']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
+};
+
+export type PaymentOrderInvalid = {
+  __typename?: 'PaymentOrderInvalid';
+  amount: Scalars['Float']['output'];
+  created?: Maybe<Scalars['DateTime']['output']>;
+  currency: Scalars['String']['output'];
+  orderId?: Maybe<Scalars['String']['output']>;
+  originalOrderId?: Maybe<Scalars['String']['output']>;
+  params?: Maybe<Scalars['String']['output']>;
+  provider: Scalars['String']['output'];
+  status?: Maybe<Scalars['String']['output']>;
+  statusReason?: Maybe<Scalars['String']['output']>;
 };
 
 export type PaymentOrderShort = {
@@ -2357,10 +2375,6 @@ export type Query = {
   getNotifications?: Maybe<UserNotificationListResult>;
   /** Get user notifications */
   getNotificationsByUser?: Maybe<UserNotificationListResult>;
-  /** Get the rate of one currency to many */
-  getOneToManyRates?: Maybe<Array<Rate>>;
-  /** Get the rate of one currency to many (using for liquidity provider functionality) */
-  getOneToManyRatesMerchant?: Maybe<Array<Maybe<Rate>>>;
   /** Get banks for OpenBanking */
   getOpenBankingDetails?: Maybe<OpenBankingDetails>;
   /** Get payment providers */
@@ -2715,21 +2729,6 @@ export type QueryGetNotificationsByUserArgs = {
 };
 
 
-export type QueryGetOneToManyRatesArgs = {
-  currenciesTo: Array<Scalars['String']['input']>;
-  currencyFrom: Scalars['String']['input'];
-  reverse?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-
-export type QueryGetOneToManyRatesMerchantArgs = {
-  currenciesTo?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  currencyFrom?: InputMaybe<Scalars['String']['input']>;
-  reverse?: InputMaybe<Scalars['Boolean']['input']>;
-  withFactor?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-
 export type QueryGetOpenBankingDetailsArgs = {
   paymentProvider: Scalars['String']['input'];
 };
@@ -2821,6 +2820,11 @@ export type QueryGetSupportTicketsArgs = {
   orderBy?: InputMaybe<Array<OrderBy>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetTextPagesArgs = {
+  local?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -3826,8 +3830,11 @@ export type SupportTicketListResult = {
 
 export type TextPage = {
   __typename?: 'TextPage';
-  page?: Maybe<Scalars['Int']['output']>;
-  text?: Maybe<Scalars['String']['output']>;
+  default?: Maybe<Scalars['Boolean']['output']>;
+  local?: Maybe<Scalars['String']['output']>;
+  pageText?: Maybe<Scalars['String']['output']>;
+  pageType?: Maybe<PageType>;
+  textPageId?: Maybe<Scalars['String']['output']>;
 };
 
 export enum TokenAction {

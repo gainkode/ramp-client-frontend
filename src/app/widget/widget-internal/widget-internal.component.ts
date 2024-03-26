@@ -557,8 +557,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 					console.log(data)
   					if (data.getTextPages) {
   						const pagesData = data.getTextPages as TextPage[];
-  						this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
-  						this.completeTextData = pagesData.filter(x => x.page === 2).map(x => x.text ?? '').filter(x => x !== '');
+  						// this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
+  						// this.completeTextData = pagesData.filter(x => x.page === 2).map(x => x.text ?? '').filter(x => x !== '');
   					}
   					this.initPage();
   				},

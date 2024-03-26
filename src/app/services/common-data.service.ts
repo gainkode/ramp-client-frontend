@@ -221,7 +221,7 @@ mutation AddMyWidgetUserParams(
 
 const GET_TEXT_PAGES = gql`
 query{
-	getTextPages{page, text}
+	getTextPages{pageText, local, pageType}
 }
 `;
 
