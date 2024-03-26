@@ -220,8 +220,14 @@ mutation AddMyWidgetUserParams(
 `;
 
 const GET_TEXT_PAGES = gql`
-query{
-	getTextPages{pageText, local, pageType}
+query($local: String!){
+  getTextPages(
+    local: $local
+  ) {
+    pageText, 
+    local, 
+    pageType
+  }
 }
 `;
 
@@ -289,9 +295,12 @@ export class CommonDataService {
 	}
 
 	getCustomText(): QueryRef<any, EmptyObject> {
+    const local = 'fr';
+
 		return this.apollo.watchQuery<any>({
 			query: GET_TEXT_PAGES,
-			fetchPolicy: 'network-only'
+			fetchPolicy: 'network-only',
+      variables: { local }
 		});
 	}
 }
