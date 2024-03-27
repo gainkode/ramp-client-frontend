@@ -33,4 +33,8 @@
             {{'global.widget_btn-return' | transloco}}
         </button>
     </div>
+
+    <ng-container *ngIf="inProgress">
+        <app-spinner></app-spinner>
+    </ng-container>
 </div>

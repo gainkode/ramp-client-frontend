@@ -34,12 +34,16 @@
             {{'global.widget_btn-back' | transloco}}
         </button>
         <button class="__main-button __button-wide-separator" type="button" [disabled]="done || !agreementChecked"
-            (click)="done=true;onNext.emit()">
+            (click)="done = true; onNext.emit()">
             {{'global.widget_btn-next' | transloco}}
         </button>
     </div>
 
-    <div *ngIf="errorMessageData != ''" class="__widget-data-error">
+    <div *ngIf="errorMessageData !== ''" class="__widget-data-error">
         {{errorMessageData}}
     </div>
+
+    <ng-container *ngIf="inProgress">
+        <app-spinner></app-spinner>
+    </ng-container>
 </div>

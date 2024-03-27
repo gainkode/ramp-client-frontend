@@ -5,14 +5,12 @@ import { environment } from '@environments/environment';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from 'model/cost-scheme.model';
-import { completeDataDefault, disclaimerDataDefault } from 'model/custom-data.model';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PageType, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionInput, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionInput, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
 import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategoryItem } from 'model/payment-base.model';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { WalletItem } from 'model/wallet.model';
 import { Subscription, take } from 'rxjs';
 import { AuthService } from 'services/auth.service';
-import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
 import { NotificationService } from 'services/notification.service';
 import { PaymentDataService } from 'services/payment.service';
@@ -73,8 +71,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   paymentComplete = false;
   notificationStarted = false;
   recentTransactions = false;
-  disclaimerTextData = disclaimerDataDefault;
-  completeTextData = completeDataDefault;
   transactionIdConfirmationCode = '';
   kycSubscribeResult: boolean | undefined = undefined;
   transactionInput: TransactionInput | undefined = undefined;
@@ -99,13 +95,12 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	private widgetService: WidgetService,
   	private notification: NotificationService,
   	public auth: AuthService,
-  	private commonService: CommonDataService,
   	private dataService: PaymentDataService,
   	private profileService: ProfileDataService,
   	private errorHandler: ErrorService) { }
 
   private companyLevelVerificationFlag = false;
-  	ngOnInit(): void {
+  ngOnInit(): void {
   	this.widgetService.register(
   		this.progressChanged.bind(this),
   		this.handleError.bind(this),
@@ -127,7 +122,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   	this.loadAccountData();
   	this.pager.init('initialization', 'widget-pager.initialization');
-  	this.loadCustomData();
+  	this.initPage();
   }
 
   private initPage(): void {
@@ -542,37 +537,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   removeStage(stage: string): void {
   	this.pager.removeStage(stage);
-  }
-
-  private loadCustomData(): void {
-  	this.errorMessage = '';
-  	const widgetData = this.commonService.getCustomText().pipe(take(1));
-  	this.inProgress = true;
-  	this.pSubscriptions.add(widgetData.subscribe({
-  				next: pagesData => {
-  					this.inProgress = false;
-
-					if (pagesData) {
-						const completeTextRaw = pagesData.find(page => page.pageType === PageType.Complete)?.pageText;
-						const disclaimerTextRaw = pagesData.find(page => page.pageType === PageType.Disclaimer)?.pageText;
-
-						this.disclaimerTextData = this.convertStringToArray(disclaimerTextRaw);
-						this.completeTextData = this.convertStringToArray(completeTextRaw);
-					}
-
-  					this.initPage();
-  				},
-  				error: () => {
-  					this.inProgress = false;
-  					this.initPage();
-  				}
-  			})
-  	);
-  }
-
-  private convertStringToArray(input: string): string[] {
-    const lines = input.split('\n').map(line => line.trim());
-    return lines;
   }
 
   private loadUserParams(): void {
@@ -1133,7 +1097,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	} else if (this.summary.providerView?.instrument === PaymentInstrument.Apm) {
   		this.completeApmTransaction(this.summary.transactionId, PaymentInstrument.Apm);
   	} else if(this.summary.providerView?.instrument === PaymentInstrument.FiatVault){
-  		this.completeTextData = completeDataDefault;
   		this.nextStage('complete', 'widget-pager.complete', 6, false);
   	} else if (this.summary.providerView?.instrument === PaymentInstrument.WireTransfer) {
   		this.widgetService.getWireTransferSettings(this.summary, this.widget);

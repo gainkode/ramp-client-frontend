@@ -78,11 +78,17 @@
           (onProgress)="progressChanged($event)">
           </app-sell-widget-complete>
           <!-- Disclaimer -->
-          <app-widget-disclaimer *ngSwitchCase="'intro_disclaimer'" [agreementChecked]="summary.agreementChecked"
-            [textContent]="disclaimerTextData" [errorMessageData]="errorMessage" [backButton]=false (onNext)="introDisclaimerNext()">
+          <app-widget-disclaimer 
+            *ngSwitchCase="'intro_disclaimer'" 
+            [agreementChecked]="summary.agreementChecked"
+            [errorMessageData]="errorMessage" 
+            [backButton]=false (onNext)="introDisclaimerNext()">
           </app-widget-disclaimer>
-          <app-widget-disclaimer *ngSwitchCase="'disclaimer'" [agreementChecked]="summary.agreementChecked"
-            [textContent]="disclaimerTextData" [errorMessageData]="errorMessage" (onBack)="stageBack()" (onNext)="disclaimerNext()">
+          <app-widget-disclaimer 
+            *ngSwitchCase="'disclaimer'" 
+            [agreementChecked]="summary.agreementChecked"
+           [errorMessageData]="errorMessage"
+            (onBack)="stageBack()" (onNext)="disclaimerNext()">
           </app-widget-disclaimer>
           <!-- Register -->
           <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="stageBack()"
@@ -148,8 +154,11 @@
             [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onComplete)="processingComplete()">
           </app-widget-processing-instantpay>
           <!-- Complete -->
-          <app-widget-complete *ngSwitchCase="'complete'" [showRestartButton]="widget.widgetId===''"
-            [textContent]="completeTextData" (onFinish)="resetWizard()"></app-widget-complete>
+          <app-widget-complete 
+            *ngSwitchCase="'complete'" 
+            [showRestartButton]="widget.widgetId===''"
+            (onFinish)="resetWizard()">
+          </app-widget-complete>
           <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" (onFinish)="resetWizard()"></app-widget-error>
       </div>
 
