@@ -767,8 +767,8 @@ export class DashboardService implements OnDestroy {
 		}));
 	}
 
-	getFeeValue(val: number | null): string | null {
-		return val ? `${getCurrencySign('EUR')}${val}` : null;
+	getFeeValue(val: number = 0): string {
+		return getCurrencySign('EUR') + val;
 	}
 
 	private filterCardData(dashboardData: DashboardStats): DashboardStats {

@@ -6,7 +6,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from 'model/cost-scheme.model';
 import { completeDataDefault, disclaimerDataDefault } from 'model/custom-data.model';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionInput, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PageType, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionInput, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
 import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategoryItem } from 'model/payment-base.model';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { WalletItem } from 'model/wallet.model';
@@ -89,7 +89,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   isOrderDetailsComplete = false;
   isSingleOrderDetailsCompleted = false;
   isSinglePage = true;
-
   constructor(
   	private modalService: NgbModal,
   	private changeDetector: ChangeDetectorRef,
@@ -106,7 +105,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	private errorHandler: ErrorService) { }
 
   private companyLevelVerificationFlag = false;
-
   	ngOnInit(): void {
   	this.widgetService.register(
   		this.progressChanged.bind(this),
@@ -124,6 +122,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.onRecaptchaCallback.bind(this),
   		this.quickCheckout
   	);
+	
   	this.initMessage = 'global.widget_loading';
 
   	this.loadAccountData();
@@ -547,19 +546,20 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   private loadCustomData(): void {
   	this.errorMessage = '';
-  	const widgetData = this.commonService.getCustomText().valueChanges.pipe(take(1));
+  	const widgetData = this.commonService.getCustomText().pipe(take(1));
   	this.inProgress = true;
-  	this.pSubscriptions.add(
-  		widgetData.subscribe(
-  			{
-  				next: ({ data }) => {
+  	this.pSubscriptions.add(widgetData.subscribe({
+  				next: pagesData => {
   					this.inProgress = false;
-					console.log(data)
-  					if (data.getTextPages) {
-  						const pagesData = data.getTextPages as TextPage[];
-  						// this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
-  						// this.completeTextData = pagesData.filter(x => x.page === 2).map(x => x.text ?? '').filter(x => x !== '');
-  					}
+
+					if (pagesData) {
+						const completeTextRaw = pagesData.find(page => page.pageType === PageType.Complete)?.pageText;
+						const disclaimerTextRaw = pagesData.find(page => page.pageType === PageType.Disclaimer)?.pageText;
+
+						this.disclaimerTextData = this.convertStringToArray(disclaimerTextRaw);
+						this.completeTextData = this.convertStringToArray(completeTextRaw);
+					}
+
   					this.initPage();
   				},
   				error: () => {
@@ -568,6 +568,11 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				}
   			})
   	);
+  }
+
+  private convertStringToArray(input: string): string[] {
+    const lines = input.split('\n').map(line => line.trim());
+    return lines;
   }
 
   private loadUserParams(): void {

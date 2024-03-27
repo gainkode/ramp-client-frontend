@@ -11,7 +11,7 @@ export class WidgetDisclaimerComponent {
   @Input() agreementChecked = false;
   @Input() backButton = true;
   @Input() set textContent(data: string[]) {
-  	if (data.length > 0) {
+  	if (data?.length > 0) {
   		this.textData = new CustomTextList(data);
   	}
   }

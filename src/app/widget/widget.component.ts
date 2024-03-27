@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionInput, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PageType, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionInput, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -567,18 +567,21 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
   private loadCustomData(): void {
   	this.errorMessage = '';
-  	const widgetData = this.commonService.getCustomText().valueChanges.pipe(take(1));
+  	const widgetData = this.commonService.getCustomText().pipe(take(1));
   	this.inProgress = true;
   	this.pSubscriptions.add(
   		widgetData.subscribe(
   			{
-  				next: ({ data }) => {
+  				next: pagesData => {
+					
   					this.inProgress = false;
-  					if (data.getTextPages) {
-  						const pagesData = data.getTextPages as TextPage[];
-  						// this.disclaimerTextData = pagesData.filter(x => x.page === 1).map(x => x.text ?? '').filter(x => x !== '');
-  						// this.completeTextData = pagesData.filter(x => x.page === 2).map(x => x.text ?? '').filter(x => x !== '');
-  					}
+					  if (pagesData) {
+						const completeTextRaw = pagesData.find(page => page.pageType === PageType.Complete)?.pageText;
+						const disclaimerTextRaw = pagesData.find(page => page.pageType === PageType.Disclaimer)?.pageText;
+
+						this.disclaimerTextData = this.convertStringToArray(disclaimerTextRaw);
+						this.completeTextData = this.convertStringToArray(completeTextRaw);
+					}
   					this.initPage();
   				},
   				error: () => {
@@ -587,6 +590,11 @@ export class WidgetComponent implements OnInit, OnDestroy {
   				}
   			})
   	);
+  }
+
+  private convertStringToArray(input: string): string[] {
+    const lines = input.split('\n').map(line => line.trim());
+    return lines;
   }
 
   private loadUserParams(): void {

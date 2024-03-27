@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { TranslocoService } from '@ngneat/transloco';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { Observable } from 'rxjs';
+import { TextPage } from 'model/generated-models';
+import { map, Observable } from 'rxjs';
 
 const GET_SETTINGS_CURRENCY = gql`
   query GetSettingsCurrency {
@@ -233,6 +235,7 @@ query($local: String!){
 
 @Injectable()
 export class CommonDataService {
+  private readonly _translocoSerivce = inject(TranslocoService);
 	constructor(private apollo: Apollo) { }
 
 	getSettingsCurrency(): QueryRef<any, EmptyObject> {
@@ -294,13 +297,13 @@ export class CommonDataService {
 		});
 	}
 
-	getCustomText(): QueryRef<any, EmptyObject> {
-    const local = 'fr';
-
-		return this.apollo.watchQuery<any>({
-			query: GET_TEXT_PAGES,
-			fetchPolicy: 'network-only',
-      variables: { local }
-		});
-	}
+  getCustomText(): Observable<TextPage[]> {
+    const local = this._translocoSerivce.getActiveLang();
+  
+    return this.apollo.watchQuery<{ getTextPages: TextPage[]; }>({
+      query: GET_TEXT_PAGES,
+      variables: { local },
+      fetchPolicy: 'network-only',
+    }).valueChanges.pipe(map(result => result.data.getTextPages));
+  }
 }
