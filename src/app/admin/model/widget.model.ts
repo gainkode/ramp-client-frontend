@@ -92,8 +92,8 @@ export class WidgetItem {
 			this.currenciesFiat = data.currenciesFiat ?? [];
 
 			this.destinationAddress = data.destinationAddress;
-
-			if(data.merchantFeeAddress?.length !== 0){
+			
+			if(data.merchantFeeAddress && data.merchantFeeAddress?.length !== 0){
 				this.merchantFeeDestinationAddress = data.merchantFeeAddress;
 			}
       
