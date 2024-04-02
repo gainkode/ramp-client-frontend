@@ -8,7 +8,7 @@ import { EnvService } from 'services/env.service';
 })
 export class MerchantSuccessComponent {
 	successType = '';
-	logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+	logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
 	logoAlt = EnvService.product;
 
 	constructor(public router: Router, activeRoute: ActivatedRoute) {

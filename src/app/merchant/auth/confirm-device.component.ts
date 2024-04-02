@@ -15,7 +15,7 @@ export class MerchantConfirmDeviceComponent implements OnDestroy {
 	validated: boolean;
 	valid: boolean;
 	errorMessage = '';
-	logoSrc = `${EnvService.image_host}/images/logo-color.png`;
+	logoSrc = `${EnvService.image_host}/images/logo-widget.png`;
 	logoAlt = EnvService.product;
 	private subscriptions: Subscription = new Subscription();
 
