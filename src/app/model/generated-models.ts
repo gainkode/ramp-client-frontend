@@ -988,7 +988,6 @@ export type LiquidityWithdrawalOrderInfo = {
   orderId?: Maybe<Scalars['String']['output']>;
   originalOrderId?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
-  subStatus?: Maybe<Scalars['String']['output']>;
   transferHash?: Maybe<Scalars['String']['output']>;
 };
 
@@ -4829,11 +4828,11 @@ export type UserDeviceListResult = {
 export type UserFilter = {
   __typename?: 'UserFilter';
   actions?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  messages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   cryptoWallets?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   customers?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   dashboard?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   fiatWallets?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  messages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   notifications?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   risks?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   transactions?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -4844,12 +4843,11 @@ export type UserFilter = {
 
 export type UserFilterInput = {
   actions?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  messages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   cryptoWallets?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   customers?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   dashboard?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   fiatWallets?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  notifications?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  messages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   risks?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   transactions?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   transactionsHistory?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;

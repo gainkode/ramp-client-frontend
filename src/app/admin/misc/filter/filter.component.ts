@@ -174,10 +174,8 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 		});
 
 		/* Get user filters, if they are exists then assign them to current filteredFields */
-		const userFilters = this.auth.user.filters[this.filterType];
-		
-		if (userFilters) {
-			this.filteredFields = userFilters;
+		if (this.auth.user?.filters && this.auth.user?.filters[this.filterType]) {
+			this.filteredFields = this.auth.user?.filters[this.filterType];
 			filterFieldsList();
 		}
 	
