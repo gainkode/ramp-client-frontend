@@ -23,7 +23,7 @@
             </button>
           </div>
 
-          <app-admin-filter [fields]="filterFields" [filterData]="filter" (filter)="handleFilterApplied($event)">
+          <app-admin-filter [filterType]="'users'" [fields]="filterFields" [filterData]="filter" (filter)="handleFilterApplied($event)">
           </app-admin-filter>
 
           <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>

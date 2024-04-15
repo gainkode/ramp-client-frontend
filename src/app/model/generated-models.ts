@@ -988,6 +988,7 @@ export type LiquidityWithdrawalOrderInfo = {
   orderId?: Maybe<Scalars['String']['output']>;
   originalOrderId?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
+  subStatus?: Maybe<Scalars['String']['output']>;
   transferHash?: Maybe<Scalars['String']['output']>;
 };
 
@@ -1240,6 +1241,7 @@ export type Mutation = {
   /** This endpoint can be used to update transaction flag */
   updateTransactionFlag?: Maybe<Transaction>;
   updateUser?: Maybe<User>;
+  updateUserFilters?: Maybe<UserFilter>;
   updateUserFlag?: Maybe<User>;
   /** This endpoint can be used to update the user's wallet. */
   updateUserVault?: Maybe<VaultAccount>;
@@ -2000,6 +2002,11 @@ export type MutationUpdateTransactionFlagArgs = {
 export type MutationUpdateUserArgs = {
   user?: InputMaybe<UserInput>;
   userId: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateUserFiltersArgs = {
+  filters?: InputMaybe<UserFilterInput>;
 };
 
 
@@ -2875,6 +2882,7 @@ export type QueryGetTransactionsArgs = {
   transactionIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   transactionStatusesOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   transactionTypesOnly?: InputMaybe<Array<TransactionType>>;
+  transactionWasEverCompleted?: InputMaybe<Scalars['Boolean']['input']>;
   updateDateInterval?: InputMaybe<DateTimeInterval>;
   userIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   userTierLevelsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -4471,6 +4479,7 @@ export type User = {
   email: Scalars['String']['output'];
   emailConfirmed?: Maybe<Scalars['DateTime']['output']>;
   fiatVaults?: Maybe<Array<FiatVault>>;
+  filters?: Maybe<UserFilter>;
   firstName?: Maybe<Scalars['String']['output']>;
   flag?: Maybe<Scalars['Boolean']['output']>;
   flatNumber?: Maybe<Scalars['String']['output']>;
@@ -4680,6 +4689,7 @@ export enum UserActionType {
   UpdateSettings = 'updateSettings',
   UpdateTransaction = 'updateTransaction',
   UpdateUser = 'updateUser',
+  UpdateUserFilter = 'updateUserFilter',
   UpdateWireTransferBankAccount = 'updateWireTransferBankAccount'
 }
 
@@ -4814,6 +4824,37 @@ export type UserDeviceListResult = {
   __typename?: 'UserDeviceListResult';
   count?: Maybe<Scalars['Int']['output']>;
   list?: Maybe<Array<Maybe<UserDevice>>>;
+};
+
+export type UserFilter = {
+  __typename?: 'UserFilter';
+  actions?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  messages?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  cryptoWallets?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  customers?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  dashboard?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  fiatWallets?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  notifications?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  risks?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  transactions?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  transactionsHistory?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  users?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  widgets?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+export type UserFilterInput = {
+  actions?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  messages?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  cryptoWallets?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  customers?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  dashboard?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  fiatWallets?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  notifications?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  risks?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  transactions?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  transactionsHistory?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  users?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  widgets?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type UserInput = {

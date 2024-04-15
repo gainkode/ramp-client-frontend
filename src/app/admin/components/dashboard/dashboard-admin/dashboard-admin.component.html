@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <app-admin-filter [fields]="filterFields" [fiatCurrencies]="fiatCurrencies" [filterData]="defaultFilter"
+    <app-admin-filter [filterType]="'dashboard'" [fields]="filterFields" [fiatCurrencies]="fiatCurrencies" [filterData]="defaultFilter"
         (filter)="handleFilterApplied($event)">
     </app-admin-filter>
 

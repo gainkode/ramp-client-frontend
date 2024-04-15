@@ -61,7 +61,8 @@ import {
 	QueryGetDashboardMerchantStatsArgs,
 	SettingsFeeSimilarResult,
   SettingsCostSimilarResult,
-  TransactionSimulatorResult
+  TransactionSimulatorResult,
+  UserFilterInput
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -696,6 +697,7 @@ const GET_TRANSACTIONS = gql`
     $kycStatusesOnly: [TransactionKycStatus!]
     $createdDateInterval: DateTimeInterval
     $completedDateInterval: DateTimeInterval
+    $updateDateInterval: DateTimeInterval
     $walletAddressOnly: String
     $verifyWhenPaid: Boolean
     $filter: String
@@ -703,6 +705,7 @@ const GET_TRANSACTIONS = gql`
     $first: Int
     $orderBy: [OrderBy!]
     $flag: Boolean
+    $transactionWasEverCompleted: Boolean
     $preauth: Boolean
     $fiatCurrency: String
   ) {
@@ -724,10 +727,12 @@ const GET_TRANSACTIONS = gql`
       kycStatusesOnly: $kycStatusesOnly
       createdDateInterval: $createdDateInterval
       completedDateInterval: $completedDateInterval
+      updateDateInterval: $updateDateInterval
       walletAddressOnly: $walletAddressOnly
       verifyWhenPaid: $verifyWhenPaid
       filter: $filter
       flag: $flag
+      transactionWasEverCompleted: $transactionWasEverCompleted
       preauth: $preauth
       fiatCurrency: $fiatCurrency
       skip: $skip
@@ -2081,6 +2086,29 @@ mutation UpdateUserVault(
 }
 `;
 
+const UPDATE_USER_FILTER = gql`
+mutation UpdateUserFilters(
+  $filters: UserFilterInput
+) {
+  updateUserFilters(
+    filters: $filters
+  ) {
+    actions
+    cryptoWallets
+    customers
+    dashboard
+    fiatWallets
+    risks
+    transactions
+    transactionsHistory
+    users
+    widgets
+    notifications
+    messages
+  }
+}
+`;
+
 const UPDATE_USER = gql`
 mutation UpdateUser(
   $userId: ID!
@@ -3389,6 +3417,7 @@ export class AdminDataService {
 			userIdsOnly: filter?.users,
 			widgetIdsOnly: widgetIds,
 			flag: filter?.transactionFlag,
+      transactionWasEverCompleted: filter?.transactionWasEverCompleted,
 			preauth: filter?.preauthFlag,
 			fiatCurrency: filter?.fiatCurrency,
 			kycStatusesOnly: filter?.transactionKycStatuses,
@@ -3399,6 +3428,7 @@ export class AdminDataService {
 			paymentInstrumentsOnly: filter?.paymentInstruments,
 			createdDateInterval: filter?.createdDateInterval,
 			completedDateInterval: filter?.completedDateInterval,
+      updateDateInterval: filter?.updatedDateInterval,
 			walletAddressOnly: filter?.walletAddress,
 			filter: filter?.search,
 			verifyWhenPaid: filter?.verifyWhenPaid,
@@ -4341,6 +4371,15 @@ export class AdminDataService {
 			}));
 		}
 	}
+
+	updateUserFilters(filters: UserFilterInput): Observable<any> {
+    return this.apollo.mutate({
+			mutation: UPDATE_USER_FILTER,
+			variables: { filters }
+		}).pipe(tap(() => {
+			this.snackBar.open(`User filter was updated`, undefined, { duration: 5000 });
+		}));
+  }
 
 	updateUserVault(wallet: AssetAddress): Observable<any> {
 		return this.apollo.mutate({

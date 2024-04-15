@@ -36,6 +36,7 @@ export class Filter {
 	public from?: string;
 	public verifyWhenPaid?: boolean;
 	public transactionFlag?: boolean;
+	public transactionWasEverCompleted?: boolean;
 	public preauthFlag?: boolean;
 	public zeroBalance?: boolean;
 	public transactionId?: string;
@@ -189,6 +190,9 @@ export class Filter {
 		}
 		if (filterValues.transactionFlag) {
 			this.transactionFlag = filterValues.transactionFlag;
+		}
+		if (filterValues.transactionWasEverCompleted) {
+			this.transactionWasEverCompleted = filterValues.transactionWasEverCompleted;
 		}
 		if (filterValues.preauthFlag) {
 			this.preauthFlag = filterValues.preauthFlag;

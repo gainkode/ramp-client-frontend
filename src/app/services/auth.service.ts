@@ -58,7 +58,21 @@ const LOGIN = gql`
                   defaultFiatCurrency,
                   defaultCryptoCurrency,
                   avatar,
-                  companyName
+                  companyName,
+									filters {
+										actions
+										cryptoWallets
+										customers
+										dashboard
+										fiatWallets
+										risks
+										transactions
+										transactionsHistory
+										users
+										widgets
+										notifications
+										messages
+									}
             }
             authTokenAction
         }
