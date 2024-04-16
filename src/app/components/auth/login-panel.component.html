@@ -14,7 +14,7 @@
         <!-- Password -->
         <app-form-password 
             [label]="'login-panel.field_password'" 
-            [placeholder]="'login-panel.field_password-placeholder'" 
+            [placeholder]="'login-panel.field_password-placeholder' | transloco" 
             [maxlength]="50"
             formControlName="password" 
             [errorMessages]="passwordErrorMessages" 
