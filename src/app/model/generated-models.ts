@@ -313,6 +313,7 @@ export enum CallbackType {
   ExternalSendgridCallback = 'externalSendgridCallback',
   ExternalSuftiCallback = 'externalSuftiCallback',
   ExternalSumsubCallback = 'externalSumsubCallback',
+  ExternalUtilaCallback = 'externalUtilaCallback',
   ExternalYapilyAuthCallback = 'externalYapilyAuthCallback',
   ExternalYapilyCallback = 'externalYapilyCallback',
   ExternalYapilyQrcodeCallback = 'externalYapilyQrcodeCallback',
@@ -388,6 +389,14 @@ export type CreateLiquidityExchangeOrderParams = {
   transactionId?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<LiquidityExchangeOrderType>;
   userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateOrUpdateVaultAccountInput = {
+  autoFuel?: InputMaybe<Scalars['Boolean']['input']>;
+  defaultVault?: InputMaybe<Scalars['Boolean']['input']>;
+  hiddenOnUI?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type CreateTransferOrderParams = {
@@ -466,7 +475,8 @@ export type CurrencyPairLiquidityProvidersListResult = {
 
 export enum CustodyProvider {
   Fireblocks = 'Fireblocks',
-  PrimeTrustCustody = 'PrimeTrustCustody'
+  PrimeTrustCustody = 'PrimeTrustCustody',
+  Utila = 'Utila'
 }
 
 export type CustodyWithdrawalOrderInfo = {
@@ -1518,7 +1528,7 @@ export type MutationCreateUserTransactionArgs = {
 
 export type MutationCreateVaultAccountArgs = {
   custodyProviderName?: InputMaybe<Scalars['String']['input']>;
-  params?: InputMaybe<Array<StringMapInput>>;
+  params?: InputMaybe<CreateOrUpdateVaultAccountInput>;
   userId: Scalars['String']['input'];
 };
 
@@ -2024,7 +2034,7 @@ export type MutationUpdateUserVaultArgs = {
 
 export type MutationUpdateVaultAccountArgs = {
   custodyProviderName?: InputMaybe<Scalars['String']['input']>;
-  params?: InputMaybe<Array<StringMapInput>>;
+  params?: InputMaybe<CreateOrUpdateVaultAccountInput>;
   vaultId: Scalars['String']['input'];
 };
 
@@ -2474,6 +2484,8 @@ export type Query = {
   myContacts: UserContactListResult;
   myDefaultSettingsFee?: Maybe<SettingsFee>;
   myDevices?: Maybe<UserDeviceListResult>;
+  /** This endpoint can be used to retrieve all existing wallets of the current user that do not contain the requested asset. */
+  myExistingWallets?: Maybe<WalletShortShortListResult>;
   /** This endpoint can be used to get all fiat wallets for the current user */
   myFiatVaults?: Maybe<FiatVaultListResult>;
   /** Get KYC information for current user */
@@ -3096,6 +3108,11 @@ export type QueryMyContactsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryMyExistingWalletsArgs = {
+  assetId?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -4707,6 +4724,27 @@ export type UserAddress = {
   vaultId?: Maybe<Scalars['String']['output']>;
 };
 
+export type UserAddressAsset = {
+  __typename?: 'UserAddressAsset';
+  created?: Maybe<Scalars['DateTime']['output']>;
+  currency?: Maybe<Scalars['String']['output']>;
+  data?: Maybe<Scalars['String']['output']>;
+  deleted?: Maybe<Scalars['DateTime']['output']>;
+  displayName?: Maybe<Scalars['String']['output']>;
+  network?: Maybe<Scalars['String']['output']>;
+  originalAssetId?: Maybe<Scalars['String']['output']>;
+  userAddress?: Maybe<Scalars['String']['output']>;
+  userAddressAssetId?: Maybe<Scalars['ID']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
+  walletId?: Maybe<Scalars['String']['output']>;
+};
+
+export type UserAddressAssetListResult = {
+  __typename?: 'UserAddressAssetListResult';
+  count?: Maybe<Scalars['Int']['output']>;
+  list?: Maybe<Array<UserAddressAsset>>;
+};
+
 export type UserAddressListResult = {
   __typename?: 'UserAddressListResult';
   count?: Maybe<Scalars['Int']['output']>;
@@ -5274,6 +5312,18 @@ export enum WalletAssetStatus {
   Rejected = 'REJECTED',
   WaitingForApproval = 'WAITING_FOR_APPROVAL'
 }
+
+export type WalletShort = {
+  __typename?: 'WalletShort';
+  name?: Maybe<Scalars['String']['output']>;
+  walletId?: Maybe<Scalars['String']['output']>;
+};
+
+export type WalletShortShortListResult = {
+  __typename?: 'WalletShortShortListResult';
+  count?: Maybe<Scalars['Int']['output']>;
+  list?: Maybe<Array<Maybe<WalletShort>>>;
+};
 
 export type Widget = {
   __typename?: 'Widget';

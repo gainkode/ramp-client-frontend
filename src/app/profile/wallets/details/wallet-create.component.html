@@ -45,12 +45,12 @@
                         <div class="__form-separator"></div>
                     </div>
 
-                    <div *ngIf="(selectedCurrency?.currencyBlockchain) && !blockchainFlagDisabled && ethReadyWallets.length>0">
+                    <div *ngIf="(selectedCurrency?.currencyBlockchain) && wallets.length>0">
                         <div class="__tool-bar-double-sided-data-box-top">
                             <div class="__tool-bar-block">
                                 <div class="__toggle-switch">
                                     <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
-                                        formControlName="useExistingEthWallet">
+                                        formControlName="useExistingWallet">
                                 </div>
                             </div>
                             <div class="__tool-bar-block">
@@ -60,19 +60,18 @@
                             </div>
                         </div>
 
-                        <!-- ETH Wallet -->
-                        <div *ngIf="ethExisting" class="__profile-details-item-block">
+                        <div *ngIf="useExistingWallet" class="__profile-details-item-block">
                             <div class="__form-text-border">
-                                <mat-select formControlName="ethWallet" style="margin: 8px 0px 0px 0px;"
+                                <mat-select formControlName="existingWallet" style="margin: 8px 0px 0px 0px;"
                                     placeholder="Select existing wallet">
                                     <mat-select-trigger>
                                         <div class="__form-finance-combo-item">
                                             <span class="__form-finance-combo-item-text">
-                                                {{selectedEthWallet}}
+                                                {{selectedWallet}}
                                             </span>
                                         </div>
                                     </mat-select-trigger>
-                                    <mat-option *ngFor="let item of ethReadyWallets" [value]="item.id" style="height: 32px;">
+                                    <mat-option *ngFor="let item of wallets" [value]="item.walletId" style="height: 32px;">
                                         <div class="__form-finance-combo-item">
                                             <span class="__form-finance-combo-item-text">
                                                 {{item.name}}
@@ -89,7 +88,7 @@
                     </div>
 
                     <!-- Wallet name -->
-                    <app-form-textbox *ngIf="!ethExisting" [label]="'Wallet name'" [smallLabel]="true" [boxType]="'text'"
+                    <app-form-textbox *ngIf="!useExistingWallet" [label]="'Wallet name'" [smallLabel]="true" [boxType]="'text'"
                         [placeholder]="'Enter wallet name'" [maxlength]="50" formControlName="walletName"
                         [errorMessages]="walletNameErrorMessages" [separator]="true">
                     </app-form-textbox>

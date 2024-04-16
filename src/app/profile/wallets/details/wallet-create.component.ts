@@ -4,7 +4,7 @@ import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShort, AssetAddressShortListResult, CurrencyBlockchain, VaultAccount } from 'model/generated-models';
+import { AssetAddressShort, AssetAddressShortListResult, CurrencyBlockchain, VaultAccount, WalletShort, WalletShortShortListResult } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
 import { WalletItem } from 'model/wallet.model';
@@ -29,27 +29,20 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     title = 'Add new wallet';
     errorMessage = '';
     inProgress = false;
-    wallets: WalletItem[] = [];
-    ethReadyWallets: WalletItem[] = [];
-    selectedEthWallet = '';
+    wallets: WalletShort[] = [];
+    selectedWallet = '';
     wallet: WalletItem | undefined = undefined;
     selectedCurrency: CurrencyView | undefined = undefined;
     currencyInit = false;
-    blockchainFlagDisabled = false;
-		ethFlag = false;
-		trxFlag = false;
-    ethExisting = false;
+    useExistingWallet = false;
     createForm = this.formBuilder.group({
     	currency: ['', { validators: [Validators.required], updateOn: 'change' }],
-    	useExistingEthWallet: [false, { validators: [], updateOn: 'change' }],
-    	ethWallet: ['', { validators: [], updateOn: 'change' }],
+    	useExistingWallet: [false, { validators: [], updateOn: 'change' }],
+    	existingWallet: ['', { validators: [], updateOn: 'change' }],
     	walletName: ['', { validators: [Validators.required], updateOn: 'change' }]
     });
     walletNameErrorMessages: { [key: string]: string; } = {
     	['required']: 'Wallet name is required'
-    };
-    ethWalletErrorMessages: { [key: string]: string; } = {
-    	['required']: 'Wallet address is required'
     };
 
     private subscriptions: Subscription = new Subscription();
@@ -67,43 +60,32 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     	this.subscriptions.add(
     		this.currencyField?.valueChanges.subscribe(val => {
     			this.currencyInit = true;
-					this.ethFlag = this.selectedCurrency?.currencyBlockchain === CurrencyBlockchain.Ethereum;
-					this.trxFlag = this.selectedCurrency?.currencyBlockchain === CurrencyBlockchain.Tron;
     			this.selectedCurrency = this.cryptoList.find(x => x.symbol === val);
-    			this.useExistingEthWalletField?.setValue(false);
-    			this.useExistingEthWalletField?.updateValueAndValidity();
-    			this.ethExisting = false;
-    			this.ethReadyWallets = [];
-    			if (this.selectedCurrency.currencyBlockchain) {
-    				this.blockchainFlagDisabled = true;
-    				if (!this.walletsLoaded) {
-    					this.loadWallets();
-    				} else {
-    					this.filterWallets();
-    				}
-    			}
+    			this.useExistingWalletField?.setValue(false);
+    			this.useExistingWalletField?.updateValueAndValidity();
+    			this.loadWallets();
     		}));
     	this.subscriptions.add(
-    		this.useExistingEthWalletField?.valueChanges.subscribe(val => {
-    			this.ethExisting = val;
-    			if (this.ethExisting) {
-    				this.ethWalletField?.setValidators([
+    		this.useExistingWalletField?.valueChanges.subscribe(val => {
+    			this.useExistingWallet = val;
+    			if (this.useExistingWallet) {
+    				this.existingWalletField?.setValidators([
     					Validators.required
     				]);
     				this.walletNameField?.setValidators([]);
     				this.walletNameField?.setValue('');
     			} else {
-    				this.ethWalletField?.setValidators([]);
+    				this.existingWalletField?.setValidators([]);
     				this.walletNameField?.setValidators([
     					Validators.required
     				]);
     			}
-    			this.ethWalletField?.updateValueAndValidity();
+    			this.existingWalletField?.updateValueAndValidity();
     			this.walletNameField?.updateValueAndValidity();
     		}));
     	this.subscriptions.add(
-    		this.ethWalletField?.valueChanges.subscribe(val => {
-    			this.selectedEthWallet = this.ethReadyWallets.find(x => x.id === this.ethWalletField?.value)?.name ?? '';
+    		this.existingWalletField?.valueChanges.subscribe(val => {
+    			this.selectedWallet = this.wallets.find(x => x.walletId === this.existingWalletField?.value)?.name ?? '';
     		}));
     }
 
@@ -111,20 +93,20 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     	this.errorMessage = '';
     	this.inProgress = true;
     	this.wallets = [];
-    	const walletsData$ = this.profileService.getMyWallets([]).valueChanges.pipe(take(1));
+    	const walletsData$ = this.profileService.getMyExistingWallets(this.selectedCurrency.symbol).valueChanges.pipe(take(1));
     	const currentUser = this.auth.user;
     	const userFiat = currentUser?.defaultFiatCurrency ?? 'EUR';
     	this.subscriptions.add(
     		walletsData$.subscribe(({ data }) => {
-    			const dataList = data.myWallets as AssetAddressShortListResult;
+					console.log(data);
+    			const dataList = data.myExistingWallets as WalletShortShortListResult;
     			if (dataList !== null) {
     				const count = dataList?.count ?? 0;
     				if (count > 0) {
-    					this.wallets = dataList?.list?.
-    						map((val) => new WalletItem(val, userFiat, this.getCurrency(val))) as WalletItem[];
+							this.useExistingWalletField?.setValue(true);
+    					this.wallets = dataList?.list;
     				}
     				this.walletsLoaded = true;
-    				this.filterWallets();
     			}
     			this.inProgress = false;
     		}, (error) => {
@@ -136,30 +118,6 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     			}
     		})
     	);
-    }
-
-    private filterWallets() {
-    	this.ethReadyWallets = [];
-    	const c = this.currencyField?.value as string;
-    	let filterAsset = '';
-    	if (this.ethFlag) {
-    		filterAsset = 'ETH';
-    	} else if (this.trxFlag) {
-    		filterAsset = 'TRX';
-    	}
-    	this.wallets.forEach(val => {
-    		if (val.asset.startsWith(filterAsset)) {
-    			const check = this.wallets.find(x => x.vaultOriginalId === val.vaultOriginalId && x.asset === c);
-    			if (!check) {
-    				this.ethReadyWallets.push(val);
-    			}
-    		}
-    	});
-    	if (this.ethReadyWallets.length > 0) {
-    		this.useExistingEthWalletField?.setValue(true);
-    		this.ethWalletField?.setValue(this.ethReadyWallets[0].id);
-    	}
-    	this.blockchainFlagDisabled = false;
     }
 
     private getCurrency(asset: AssetAddressShort): CurrencyView | undefined {
@@ -178,12 +136,12 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     	return this.createForm.get('walletName');
     }
 
-    get useExistingEthWalletField(): AbstractControl | null {
-    	return this.createForm.get('useExistingEthWallet');
+    get useExistingWalletField(): AbstractControl | null {
+    	return this.createForm.get('useExistingWallet');
     }
 
-    get ethWalletField(): AbstractControl | null {
-    	return this.createForm.get('ethWallet');
+    get existingWalletField(): AbstractControl | null {
+    	return this.createForm.get('existingWallet');
     }
 
     copyAddress(): void {
@@ -192,14 +150,14 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     	}
     }
 
-    private createWallet(currency: string, walletName: string, ethWallet: string): void {
+    private createWallet(currency: string, walletName: string, existingWallet: string): void {
     	this.errorMessage = '';
     	this.inProgress = true;
     	this.subscriptions.add(
     		this.profileService.addMyVault(
     			currency,
     			walletName,
-    			ethWallet).subscribe(({ data }) => {
+    			existingWallet).subscribe(({ data }) => {
     			this.inProgress = false;
     			if (data && data.addMyVault) {
     				const result = data.addMyVault as VaultAccount;
@@ -247,7 +205,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     		this.walletNameField?.setValue('');
     	}
     	if (this.createForm.valid) {
-    		const ethOriginalId = this.ethReadyWallets.find(x => x.id === this.ethWalletField?.value)?.vaultOriginalId ?? '';
+    		const ethOriginalId = this.wallets.find(x => x.walletId === this.existingWalletField?.value)?.walletId ?? '';
     		this.createWallet(this.currencyField?.value, this.walletNameField?.value, ethOriginalId);
     	}
     }

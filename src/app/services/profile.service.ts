@@ -139,6 +139,22 @@ query GetTransactionStatuses {
 }
 `;
 
+const GET_MY_EXISTING_WALLETS = gql`
+  query MyExistingWallets(
+    $assetId: String
+  ) {
+    myExistingWallets(
+			assetId: $assetId
+    ) {
+      count
+      list {
+        name
+        walletId
+      }
+    }
+  }
+`;
+
 const GET_MY_WALLETS = gql`
   query MyWallets(
     $orderBy: [OrderBy!],
@@ -718,6 +734,16 @@ export class ProfileDataService {
 			variables: {
 				assetIdsOnly: assetIds,
 				orderBy: orderFields,
+			},
+			fetchPolicy: 'network-only',
+		});
+	}
+
+	getMyExistingWallets(assetId?: string): QueryRef<any, EmptyObject> {
+		return this.apollo.watchQuery<any>({
+			query: GET_MY_EXISTING_WALLETS,
+			variables: {
+				assetId: assetId,
 			},
 			fetchPolicy: 'network-only',
 		});
