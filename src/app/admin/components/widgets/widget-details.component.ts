@@ -185,10 +185,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   		}
       
   		const user$ = widget.userId ?
-  			this.getUserFilteredOptions(widget.userId).pipe(take(1), map(users => {
-  				return users.find(u => u.id === widget.userId);
-  			})) :
-  			of(undefined);
+  			this.getUserFilteredOptions(widget.userId).pipe(take(1),map(users => users.find(u => u.id === widget.userId))) : of(undefined);
   		this.subscriptions.add(
   			user$.subscribe(userItem => {
   				this.form.setValue({
@@ -410,9 +407,10 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 
   private getUserFilteredOptions(searchString: string): Observable<UserItem[]> {
   	if (searchString) {
-  		return this.adminService.findUsers(new Filter({ search: searchString })).pipe(
-  			map(result => { return result.list; })
-  		);
+			return this.adminService.findUsers(new Filter({
+				search: searchString,
+				accountTypes: [UserType.Merchant]
+			})).pipe(map(result => result.list));
   	} else {
   		return of([]);
   	}
