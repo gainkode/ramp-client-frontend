@@ -41,6 +41,8 @@
             <app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Liquidity !== false"
                 [title]="liquidityProviderName" source="liquidityBalances">
             </app-admin-dashboard-card>
+						<app-admin-dashboard-card *ngIf="adminAdditionalSettings?.tabs?.dashboard?.PaidTransaction !== false" title="Paid transactions"
+              source="paids"></app-admin-dashboard-card>
         </div>
     </div>
 </div>

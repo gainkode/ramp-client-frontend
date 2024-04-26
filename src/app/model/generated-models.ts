@@ -451,6 +451,7 @@ export enum CurrencyBlockchain {
   Cardano = 'CARDANO',
   Eos = 'EOS',
   Ethereum = 'ETHEREUM',
+  None = 'NONE',
   Polkadot = 'POLKADOT',
   Solana = 'SOLANA',
   Tron = 'TRON'
@@ -471,6 +472,21 @@ export type CurrencyPairLiquidityProvidersListResult = {
   __typename?: 'CurrencyPairLiquidityProvidersListResult';
   count: Scalars['Int']['output'];
   list: Array<CurrencyPairLiquidityProvider>;
+};
+
+export type CustodyCurrencyMap = {
+  __typename?: 'CustodyCurrencyMap';
+  custodyCurrencyMapId: Scalars['ID']['output'];
+  network?: Maybe<Scalars['String']['output']>;
+  provider?: Maybe<Scalars['String']['output']>;
+  settingsCurrency?: Maybe<SettingsCurrency>;
+  symbol?: Maybe<Scalars['String']['output']>;
+};
+
+export type CustodyCurrencyMapListResult = {
+  __typename?: 'CustodyCurrencyMapListResult';
+  count?: Maybe<Scalars['Int']['output']>;
+  list?: Maybe<Array<CustodyCurrencyMap>>;
 };
 
 export enum CustodyProvider {
@@ -508,6 +524,7 @@ export type DashboardStats = {
   liquidityProviderBalances?: Maybe<Array<Maybe<LiquidityProviderBalance>>>;
   monoovaBalances?: Maybe<Array<MonoovaProviderBalance>>;
   openpaydBalances?: Maybe<Array<OpenpaydProviderBalance>>;
+  paids?: Maybe<PaidStats>;
   receives?: Maybe<TransferStats>;
   sells?: Maybe<BuyOrSellStats>;
   transfers?: Maybe<TransferStats>;
@@ -2108,6 +2125,12 @@ export enum PageType {
   Disclaimer = 'Disclaimer'
 }
 
+export type PaidStats = {
+  __typename?: 'PaidStats';
+  buys?: Maybe<TransactionStatsVolume>;
+  sells?: Maybe<TransactionStatsVolume>;
+};
+
 export type PaymentApmInput = {
   instrument: PaymentInstrument;
   transactionId: Scalars['String']['input'];
@@ -2372,6 +2395,8 @@ export type Query = {
   /** Get toolbar statistics */
   getDashboardStats?: Maybe<DashboardStats>;
   getDevices?: Maybe<UserDeviceListResult>;
+  /** Get existing custody wallets for user by asset */
+  getExistingVaultAccountsByAsset?: Maybe<Array<WalletShort>>;
   /** Get fake error */
   getFakeError?: Maybe<Scalars['Void']['output']>;
   /** get feedbacks */
@@ -2681,6 +2706,13 @@ export type QueryGetDashboardStatsArgs = {
   updateDateInterval?: InputMaybe<DateTimeInterval>;
   userIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   widgetIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+
+export type QueryGetExistingVaultAccountsByAssetArgs = {
+  assetId?: InputMaybe<Scalars['String']['input']>;
+  custodyProviderName: Scalars['String']['input'];
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 

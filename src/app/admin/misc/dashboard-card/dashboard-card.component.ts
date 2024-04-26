@@ -28,6 +28,7 @@ export class AdminDashboardCardComponent implements OnInit, OnDestroy {
   					row.volume = `€${parseFloat((<string>row.volume)?.split('€')[1]).toFixed(2)}`;
   				}
   			}
+				
   			if(this.data?.columns){{
   				for(const col of this.data?.columns){
   					for(const row of this.data?.rows){
