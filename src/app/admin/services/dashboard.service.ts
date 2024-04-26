@@ -259,6 +259,31 @@ export class DashboardService implements OnDestroy {
 					}) : []
 			};
 
+			// region Buys
+			const paidsData: DashboardCardData = {
+				columns: [
+					{
+						key: 'type',
+						label: 'Transaction type',
+						type: 'text'
+					},
+					{
+						key: 'count',
+						label: 'Count',
+						type: 'number'
+					},
+					{
+						key: 'volume',
+						label: 'Total',
+						type: 'count-volume'
+					}
+				],
+				rows: [
+					{type: 'Buy', volumeVolume: rawData.paids.buys.volume, count: rawData.paids.buys.count},
+					{type: 'Sell', volumeVolume: rawData.paids.sells.volume, count: rawData.paids.sells.count}
+				]
+			};
+
 			// region Deposits
 			const depositsData: DashboardCardData = {
 				columns: [
@@ -749,7 +774,8 @@ export class DashboardService implements OnDestroy {
 				balances: balancesData,
 				openpaydBalances: openpaydBalances,
 				monoovaBalances: monoovaBalances,
-				liquidityBalances: liquidityProviderBalancesData
+				liquidityBalances: liquidityProviderBalancesData,
+				paids: paidsData
 			};
 
 			this.dataSubject.next(data);

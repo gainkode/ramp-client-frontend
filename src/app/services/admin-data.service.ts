@@ -131,6 +131,16 @@ const GET_DASHBOARD_STATS = gql`
           ratio
         }
       }
+			paids {
+				buys {
+					count
+					volume
+				}
+				sells {
+					count
+					volume
+				}
+			}
       deposits {
         approved {count, volume},
         declined {count, volume},
