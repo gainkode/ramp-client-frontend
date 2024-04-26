@@ -4,7 +4,6 @@ import { shareReplay, take } from 'rxjs/operators';
 import { User } from './model/generated-models';
 import { Title } from '@angular/platform-browser';
 import { AuthService } from './services/auth.service';
-import { CommonDataService } from './services/common-data.service';
 import { NotificationService } from './services/notification.service';
 import { ProfileDataService } from './services/profile.service';
 import { EnvService } from './services/env.service';
@@ -20,7 +19,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	constructor(
 		@Inject(DOCUMENT) private document: Document,
-		private commonService: CommonDataService,
 		private profileService: ProfileDataService,
 		private notification: NotificationService,
 		private auth: AuthService,

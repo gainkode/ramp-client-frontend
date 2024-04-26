@@ -96,7 +96,6 @@ import {
 	TransactionSimulationComponent,
 	TransactionRefundModalComponent
 } from './components/transactions';
-import { JobStatusPipe } from 'pipes/job-status/job-status.pipe';
 import { MatStepperModule } from '@angular/material/stepper';
 import { RawJsonModule } from 'shared/raw-json/raw-json.module';
 import { 
@@ -207,7 +206,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminCommonSettingsComponent, AdminWithdrawalAddressComponent,
 		AdminApiKeysComponent, AdminApiKeyDetailsComponent, 
 		AdminCurrencyPairsComponent, AdminCurrencyPairDetailsComponent,
-		JobStatusPipe, FaqPageComponent
+		FaqPageComponent
 	],
 	providers: [
 		AdminGuard,
