@@ -15,6 +15,7 @@ const GET_SETTINGS_CURRENCY = gql`
           name
           precision
           minAmount
+					maxAmount
           rateFactor
           validateAsSymbol
           fiat
