@@ -6,7 +6,7 @@ import { TransactionType, SettingsCurrencyWithDefaults, Rate, UserState, AssetAd
 import { WidgetSettings } from 'model/payment-base.model';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'model/payment.model';
 import { WalletItem } from 'model/wallet.model';
-import { Subscription, distinctUntilChanged } from 'rxjs';
+import { Subscription, distinctUntilChanged, take } from 'rxjs';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
@@ -15,6 +15,7 @@ import { getCurrencySign } from 'utils/utils';
 import { WalletValidator } from 'utils/wallet.validator';
 import { EnvService } from 'services/env.service';
 import { ThemeService } from 'services/theme-service';
+import { ProfileDataService } from 'services/profile.service';
 
 @Component({
 	selector: 'app-widget-internal-overview',
@@ -219,6 +220,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	private paymentService: PaymentDataService,
   	private errorHandler: ErrorService,
   	private formBuilder: UntypedFormBuilder,
+		private profileService: ProfileDataService,
   	public themeService: ThemeService) {
   	this.availableLangs = <LangDefinition[]>transloco.getAvailableLangs();
   	const activeLangId = transloco.getActiveLang();
@@ -740,6 +742,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   private onCurrenciesUpdated(currency: string, typeCurrency: string): void{
+		
   	if (!this.pTransactionChanged) {
   		if(typeCurrency === 'Spend'){
   			this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
@@ -748,6 +751,12 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				this.checkWalletExisting(currency);
   			}
   		} else if (typeCurrency === 'Receive'){
+				if (this.summary?.transactionType === TransactionType.Sell && this.USER) {
+					this.profileService.maxSellAmount(currency).valueChanges.pipe(take(1)).subscribe(value => {
+						console.log(value);
+					});
+				}
+
   			this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
 		
   			if(!this.currentCurrencyReceive?.fiat){

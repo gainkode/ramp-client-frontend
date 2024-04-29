@@ -935,6 +935,11 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.stopNotificationListener();
   	if (data.user) {
   		this.summary.email = data.user?.email;
+			if (this.summary.transactionType === TransactionType.Sell) {
+				this.profileService.maxSellAmount(this.summary.currencyTo).valueChanges.pipe(take(1)).subscribe(value => {
+					console.log(value);
+				});
+			}
   	}
   	if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
   		this.auth.setLoginUser(data);

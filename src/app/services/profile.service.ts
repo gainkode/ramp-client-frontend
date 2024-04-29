@@ -262,6 +262,16 @@ query MyProfit($currencyTo: String, $period: UserBalanceHistoryPeriod!) {
 }
 `;
 
+const MAX_SELL_AMOUNT = gql`
+query MaxSellAmount($currency: String) {
+  maxSellAmount(
+    currency: $currency
+  ) {
+    total
+  }
+}
+`;
+
 const GET_MY_NOTIFICATIONS = gql`
   query MyNotifications(
     $unreadOnly: Boolean
@@ -826,6 +836,24 @@ export class ProfileDataService {
 			variables: {
 				currencyTo: fiatCurrency,
 				period: selectPeriod
+			},
+			fetchPolicy: 'network-only',
+		});
+	}
+
+	maxSellAmount(currency: string): QueryRef<any, EmptyObject> {
+		const orderFields = [{ orderBy: 'date', desc: true }];
+		// {
+		// 	data: {
+		// 		maxSellAmount: {
+		// 			total: 90000
+		// 		}
+		// 	}
+		// }
+		return this.apollo.watchQuery<any>({
+			query: MAX_SELL_AMOUNT,
+			variables: {
+				currency: currency
 			},
 			fetchPolicy: 'network-only',
 		});
