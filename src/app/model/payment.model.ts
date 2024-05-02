@@ -177,6 +177,7 @@ export class CurrencyView {
 	img = '';
 	precision = 0;
 	minAmount = 0;
+	maxAmount = 0;
 	rateFactor = 0;
 	validateAsSymbol: string | null = null;
 	fiat = false;
@@ -210,6 +211,7 @@ export class CurrencyView {
 		this.name = data.name ?? '';
 		this.precision = data.precision;
 		this.minAmount = data.minAmount;
+		this.maxAmount = data.maxAmount;
 		this.rateFactor = data.rateFactor;
 		this.validateAsSymbol = data.validateAsSymbol as string | null;
 		this.fiat = data.fiat as boolean;

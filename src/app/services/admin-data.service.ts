@@ -3069,12 +3069,6 @@ export class AdminDataService {
 			fiatCurrency: filter.fiatCurrency
 		};
     
-		// return of({
-		//   transactionsAmount: 10000019,
-		//   transactionsTotal: 13325,
-		//   usersTotal: 99,
-		// } as DashboardMerchantStats);
-    
 		return this.watchQuery<{ getDashboardMerchantStats: DashboardMerchantStats; }, QueryGetDashboardMerchantStatsArgs>({
 			query: GET_DASHBOARD_MERCHANT_STATS,
 			variables: vars,

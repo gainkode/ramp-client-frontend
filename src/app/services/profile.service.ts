@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
-import { Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { EmptyObject } from 'apollo-angular/types';
 import { TransactionSource, TransactionType, UserBalanceHistoryPeriod } from '../model/generated-models';
 
@@ -841,23 +841,15 @@ export class ProfileDataService {
 		});
 	}
 
-	maxSellAmount(currency: string): QueryRef<any, EmptyObject> {
-		const orderFields = [{ orderBy: 'date', desc: true }];
-		// {
-		// 	data: {
-		// 		maxSellAmount: {
-		// 			total: 90000
-		// 		}
-		// 	}
-		// }
-		return this.apollo.watchQuery<any>({
-			query: MAX_SELL_AMOUNT,
-			variables: {
-				currency: currency
-			},
+  maxSellAmount(currency: string): Observable<any> {
+    // return of({ maxSellAmount: { total: 90 } })
+
+    return this.apollo.watchQuery<{ maxSellAmount: any; }>({
+      query: MAX_SELL_AMOUNT,
+			variables: { currency },
 			fetchPolicy: 'network-only',
-		});
-	}
+    }).valueChanges.pipe(map(result => result.data.maxSellAmount || { maxSellAmount: { total: 90000 } }));
+  }
 
 	getMyApiKeys(
 		pageIndex: number,

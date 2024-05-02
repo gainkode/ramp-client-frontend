@@ -9,7 +9,7 @@ import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentApmResult
 import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategoryItem } from 'model/payment-base.model';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { WalletItem } from 'model/wallet.model';
-import { Subscription, take } from 'rxjs';
+import { Subject, Subscription, take, takeUntil } from 'rxjs';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { NotificationService } from 'services/notification.service';
@@ -32,7 +32,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   @Output() onComplete = new EventEmitter<PaymentCompleteDetails>();
   @Output() onError = new EventEmitter<PaymentErrorDetails>();
   @Output() onIFramePay = new EventEmitter<boolean>();
-
   @ViewChild('recaptcha') private recaptchaModalContent;
 
   private recaptchaDialog: NgbModalRef | undefined = undefined; 
@@ -66,7 +65,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   requestKyc = false;
   overLimitLevel = '';
   iframeContent = '';
-  instantpayDetails = '';
   apmResult: PaymentApmResult = undefined;
   paymentComplete = false;
   notificationStarted = false;
@@ -85,6 +83,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   isOrderDetailsComplete = false;
   isSingleOrderDetailsCompleted = false;
   isSinglePage = true;
+
+	private readonly destroy$ = new Subject<void>();
   constructor(
   	private modalService: NgbModal,
   	private changeDetector: ChangeDetectorRef,
@@ -162,6 +162,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	}
 
   	this.exhangeRate.stop();
+
+		this.destroy$.next();
+		this.destroy$.complete();
   }
 
   private initData(data: Widget | undefined): void {
@@ -174,6 +177,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		if (data.additionalSettings) {
   	
   			const extraData = JSON.parse(data.additionalSettings);
+
   			if (extraData.amounts && extraData.amounts.length !== 0){
   				this.widget.currencyAmounts = extraData.amounts;
   			}
@@ -187,6 +191,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.widget.disclaimer = true;
   			this.widget.kycFirst = false;
   		}
+
   		let userTransaction: TransactionType | undefined = undefined;
   		let presetAddress = false;
 
@@ -214,11 +219,11 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			}
   		}
       
-  		if(data?.fee){
+  		if (data?.fee) {
   			this.defaultFee = data.fee;
   		}
 
-  		if(!this.widget.walletAddressPreset){
+  		if (!this.widget.walletAddressPreset) {
   			this.summary.address = (userParams?.params?.destination) ? userParams.params.destination : 
   				(data?.destinationAddress) ? data?.destinationAddress : '';
   		}
@@ -250,7 +255,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			}
   		}
   		this.widget.source = (this.quickCheckout) ? TransactionSource.QuickCheckout : TransactionSource.Widget;
-  	} else {  // Quick checkout w/o parameters
+
+  	} else {  
+
   		if (!this.widget.embedded) {
   			this.widget.disclaimer = false;
   			this.widget.kycFirst = false;
@@ -309,8 +316,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		console.log('Kyc completed notifications subscribed');
 
   		this.externalKycProvideNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications()
-  			.subscribe(
-  				{
+  			.subscribe({
   					next: ({ data }) => {
   						const  subscriptionData= data.kycCompletedNotification;
   						console.log('KYC completed', subscriptionData);
@@ -371,6 +377,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	if (this.pNotificationsSubscription) {
   		this.pNotificationsSubscription.unsubscribe();
   	}
+		
   	this.pNotificationsSubscription = undefined;
   	this.notificationStarted = false;
   }
@@ -425,8 +432,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.inProgress = false;
   		this.requiredExtraData = false;
 
-  		// this.summary.reset();  commented during sell implementation
-
   		if (this.userParamsId === '') {
   			this.initData(undefined);
 
@@ -450,7 +455,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 	this.transactionErrorTitle = undefined;
   }
 
-  capchaResult(event): void {
+  capchaResult(event: any): void {
   	this.recaptchaDialog?.close();
   	this.recaptchaDialog = undefined;
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
@@ -527,11 +532,11 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	}, 50);
 
   	if (id === 'order_details' && this.isOrderDetailsComplete) {
-	  this.isOrderDetailsComplete = false;
+			this.isOrderDetailsComplete = false;
 
-	  if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
-  			this.isSingleOrderDetailsCompleted = false;
-	  }
+			if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
+					this.isSingleOrderDetailsCompleted = false;
+			}
   	}
   }
 
@@ -588,17 +593,21 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.errorMessage = '';
   	this.inProgress = true;
   	const walletData = this.profileService.getMyWallets([]).valueChanges.pipe(take(1));
+
   	this.pSubscriptions.add(
   		walletData.subscribe({
   			next: ({ data }) => {
   				this.inProgress = false;
   				const dataList = data.myWallets as AssetAddressShortListResult;
+
   				if (dataList !== null) {
   					const walletCount = dataList?.count as number;
+
   					if (walletCount > 0) {
   						this.userWallets = dataList?.list?.map((val) => new WalletItem(val, '', undefined)) as WalletItem[];
   					}
   				}
+
   				this.initData(undefined);
   			},
   			error: () => {
@@ -614,12 +623,16 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.errorMessage = '';
   	this.inProgress = true;
   	const defaultFeeData = this.profileService.getMyDefaultSettingsFee().valueChanges.pipe(take(1));
+
   	this.pSubscriptions.add(
   		defaultFeeData.subscribe({
-  			next: ({ data }) => { this.inProgress = false;
-  				if(data.myDefaultSettingsFee.terms && data.myDefaultSettingsFee.terms !== ''){
+  			next: ({ data }) => { 
+					this.inProgress = false;
+			
+  				if (data.myDefaultSettingsFee.terms && data.myDefaultSettingsFee.terms !== '') {
   					const defaultFeeTerms = typeof data.myDefaultSettingsFee.terms == 'string' ? JSON.parse(data.myDefaultSettingsFee.terms) : data.myDefaultSettingsFee.terms;
-  					if(defaultFeeTerms.Transaction_fee){
+  					
+						if (defaultFeeTerms.Transaction_fee) {
   						this.defaultFee = defaultFeeTerms.Transaction_fee;
   					}
   				}
@@ -636,23 +649,29 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   // == Order details page ==
   orderDetailsChanged(data: CheckoutSummary): void {
   	this.stopNotificationListener();
+
   	if (this.initState && (data.amountFrom || data.amountTo)) {
   		this.initState = false;
   	}
+
   	this.summary.initialized = true;
   	this.summary.fee = 0;
+
   	const amountFromTemp = (data.amountFrom) ? data.amountFrom?.toFixed(8) : undefined;
   	this.summary.amountFrom = (amountFromTemp) ? parseFloat(amountFromTemp) : undefined;
+
   	const amountToTemp = (data.amountTo) ? data.amountTo?.toFixed(8) : undefined;
   	this.summary.amountTo = (amountToTemp) ? parseFloat(amountToTemp) : undefined;
   	this.summary.amountFromPrecision = data.amountFromPrecision;
   	this.summary.amountToPrecision = data.amountToPrecision;
+
   	const currencyFromChanged = (this.summary.currencyFrom !== data.currencyFrom);
   	const currencyToChanged = (this.summary.currencyTo !== data.currencyTo);
   	this.summary.currencyFrom = data.currencyFrom;
   	this.summary.currencyTo = data.currencyTo;
   	this.summary.transactionType = data.transactionType;
   	this.summary.quoteLimit = data.quoteLimit;
+
   	if (currencyFromChanged || currencyToChanged) {
   		this.exhangeRate.setCurrency(this.summary.currencyFrom, this.summary.currencyTo, this.summary.transactionType);
   		this.exhangeRate.update();
@@ -934,11 +953,12 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   private checkLoginResult(data: LoginResult): void {
   	this.stopNotificationListener();
   	if (data.user) {
-  		this.summary.email = data.user?.email;
+  		this.summary.email = data.user.email;
+
 			if (this.summary.transactionType === TransactionType.Sell) {
-				this.profileService.maxSellAmount(this.summary.currencyTo).valueChanges.pipe(take(1)).subscribe(value => {
-					console.log(value);
-				});
+				// this.profileService.maxSellAmount(this.summary.currencyTo)
+				// 	.pipe(take(1), takeUntil(this.destroy$))
+				// 	.subscribe( ({ maxSellAmount }) => this.maxSellAmount = maxSellAmount.total);
 			}
   	}
   	if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
@@ -1012,10 +1032,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			  }
 		  }, (error) => {
 			  this.inProgress = false;
+
 			  if (tempStageId === 'verification') {
 				  this.pager.goBack();
-			  } else {
-				  // this.pager.swapStage(tempStageId);
 			  }
 			  
 			  if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
@@ -1034,13 +1053,14 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   }
 	
   private transactionWithCodeHandler(order: TransactionShort): void {
+		
   	this.summary.orderId = order.code as string;
-  	this.summary.fee = order.feeFiat as number ?? 0;
-  	this.summary.feeMinFiat = order.feeMinFiat as number ?? 0;
-  	this.summary.feePercent = order.feePercent as number ?? 0;
+  	this.summary.fee = order.feeFiat ?? 0;
+  	this.summary.feeMinFiat = order.feeMinFiat ?? 0;
+  	this.summary.feePercent = order.feePercent ?? 0;
   	this.summary.networkFee = order.approxNetworkFee ?? 0;
   	this.summary.transactionDate = new Date().toLocaleString();
-  	this.summary.transactionId = order.transactionId as string;
+  	this.summary.transactionId = order.transactionId;
 		
   	if(this.transactionInput.type === TransactionType.Buy){
   		this.summary.instrument = this.transactionInput.instrument;
@@ -1056,10 +1076,10 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.startPayment();
   		}
   	} else if(this.transactionInput.type === TransactionType.Sell){
-  		if(this.isWidget && order.sourceAddress) {
+  		if (this.isWidget && order.sourceAddress) {
   			this.summary.sourceAddress = order.sourceAddress;
   			this.nextStage('sell_widget_complete', 'widget-pager.complete', 5, false);
-  		}else{
+  		} else {
   			this.processingComplete();
   		}
   	}
@@ -1088,7 +1108,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.transactionIdConfirmationCode = order.transactionId;
   		this.nextStage('code_auth', 'widget-pager.login_auth', 3, true);
   	} else {
-  		if(this.transactionInput.type === TransactionType.Buy) {
+  		if (this.transactionInput.type === TransactionType.Buy) {
   			this.pager.swapStage(tempStageId);
   		} else if(this.transactionInput.type === TransactionType.Sell) {
   			this.setError('widget-error.title-transaction-failed', this.errorMessage);
@@ -1119,6 +1139,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			next: ({ data }) => {
   				this.inProgress = false;
   				const preAuthResult = data.createApmPayment as PaymentApmResult;
+
   				if (preAuthResult.type === PaymentApmType.External) {
   					this.showWidget = false;
   					this.inProgress = false;
@@ -1131,7 +1152,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   					this.apmResult = preAuthResult;
   					this.nextStage('processing-instantpay', 'widget-pager.processing-instantpay', this.pager.step, false);
   				}
-				
   			},
   			error: (error) => {
   				this.inProgress = false;
@@ -1228,6 +1248,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   private setError(title: string, message: string): void {
   	this.errorMessage = message;
   	this.changeDetector.detectChanges();
+
   	if (this.pager.stageId !== 'order_details') {
   		this.showTransactionError(title, message);
   	} else if (this.pager.stageId === 'order_details' && this.isSingleOrderDetailsCompleted) {
@@ -1236,8 +1257,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   }
 
   private showTransactionError(messageTitle: string, messageText: string): void {
-  	console.log(messageText, messageTitle);
-  	console.log('ERRROR');
   	this.transactionErrorTitle = messageTitle;
   	this.nextStage('error', 'widget-pager.error', 6, false);
   }

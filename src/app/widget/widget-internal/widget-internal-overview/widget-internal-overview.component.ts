@@ -6,7 +6,7 @@ import { TransactionType, SettingsCurrencyWithDefaults, Rate, UserState, AssetAd
 import { WidgetSettings } from 'model/payment-base.model';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'model/payment.model';
 import { WalletItem } from 'model/wallet.model';
-import { Subscription, distinctUntilChanged, take } from 'rxjs';
+import { Subject, Subscription, distinctUntilChanged, take, takeUntil } from 'rxjs';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
@@ -45,8 +45,9 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   @Input() set depositRate(val: number | undefined) {
   	this.pDepositRate = val;
   	this.updateCurrentAmounts();
+
   	if (this.currentCurrencySpend) {
-  		this.setSpendValidators();
+  		this.setSpendValidators(this.maxSellAmount);
   	}
   	if (this.currentCurrencyReceive) {
   		this.setReceiveValidators();
@@ -83,10 +84,9 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   private currentQuoteEur = 0;
   private quoteLimit = 0;
   private transactionsTotalEur = 0;
-  
   private pDepositRate: number | undefined = undefined;
   private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
-
+	maxSellAmount!: number;
   errorMessageData = '';
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   validData = false;
@@ -112,7 +112,6 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   currentQuote = '';
   transactionList = QuickCheckoutTransactionTypeList;
   userAdditionalSettings: Record<string, any> = {};
-
   emailErrorMessages: { [key: string]: string; } = {
   	['pattern']: 'widget-internal-overview.field_email-error-pattern',
   	['required']: 'widget-internal-overview.field-email-error-required'
@@ -211,7 +210,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   public t: <T = string>(key: TranslateParams, params?: HashMap, lang?: string) => T;
-  
+	private readonly destroy$ = new Subject<void>();
   constructor(
   	public transloco: TranslocoService,
   	private router: Router,
@@ -227,7 +226,6 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.activeLang = this.availableLangs.find(l => l.id === activeLangId).label;
 	
   	this.USER = this.auth.user;
-
   	this.t = transloco.translate.bind(transloco);
   }
 
@@ -267,8 +265,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		this.walletField?.setValue(address);
   		this.walletInit = false;
   		if (address !== '') {
-		  this.selectedWallet = this.wallets.find(x => x.address === address);
-		  this.walletSelectorField?.setValue(address);
+				this.selectedWallet = this.wallets.find(x => x.address === address);
+				this.walletSelectorField?.setValue(address);
   		}
   	}
 
@@ -284,8 +282,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	if (kycTier) {
   		this.currentTier = kycTier.name;
   		if (kycValid) {
-		  this.currentQuoteEur = kycTier.amount || 0;
-		  this.quoteUnlimit = kycTier.amount === null;
+				this.currentQuoteEur = kycTier.amount || 0;
+				this.quoteUnlimit = kycTier.amount === null;
   		}
   	} else {
   		this.currentTier = '';
@@ -316,10 +314,6 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.pSubscriptions.add(this.amountReceiveField?.valueChanges
   		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
   		.subscribe(val => this.onAmountReceiveUpdated(val)));
-    
-  	// this.pSubscriptions.add(this.transactionField?.valueChanges
-  	// 	.pipe(distinctUntilChanged((prev, curr) => prev === curr))
-  	// 	.subscribe(val => this.onTransactionUpdated(val)));
 
   	this.pSubscriptions.add(this.walletSelectorField?.valueChanges
   		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
@@ -336,6 +330,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   ngOnDestroy(): void {
   	this.pSubscriptions.unsubscribe();
+		this.destroy$.next();
+		this.destroy$.complete();
   }
 
   toggleTransationType(type: TransactionType): void {
@@ -380,8 +376,10 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			if (!defaultFiat) {
   				defaultFiatCurrency = 'EUR';
   			}
+				
   			let currentCurrencySpendId = this.summary?.currencyFrom ?? '';
   			let currentCurrencyReceiveId = this.summary?.currencyTo ?? '';
+				
   			const currentAmountSpend = this.summary?.amountFrom;
   			const currentAmountReceive = this.summary?.amountTo;
 
@@ -392,6 +390,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				currentCurrencyReceiveId = currentCurrencyReceiveId || defaultFiatCurrency;
   				currentCurrencySpendId = currentCurrencySpendId || defaultCryptoCurrency;
   			}
+
   			this.pCurrencies = currencyList?.list?.map(val => new CurrencyView(val)) || [];
 			
 			this.dataForm.setValidators(
@@ -424,20 +423,20 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   private loadRates(): void {
   	const rateCurrencies = this.pCurrencies.filter(x => x.fiat && x.symbol !== 'EUR').map((val) => val.symbol);
-	
   	const rateData = this.paymentService.getOneToManyRates('EUR', rateCurrencies, false);
 
   	this.pSubscriptions.add(
   		rateData.valueChanges.subscribe(
   			({ data }) => {
   				const rates = data.getOneToManyRates as Rate[];
+
   				this.pCurrencies.forEach(c => {
   					if (c.symbol === 'EUR') {
   						c.rateFactor = 1;
   					} else {
   						const rate = rates?.find(x => x.currencyTo === c.symbol);
   						if (rate) {
-						  c.rateFactor = rate.depositRate;
+						  	c.rateFactor = rate.depositRate;
   						}
   					}
   				});
@@ -451,14 +450,15 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   private loadTransactionsTotal(): void {
   	this.transactionsTotalEur = 0;
   	const totalData = this.commonService.getMyTransactionsTotal();
+
   	this.pSubscriptions.add(
   		totalData.valueChanges.subscribe(({ data }) => {
+
   			if (data) {
   				const totalState = data.myState as UserState;
   				this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
-  			} else {
-  				this.transactionsTotalEur = 0;
   			}
+
   			this.updateQuote();
   			this.onQuoteChanged.emit(this.quoteLimit);
   			this.onProgress.emit(false);
@@ -486,28 +486,32 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				defaultSpendCurrency = this.spendCurrencyList[0].symbol;
   			}
   		}
+
   		this.currencySpendField?.setValue(defaultSpendCurrency);
   		this.pSpendAutoUpdated = true;
   		this.amountSpendField?.setValue(defaultSpendAmount);
   	}
 
   	if (this.receiveCurrencyList.length > 0) {
-
   		if (defaultReceiveCurrency === '') {
   			defaultReceiveCurrency = this.receiveCurrencyList[0].symbol;
   		} else {
   			const presented = this.receiveCurrencyList.find(x => x.symbol === defaultReceiveCurrency);
+
   			if (!presented) {
   				defaultReceiveCurrency = this.receiveCurrencyList[0].symbol;
   			}
   		}
+
   		this.currencyReceiveField?.setValue(defaultReceiveCurrency);
   		this.pReceiveAutoUpdated = true;
   		this.amountReceiveField?.setValue(defaultReceiveAmount);
   	} 
+
   	if (initState === true) {
   		this.pSpendChanged = true;
   	}
+
   	if (this.pSpendChanged || this.pReceiveChanged) {
   		this.updateCurrentAmounts();
   	}
@@ -522,6 +526,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			if (isBuy) {
   				return this.isMasked ? this.filterMaskedCrypto(c) : this.filterCrypto(c);
   			}
+
   			return this.filterFiat(c);
   		});
   	}
@@ -565,6 +570,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   private sendData(): void {
   	if (this.pInitState === false) {
   		const data = new CheckoutSummary();
+			
   		if (this.amountSpendField?.valid) {
   			data.amountFrom = parseFloat(this.amountSpendField?.value);
   		}
@@ -595,67 +601,66 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   private setSpendValidators(maxValid: number | undefined = undefined): void {
   	let minAmount = this.currentCurrencySpend?.minAmount ?? 0;
   	let currencyDisplay = this.currentCurrencySpend?.display;
-  	let maxAmount = 0;
+
+  	let maxAmount = this.currentCurrencySpend?.maxAmount ?? 0;
   	let minAmountDisplay = this.currentCurrencySpend?.minAmount ?? 0;
 
-  	let maxAmountDisplay = 0;
+  	let maxAmountDisplay = this.currentCurrencySpend?.maxAmount ?? 0;
   
   	if(!this.currentCurrencySpend?.fiat){
   		currencyDisplay = this.currentCurrencyReceive?.display;
+
   		if (this.pDepositRate) {
   			minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
   		}
   	}
-  	if(this.settings.currencyAmounts && this.settings.currencyAmounts.length !== 0){
+
+  	if(this.settings.currencyAmounts?.length !== 0){
   		const currencyAmount = this.settings.currencyAmounts.find(item => item.currency === this.currentCurrencySpend?.display);
+			const calculateDisplayAmount = (amount: number, rate: number): number =>
+				!this.currentCurrencySpend?.fiat && rate
+					? parseFloat((amount * rate).toFixed(2))
+					: amount;
 
-  		if(currencyAmount?.minAmount){
-  			minAmount = currencyAmount.minAmount;
+			if (currencyAmount) {
+				minAmount = currencyAmount.minAmount || minAmount;
+				minAmountDisplay = calculateDisplayAmount(minAmount, this.pDepositRate);
 
-  			if(!this.currentCurrencySpend?.fiat && this.pDepositRate){
-  				minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
-  			} else {
-  				minAmountDisplay = minAmount;
-  			}
-  		}
-  		if(currencyAmount?.maxAmount){
-  			maxAmount = currencyAmount.maxAmount;
-
-  			if(!this.currentCurrencySpend?.fiat && this.pDepositRate){
-  				maxAmountDisplay = parseFloat((maxAmount * this.pDepositRate).toFixed(2));
-  			} else {
-  				maxAmountDisplay = maxAmount;
-  			}
-  		}
+				maxAmount = currencyAmount.maxAmount || maxAmount;
+				maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
+			}
   	}
 	
-  	// this.amountSpendErrorMessages['min'] = this.t(this.amountSpendErrorMessages['min'], { value: `${minAmountDisplay} ${currencyDisplay}` });
   	this.amountSpendErrorMessages['min'] = `Min. amount ${minAmountDisplay} ${currencyDisplay}`;
+		
   	let validators = [
   		Validators.required,
   		Validators.pattern(this.pNumberPattern),
   		Validators.min(minAmount),
   	];
+
   
   	if(!maxAmount || maxAmount === 0){
+			console.log(maxValid)
   		if (maxValid !== undefined) {
-  			if (maxValid > 0) {
-  				this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` });
-  			} else {
-  				this.amountSpendErrorMessages['max'] = 'widget-internal-overview.spend-max-empty';
-  			}
+				this.amountSpendErrorMessages['max'] = maxValid > 0 
+					? this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` }) 
+					: 'widget-internal-overview.spend-max-empty';
+
   			validators = [
   				...validators,
   				Validators.max(maxValid)
   			];
   		}
   	} else {
-	  this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
-  		validators = [
-  			...validators,
-  			Validators.max(maxAmount)
-  		];
+			this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
+			
+			validators = [
+				...validators,
+				Validators.max(maxAmount)
+			];
   	}
+		
   	if(!this.initValidators){
   		this.amountSpendField?.setValidators(validators);
   		this.amountSpendField?.updateValueAndValidity();
@@ -663,13 +668,14 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
   
   private setReceiveValidators(): void {
-  	// this.amountReceiveErrorMessages['min'] = this.t(this.amountReceiveErrorMessages['min'],{ value: `${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}` });
   	this.amountReceiveErrorMessages['min'] =  `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`
-  	if(!this.initValidators){
+  	
+		if(!this.initValidators){
   		this.amountReceiveField?.setValidators([
   			Validators.required,
   			Validators.pattern(this.pNumberPattern),
   		]);
+
   		this.amountReceiveField?.updateValueAndValidity();
   	}
   }
@@ -742,7 +748,6 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   private onCurrenciesUpdated(currency: string, typeCurrency: string): void{
-		
   	if (!this.pTransactionChanged) {
   		if(typeCurrency === 'Spend'){
   			this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
@@ -752,9 +757,9 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			}
   		} else if (typeCurrency === 'Receive'){
 				if (this.summary?.transactionType === TransactionType.Sell && this.USER) {
-					this.profileService.maxSellAmount(currency).valueChanges.pipe(take(1)).subscribe(value => {
-						console.log(value);
-					});
+					this.profileService.maxSellAmount(currency)
+						.pipe(take(1), takeUntil(this.destroy$))
+						.subscribe( ({ maxSellAmount }) =>  this.maxSellAmount = maxSellAmount.total);
 				}
 
   			this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
@@ -773,7 +778,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		if (this.initValidators) {
   			this.initValidators = false;
   			if (this.currentCurrencySpend) {
-  				this.setSpendValidators();
+  				this.setSpendValidators(this.maxSellAmount);
   			}
   			if (this.currentCurrencyReceive) {
   				this.setReceiveValidators();
@@ -792,7 +797,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		if (this.initValidators) {
   			this.initValidators = false;
   			if (this.currentCurrencySpend) {
-  				this.setSpendValidators();
+  				this.setSpendValidators(this.maxSellAmount);
   			}
   			if (this.currentCurrencyReceive) {
   				this.setReceiveValidators();
@@ -819,13 +824,16 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.pSpendAutoUpdated = true;
   	this.pReceiveAutoUpdated = true;
   	this.pTransactionChanged = true;
+
   	const currencySpend = this.currentCurrencySpend?.symbol;
   	const currencyReceive = this.currentCurrencyReceive?.symbol;
+
   	this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currencyReceive);
   	this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currencySpend);
-  	this.setSpendValidators();
+  	this.setSpendValidators(this.maxSellAmount);
   	this.setReceiveValidators();
   	this.setCurrencyLists();
+
   	this.currencySpendField?.setValue(this.currentCurrencySpend?.symbol);
   	this.currencyReceiveField?.setValue(this.currentCurrencyReceive?.symbol);
 
