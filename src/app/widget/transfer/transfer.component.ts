@@ -32,7 +32,6 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   rateErrorMessage = '';
   inProgress = false;
   initState = true;
-  showSummary = true;
   mobileSummary = false;
   initMessage = 'Loading...';
   summary = new CheckoutSummary();
@@ -191,7 +190,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   	this.summary.reset();
   	this.initData();
   	this.pager.init('', '');
-  	this.nextStage('order_details', 'Order details', 1, false);
+  	this.nextStage('order_details', 'Order details', 1);
   }
 
   handleError(message: string): void {
@@ -203,7 +202,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   	if (this.widget.embedded) {
   		void this.router.navigateByUrl('/');
   	} else {
-  		this.nextStage('order_details', 'Order details', 1, false);
+  		this.nextStage('order_details', 'Order details', 1);
   	}
   }
 
@@ -214,17 +213,12 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
 
   private stageBack(): void {
   	this.inProgress = false;
-  	const stage = this.pager.goBack();
-  	if (stage) {
-  		this.showSummary = stage.summary;
-  	}
   }
 
-  private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
+  private nextStage(id: string, name: string, stepId: number): void {
   	setTimeout(() => {
   		this.errorMessage = '';
-  		this.pager.nextStage(id, name, stepId, this.showSummary);
-  		this.showSummary = summaryVisible;
+  		this.pager.nextStage(id, name, stepId);
   	}, 50);
   }
 
@@ -309,7 +303,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   }
 
   settingsIdRequired(): void {
-  	this.nextStage('order_details', 'Order details', 1, true);
+  	this.nextStage('order_details', 'Order details', 1);
   }
 
   settingsLoginRequired(email: string): void {
@@ -324,16 +318,14 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   	this.paymentProviders = providers.map(val => val);
   	setTimeout(() => {
   		const nextStage = 4;
-  		// if (this.requestKyc) {
-  		//   this.nextStage('verification', 'Verification', nextStage, false);
-  		// } else {
+
   		if (this.paymentProviders.length < 1) {
   			this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
   		} else if (this.paymentProviders.length > 1) {
   			if (!this.notificationStarted) {
   				this.startNotificationListener();
   			}
-  			this.nextStage('payment', 'Payment info', nextStage, true);
+  			this.nextStage('payment', 'Payment info', nextStage);
   		} else {
   			this.selectProvider(this.paymentProviders[0]);
   		}
@@ -423,7 +415,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   	if (this.paymentProviders.length < 1) {
   		this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
   	} else if (this.paymentProviders.length > 1) {
-  		this.nextStage('payment', 'Payment info', 5, true);
+  		this.nextStage('payment', 'Payment info', 5);
   	} else {
   		this.selectProvider(this.paymentProviders[0]);
   	}
@@ -431,13 +423,12 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
 
 	requiredFieldsComplete(): void {
 		this.createTransactionInternal();
-  	// this.widgetService.getWireTransferSettings(this.summary, this.widget);
   }
   // ====================
 
 	private userInfoRequired(requiredFields: string[]): void {
   	this.requiredFields = requiredFields;
-		this.nextStage('wire_transfer_info_required', 'Payment info', this.pager.step, true);
+		this.nextStage('wire_transfer_info_required', 'Payment info', this.pager.step);
   }
 
   private createTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string): void {
@@ -453,7 +444,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
 			paymentProvider: (instrument === PaymentInstrument.WireTransfer) ? '' : providerId,
 			widgetUserParamsId: '',
 			destination: this.summary.address,
-			verifyWhenPaid: this.summary.transactionType == TransactionType.Buy ? this.summary.verifyWhenPaid : false
+			verifyWhenPaid: this.summary.transactionType === TransactionType.Buy ? this.summary.verifyWhenPaid : false
 		}
   	
 		this.createTransactionInternal();
@@ -472,7 +463,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   				}
   				const order = data.createTransaction as TransactionShort;
   				this.inProgress = false;
-					if(order.requiredFields && order.requiredFields.length != 0) {
+					if(order.requiredFields && order.requiredFields.length !== 0) {
 						this.userInfoRequired(order.requiredFields);
 						return;
 					}
@@ -487,7 +478,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   					this.summary.transactionDate = new Date().toLocaleString();
   					this.summary.transactionId = order.transactionId as string;
   					if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
-  						this.nextStage('wire_transfer_result', 'Payment', 5, false);
+  						this.nextStage('wire_transfer_result', 'Payment', 5);
   					} else {
   						this.startPayment();
   					}
@@ -521,7 +512,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
 
   private startPayment(): void {
   	if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {
-  		this.nextStage('credit_card', 'Payment info', this.pager.step, true);
+  		this.nextStage('credit_card', 'Payment info', this.pager.step);
   	} else if (this.summary.providerView?.instrument === PaymentInstrument.Apm) {
   		this.completeInstantpayTransaction(
   			this.summary.transactionId,
@@ -550,7 +541,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   				this.summary.setPaymentInfo(PaymentInstrument.CreditCard, order?.paymentInfo as string);
   				this.iframeContent = preAuthResult.html as string;
   				this.inProgress = false;
-  				this.nextStage('processing-frame', 'Payment', this.pager.step, false);
+  				this.nextStage('processing-frame', 'Payment', this.pager.step);
   			}, (error) => {
   				this.inProgress = false;
   				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
@@ -576,7 +567,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   				const preAuthResult = data.createApmPayment as PaymentApmResult;
   				this.apmResult = preAuthResult;
   				this.inProgress = false;
-  				this.nextStage('processing-instantpay', 'Payment', this.pager.step, false);
+  				this.nextStage('processing-instantpay', 'Payment', this.pager.step);
   			}, (error) => {
   				this.inProgress = false;
   				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
@@ -597,7 +588,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   	this.bankAccountId = bankAccountId;
   	this.wireTransferList = wireTransferList;
   	if (this.wireTransferList.length > 1) {
-  		this.nextStage('wire_transfer', 'Payment info', this.pager.step, true);
+  		this.nextStage('wire_transfer', 'Payment info', this.pager.step);
   	} else if (this.wireTransferList.length === 1) {
   		this.wireTransferPaymentComplete({
   			id: this.bankAccountId,

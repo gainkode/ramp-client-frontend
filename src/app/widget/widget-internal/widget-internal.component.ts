@@ -43,7 +43,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   inProgress = false;
   initLoading = true;
   initState = true;
-  showSummary = true;
   mobileSummary = false;
   requiredExtraData = false;
   initMessage = 'global.widget_loading';
@@ -439,7 +438,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				this.orderDetailsComplete(this.summary.email);
   			} else {
   				this.pager.init('', '');
-  				this.nextStage('order_details', 'widget-pager.order_details', 1, false);
+  				this.nextStage('order_details', 'widget-pager.order_details', 1);
   			}
 
   		} else {
@@ -474,7 +473,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				'No payment providers',
   				`No supported payment providers found for "${this.summary.currencyFrom}"`);
   		} else if (this.paymentProviders.length > 1) {
-  			this.nextStage('payment', 'widget-pager.credit_card', 5, true);
+  			this.nextStage('payment', 'widget-pager.credit_card', 5);
   		} else {
   			this.selectProvider(this.paymentProviders[0]);
   		}
@@ -486,9 +485,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		void this.router.navigateByUrl('/');
   	} else {
   		if (this.widget.orderDefault) {
-  			this.nextStage('login_auth', 'widget-pager.register', 3, true);
+  			this.nextStage('login_auth', 'widget-pager.register', 3);
   		} else {
-  			this.nextStage('order_details', 'widget-pager.order_details', 1, false);
+  			this.nextStage('order_details', 'widget-pager.order_details', 1);
   		}
   	}
   }
@@ -509,10 +508,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   stageBack(): void {
   	this.inProgress = false;
-  	const stage = this.pager.goBack();
-  	if (stage) {
-  		this.showSummary = stage.summary;
-  	}
 
   	if (this.pager.stageId === 'order_details') {
   		this.isOrderDetailsComplete = false;
@@ -523,11 +518,10 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private nextStage(id: string, name: string, stepId: number, summaryVisible: boolean): void {
+  private nextStage(id: string, name: string, stepId: number): void {
   	setTimeout(() => {
   		this.errorMessage = '';
-  		this.pager.nextStage(id, name, stepId, this.showSummary);
-  		this.showSummary = summaryVisible;
+  		this.pager.nextStage(id, name, stepId);
   		this.inProgress = false;
   	}, 50);
 
@@ -758,7 +752,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	if (this.widget.orderDefault) {
   		this.orderDetailsComplete(this.summary.email);
   	} else {
-  		this.nextStage('order_details', 'widget-pager.order_details', 1, true);
+  		this.nextStage('order_details', 'widget-pager.order_details', 1);
   	}
   }
 
@@ -780,13 +774,13 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
   		this.startExternalKycProvideListener();
   		if(this.companyLevelVerificationFlag){
-  			this.nextStage('company_level_verification', 'widget-pager.company_level_verification', this.pager.step, true);
+  			this.nextStage('company_level_verification', 'widget-pager.company_level_verification', this.pager.step);
   		} else {
   			const tempStageId = this.pager.stageId;
   			if (tempStageId === 'verification') {
   				this.pager.goBack();
   			}
-  			this.nextStage('verification', 'widget-pager.company_level_verification', nextStage, false);
+  			this.nextStage('verification', 'widget-pager.company_level_verification', nextStage);
   		}
       
   	} else {
@@ -798,7 +792,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			if (!this.notificationStarted) {
   				this.startNotificationListener();
   			}
-  			this.nextStage('payment', 'widget-pager.credit_card', nextStage, true);
+  			this.nextStage('payment', 'widget-pager.credit_card', nextStage);
   		} else {
   			this.selectProvider(this.paymentProviders[0]);
   		}
@@ -806,23 +800,31 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   }
 
   // == Payment info ==
-
   selectProvider(provider: PaymentProviderInstrumentView): void {
   	if(this.summary.transactionType === TransactionType.Buy){
   		this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
   		if (provider.instrument === PaymentInstrument.WireTransfer) {
   			this.startPayment();
   		} else if (provider.instrument === PaymentInstrument.OpenBanking) {
-  			this.nextStage(`payment_${provider.name}`, 'widget-pager.wire_transfer_result', 5, true);
+  			this.nextStage(`payment_${provider.name}`, 'widget-pager.wire_transfer_result', 5);
   		} else {
   			this.createTransaction(provider.id, provider.instrument, '');
   		}
   	} else {
-  		if (provider.instrument === PaymentInstrument.WireTransfer) {
-  			this.nextStage('sell_details', 'widget-pager.bank-details', 2, true);
-  		} else {
-  			this.createTransaction(provider.id, provider.instrument, '');
-  		}
+			this.profileService.maxSellAmount(this.summary.currencyFrom)
+				.pipe(take(1), takeUntil(this.destroy$))
+				.subscribe(maxSellAmount => {
+					if (this.summary.amountFrom > maxSellAmount ) {
+						// Back to first page in order to validate maxSellAmount to SELL transaction type
+						this.nextStage('order_details', 'widget-pager.order_details', 1);
+					} else {
+						if (provider.instrument === PaymentInstrument.WireTransfer) {
+							this.nextStage('sell_details', 'widget-pager.bank-details', 2);
+						} else {
+							this.createTransaction(provider.id, provider.instrument, '');
+						}
+					}
+				});
   	}
   }
   // ====================
@@ -877,9 +879,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.onComplete.emit(details);
   	} else {
   		if (!this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
-  			this.nextStage('verification', 'widget-pager.company_level_verification', 5, false);
+  			this.nextStage('verification', 'widget-pager.company_level_verification', 5);
   		} else {
-  			this.nextStage('complete', 'widget-pager.complete', 6, false);
+  			this.nextStage('complete', 'widget-pager.complete', 6);
   		}
   	}
   }
@@ -887,7 +889,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   // == Auth ========
   onRegister(email: string): void {
   	this.summary.email = email;
-  	this.nextStage('register', 'widget-pager.register', 3, true);
+  	this.nextStage('register', 'widget-pager.register', 3);
   }
 
   onLoginRequired(email: string): void {
@@ -902,7 +904,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		}
   		this.summary.email = email;
   		if (this.summary.transactionId === '') {
-  			this.nextStage('login_auth', 'widget-pager.register', 3, true);
+  			this.nextStage('login_auth', 'widget-pager.register', 3);
   		} else {
   			this.startPayment();
   		}
@@ -911,7 +913,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   onCodeLoginRequired(email: string): void {
   	this.summary.email = email;
-  	this.nextStage('code_auth', 'widget-pager.register', 3, true);
+  	this.nextStage('code_auth', 'widget-pager.register', 3);
   }
 
   loginCodeConfirmed(): void {
@@ -931,7 +933,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.summary.transactionDate = new Date().toLocaleString();
   	this.summary.transactionId = order.transactionId as string;
   	if (this.summary.instrument === PaymentInstrument.WireTransfer) {
-  		this.nextStage('wire_transfer_result', 'widget-pager.processing-frame', 5, false);
+  		this.nextStage('wire_transfer_result', 'widget-pager.processing-frame', 5);
   	} else {
   		this.startPayment();
   	}
@@ -946,26 +948,24 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.widgetService.getSettingsCommon(this.summary, this.widget, this.widget.orderDefault);
   		this.kycSubscribeResult = undefined;
   	} else {
-  		this.nextStage('complete', 'widget-pager.complete', 6, false);
+  		this.nextStage('complete', 'widget-pager.complete', 6);
   	}
   }
   
   private checkLoginResult(data: LoginResult): void {
   	this.stopNotificationListener();
+
   	if (data.user) {
   		this.summary.email = data.user.email;
-
-			if (this.summary.transactionType === TransactionType.Sell) {
-				// this.profileService.maxSellAmount(this.summary.currencyTo)
-				// 	.pipe(take(1), takeUntil(this.destroy$))
-				// 	.subscribe( ({ maxSellAmount }) => this.maxSellAmount = maxSellAmount.total);
-			}
   	}
+		
   	if (data.authTokenAction === 'Default' || data.authTokenAction === 'KycRequired') {
   		this.auth.setLoginUser(data);
-  		if(this.externalKycProvideNotificationsSubscription){
+
+  		if (this.externalKycProvideNotificationsSubscription) {
   			this.externalKycProvideNotificationsSubscription.unsubscribe();
   		}
+
   		this.startExternalKycProvideListener();
 
   		if (this.summary.agreementChecked) {
@@ -975,12 +975,12 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				this.startPayment();
   			}
   		} else {
-  			this.nextStage('disclaimer', 'widget-pager.disclaimer', 2, false);
+  			this.nextStage('disclaimer', 'widget-pager.disclaimer', 2);
   		}
   	} else if (data.authTokenAction === 'UserInfoRequired') {
   		this.auth.setLoginUser(data);
   		this.requiredExtraData = true;
-  		this.nextStage('login_auth', 'widget-pager.register', 3, true);
+  		this.nextStage('login_auth', 'widget-pager.register', 3);
   	} else {
   		this.setError(
   			'Authentication failed',
@@ -1071,14 +1071,14 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				this.selectedWireTransfer.data = instrumentDetails.accountType.data;
   			}
 				
-  			this.nextStage('wire_transfer_result', 'widget-pager.wire_transfer_result', 5, false);
+  			this.nextStage('wire_transfer_result', 'widget-pager.wire_transfer_result', 5);
   		} else {
   			this.startPayment();
   		}
   	} else if(this.transactionInput.type === TransactionType.Sell){
   		if (this.isWidget && order.sourceAddress) {
   			this.summary.sourceAddress = order.sourceAddress;
-  			this.nextStage('sell_widget_complete', 'widget-pager.complete', 5, false);
+  			this.nextStage('sell_widget_complete', 'widget-pager.complete', 5);
   		} else {
   			this.processingComplete();
   		}
@@ -1106,7 +1106,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
   		}
   		this.transactionIdConfirmationCode = order.transactionId;
-  		this.nextStage('code_auth', 'widget-pager.login_auth', 3, true);
+  		this.nextStage('code_auth', 'widget-pager.login_auth', 3);
   	} else {
   		if (this.transactionInput.type === TransactionType.Buy) {
   			this.pager.swapStage(tempStageId);
@@ -1118,11 +1118,11 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   private startPayment(): void {
   	if (this.summary.providerView?.instrument === PaymentInstrument.CreditCard) {
-  		this.nextStage('credit_card', 'widget-pager.credit_card', this.pager.step, true);
+  		this.nextStage('credit_card', 'widget-pager.credit_card', this.pager.step);
   	} else if (this.summary.providerView?.instrument === PaymentInstrument.Apm) {
   		this.completeApmTransaction(this.summary.transactionId, PaymentInstrument.Apm);
   	} else if(this.summary.providerView?.instrument === PaymentInstrument.FiatVault){
-  		this.nextStage('complete', 'widget-pager.complete', 6, false);
+  		this.nextStage('complete', 'widget-pager.complete', 6);
   	} else if (this.summary.providerView?.instrument === PaymentInstrument.WireTransfer) {
   		this.widgetService.getWireTransferSettings(this.summary, this.widget);
   	} else {
@@ -1150,7 +1150,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   					}
   				} else {
   					this.apmResult = preAuthResult;
-  					this.nextStage('processing-instantpay', 'widget-pager.processing-instantpay', this.pager.step, false);
+  					this.nextStage('processing-instantpay', 'widget-pager.processing-instantpay', this.pager.step);
   				}
   			},
   			error: (error) => {
@@ -1184,7 +1184,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				this.summary.setPaymentInfo(PaymentInstrument.CreditCard, order?.paymentInfo as string);
   				this.iframeContent = preAuthResult.html as string;
   				this.inProgress = false;
-  				this.nextStage('processing-frame', 'widget-pager.processing-frame', this.pager.step, false);
+  				this.nextStage('processing-frame', 'widget-pager.processing-frame', this.pager.step);
   			},
   			error: (error) => {
   				this.inProgress = false;
@@ -1222,7 +1222,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.bankAccountId = bankAccountId;
   	this.wireTransferList = wireTransferList;
   	if (this.wireTransferList.length > 1) {
-  		this.nextStage('wire_transfer', 'widget-pager.credit_card', this.pager.step, true);
+  		this.nextStage('wire_transfer', 'widget-pager.credit_card', this.pager.step);
   	} else if (this.wireTransferList.length === 1) {
   		this.wireTransferPaymentComplete({
   			id: this.bankAccountId,
@@ -1238,7 +1238,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   private userInfoRequired(requiredFields: string[]): void {
   	this.requiredFields = requiredFields;
-  	this.nextStage('wire_transfer_info_required', 'widget-pager.credit_card', this.pager.step, true);
+  	this.nextStage('wire_transfer_info_required', 'widget-pager.credit_card', this.pager.step);
   }
 
   private companyLevelVerification(): void {
@@ -1258,7 +1258,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   private showTransactionError(messageTitle: string, messageText: string): void {
   	this.transactionErrorTitle = messageTitle;
-  	this.nextStage('error', 'widget-pager.error', 6, false);
+  	this.nextStage('error', 'widget-pager.error', 6);
   }
 
   private setOrderDetailsStep(): void {

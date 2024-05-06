@@ -841,14 +841,12 @@ export class ProfileDataService {
 		});
 	}
 
-  maxSellAmount(currency: string): Observable<any> {
-    // return of({ maxSellAmount: { total: 90 } })
-
-    return this.apollo.watchQuery<{ maxSellAmount: any; }>({
+  maxSellAmount(currency: string): Observable<number> {
+    return this.apollo.watchQuery<{ maxSellAmount: { total: number; }; }>({
       query: MAX_SELL_AMOUNT,
 			variables: { currency },
 			fetchPolicy: 'network-only',
-    }).valueChanges.pipe(map(result => result.data.maxSellAmount || { maxSellAmount: { total: 90000 } }));
+    }).valueChanges.pipe(map(result => result.data.maxSellAmount.total));
   }
 
 	getMyApiKeys(
