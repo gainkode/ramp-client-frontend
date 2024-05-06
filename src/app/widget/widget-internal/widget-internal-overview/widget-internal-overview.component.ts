@@ -47,7 +47,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.updateCurrentAmounts();
 
   	if (this.currentCurrencySpend) {
-  		this.setSpendValidators(this.maxSellAmount);
+  		this.setSpendValidators();
   	}
   	if (this.currentCurrencyReceive) {
   		this.setReceiveValidators();
@@ -599,14 +599,80 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   private setSpendValidators(maxValid: number | undefined = undefined): void {
-  	let minAmount = this.currentCurrencySpend?.minAmount ?? 0;
-  	let currencyDisplay = this.currentCurrencySpend?.display;
+  	const minAmount = this.currentCurrencySpend?.minAmount ?? 0;
+		let maxAmount = this.currentCurrencySpend?.maxAmount ?? 0;
 
-  	let maxAmount = this.currentCurrencySpend?.maxAmount ?? 0;
   	let minAmountDisplay = this.currentCurrencySpend?.minAmount ?? 0;
+		let maxAmountDisplay = this.currentCurrencySpend?.maxAmount ?? 0;
 
-  	let maxAmountDisplay = this.currentCurrencySpend?.maxAmount ?? 0;
-  
+		let currencyDisplay = this.currentCurrencySpend?.display;
+
+  	let validators = [
+  		Validators.required,
+  		Validators.pattern(this.pNumberPattern),
+  		Validators.min(minAmount),
+  	];
+
+		const calculateDisplayAmount = (amount: number, rate: number): number =>
+			!this.currentCurrencySpend?.fiat && rate
+				? parseFloat((amount * rate).toFixed(2))
+				: amount;
+
+		if (this.currentTransaction === TransactionType.Sell) {
+			if (this.currentCurrencySpend?.maxAmount === 0 || this.maxSellAmount < this.currentCurrencySpend?.maxAmount) {
+				maxAmount = this.maxSellAmount;
+				maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
+				currencyDisplay = this.currentCurrencyReceive?.display;
+
+				const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
+
+				this.amountSpendErrorMessages['max'] = `Amount you'r request exceeds available balance: ${currencyDisplay} ${upodatedMaxAmountDisplay}`;
+
+			} else {
+				maxAmount = this.currentCurrencySpend?.maxAmount;
+				maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
+				currencyDisplay = this.currentCurrencyReceive?.display;
+
+				const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
+
+				this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${upodatedMaxAmountDisplay} ${currencyDisplay}` });
+			}
+
+			validators = [
+				...validators,
+				Validators.max(maxAmount)
+			];
+		} else {
+			if(!maxAmount || maxAmount === 0){
+				if (maxValid !== undefined) {
+					this.amountSpendErrorMessages['max'] = maxValid > 0 
+						? this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` }) 
+						: 'widget-internal-overview.spend-max-empty';
+	
+					validators = [
+						...validators,
+						Validators.max(maxValid)
+					];
+				}
+			} else {
+				this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
+				
+				validators = [
+					...validators,
+					Validators.max(maxAmount)
+				];
+			} 
+			
+			if (this.currentQuoteEur) {
+				this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
+	
+				validators = [
+					...validators,
+					Validators.max(maxAmount)
+				];
+			}
+		}
+
   	if(!this.currentCurrencySpend?.fiat){
   		currencyDisplay = this.currentCurrencyReceive?.display;
 
@@ -615,51 +681,10 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		}
   	}
 
-  	if(this.settings.currencyAmounts?.length !== 0){
-  		const currencyAmount = this.settings.currencyAmounts.find(item => item.currency === this.currentCurrencySpend?.display);
-			const calculateDisplayAmount = (amount: number, rate: number): number =>
-				!this.currentCurrencySpend?.fiat && rate
-					? parseFloat((amount * rate).toFixed(2))
-					: amount;
 
-			if (currencyAmount) {
-				minAmount = currencyAmount.minAmount || minAmount;
-				minAmountDisplay = calculateDisplayAmount(minAmount, this.pDepositRate);
+		minAmountDisplay = calculateDisplayAmount(minAmount, this.pDepositRate);
 
-				maxAmount = currencyAmount.maxAmount || maxAmount;
-				maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
-			}
-  	}
-	
   	this.amountSpendErrorMessages['min'] = `Min. amount ${minAmountDisplay} ${currencyDisplay}`;
-		
-  	let validators = [
-  		Validators.required,
-  		Validators.pattern(this.pNumberPattern),
-  		Validators.min(minAmount),
-  	];
-
-  
-  	if(!maxAmount || maxAmount === 0){
-			console.log(maxValid)
-  		if (maxValid !== undefined) {
-				this.amountSpendErrorMessages['max'] = maxValid > 0 
-					? this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` }) 
-					: 'widget-internal-overview.spend-max-empty';
-
-  			validators = [
-  				...validators,
-  				Validators.max(maxValid)
-  			];
-  		}
-  	} else {
-			this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
-			
-			validators = [
-				...validators,
-				Validators.max(maxAmount)
-			];
-  	}
 		
   	if(!this.initValidators){
   		this.amountSpendField?.setValidators(validators);
@@ -668,7 +693,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
   
   private setReceiveValidators(): void {
-  	this.amountReceiveErrorMessages['min'] =  `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`
+  	this.amountReceiveErrorMessages['min'] =  `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`;
   	
 		if(!this.initValidators){
   		this.amountReceiveField?.setValidators([
@@ -747,7 +772,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	}
   }
 
-  private onCurrenciesUpdated(currency: string, typeCurrency: string): void{
+  private onCurrenciesUpdated(currency: string, typeCurrency: string): void {
   	if (!this.pTransactionChanged) {
   		if(typeCurrency === 'Spend'){
   			this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
@@ -757,9 +782,12 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			}
   		} else if (typeCurrency === 'Receive'){
 				if (this.summary?.transactionType === TransactionType.Sell && this.USER) {
-					this.profileService.maxSellAmount(currency)
+					this.profileService.maxSellAmount(this.currentCurrencySpend.symbol)
 						.pipe(take(1), takeUntil(this.destroy$))
-						.subscribe( ({ maxSellAmount }) =>  this.maxSellAmount = maxSellAmount.total);
+						.subscribe(maxSellAmount => {
+							this.maxSellAmount = maxSellAmount;
+							this.onAmountSpendUpdated(this.amountSpendField.value);
+						});
 				}
 
   			this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
@@ -778,7 +806,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		if (this.initValidators) {
   			this.initValidators = false;
   			if (this.currentCurrencySpend) {
-  				this.setSpendValidators(this.maxSellAmount);
+  				this.setSpendValidators();
   			}
   			if (this.currentCurrencyReceive) {
   				this.setReceiveValidators();
@@ -797,7 +825,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		if (this.initValidators) {
   			this.initValidators = false;
   			if (this.currentCurrencySpend) {
-  				this.setSpendValidators(this.maxSellAmount);
+  				this.setSpendValidators();
   			}
   			if (this.currentCurrencyReceive) {
   				this.setReceiveValidators();
@@ -830,7 +858,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   	this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currencyReceive);
   	this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currencySpend);
-  	this.setSpendValidators(this.maxSellAmount);
+  	this.setSpendValidators();
   	this.setReceiveValidators();
   	this.setCurrencyLists();
 
