@@ -772,7 +772,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	}
   }
 
-  private onCurrenciesUpdated(currency: string, typeCurrency: string): void {
+  private onCurrenciesUpdated(currency: string, typeCurrency: 'Spend' | 'Receive'): void {
   	if (!this.pTransactionChanged) {
   		if(typeCurrency === 'Spend'){
   			this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
@@ -781,14 +781,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   				this.checkWalletExisting(currency);
   			}
   		} else if (typeCurrency === 'Receive'){
-				if (this.summary?.transactionType === TransactionType.Sell && this.USER) {
-					this.profileService.maxSellAmount(this.currentCurrencySpend.symbol)
-						.pipe(take(1), takeUntil(this.destroy$))
-						.subscribe(maxSellAmount => {
-							this.maxSellAmount = maxSellAmount;
-							this.onAmountSpendUpdated(this.amountSpendField.value);
-						});
-				}
+				this.getMaxSellAmount();
 
   			this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
 		
@@ -800,6 +793,17 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		this.sendData();
   	}
   }
+
+	private getMaxSellAmount(): void {
+		if (this.summary?.transactionType === TransactionType.Sell && this.USER) {
+			this.profileService.maxSellAmount(this.currentCurrencySpend.symbol)
+				.pipe(take(1), takeUntil(this.destroy$))
+				.subscribe(maxSellAmount => {
+					this.maxSellAmount = maxSellAmount;
+					this.onAmountSpendUpdated(this.amountSpendField.value);
+				});
+		}
+	}
   
   private onAmountSpendUpdated(val: any): void {
   	if (val && !this.pSpendAutoUpdated) {
@@ -871,6 +875,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.amountReceiveField?.setValue(undefined);
 
   	this.sendData();
+		this.getMaxSellAmount();
   }
 
   private onWalletSelectorUpdated(val: string): void {
