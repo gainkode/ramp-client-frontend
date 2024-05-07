@@ -7,11 +7,11 @@
             <h5 class="card-title mg-b-20">
               Widget Data
             </h5>
-            <app-admin-details-item label="Widget ID" [value]="widgetId">
+            <app-admin-details-item label="Widget ID" [value]="widgetDetails?.id || ''">
             </app-admin-details-item>
-            <app-admin-details-item label="Widget link" [value]="widgetMaskLink">
+            <app-admin-details-item label="Widget link" [value]="widgetDetails?.maskLink || ''">
             </app-admin-details-item>
-            <app-admin-details-item [linkUrl]="widgetLink" label="Quick Checkout link" [value]="widgetLink">
+            <app-admin-details-item [linkUrl]="widgetDetails?.link || ''" label="Quick Checkout link" [value]="widgetDetails?.link || ''">
             </app-admin-details-item>
     
             <div class="form-group">
@@ -245,7 +245,7 @@
                     </th>
                     <td *matCellDef="let element" class="widget-list-data-column">
                       <input class="form-control"
-                      type="text" [(ngModel)]="element.destination" maxlength="50" required [ngModelOptions]="{standalone: true}" [required]="destinationRequired">
+                      type="text" [(ngModel)]="element.destination" maxlength="50" [ngModelOptions]="{standalone: true}" [required]="destinationRequired">
                       <div *ngIf="destinationRequired && !element.destination"
                         class="tx-danger">
                         <small>
@@ -297,7 +297,7 @@
                     </th>
                     <td *matCellDef="let element" class="widget-list-data-column">
                       <input class="form-control"
-                      type="text" [(ngModel)]="element.destination" maxlength="50" required [ngModelOptions]="{standalone: true}" [required]="destinationRequired">
+                      type="text" [(ngModel)]="element.destination" maxlength="50" [ngModelOptions]="{standalone: true}" [required]="destinationRequired">
                       <div *ngIf="destinationRequired && !element.destination"
                         class="tx-danger">
                         <small>
@@ -421,9 +421,9 @@
       </div>
     </form>
 
-    <!-- <ng-container *ngIf="!form.value.id">
+    <ng-container *ngIf="isLoading">
 			<app-spinner></app-spinner>
-		</ng-container> -->
+		</ng-container>
   </div>
 </div>
 
