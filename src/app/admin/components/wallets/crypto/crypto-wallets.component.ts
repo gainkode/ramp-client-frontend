@@ -142,13 +142,15 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   		this.sortedField,
   		this.sortedDesc,
   		this.filter).pipe(take(1));
+
   	this.subscriptions.add(
   		listData$.subscribe(({ list, count }) => {
   			this.wallets = list;
   			this.walletCount = count;
   			this.inProgress = false;
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
+				
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
   			}

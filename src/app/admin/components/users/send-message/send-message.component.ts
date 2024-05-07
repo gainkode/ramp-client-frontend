@@ -12,7 +12,7 @@ export class UserMessageData {
 	level: UserNotificationLevel = UserNotificationLevel.Info;
 	title = '';
 	text = '';
-	users:string[] = []
+	users: string[] = [];
 }
 
 @Component({
@@ -99,7 +99,7 @@ export class AdminMessageDialogComponent implements OnInit {
 
   private usersSearch(): void {
   	let searchItems:CommonTargetValue[] = [];
-  	if(this.usersPreset && this.usersPreset.length != 0){
+  	if(this.usersPreset && this.usersPreset.length !== 0){
   		searchItems = this.usersPreset;
   	}
   	this.usersOptions$ = concat(

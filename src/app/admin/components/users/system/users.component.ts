@@ -155,6 +155,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   private loadRoleData(): void {
   	this.roleIds = [];
   	const currencyData = this.commonService.getRoles();
+		
   	if (currencyData) {
   		this.subscriptions.add(
   			currencyData.valueChanges.subscribe({

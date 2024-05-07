@@ -9,7 +9,7 @@ import { LiquidityProviderList } from 'admin/model/lists.model';
 import { WidgetItem } from 'admin/model/widget.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { Countries } from 'model/country-code.model';
-import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, UserType, WidgetDestination } from 'model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, UserType } from 'model/generated-models';
 import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserTypeList } from 'model/payment.model';
 import { UserItem } from 'model/user.model';
 import { AuthService } from 'services/auth.service';

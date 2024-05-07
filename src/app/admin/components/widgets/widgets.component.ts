@@ -19,7 +19,6 @@ import { AuthService } from 'services/auth.service';
 })
 export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
-
   filterFields = [
   	'search'
   ];
@@ -42,7 +41,6 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   	'id'
   ];
   inProgress = false;
-  errorMessage = '';
   permission = 0;
   widgetDetailsTitle = 'Widget Details';
   userIdFilter = '';
@@ -123,6 +121,7 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private loadCommonSettings(): void{
   	const settingsCommon = this.auth.getLocalSettingsCommon();
+
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
   		if(this.adminAdditionalSettings?.tabs?.widget?.filterFields){
@@ -139,13 +138,15 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   		this.sortedField,
   		this.sortedDesc,
   		this.filter).pipe(take(1));
+
   	this.subscriptions.add(
   		listData$.subscribe(({ list, count }) => {
   			this.widgets = list;
   			this.widgetCount = count;
   			this.inProgress = false;
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
+
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
   			}
@@ -163,18 +164,20 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   export(content: any): void {
   	const ids = this.widgets.filter(x => x.selected === true).map(val => val.id);
+
   	const exportData$ = this.adminService.exportWidgetsToCsv(
   		ids,
   		this.sortedField,
   		this.sortedDesc,
   		this.filter);
+
   	this.subscriptions.add(
-  		exportData$.subscribe(({ data }) => {
+  		exportData$.subscribe(() => {
   			this.modalService.open(content, {
   				backdrop: 'static',
   				windowClass: 'modalCusSty',
   			});
-  		}, (error) => {
+  		}, () => {
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
   			}

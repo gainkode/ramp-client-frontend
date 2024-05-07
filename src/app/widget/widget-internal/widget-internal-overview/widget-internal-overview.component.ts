@@ -599,14 +599,45 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   }
 
   private setSpendValidators(maxValid: number | undefined = undefined): void {
-  	const minAmount = this.currentCurrencySpend?.minAmount ?? 0;
-		let maxAmount = this.currentCurrencySpend?.maxAmount ?? 0;
-
+		let minAmount = this.currentCurrencySpend?.minAmount ?? 0;
+  	let currencyDisplay = this.currentCurrencySpend?.display;
+  	let maxAmount = 0;
   	let minAmountDisplay = this.currentCurrencySpend?.minAmount ?? 0;
-		let maxAmountDisplay = this.currentCurrencySpend?.maxAmount ?? 0;
 
-		let currencyDisplay = this.currentCurrencySpend?.display;
+  	let maxAmountDisplay = 0;
+  
+  	if(!this.currentCurrencySpend?.fiat){
+  		currencyDisplay = this.currentCurrencyReceive?.display;
+  		if (this.pDepositRate) {
+  			minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
+  		}
+  	}
+		
+  	if(this.settings.currencyAmounts && this.settings.currencyAmounts.length !== 0){
+  		const currencyAmount = this.settings.currencyAmounts.find(item => item.currency === this.currentCurrencySpend?.display);
 
+  		if(currencyAmount?.minAmount){
+  			minAmount = currencyAmount.minAmount;
+
+  			if(!this.currentCurrencySpend?.fiat && this.pDepositRate){
+  				minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
+  			} else {
+  				minAmountDisplay = minAmount;
+  			}
+  		}
+  		if(currencyAmount?.maxAmount){
+  			maxAmount = currencyAmount.maxAmount;
+
+  			if(!this.currentCurrencySpend?.fiat && this.pDepositRate){
+  				maxAmountDisplay = parseFloat((maxAmount * this.pDepositRate).toFixed(2));
+  			} else {
+  				maxAmountDisplay = maxAmount;
+  			}
+  		}
+  	}
+	
+  	this.amountSpendErrorMessages['min'] = `Min. amount ${minAmountDisplay} ${currencyDisplay}`;
+		
   	let validators = [
   		Validators.required,
   		Validators.pattern(this.pNumberPattern),
@@ -617,7 +648,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 			!this.currentCurrencySpend?.fiat && rate
 				? parseFloat((amount * rate).toFixed(2))
 				: amount;
-
+  
 		if (this.currentTransaction === TransactionType.Sell) {
 			if (this.currentCurrencySpend?.maxAmount === 0 || this.maxSellAmount < this.currentCurrencySpend?.maxAmount) {
 				maxAmount = this.maxSellAmount;
@@ -645,27 +676,18 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 		} else {
 			if(!maxAmount || maxAmount === 0){
 				if (maxValid !== undefined) {
-					this.amountSpendErrorMessages['max'] = maxValid > 0 
-						? this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` }) 
-						: 'widget-internal-overview.spend-max-empty';
-	
+					if (maxValid > 0) {
+						this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` });
+					} else {
+						this.amountSpendErrorMessages['max'] = 'widget-internal-overview.spend-max-empty';
+					}
 					validators = [
 						...validators,
 						Validators.max(maxValid)
 					];
 				}
 			} else {
-				this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
-				
-				validators = [
-					...validators,
-					Validators.max(maxAmount)
-				];
-			} 
-			
-			if (this.currentQuoteEur) {
-				this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
-	
+			this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
 				validators = [
 					...validators,
 					Validators.max(maxAmount)
@@ -673,19 +695,6 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 			}
 		}
 
-  	if(!this.currentCurrencySpend?.fiat){
-  		currencyDisplay = this.currentCurrencyReceive?.display;
-
-  		if (this.pDepositRate) {
-  			minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
-  		}
-  	}
-
-
-		minAmountDisplay = calculateDisplayAmount(minAmount, this.pDepositRate);
-
-  	this.amountSpendErrorMessages['min'] = `Min. amount ${minAmountDisplay} ${currencyDisplay}`;
-		
   	if(!this.initValidators){
   		this.amountSpendField?.setValidators(validators);
   		this.amountSpendField?.updateValueAndValidity();

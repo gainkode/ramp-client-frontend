@@ -50,9 +50,11 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
   ) {
   	const filterUserId = activeRoute.snapshot.params['userid'];
   	const filterVaultId = activeRoute.snapshot.params['vaultids'];
+
   	if (filterUserId) {
   		this.filter.users = [filterUserId as string];
   	}
+		
   	if (filterVaultId) {
   		const filterData = (filterVaultId as string).split('#');
   		this.filter.walletIds = filterData;
@@ -135,19 +137,22 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
 
   private loadWallets(): void {
   	this.inProgress = true;
+
   	const listData$ = this.adminService.getFiatWallets(
   		this.pageIndex,
   		this.pageSize,
   		this.sortedField,
   		this.sortedDesc,
   		this.filter).pipe(take(1));
+			
   	this.subscriptions.add(
   		listData$.subscribe(({ list, count }) => {
   			this.wallets = list;
   			this.walletCount = count;
   			this.inProgress = false;
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
+
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
   			}
