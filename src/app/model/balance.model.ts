@@ -26,7 +26,6 @@ export class BalancePoint {
 
 export class UserBalanceItem {
 	private pId = '';
-	private pAsset = '';
 	private pCryptoCurrency = '';
 	private pCryptoCurrencyFull = '';
 	private pFiatSymbol = '';
@@ -69,10 +68,10 @@ export class UserBalanceItem {
 		this.pCryptoCurrencyFull = currencyNameFull;
 		this.pFiatSymbol = fiatSymbol;
 		this.pFiatPrecision = fiatPrecision;
+		
 		if (data) {
 			this.pFiat = false;
 			this.pId = data.assetId ?? '';
-			this.pAsset = this.pId;
 			this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.pCryptoCurrency).toLowerCase()}.svg`;
 			this.pBalanceCrypto = data.totalBalance ?? 0;
 			this.pBalanceFiat = data.totalBalanceFiat;
@@ -81,7 +80,6 @@ export class UserBalanceItem {
 			this.pBalanceCrypto = cryptoBalance;
 			this.pBalanceFiat = fiatBalance;
 			this.pId = currencyName;
-			this.pAsset = this.pId;
 		}
 	}
 

@@ -49,6 +49,19 @@
                   {{element.name}}
                 </td>
               </ng-container>
+              
+              <ng-container matColumnDef="widgetIds">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-target">
+                  Widgets
+                </th>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
+                  <mat-chip-listbox>
+                    <mat-chip *ngFor="let widget of element.widgetIds" class="widget-chip">
+                      <span class="tx-13">{{widget}}</span>
+                    </mat-chip>
+                  </mat-chip-listbox>
+                </td>
+              </ng-container>
 
               <ng-container matColumnDef="target">
                 <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-target">

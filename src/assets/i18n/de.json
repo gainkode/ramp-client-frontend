@@ -196,5 +196,5 @@
   "widget-payment-transaction-details.msg-failed-1": "Bitte beachten Sie, dass Ihre Bestellung aufgrund der Überschreitung der Bestellzeitgrenze storniert wurde.",
   "widget-payment-transaction-details.msg-failed-2": "Um die erhaltenen Krypto-Assets zurückzuerstatten, kontaktieren Sie uns bitte.",
   "kyc.btn_verify-later": "Später verifizieren",
-  "widget-pager.bank-details": "Bankdetails"
+  "widget-pager.bank-details": "Bankverbindung"
 }

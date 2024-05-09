@@ -152,6 +152,7 @@ export class UserItem {
 			this.flag = data.flag ?? false;
 			this.referralCode = data?.referralCode?.toString() ?? '';
 			this.deleted = data.deleted !== undefined && data.deleted !== null;
+
 			if(data.type){
 				this.userType = UserTypeList.find((x) => x.id === data.type) as UserTypeView;
 			}
@@ -165,18 +166,21 @@ export class UserItem {
       
 			this.firstName = data.firstName as string;
 			this.lastName = data.lastName as string;
+
 			if (this.userType?.id === UserType.Merchant) {
 				this.company = data.companyName ? data.companyName : '';
 			}
 
 			this.setFullName();
 			this.birthday = (data.birthday) ? new Date(data.birthday) : undefined;
+
 			if (this.birthday) {
 				const currentDate = new Date();
 				const currentMonths = currentDate.getFullYear() * 10000 + currentDate.getMonth() * 100 + currentDate.getDate();
 				const birthDayMonths = this.birthday.getFullYear() * 10000 + this.birthday.getMonth() * 100 + this.birthday.getDate();
 				this.age = Math.floor((currentMonths - birthDayMonths) / 10000).toString();
 			}
+
 			this.gender = data.gender ?? '';
 			this.email = data.email;
 			this.emailConfirmed = data.emailConfirmed ?? false;
@@ -189,12 +193,10 @@ export class UserItem {
 			this.town = data.town ?? '';
 			this.postCode = data.postCode ?? '';
 			this.stateName = data.stateName ?? '';
-			if (data.addressLine) {
-				this.address = data.addressLine;
-			} else {
-				this.address = this.getAddress(data);
-			}
+			this.address = data.addressLine ?? this.getAddress(data);
+
 			const datepipe: DatePipe = new DatePipe('en-US');
+
 			this.created = datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') ?? '';
 			this.updated = datepipe.transform(data.updated, 'dd MMM YYYY HH:mm:ss') ?? '';
 			this.lastLogin = datepipe.transform(data.lastLogin, 'dd MMM YYYY HH:mm:ss') ?? '';
@@ -207,10 +209,12 @@ export class UserItem {
 			this.comment = data.comment ?? '';
 			this.roles = data.roles?.map(val => val.code) ?? [];
 			this.risk = data.risk ?? '';
+
 			this.riskCodes = data.riskCodes?.map(riskAlert => {
 				const riskData = JSON.parse(riskAlert);
 				return riskData.riskAlertTypeCode ?? '';
 			}) ?? [];
+
 			this.totalTransactionCount = data.totalTransactionCount ?? 0;
 			this.averageTransaction = data.averageTransaction ?? 0;
 			this.totalDepositCompleted = data.totalDepositCompleted ?? 0;
@@ -260,6 +264,7 @@ export class UserItem {
 			this.kycStatusValue = data.kycStatus as KycStatus ?? KycStatus.Unknown;
 			this.kycStatus = KycStatusList.find(x => x.id === data.kycStatus?.toLowerCase())?.name ?? '';
 			const status = this.kycStatus.toLowerCase();
+
 			if (status === KycStatus.Completed.toLowerCase()) {
 				this.kycRejected = false;
 				this.kycComplete = true;
@@ -275,12 +280,14 @@ export class UserItem {
 					this.kycVerificationAvailable = false;
 				}
 			}
+
 			this.kycReviewDate = datepipe.transform(data.kycReviewDate, 'dd MMM YYYY HH:mm:ss') ?? '';
 			this.kycStatusDate = datepipe.transform(data.kycStatusDate, 'dd MMM YYYY HH:mm:ss') ?? '';
 			this.kycReviewComment = data.kycReviewComment ?? '';
 			this.kycPrivateComment = data.kycPrivateComment ?? '';
 			this.kycReviewRejectedType = data.kycReviewRejectedType ?? '';
 			this.kycReviewRejectedLabels = data.kycReviewRejectedLabels ?? [];
+
 			if (data.kycReviewResult) {
 				const kycReviewResultData = JSON.parse(data.kycReviewResult ?? '');
 				if (kycReviewResultData !== null) {
@@ -294,12 +301,15 @@ export class UserItem {
 					}
 				}
 			}
+
 			this.kycStatusUpdateRequired = (data.kycStatusUpdateRequired) ? ((data.kycStatusUpdateRequired === true) ? 'Yes' : 'No') : 'No';
 			if (data.kycTier) {
 				this.kycLevel = data.kycTier.name;
 				this.kycLevelMax = (!data.kycTier.amount);
 			}
+
 			const countryObject = getCountryByCode2(data.countryCode2 as string);
+
 			if (countryObject !== null) {
 				this.country = new CommonTargetValue();
 				this.country.id = countryObject.code3;
@@ -307,6 +317,7 @@ export class UserItem {
 				this.country.imgSource = `assets/svg-country-flags/${countryObject.code2.toLowerCase()}.svg`;
 				this.country.title = countryObject.name;
 			}
+
 			this.fiatCurrency = data.defaultFiatCurrency
 				? (data.defaultFiatCurrency as string)
 				: '';
@@ -411,11 +422,7 @@ export class UserItem {
 	}
 
 	get extendedName(): string {
-		if (this.fullName === '') {
-			return this.email;
-		} else {
-			return `${this.fullName} (${this.email})`;
-		}
+		return this.fullName === '' ? this.email : `${this.fullName} (${this.email})`;
 	}
 
 	setFullName(): void {
@@ -437,10 +444,6 @@ export class ContactItem {
 	created = '';
 	asset = '';
 	address = '';
-	sent = 4200;
-	received = 0.0042;
-	lastTransactionDate = '16-12-2020';
-	lastTransactionStatus = 'Pending';
 
 	private pIconUrl = '';
 
@@ -450,9 +453,11 @@ export class ContactItem {
 		this.contactEmail = data?.contactEmail ?? '';
 		this.displayName = data?.displayName ?? '';
 		this.address = data?.address ?? '';
+
 		const datepipe: DatePipe = new DatePipe('en-US');
 		this.created = datepipe.transform(data?.created, 'dd MMM YYYY HH:mm:ss') ?? '';
 		this.asset = data?.assetId ?? '';
+
 		if (this.asset !== '') {
 			this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(this.asset).toLowerCase()}.svg`;
 		}
@@ -495,13 +500,16 @@ export class DeviceItem {
 
 	constructor(data: UserDevice | null) {
 		this.id = data?.userDeviceId ?? '';
+
 		const datepipe: DatePipe = new DatePipe('en-US');
 		this.created = datepipe.transform(data?.created, 'dd MMM YYYY HH:mm:ss') ?? '';
 		this.deviceConfirmed = datepipe.transform(data?.deviceConfirmed, 'dd MMM YYYY HH:mm:ss') ?? '';
 		this.country = getCountryByCode3(data?.countryCode3 ?? '') ?? undefined;
+		
 		if (this.country) {
 			this.countryImg = `assets/svg-country-flags/${this.country?.code2.toLowerCase()}.svg`;
 		}
+
 		this.city = data?.city ?? '';
 		this.region = data?.region ?? '';
 		this.eu = data?.eu ?? '';
@@ -521,7 +529,7 @@ export class UserActionItem {
 	currentUserEmail = '';
 	date = '';
 	objectId = '';
-	linkedIds: any = [];
+	linkedIds: string[] = [];
 	info = {};
 	status = '';
 	actionType: UserActionTypeView | null = null;
@@ -532,6 +540,7 @@ export class UserActionItem {
 		this.userId = data?.userId ?? '';
 		this.userEmail = data?.userEmail ?? '';
 		this.currentUserEmail = data?.currentUserEmail ?? '';
+		
 		const datepipe: DatePipe = new DatePipe('en-US');
 		this.date = datepipe.transform(data?.date, 'dd MMM YYYY HH:mm:ss') ?? '';
 		this.objectId = data?.objectId ?? '';

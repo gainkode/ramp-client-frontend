@@ -18,6 +18,7 @@ export class AdminCostSchemesComponent implements OnInit, OnDestroy {
 		'details',
 		'default',
 		'name',
+		'widgetIds',
 		'target',
 		'targetValues',
 		'trxType',

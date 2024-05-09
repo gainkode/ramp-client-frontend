@@ -8,7 +8,6 @@ export class WalletItem {
 	code = '';
 	vaultOriginalId = '';
 	vault = '';
-	type = '';
 	address = '';
 	addressFormat = '';
 	asset = '';
@@ -98,8 +97,9 @@ export class WalletItem {
 		this.name = n;
 	}
 
-	setFiat(data: FiatVault, defaultFiat: string) {
+	setFiat(data: FiatVault, defaultFiat: string): void {
 		this.crypto = false;
+
 		if (data) {
 			this.fiat = defaultFiat;
 			this.id = data.fiatVaultId ?? '';

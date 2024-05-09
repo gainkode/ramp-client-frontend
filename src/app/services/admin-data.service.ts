@@ -3803,17 +3803,14 @@ export class AdminDataService {
 			fetchPolicy: 'network-only'
 		}).pipe(
 			map(result => {
-				if (result.data?.getWidgets?.list && result.data?.getWidgets?.count) {
-					return {
-						list: result.data.getWidgets.list.map(w => new WidgetItem(w)),
-						count: result.data.getWidgets.count
-					};
-				} else {
-					return {
+        return result.data?.getWidgets?.list && result.data?.getWidgets?.count ? 
+          {
+            list: result.data.getWidgets.list.map(w => new WidgetItem(w)),
+            count: result.data.getWidgets.count
+          } : {
 						list: [],
 						count: 0
 					};
-				}
 			})
 		);
 	}
@@ -4593,7 +4590,7 @@ export class AdminDataService {
 		}));
 	}
 
-  simulateTransaction(transaction: TransactionInput, userId: string, rate: number): Observable<TransactionSimulatorResult> {
+  simulateTransaction(transaction: TransactionInput, userId: string, rate: number, widgetUserParamsId: string = undefined): Observable<TransactionSimulatorResult> {
 		return this.mutate<{ simulateTransaction: TransactionSimulatorResult; }, any>({
 			mutation: SIMULATE_TRANSACTION,
 			variables: {
@@ -4604,6 +4601,7 @@ export class AdminDataService {
 				amountToSpend: transaction.amountToSpend,
 				instrument: transaction.instrument,
 				paymentProvider: transaction.paymentProvider,
+        widgetUserParamsId,
 				rate,
         userId
 			}

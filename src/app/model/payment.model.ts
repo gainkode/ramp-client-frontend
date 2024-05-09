@@ -4,7 +4,10 @@ import { CommonTargetValue } from './common.model';
 import {
 	PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
 	SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
-	UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, AdminTransactionStatus, UserTransactionStatus, WireTransferPaymentCategory, CryptoInvoiceCreationResult, UserActionType, UserActionResult, CurrencyBlockchain
+	UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, 
+	CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, 
+	AdminTransactionStatus, UserTransactionStatus, WireTransferPaymentCategory, CryptoInvoiceCreationResult, 
+	UserActionType, UserActionResult, CurrencyBlockchain
 } from './generated-models';
 import { WireTransferPaymentCategoryItem } from './payment-base.model';
 
@@ -19,25 +22,17 @@ export class PaymentProviderInstrumentView {
 	image = '';
 	instrument: PaymentInstrument = PaymentInstrument.CreditCard;
 	external = false;
-	virtual = false;
 
 	constructor(data: PaymentProviderByInstrument) {
 		this.id = data.provider?.name ?? '';
 		this.name = data.provider?.name ?? '';
 		this.instrument = data.instrument ?? PaymentInstrument.CreditCard;
-		if(data.provider.external){
-			this.external = data.provider.external;
-		}
-		if(data.provider.virtual){
+		if(data.provider.external || data.provider.virtual){
 			this.external = data.provider.external;
 		}
 		if (this.instrument === PaymentInstrument.Apm) {
 			this.name = data.provider?.displayName ?? 'APM';
-			if (data.provider?.logo) {
-				this.image = `${EnvService.image_host}/apm/${data.provider.logo}`;
-			} else {
-				this.image = './assets/svg-providers/apm.svg';
-			}
+			this.image = data.provider?.logo ? `${EnvService.image_host}/apm/${data.provider.logo}` : './assets/svg-providers/apm.svg';
 		} else if (this.instrument === PaymentInstrument.CreditCard) {
 			this.name = 'CARD PAYMENT';
 			this.image = './assets/svg-providers/credit-card.svg';
@@ -185,11 +180,7 @@ export class CurrencyView {
 	currencyBlockchain = '';
 
 	get fullName(): string {
-		if (this.stable) {
-			return this.display;
-		} else {
-			return `${this.code} - ${this.name}`;
-		}
+		return this.stable ? this.display : `${this.code} - ${this.name}`;
 	}
 
 	constructor(data: SettingsCurrency) {
@@ -215,11 +206,7 @@ export class CurrencyView {
 		this.rateFactor = data.rateFactor;
 		this.validateAsSymbol = data.validateAsSymbol as string | null;
 		this.fiat = data.fiat as boolean;
-		if (!this.fiat) {
-			this.img = `assets/svg-crypto/${getCryptoSymbol(this.code).toLowerCase()}`;
-		} else {
-			this.img = `assets/svg-fiat/${getCryptoSymbol(this.code).toLowerCase()}`;
-		}
+		this.img = `assets/svg-${!this.fiat ? 'crypto' : 'fiat'}/${getCryptoSymbol(this.code).toLowerCase()}`;
 	}
 }
 
@@ -255,10 +242,6 @@ export class CardView {
 				this.cardInfo.title = this.cardType;
 			}
 		}
-	}
-
-	get cardExpired(): string {
-		return `${this.monthExpired < 10 ? '0' : ''}${this.monthExpired}/${this.yearExpired}`;
 	}
 
 	get secureCardNumber(): string {
@@ -601,7 +584,6 @@ export class CheckoutSummary {
 	amountFromPrecision = 2;
 	amountToPrecision = 2;
 	address = '';
-	addressPreset = false;
 	fee = 0;
 	feePercent = 0;
 	feeMinFiat = 0;
@@ -622,21 +604,11 @@ export class CheckoutSummary {
 	treatAsGrossAmount = true;
 
 	get isFromCrypto(): boolean {
-		let result = false;
-		switch (this.transactionType) {
-			case TransactionType.Sell:
-				result = true;
-		}
-		return result;
+		return this.transactionType === TransactionType.Sell || false;
 	}
 
 	get isToCrypto(): boolean {
-		let result = false;
-		switch (this.transactionType) {
-			case TransactionType.Buy:
-				result = true;
-		}
-		return result;
+		return this.transactionType === TransactionType.Buy || false;
 	}
 
 	get transactionFee(): string {
@@ -650,27 +622,16 @@ export class CheckoutSummary {
 	}
 
 	get transactionFeeCurrency(): string {
-		let result = '';
-		if (this.isFromCrypto) {
-			result = this.currencyTo;
-		} else {
-			result = this.currencyFrom as string;
-		}
-		return result;
+		return this.isFromCrypto ? this.currencyTo : this.currencyFrom;
 	}
 
 	get networkFeeCurrency(): string {
-		let result = '';
-		if (this.isFromCrypto) {
-			result = this.currencyFrom;
-		} else {
-			result = this.currencyTo as string;
-		}
-		return result;
+		return this.isFromCrypto ? this.currencyFrom : this.currencyTo ;
 	}
 
 	get rate(): string {
 		let result = '';
+
 		switch (this.transactionType) {
 			case TransactionType.Buy:
 				if (this.exchangeRate?.depositRate) {
@@ -693,6 +654,7 @@ export class CheckoutSummary {
 	get validAmounts(): boolean {
 		const validFrom = (this.amountFrom) ? (this.amountFrom > 0) : false;
 		const validTo = (this.amountTo) ? (this.amountTo > 0) : false;
+		
 		return validFrom && validTo;
 	}
 

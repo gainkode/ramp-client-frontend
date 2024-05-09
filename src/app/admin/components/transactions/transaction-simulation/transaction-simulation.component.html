@@ -106,7 +106,7 @@
 
         <mat-form-field appearance="outline" class="size-smaller">
           <mat-label>Payment providers</mat-label>
-          <mat-select formControlName="provider">
+          <mat-select formControlName="paymentProvider">
             <mat-option *ngFor="let type of filteredProviders" [value]="type.id">
               {{ type.name }}
             </mat-option>

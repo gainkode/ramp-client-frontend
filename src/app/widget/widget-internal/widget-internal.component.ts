@@ -444,14 +444,14 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		} else {
   			this.loadUserParams();
   		}
-
+						
   		this.isOrderDetailsComplete = false;
-
   		if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
   			this.isSingleOrderDetailsCompleted = false;
   		}
   	}
-	this.transactionErrorTitle = undefined;
+
+		this.transactionErrorTitle = undefined;
   }
 
   capchaResult(event: any): void {
@@ -508,7 +508,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   stageBack(): void {
   	this.inProgress = false;
-
+		this.pager.goBack();
+		
   	if (this.pager.stageId === 'order_details') {
   		this.isOrderDetailsComplete = false;
 
@@ -991,6 +992,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   private createTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string): void {
   	const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
   	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
+
   	this.transactionInput = {
   		type: this.summary.transactionType,
   		source: this.widget.source,

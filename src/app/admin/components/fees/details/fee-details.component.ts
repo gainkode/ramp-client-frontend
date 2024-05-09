@@ -9,7 +9,7 @@ import { FeeScheme, TransactionSourceFilterList } from 'model/fee-scheme.model';
 import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, SettingsFeeSimilarResult, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'model/generated-models';
 import { CurrencyView, FeeTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserModeList, UserTypeList } from 'model/payment.model';
 import { Observable, Subject, Subscription, concat, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
@@ -56,15 +56,16 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   targetType = SettingsFeeTargetFilterType.None;
   targets = FeeTargetFilterList;
   isTargetsLoading = false;
+	isWidgetsLoading = false;
   targetsSearchInput$ = new Subject<string>();
-  widgetsSearchInput$ = new Subject<string>();
+	widgetsSearchInput$ = new Subject<string>();
   targetsOptions$: Observable<CommonTargetValue[]> = of([]);
   widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
   sourceTargetsOptions = TransactionSourceFilterList;
   minTargetsLengthTerm = 1;
   adminAdditionalSettings: Record<string, any> = {};
   similarSchemas$: Observable<SettingsFeeSimilarResult>;
-
+	widgetIds: string[] = [];
   form = this.formBuilder.group({
   	id: [''],
   	name: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -81,7 +82,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	provider: [undefined, Validators.required],
   	transactionFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
   	minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-	widgetIds: [undefined]
+		widgetIds: [undefined]
   });
 
   constructor(
@@ -103,7 +104,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.loadCommonSettings();
   	this.getPaymentProviders();
   	this.loadCurrencies();
-	this.initWidgetSearch();
+		this.initWidgetSearch();
   }
 
   ngOnDestroy(): void {
@@ -142,35 +143,38 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.defaultSchemeName = '';
   	this.currency = scheme?.currency ?? '';
   	this.deleted = !!scheme?.deleted;
+
   	if (scheme) {
   		this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
-  		this.form.get('id')?.setValue(scheme?.id);
-  		this.form.get('name')?.setValue(scheme?.name);
-  		this.form.get('description')?.setValue(scheme?.description);
-  		this.form.get('isDefault')?.setValue(scheme?.isDefault);
+			this.widgetIds = scheme.widgetIds;
+  		this.form.get('id')?.setValue(scheme.id);
+  		this.form.get('name')?.setValue(scheme.name);
+  		this.form.get('description')?.setValue(scheme.description);
+  		this.form.get('isDefault')?.setValue(scheme.isDefault);
 
-  		this.form.get('currenciesFrom')?.setValue(scheme?.currenciesFrom);
-  		this.form.get('currenciesTo')?.setValue(scheme?.currenciesTo);
+  		this.form.get('currenciesFrom')?.setValue(scheme.currenciesFrom);
+  		this.form.get('currenciesTo')?.setValue(scheme.currenciesTo);
   		// Targets
-  		this.form.get('target')?.setValue(scheme?.target);
+  		this.form.get('target')?.setValue(scheme.target);
   		this.targetType = scheme?.target ?? SettingsFeeTargetFilterType.None;
   		this.setTargetValues(scheme?.targetValues);
-		this.setWidgets(scheme?.widgetIds);
-			
+
   		if (scheme.instrument && scheme.instrument.length > 0) {
   			const instrument = scheme.instrument[0];
   			this.form.get('instrument')?.setValue(instrument);
-			this.form.get('provider')?.setValue(scheme?.provider);
+				this.form.get('provider')?.setValue(scheme?.provider);
   		} else {
   			this.form.get('instrument')?.setValue(undefined);
   			this.form.get('provider')?.setValue([]);
   		}
+
   		this.form.get('userMode')?.setValue(scheme?.userMode);
   		this.form.get('userType')?.setValue(scheme?.userType);
   		this.form.get('trxType')?.setValue(scheme?.trxType);
   		// Terms
   		this.form.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
   		this.form.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
+
   		this.setTargetValidator();
   		this.setTargetValueParams();
   	} else {
@@ -204,7 +208,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	data.isDefault = this.form.get('isDefault')?.value;
   	data.id = this.form.get('id')?.value;
   	data.setTarget(this.targetType, this.form.get('targetValues')?.value);
-	data.setWidgets(this.form.get('widgetIds')?.value);
+		data.setWidgets(this.form.get('widgetIds')?.value);
   	data.userType = this.form.get('userType')?.value as UserType[];
   	data.userMode = this.form.get('userMode')?.value as UserMode[];
   	data.trxType = this.form.get('trxType')?.value as TransactionType[];
@@ -224,17 +228,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	return data;
   }
 
-	private setWidgets(values: string[]): void {
-		const filter = new Filter({
-			widgets: values
-		});
-		this.subscriptions.add(
-			this.getFilteredWidgets(filter).subscribe(result => {
-				this.widgetsOptions$ = of(result);
-				this.form.get('widgetIds')?.setValue(result);
-			})
-		);
-	}
   private setTargetValues(values: string[]): void {
   	if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
   		const filter = new Filter({
@@ -319,19 +312,31 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   }
 
 	private initWidgetSearch(): void {
-  	this.widgetsOptions$ = concat(
-  		of([]),
-  		this.widgetsSearchInput$.pipe(
-  			filter(res => res !== null && res.length >= this.minTargetsLengthTerm),
-  			debounceTime(300),
-  			distinctUntilChanged(),
-  			tap(() => this.isTargetsLoading = true),
-  			switchMap(searchString => {
-  				this.isTargetsLoading = false;
-  				const filter = new Filter({ search: searchString });
-  				return this.getFilteredWidgets(filter);
-  			})
-  		));
+		let initialLoadDone = false;
+
+    this.widgetsOptions$ = this.widgetsSearchInput$.pipe(
+			startWith(null),
+			debounceTime(300),
+			distinctUntilChanged(),
+			switchMap(searchString => {
+					if (searchString === null && !initialLoadDone && this.widgetIds.length) {
+							this.isWidgetsLoading = true;
+							initialLoadDone = true;
+							return this.getFilteredWidgets(new Filter({ widgets: this.widgetIds })).pipe(
+								tap(result => {
+									this.form.get('widgetIds')?.setValue(result);
+									this.isWidgetsLoading = false;
+								}));
+					} else if (searchString !== null && searchString.length >= this.minTargetsLengthTerm) {
+							this.isWidgetsLoading = true;
+							return this.getFilteredWidgets(new Filter({ search: searchString })).pipe(
+								tap(() => this.isWidgetsLoading = false));
+					} else {
+							this.isWidgetsLoading = false;
+							return of([]);
+					}
+			})
+    );
   }
 
   private filterPaymentProviders(instruments: PaymentInstrument[]): void {

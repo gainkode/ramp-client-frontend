@@ -10,7 +10,6 @@ import { CustomerDocsFacadeService } from '../services/customer-docs.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { customFilterPredicate } from 'components/data-list/table/filter-predicate.util';
 import { HttpEventType } from '@angular/common/http';
-import { saveAs } from 'file-saver';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogBox } from 'components/dialogs/delete-box.dialog';
 
@@ -163,8 +162,6 @@ export class AdminCustomerDocsComponent implements OnInit, OnDestroy {
 	onAddDocument(): void {
 		this.isEditDocument = true;
 		this.form.controls.group.setValue(DocumentType.ID);
-
-		// this.fillForm(this.customerDocs);
 	}
 
 	onEditDocument(): void {

@@ -91,14 +91,12 @@
               bindLabel="title"
               [minTermLength]="minTargetsLengthTerm"
               notFoundText="No widgets found" 
-              [loading]="isTargetsLoading" 
+              [loading]="isWidgetsLoading" 
               [multiple]="true"
               typeToSearchText="type widget name" 
-              placeholder="Start typing to search a widget" [typeahead]="widgetsSearchInput$">
-              <ng-option *ngFor="let item of widgetsOptions$ | async" [value]="item">
-                <app-dropdown-item [itemValue]="item.title" [imageClass]="item.imgClass" [imageSource]="item.imgSource">
-                </app-dropdown-item>
-              </ng-option>
+              placeholder="Start typing to search a widget" 
+              [typeahead]="widgetsSearchInput$" 
+              [items]="widgetsOptions$ | async">
             </ng-select>
             <app-cost-similiar-panel [targetField]="(similarSchemas$ | async)?.widgetIds"> </app-cost-similiar-panel>
           </div>

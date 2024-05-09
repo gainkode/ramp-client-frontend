@@ -450,11 +450,7 @@ export class TransactionItemFull {
 				color = 'blue';
 				break;
 			case AdminTransactionStatus.Confirming:
-				if (this.statusInfo?.key === TransactionStatus.TransferBlocked) {
-					color = 'yellow';
-				} else {
-					color = 'purple';
-				}
+				color = this.statusInfo?.key === TransactionStatus.TransferBlocked ? 'yellow' : 'purple';
 				break;
 			case AdminTransactionStatus.Completed:
 				color = 'green';

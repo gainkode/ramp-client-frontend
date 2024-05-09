@@ -57,7 +57,7 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
 	rate: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(this.pNumberPattern)]),
 	users: this.fb.control<CommonTargetValue>(undefined, Validators.required),
 	instrument: this.fb.control<PaymentInstrument>(PaymentInstrument.FiatVault, Validators.required),
-	provider: this.fb.control<string>(undefined),
+	paymentProvider: this.fb.control<string>(undefined),
 	widgetUserParamsId: this.fb.control<string>(undefined)
   });
   transactionSimulation$: Observable<TransactionSimulatorResult>;
@@ -128,6 +128,7 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
 					widgetIdControl.setValidators(Validators.required);
 				} else {
 					widgetIdControl.clearValidators();
+					widgetIdControl.patchValue(null);
 				}
 
 				widgetIdControl.updateValueAndValidity();
@@ -185,14 +186,14 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
   	if (instrument?.length > 0) {
   		this.filteredProviders = getProviderList([instrument], this.providers);
 
-		this.form.controls.provider.patchValue(
+		this.form.controls.paymentProvider.patchValue(
 			this.filteredProviders.length > 0
   				? this.filteredProviders[0].id
   				: null
   		);
   	} else {
 		this.instrumentTypeField.patchValue(undefined);
-		this.form.controls.provider.patchValue(undefined);
+		this.form.controls.paymentProvider.patchValue(undefined);
   	}
   }
 
@@ -355,7 +356,8 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
 		this.adminService.simulateTransaction(
 		 this.getTransactionToCreate(), 
 		 this.form.controls.users.value.id, 
-		 parseFloat(this.rateField?.value)
+		 parseFloat(this.rateField?.value),
+		 this.form.controls.widgetUserParamsId.value 
 	 ) .pipe(finalize(() => {
 		 this.isProgress = false;
 		 this.cdr.markForCheck();
