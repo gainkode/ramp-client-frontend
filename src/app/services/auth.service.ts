@@ -1071,7 +1071,7 @@ export class AuthService {
 	}
 
 	socialSignOut(): void {
-		this.socialAuth.signOut().then(function (data) { }).catch(function (error) { });
+		this.socialAuth.signOut().then(function () { }).catch(function () { });
 	}
 
 	logout(): void {

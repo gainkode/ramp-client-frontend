@@ -21,71 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="main-header-right">
-      <!-- <button class="navbar-toggler navresponsive-toggler d-md-none ms-auto" type="button" (click)="collapse.toggle()"
-        [attr.aria-expanded]="!isCollapsed">
-        <span class="navbar-toggler-icon fe fe-more-vertical "></span>
-      </button> -->
-      <!-- <div class="mb-0 navbar navbar-expand-lg navbar-nav-right responsive-navbar navbar-dark p-0">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent-4" #collapse="ngbCollapse"
-          [(ngbCollapse)]="isCollapsed">
-          <ul class="nav nav-item header-icons navbar-nav-right ms-md-auto ms-3 flex-nowrap">
-            <li class="nav-link search-icon d-lg-none d-block">
-              <form class="navbar-form" [ngClass]="{'active':activated}" role="search">
-                <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Search">
-                  <span class="input-group-btn">
-                    <button type="reset" class="btn btn-default" (click)="closeToggle()">
-                      <i class="fas fa-times"></i>
-                    </button>
-                    <button type="button" class="btn btn-default nav-link resp-btn" (click)="searchToggle()">
-                      <svg xmlns="http://www.w3.org/2000/svg" height="24px" class="header-icon-svgs" viewBox="0 0 24 24"
-                        width="24px" fill="#000000">
-                        <path d="M0 0h24v24H0V0z" fill="none" />
-                        <path
-                          d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                      </svg>
-                    </button>
-                  </span>
-                </div>
-              </form>
-            </li>
-            <li ngbDropdown class="main-profile-menu nav nav-item nav-link ps-lg-2">
-              <a class="new nav-link profile-user d-flex" href="javascript:;" ngbDropdownToggle><img alt=""
-                  src="./assets/img/faces/2.jpg" class=""></a>
-              <div ngbDropdownMenu>
-                <div class="menu-header-content p-3 border-bottom">
-                  <div class="d-flex wd-100p">
-                    <div class="main-img-user"><img alt="" src="./assets/img/faces/2.jpg" class=""></div>
-                    <div class="ms-3 my-auto">
-                      <h6 class="tx-15 font-weight-semibold mb-0">Teri Dactyl</h6><span
-                        class="dropdown-title-text subtext op-6  tx-12">Premium Member</span>
-                    </div>
-                  </div>
-                </div>
-                <a ngbDropdownItem routerLink="/pages/profile"><i class="far fa-user-circle"></i>Profile</a>
-                <a ngbDropdownItem routerLink="/mail/chat"><i class="far fa-smile"></i> chat</a>
-                <a ngbDropdownItem routerLink="/mail/read-mail"><i class="far fa-envelope "></i>Inbox</a>
-                <a ngbDropdownItem routerLink="/mail/mail"><i class="far fa-comment-dots"></i>Messages</a>
-                <a ngbDropdownItem routerLink="/mail/mail-settings"><i class="far fa-sun"></i> Settings</a>
-                <a ngbDropdownItem (click)="signout()"><i class="far fa-arrow-alt-circle-left"></i> Sign Out</a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div> -->
-      <!-- <div class="d-flex">
-        <a (click)="toggleSwitcher()" class="demo-icon new nav-link" href="javascript:void(0);">
-          <svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs fa-spin" width="24" height="24"
-            viewBox="0 0 24 24">
-            <path
-              d="M12 16c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm0-6c1.084 0 2 .916 2 2s-.916 2-2 2-2-.916-2-2 .916-2 2-2z" />
-            <path
-              d="m2.845 16.136 1 1.73c.531.917 1.809 1.261 2.73.73l.529-.306A8.1 8.1 0 0 0 9 19.402V20c0 1.103.897 2 2 2h2c1.103 0 2-.897 2-2v-.598a8.132 8.132 0 0 0 1.896-1.111l.529.306c.923.53 2.198.188 2.731-.731l.999-1.729a2.001 2.001 0 0 0-.731-2.732l-.505-.292a7.718 7.718 0 0 0 0-2.224l.505-.292a2.002 2.002 0 0 0 .731-2.732l-.999-1.729c-.531-.92-1.808-1.265-2.731-.732l-.529.306A8.1 8.1 0 0 0 15 4.598V4c0-1.103-.897-2-2-2h-2c-1.103 0-2 .897-2 2v.598a8.132 8.132 0 0 0-1.896 1.111l-.529-.306c-.924-.531-2.2-.187-2.731.732l-.999 1.729a2.001 2.001 0 0 0 .731 2.732l.505.292a7.683 7.683 0 0 0 0 2.223l-.505.292a2.003 2.003 0 0 0-.731 2.733zm3.326-2.758A5.703 5.703 0 0 1 6 12c0-.462.058-.926.17-1.378a.999.999 0 0 0-.47-1.108l-1.123-.65.998-1.729 1.145.662a.997.997 0 0 0 1.188-.142 6.071 6.071 0 0 1 2.384-1.399A1 1 0 0 0 11 5.3V4h2v1.3a1 1 0 0 0 .708.956 6.083 6.083 0 0 1 2.384 1.399.999.999 0 0 0 1.188.142l1.144-.661 1 1.729-1.124.649a1 1 0 0 0-.47 1.108c.112.452.17.916.17 1.378 0 .461-.058.925-.171 1.378a1 1 0 0 0 .471 1.108l1.123.649-.998 1.729-1.145-.661a.996.996 0 0 0-1.188.142 6.071 6.071 0 0 1-2.384 1.399A1 1 0 0 0 13 18.7l.002 1.3H11v-1.3a1 1 0 0 0-.708-.956 6.083 6.083 0 0 1-2.384-1.399.992.992 0 0 0-1.188-.141l-1.144.662-1-1.729 1.124-.651a1 1 0 0 0 .471-1.108z" />
-          </svg>
-        </a>
-      </div> -->
-      
+    <div class="main-header-right">    
       <div class="d-flex">
         <a (click)="signout()" class="demo-icon new nav-link" href="javascript:void(0);">
           <i class="material-icons" style="font-size: 20px;color: rgb(136, 136, 136);">logout</i>

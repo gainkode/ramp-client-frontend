@@ -44,7 +44,10 @@ export class AdminHeaderComponent implements OnInit {
 
 	signout(): void {
 		this.auth.logout();
-		void this.router.navigate(['/auth/login']);
+
+		void this.router.navigateByUrl('/').then(() => {
+			window.location.reload();
+		});
 	}
 
 	searchToggle(): void {

@@ -164,7 +164,7 @@ export class MerchantComponent implements OnInit, OnDestroy {
     		if (personalVerified === true) {
     			this.selectedMenu = section;
     		} else {
-    			this.router.navigateByUrl(this.menuItems[0].url);
+    			void this.router.navigateByUrl(this.menuItems[0].url);
     		}
     	}
     }
@@ -293,13 +293,13 @@ export class MerchantComponent implements OnInit, OnDestroy {
     			}
     		}
     	}
-    	this.router.navigateByUrl(baseLink, { skipLocationChange: true }).then(() =>
-    		this.router.navigate([link]));
+    	void this.router.navigateByUrl(baseLink, { skipLocationChange: true }).then(() => this.router.navigate([link]));
     }
 
     logout(): void {
     	this.auth.logout();
-    	this.router.navigateByUrl('/').then(() => {
+			
+    	void this.router.navigateByUrl('/').then(() => {
     		window.location.reload();
     	});
     }

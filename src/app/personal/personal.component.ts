@@ -308,9 +308,10 @@ export class PersonalComponent implements OnInit, OnDestroy {
 
     logout(): void {
     	this.auth.logout();
-    	this.router.navigateByUrl('/').then(() => {
-    		window.location.reload();
-    	});
+			
+			void this.router.navigateByUrl('/').then(() => {
+				window.location.reload();
+			});
     }
 
     getUserMainPage(): string {
