@@ -72,7 +72,7 @@ export class DashboardAdminComponent implements OnInit, OnDestroy {
 			})
 		);
 		this.auth.getLocalSettingsCommon();
-		if (this.defaultFilter) {
+		if (this.auth.user?.filters?.dashboard?.includes('updatedDate') || !this.auth.user?.filters ) {
 			this.dashboardService.setFilter(this.defaultFilter);
 		} else {
 			this.dashboardService.load();

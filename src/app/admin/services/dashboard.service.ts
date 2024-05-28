@@ -7,7 +7,7 @@ import { AdminDataService } from 'services/admin-data.service';
 import { Filter } from 'admin/model/filter.model';
 import { PaymentInstrumentList } from 'model/payment.model';
 import { EnvService } from 'services/env.service';
-import { DashboardMerchantStats, DateTimeInterval, DashboardStats, TransferStats } from 'model/generated-models';
+import { DashboardMerchantStats, DateTimeInterval, DashboardStats } from 'model/generated-models';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()

@@ -177,8 +177,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 		if (this.auth.user?.filters && this.auth.user?.filters[this.filterType]) {
 			this.filteredFields = this.auth.user?.filters[this.filterType];
 			filterFieldsList();
+		} else if (this.filterType === 'dashboard') {
+			this.filteredFields = ['updatedDate'];
+			this.filteredFieldsList = this.filteredFieldsList.filter(item => item.value !== 'updatedDate');
 		}
-	
 		/* Subrcribe to filteredField, in case of found parsedField add to filteredFields and remove from the list*/
 		this.filteredField.valueChanges
 			.pipe(takeUntil(this.destroy$))
