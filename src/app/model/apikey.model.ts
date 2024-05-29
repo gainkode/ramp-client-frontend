@@ -12,10 +12,12 @@ export class ApiKeyItem {
 
 	constructor(data: ApiKey) {
 		this.title = data.apiKeyId ?? '';
+		
 		if (data.user) {
 			const user = new UserItem(data.user);
 			this.user = user.extendedName;
 		}
+
 		this.created = this.datepipe.transform(data.created, 'dd MMM YYYY HH:mm:ss') ?? '';
 		this.disabled = data.disabled ?? false;
 	}

@@ -18,7 +18,6 @@ import { ProfileDataService } from 'services/profile.service';
 	templateUrl: './apikeys.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		
 		'../../../../assets/profile.scss',
 		'./apikeys.component.scss'
 	]
