@@ -16,6 +16,7 @@ import { WalletValidator } from 'utils/wallet.validator';
 import { EnvService } from 'services/env.service';
 import { ThemeService } from 'services/theme-service';
 import { ProfileDataService } from 'services/profile.service';
+import { NUMBER_PATTERN } from 'utils/constants';
 
 @Component({
 	selector: 'app-widget-internal-overview',
@@ -85,7 +86,6 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   private quoteLimit = 0;
   private transactionsTotalEur = 0;
   private pDepositRate: number | undefined = undefined;
-  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 	maxSellAmount!: number;
   errorMessageData = '';
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
@@ -640,7 +640,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 		
   	let validators = [
   		Validators.required,
-  		Validators.pattern(this.pNumberPattern),
+  		Validators.pattern(NUMBER_PATTERN),
   		Validators.min(minAmount),
   	];
 
@@ -707,7 +707,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 		if(!this.initValidators){
   		this.amountReceiveField?.setValidators([
   			Validators.required,
-  			Validators.pattern(this.pNumberPattern),
+  			Validators.pattern(NUMBER_PATTERN),
   		]);
 
   		this.amountReceiveField?.updateValueAndValidity();

@@ -8,6 +8,7 @@ import { take } from 'rxjs/operators';
 import { CommonDataService } from 'services/common-data.service';
 import { EnvService } from 'services/env.service';
 import { ErrorService } from 'services/error.service';
+import { GUID_PATTERN, NUMBER_PATTERN } from 'utils/constants';
 
 @Component({
 	selector: 'app-crypto-widget-wizard',
@@ -16,8 +17,6 @@ import { ErrorService } from 'services/error.service';
 })
 export class CryptoWizardComponent implements OnInit, OnDestroy {
 	private pSubscriptions: Subscription = new Subscription();
-	private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
-	private pGuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 	errorMessage = '';
 	inProgress = false;
@@ -50,7 +49,7 @@ export class CryptoWizardComponent implements OnInit, OnDestroy {
 		widget: [undefined, {
 			validators: [
 				Validators.required,
-				Validators.pattern(this.pGuidPattern)
+				Validators.pattern(GUID_PATTERN)
 			], updateOn: 'change'
 		}],
 		email: [undefined,
@@ -64,7 +63,7 @@ export class CryptoWizardComponent implements OnInit, OnDestroy {
 		direction: ['crypto_amount'],
 		amount: [undefined, {
 			validators: [
-				Validators.pattern(this.pNumberPattern)
+				Validators.pattern(NUMBER_PATTERN)
 			], updateOn: 'change'
 		}],
 		currency: [undefined, { validators: [], updateOn: 'change' }],
@@ -138,12 +137,12 @@ export class CryptoWizardComponent implements OnInit, OnDestroy {
 		if (selected) {
 			this.amountErrorMessages['min'] = `Min. amount ${selected?.minAmount} ${selected?.display}`;
 			validators = [
-				Validators.pattern(this.pNumberPattern),
+				Validators.pattern(NUMBER_PATTERN),
 				Validators.min(selected?.minAmount ?? 0)
 			];
 		} else {
 			validators = [
-				Validators.pattern(this.pNumberPattern)
+				Validators.pattern(NUMBER_PATTERN)
 			];
 		}
 		this.amountField?.setValidators(validators);

@@ -16,6 +16,7 @@ import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
 import { MatTableDataSource } from '@angular/material/table';
+import { NUMBER_PATTERN } from 'utils/constants';
 
 @Component({
 	selector: 'app-admin-widget-details',
@@ -34,8 +35,6 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   }
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
-
-  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   
   displayedColumns: string[] = [
   	'details',
@@ -98,11 +97,11 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	twoFA: false,
   	showRate: true,
 		masked: false,
-  	minAmountFrom: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-  	maxAmountFrom: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-  	fee: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-		merchantFeeMinAmount: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-		merchantFeePercent: [0, { validators: [Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+  	minAmountFrom: [0, { validators: [Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
+  	maxAmountFrom: [0, { validators: [Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
+  	fee: [0, { validators: [Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
+		merchantFeeMinAmount: [0, { validators: [Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
+		merchantFeePercent: [0, { validators: [Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
   });
 
 	private readonly destroy$ = new Subject<void>();

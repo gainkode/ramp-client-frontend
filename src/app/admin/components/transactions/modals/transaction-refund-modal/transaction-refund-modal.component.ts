@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DialogData } from 'model/dialog.model';
 import { TransactionUpdateInput } from 'model/generated-models';
+import { NUMBER_PATTERN } from 'utils/constants';
 
 @Component({
   selector: 'app-transaction-refund-modal',
@@ -15,7 +16,7 @@ export class TransactionRefundModalComponent {
   private readonly _fb = inject(FormBuilder);
   transaction: TransactionUpdateInput;
   form = this._fb.group({
-    amountToSell: this._fb.control<number>(undefined, [Validators.required, Validators.pattern(/^[+-]?((\.\d+)|(\d+(\.\d+)?))$/)]),
+    amountToSell: this._fb.control<number>(undefined, [Validators.required, Validators.pattern(NUMBER_PATTERN)]),
     sourceWallet: this._fb.control<string>(undefined, Validators.required)
   });
 

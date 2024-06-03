@@ -217,6 +217,17 @@
                 </div>
               </div>
 
+              <div class="form-group" *ngIf="form.controls.recallNumber.value">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                  Recall number
+                </label>
+                <mat-chip-listbox>
+                  <mat-chip class="widget-chip" (click)="navigateToRecallNumber(form.controls.recallNumber.value)">
+                    <span class="tx-13">{{form.controls.recallNumber.value}}</span>
+                  </mat-chip>
+                </mat-chip-listbox>
+              </div>
+
             </div>
           </div>
           <div class="col-lg-5 col-md-12">
@@ -272,7 +283,7 @@
                         {{data?.amountToSpend}}
                       </p>
                       <input *ngIf="!isReceiveTransactionType" class="form-control"
-                        [ngClass]="{'has-error': !form.controls.amountToSpend.valid}" type="text"
+                        [ngClass]="{'has-error': !form.controls.amountToSpend.valid}" type="number"
                         formControlName="amountToSpend" required>
                       <div
                         *ngIf="(form.controls.amountToSpend.touched || submitted) && (form.controls.amountToSpend.errors?.['required'])"
@@ -353,7 +364,7 @@
                   Set current
                 </a>
               </label>
-              <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="text"
+              <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="number"
                 formControlName="rate" required>
               <div *ngIf="(form.controls.rate.touched || submitted) && (form.controls.rate.errors?.['required'])"
                 class="tx-danger">
@@ -372,8 +383,7 @@
 
             <div class="row">
               <div class="col-lg-6 col-md-12" *ngIf="isReceiveTransactionType" >
-                <app-admin-details-item  [label]="systemFeeTitle"
-                [value]="data?.fees"></app-admin-details-item>
+                <app-admin-details-item  [label]="systemFeeTitle" [value]="data?.fees"></app-admin-details-item>
               </div>
               <div class="col-lg-6 col-md-12"  *ngIf="data?.feePercent && transactionType===TRANSACTION_TYPE.Buy" >
                 <div class="form-group">
@@ -398,7 +408,7 @@
                 </div>
               </div>
               <div class="col-lg-6 col-md-12">
-                <div *ngIf="data?.calcMerchantFeePercent && transactionType===TRANSACTION_TYPE.Buy" class="form-group">
+                <div *ngIf="data?.merchantFeePercent && transactionType===TRANSACTION_TYPE.Buy" class="form-group">
                   <div class="row">
                     <div class="col-sm-12">
                       <label class="main-content-label tx-11 tx-medium tx-gray-600">
@@ -479,7 +489,7 @@
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">
                   Benchmark transfer hash
                 </label>
-                <input class="form-control" type="text" formControlName="benchmarkTransferHash">
+                <input class="form-control" type="text" formControlName="benchmarkTransferOrderHash">
               </div>
               <app-admin-details-item label="Benchmark transfer blockchain Link" [value]="benchmarkTransferOrderBlockchainLink" [linkUrl]="benchmarkTransferOrderBlockchainLink"></app-admin-details-item>
               <app-admin-details-item label="Benchmark transfer status" [value]="data?.benchmarkStatus"></app-admin-details-item>
@@ -496,7 +506,7 @@
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">
                   End-user transfer hash
                 </label>
-                <input class="form-control" type="text" formControlName="transferHash">
+                <input class="form-control" type="text" formControlName="transferOrderHash">
               </div>
               <app-admin-details-item label="End-user transfer blockchain Link" [value]="transferOrderBlockchainLink" [linkUrl]="transferOrderBlockchainLink"></app-admin-details-item>
               <app-admin-details-item label="End-user transfer status" [value]="data?.transferStatus"></app-admin-details-item>
@@ -571,7 +581,7 @@
         
                   <button *ngIf="!isReceiveTransactionType && data?.hasToBeRefunded"
                     class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
-                    (click)="onRefunded(update_confirm_content)">
+                    (click)="onRecallNumberModal(false, true, update_confirm_content)">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Refund

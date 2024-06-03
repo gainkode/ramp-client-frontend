@@ -13,6 +13,7 @@ import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
 import { getCurrencySign } from 'utils/utils';
 import { WalletValidator } from 'utils/wallet.validator';
+import { NUMBER_PATTERN } from 'utils/constants';
 
 @Component({
 	selector: 'app-widget-order-details',
@@ -64,7 +65,6 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   private transactionsTotalEur = 0;
   
   private pDepositRate: number | undefined = undefined;
-  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
   errorMessageData = '';
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
@@ -597,11 +597,11 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
 
   	let validators = [
   		Validators.required,
-  		Validators.pattern(this.pNumberPattern),
+  		Validators.pattern(NUMBER_PATTERN),
   		Validators.min(minAmount),
   	];
 		
-		if(!maxAmount || maxAmount == 0){
+		if(!maxAmount || maxAmount === 0){
 			if (maxValid !== undefined) {
 				if (maxValid > 0) {
 					this.amountSpendErrorMessages['max'] = `Max. amount ${maxValid} ${currencyDisplay}`;
@@ -633,7 +633,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   	if(!this.initValidators){
   		this.amountReceiveField?.setValidators([
   			Validators.required,
-  			Validators.pattern(this.pNumberPattern),
+  			Validators.pattern(NUMBER_PATTERN),
   		]);
   		this.amountReceiveField?.updateValueAndValidity();
   	}

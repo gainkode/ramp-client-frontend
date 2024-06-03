@@ -394,6 +394,17 @@
                                             formControlName="transactionCountOver"
                                             placeholder="Specify transaction count limit">
                                     </div>
+                                    <div *ngIf="field === 'recallNumber'" class="form-group">
+                                        <label class="main-content-label tx-11 tx-medium tx-gray-600 d-flex align-items-center justify-content-between mb-1">
+                                            Recall number
+                                            <button type="button" class="close" aria-label="Close" (click)="onFilterRemove(field, 'recallNumber')">
+                                                <span aria-hidden="true" class="tx-20">&times;</span>
+                                            </button>
+                                        </label>
+                                        <input class="form-control" [onlyNumber]="true"
+                                            formControlName="recallNumber"
+                                            placeholder="Specify recall number">
+                                    </div>
                                     <div *ngIf="field === 'from'" class="form-group">
                                         <label class="main-content-label tx-11 tx-medium tx-gray-600">
                                             From
@@ -438,6 +449,18 @@
                                         <div class="__admin-filter-top-bar">
                                             <input type="checkbox" formControlName="transactionWasEverCompleted">
                                             <span class="ml-8px">Transaction Was Ever Completed</span>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="field === 'hasRecallNumber'" class="form-group">
+                                        <label class="main-content-label tx-11 tx-medium tx-gray-600 d-flex align-items-center justify-content-between mb-1">
+                                            Has recall number
+                                            <button type="button" class="close" aria-label="Close" (click)="onFilterRemove(field, 'hasRecallNumber')">
+                                                <span aria-hidden="true" class="tx-20">&times;</span>
+                                            </button>
+                                        </label>
+                                        <div class="__admin-filter-top-bar">
+                                            <input type="checkbox" formControlName="hasRecallNumber">
+                                            <span class="ml-8px">Has recall number</span>
                                         </div>
                                     </div>
                                     <div *ngIf="field === 'preauthFlag'" class="form-group">

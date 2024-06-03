@@ -8,6 +8,7 @@ import { take } from 'rxjs/operators';
 import { CommonDataService } from 'services/common-data.service';
 import { EnvService } from 'services/env.service';
 import { ErrorService } from 'services/error.service';
+import { GUID_PATTERN, NUMBER_PATTERN } from 'utils/constants';
 
 @Component({
 	selector: 'app-widget-widget-wizard',
@@ -16,8 +17,6 @@ import { ErrorService } from 'services/error.service';
 })
 export class WidgetWizardComponent implements OnInit, OnDestroy {
 	private pSubscriptions: Subscription = new Subscription();
-	private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
-	private pGuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 	errorMessage = '';
 	inProgress = false;
@@ -54,7 +53,7 @@ export class WidgetWizardComponent implements OnInit, OnDestroy {
 		widget: [undefined, {
 			validators: [
 				Validators.required,
-				Validators.pattern(this.pGuidPattern)
+				Validators.pattern(GUID_PATTERN)
 			], updateOn: 'change'
 		}],
 		email: [undefined,
@@ -68,7 +67,7 @@ export class WidgetWizardComponent implements OnInit, OnDestroy {
 		transactionType: [TransactionType.Buy],
 		amountSend: [undefined, {
 			validators: [
-				Validators.pattern(this.pNumberPattern)
+				Validators.pattern(NUMBER_PATTERN)
 			], updateOn: 'change'
 		}],
 		currencySend: [undefined, { validators: [], updateOn: 'change' }],
@@ -155,12 +154,12 @@ export class WidgetWizardComponent implements OnInit, OnDestroy {
 		if (selected) {
 			this.amountSendErrorMessages['min'] = `Min. amount ${selected?.minAmount} ${selected?.display}`;
 			validators = [
-				Validators.pattern(this.pNumberPattern),
+				Validators.pattern(NUMBER_PATTERN),
 				Validators.min(selected?.minAmount ?? 0)
 			];
 		} else {
 			validators = [
-				Validators.pattern(this.pNumberPattern)
+				Validators.pattern(NUMBER_PATTERN)
 			];
 		}
 		this.amountSendField?.setValidators(validators);
@@ -268,17 +267,6 @@ export class WidgetWizardComponent implements OnInit, OnDestroy {
 			transactionType: this.selectedTransactionType?.id,
 			onTransactionStatusChanged: wh,
 			userType: this.selectedUserType?.id
-			// postCode: '',
-			// town: '',
-			// street: '',
-			// subStreet: '',
-			// stateName: '',
-			// buildingName: '',
-			// buildingNumber: '',
-			// flatNumber: '',
-			// phone: '',
-			// birthday: '',
-			// sex: 'M/F'
 		};
 		const transactionData$ = this.commonService.addMyWidgetUserParams(
 			this.widgetField?.value,

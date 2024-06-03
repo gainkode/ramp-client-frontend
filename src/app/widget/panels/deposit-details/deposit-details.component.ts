@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { PaymentDataService } from 'services/payment.service';
+import { NUMBER_PATTERN } from 'utils/constants';
 
 @Component({
 	selector: 'app-widget-deposit-details',
@@ -40,7 +41,6 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   @Output() onComplete = new EventEmitter<CheckoutSummary>();
 
   private defaultSummary: CheckoutSummary | undefined = undefined;
-  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   private pSubscriptions: Subscription = new Subscription();
   private transactionsTotalEur = 0;
   private currentQuoteEur = 0;
@@ -209,7 +209,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   	this.amountErrorMessages['min'] = `Min. amount ${this.selectedCurrency?.minAmount ?? 0} ${this.selectedCurrency?.display}`;
   	const validators = [
   		Validators.required,
-  		Validators.pattern(this.pNumberPattern),
+  		Validators.pattern(NUMBER_PATTERN),
   		Validators.min(this.selectedCurrency?.minAmount ?? 0),
   	];
   	this.amountTo?.setValidators(validators);

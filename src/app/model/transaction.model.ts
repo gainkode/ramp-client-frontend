@@ -139,15 +139,19 @@ export class TransactionItemFull {
 	canBeReviewed = false;
 	exchangeOrderId = '';
 	widgetUserParams: WidgetUserParams;
-	calcMerchantFeePercent: number;
+	merchantFeePercent: number;
 	feePercent: number;
 	currencyCrypto = '';
+
+	recallNumber: string | undefined;
+	hasRecallNumber: boolean;
 
 	constructor(data: Transaction | TransactionShort | null) {
 		if (data !== null) {
 			this.code = data.code ?? '';
 			this.id = data.transactionId;
 			const datepipe: DatePipe = new DatePipe('en-US');
+
 			this.created = datepipe.transform(
 				data.created,
 				'dd-MM-YYYY HH:mm:ss:SSS'
@@ -175,12 +179,14 @@ export class TransactionItemFull {
 					) as string;
 				}
 			}
+
 			this.accountId = data.userId ?? '';
 			this.interimWallet = data.sourceVaultId ?? '';
 			this.exchangeOrderId = data.liquidityOrder?.originalOrderId ?? '';
 			this.accountStatus = data.accountStatus ?? '';
 			this.accountStatusValue = data.accountStatus ?? AccountStatus.Closed;
 			this.flag = data.flag ?? false;
+
 			const transactionData = data as Transaction;
 			const paymentData = getPaymentData(data);
 
@@ -208,6 +214,7 @@ export class TransactionItemFull {
 					this.benchmarkTransferOrderHash = this.benchmarkTransferOrder.transferHash ?? '';
 				}
 			}
+
 			this.instrumentDetailsRaw = transactionData?.instrumentDetails;
 			this.widgetUserParams = transactionData.widgetUserParams;
 			this.comment = transactionData.comment ?? '';
@@ -266,18 +273,27 @@ export class TransactionItemFull {
 			}
 
 			this.rate = data.rate ?? data.initialRate;
-			this.calcMerchantFeePercent = data.merchantFeePercent ?? 0;
+
+			this.merchantFeePercent = data.merchantFeePercent ?? 0;
+
+			const recallNumber = '123123123132';
+			const hasRecallNumber = true;
+
+			this.recallNumber = recallNumber ?? undefined;
+			this.hasRecallNumber = hasRecallNumber ?? false;
+
 			this.feePercent = data.feePercent ?? 0;
 
 			if (data.type === TransactionType.Deposit) {
 				this.address = this.recipient ?? '-';
-			} else if(data.type === TransactionType.Withdrawal) {
+			} else if (data.type === TransactionType.Withdrawal) {
 				this.address = this.sender ?? '-';
 			} else {
 				this.address = data.destination ?? '-';
 			}
 
 			const kycStatus = TransactionKycStatusList.find((x) => x.id === (data as Transaction).kycStatus);
+			const widgetData = JSON.parse(data.widget ?? '{}');
 
 			this.kycStatus = kycStatus ? kycStatus.name : '';
 			this.kycStatusValue = kycStatus ? kycStatus.id : TransactionKycStatus.KycWaiting;
@@ -286,7 +302,6 @@ export class TransactionItemFull {
 			this.kycTier = data.userTier?.name ?? '';
 			this.status = data.status;
 			this.subStatus = data.subStatus ?? '';
-			const widgetData = JSON.parse(data.widget ?? '{}');
 
 			if (widgetData) {
 				this.widgetName = widgetData.widgetName;
@@ -297,7 +312,6 @@ export class TransactionItemFull {
 				this.benchmarkSubStatus = this.benchmarkTransferOrder.subStatus ?? '';
 			}
 
-		
 			this.paymentStatus =  data.paymentOrder?.status ?? '';
 			this.paymentStatusReason = data.paymentOrder?.statusReason && (this.paymentStatus?.toLowerCase() !== 'completed') ? data.paymentOrder?.statusReason : '' ;
 
@@ -331,10 +345,12 @@ export class TransactionItemFull {
 
 					if (this.declineReasonExtra !== '') {
 						let dataExtra = JSON.parse(this.declineReasonExtra);
+
 						try {
 							dataExtra = JSON.parse(dataExtra);
 							const extraStatus = dataExtra?.status ?? '';
 							const extraSubStatus = (dataExtra?.subStatus ?? '') === '' ? '' : ` (${dataExtra?.subStatus ?? ''})`;
+							
 							this.declineReasonExtra = `${extraStatus} ${extraSubStatus}`;
 						} catch (e) {
 							this.declineReasonExtra = dataExtra;
@@ -356,6 +372,7 @@ export class TransactionItemFull {
 					this.vaultIds.push(data.destVaultId);
 				}
 			}
+			
 			if (data.sourceVaultId) {
 				if (!this.vaultIds.includes(data.sourceVaultId)) {
 					this.vaultIds.push(data.sourceVaultId);
@@ -364,39 +381,45 @@ export class TransactionItemFull {
 
 			if (data.paymentOrder) {
 				this.paymentOrderPreauth = data.paymentOrder.preauth && data.paymentOrder.status === 'AUTOREJECTED';
+
 				if (data.paymentOrder.paymentInfo) {
 					let payment = JSON.parse(data.paymentOrder.paymentInfo);
 					// sometimes it comes as a string with escape symbols.
 					//  In this case parse returns a stringified JSON, which has to be parsed again
+					
 					if (typeof payment === 'string') {
 						payment = JSON.parse(payment);
 					}
+
 					if (this.instrument === PaymentInstrument.CreditCard) {
 						const card = new CardView();
+
 						card.setPaymentInfo(JSON.stringify(payment));
 						this.instrumentDetails = card.cardInfo;
+						
 						if (this.instrumentDetails) {
 							this.instrumentDetails.title = card.secureCardNumber;
 						}
 					}
 				}
-				if (data.paymentOrder.operations) {
-					if (data.paymentOrder.operations.length > 0) {
-						let operations = data.paymentOrder.operations.slice();
-						// take the latest operation
-						if (operations.length > 1) {
-							operations = operations.sort((a, b) => {
-								if (a.created > b.created) {
-									return -1;
-								}
-								if (a.created < b.created) {
-									return 1;
-								}
-								return 0;
-							});
-						}
-						this.paymentProviderResponse = `${operations[0].type}: ${operations[0].status}`;
+
+				if (data.paymentOrder.operations?.length > 0) {
+					let operations = data.paymentOrder.operations.slice();
+
+					// take the latest operation
+					if (operations.length > 1) {
+						operations = operations.sort((a, b) => {
+							if (a.created > b.created) {
+								return -1;
+							}
+							if (a.created < b.created) {
+								return 1;
+							}
+							return 0;
+						});
 					}
+
+					this.paymentProviderResponse = `${operations[0].type}: ${operations[0].status}`;
 				}
 			}
 		}
@@ -545,7 +568,7 @@ export class TransactionItemFull {
 	}
 
 	get amountHash(): number {
-		return getTransactionAmountHash(this.rate, this.amountToSpend, this.feePercent, this.calcMerchantFeePercent);
+		return getTransactionAmountHash(this.rate, this.amountToSpend, this.feePercent, this.merchantFeePercent);
 	}
 }
 
@@ -590,11 +613,14 @@ export class TransactionItem {
 		userStatus: TransactionStatusDescriptorMap | undefined = undefined
 	) {
 		if (data) {
+			const paymentData = getPaymentData(data);
+			const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;
+
 			this.id = data.transactionId;
 			this.code = data.code ?? '';
 			this.created = data.created;
 			this.type = data.type;
-			const paymentData = getPaymentData(data);
+
 			this.currencyToSpend = paymentData.currencyToSpend;
 			this.currencyToReceive = paymentData.currencyToReceive;
 			this.amountToSpend = paymentData.amountToSpend;
@@ -612,7 +638,7 @@ export class TransactionItem {
 			this.status = userStatus;
 			this.ip = data.userIp as string;
 			this.feePercent = data.feePercent ?? 0;
-			const kycStatusValue = data.kycStatus ?? TransactionKycStatus.KycApproved;
+
 			if (kycStatusValue !== TransactionKycStatus.KycApproved) {
 				this.kycStatus = TransactionKycStatusList.find((x) => x.id === kycStatusValue)?.name ?? '';
 				this.kycRejected = kycStatusValue === TransactionKycStatus.KycRejected;

@@ -9,6 +9,7 @@ import { AdminDataService } from 'services/admin-data.service';
 import { CommonDataService } from 'services/common-data.service';
 import { EnvService } from 'services/env.service';
 import { PaymentDataService } from 'services/payment.service';
+import { NUMBER_PATTERN } from 'utils/constants';
 import { getProviderList } from 'utils/utils';
 
 const requiredTransactionTypes = [
@@ -25,7 +26,7 @@ const requiredTransactionTypes = [
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionSimulationComponent implements OnInit, OnDestroy {
-  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
+
   private subscriptions: Subscription = new Subscription();
   transactionTypes = TransactionTypeList.filter((item) => requiredTransactionTypes.includes(item.id));
   instrumentTypes = PaymentInstrumentList;
@@ -52,9 +53,9 @@ export class TransactionSimulationComponent implements OnInit, OnDestroy {
 	source: this.fb.control<TransactionSource>(TransactionSource.Wallet, Validators.required),
 	currencyToSpend: this.fb.control<string>(undefined, Validators.required),
 	currencyToReceive: this.fb.control<string>(undefined, Validators.required),
-	amountToSpend: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(this.pNumberPattern)]),
-	amountToReceive: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(this.pNumberPattern)]),
-	rate: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(this.pNumberPattern)]),
+	amountToSpend: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(NUMBER_PATTERN)]),
+	amountToReceive: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(NUMBER_PATTERN)]),
+	rate: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(NUMBER_PATTERN)]),
 	users: this.fb.control<CommonTargetValue>(undefined, Validators.required),
 	instrument: this.fb.control<PaymentInstrument>(PaymentInstrument.FiatVault, Validators.required),
 	paymentProvider: this.fb.control<string>(undefined),

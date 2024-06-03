@@ -12,6 +12,7 @@ import { take } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
+import { NUMBER_PATTERN } from 'utils/constants';
 
 @Component({
 	selector: 'app-admin-currencypairs-details',
@@ -26,7 +27,6 @@ export class AdminCurrencyPairDetailsComponent implements OnInit, OnDestroy {
   @Output() close = new EventEmitter();
 
   private subscriptions: Subscription = new Subscription();
-  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
   submitted = false;
   saveInProgress = false;
@@ -43,7 +43,7 @@ export class AdminCurrencyPairDetailsComponent implements OnInit, OnDestroy {
   	fromCurrency: [undefined, { validators: [Validators.required], updateOn: 'change' }],
   	toCurrency: [undefined, { validators: [Validators.required], updateOn: 'change' }],
   	liquidityProvider: [undefined, { validators: [Validators.required], updateOn: 'change' }],
-  	rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+  	rate: [0, { validators: [Validators.required, Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
   });
 
   constructor(

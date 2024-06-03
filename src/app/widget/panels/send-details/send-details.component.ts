@@ -10,6 +10,7 @@ import { take } from 'rxjs/operators';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ProfileDataService } from 'services/profile.service';
+import { NUMBER_PATTERN } from 'utils/constants';
 import { getCurrencySign } from 'utils/utils';
 import { WalletValidator } from 'utils/wallet.validator';
 
@@ -38,7 +39,6 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
 
   private pSubscriptions: Subscription = new Subscription();
   private pWithdrawalRate: number | undefined = undefined;
-  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
   inProgress = false;
   validData = false;
@@ -228,7 +228,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   				if (this.auth.token !== '') {
   					this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load contacts');
   				} else {
-  					this.router.navigateByUrl('/');
+  					void this.router.navigateByUrl('/');
   				}
   			})
   		);
@@ -275,7 +275,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   	}
   	this.amountField?.setValidators([
   		Validators.required,
-  		Validators.pattern(this.pNumberPattern),
+  		Validators.pattern(NUMBER_PATTERN),
   		Validators.min(this.currentCurrency?.minAmount ?? 0),
   		Validators.max(this.selectedWallet?.total ?? 0)
   	]);

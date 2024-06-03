@@ -16,6 +16,7 @@ import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { EnvService } from 'services/env.service';
 import { ExchangeRateService } from 'services/rate.service';
+import { NUMBER_PATTERN } from 'utils/constants';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
 
 const requiredTransactionTypes = [
@@ -45,7 +46,6 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
 
-  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
   private subscriptions: Subscription = new Subscription();
   private createDialog?: NgbModalRef;
 
@@ -83,9 +83,9 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   form = this.formBuilder.group({
   	currencyToSpend: [null, { validators: [Validators.required], updateOn: 'change' }],
   	currencyToReceive: [null, { validators: [Validators.required], updateOn: 'change' }],
-  	amountToSpend: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-  	amountToReceive: [undefined, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
-  	rate: [0, { validators: [Validators.required, Validators.pattern(this.pNumberPattern)], updateOn: 'change' }],
+  	amountToSpend: [undefined, { validators: [Validators.required, Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
+  	amountToReceive: [undefined, { validators: [Validators.required, Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
+  	rate: [0, { validators: [Validators.required, Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
   	transactionType: [null, { validators: [Validators.required], updateOn: 'change' }],
   	users: [[], { validators: [Validators.required], updateOn: 'change' }],
   	fullAmount: [false],

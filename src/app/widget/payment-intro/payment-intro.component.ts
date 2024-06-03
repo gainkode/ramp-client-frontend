@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
 import { ExchangeRateService } from 'services/rate.service';
+import { NUMBER_PATTERN } from 'utils/constants';
 
 @Component({
 	selector: 'app-payment-intro',
@@ -24,7 +25,6 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   private pReceiveAutoUpdated = false;
   private pExchangeRateStarted = false;
   private pDepositRate: number | undefined = undefined;
-  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
   validData = false;
   currentCurrencySpend: CurrencyView | undefined = undefined;
@@ -208,7 +208,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   	this.amountSpendErrorMessages['min'] = `Min. amount ${this.currentCurrencySpend?.minAmount} ${this.currentCurrencySpend?.display}`;
   	this.amountSpendField?.setValidators([
   		Validators.required,
-  		Validators.pattern(this.pNumberPattern),
+  		Validators.pattern(NUMBER_PATTERN),
   		Validators.min(this.currentCurrencySpend?.minAmount ?? 0),
   	]);
   	this.amountSpendField?.updateValueAndValidity();
@@ -218,7 +218,7 @@ export class PaymentIntroComponent implements OnInit, OnDestroy {
   	this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`;
   	this.amountReceiveField?.setValidators([
   		Validators.required,
-  		Validators.pattern(this.pNumberPattern),
+  		Validators.pattern(NUMBER_PATTERN),
   		Validators.min(this.currentCurrencyReceive?.minAmount ?? 0),
   	]);
   	this.amountReceiveField?.updateValueAndValidity();

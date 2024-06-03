@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
+import { NUMBER_PATTERN } from 'utils/constants';
 
 @Component({
 	selector: 'app-widget-crypto-details',
@@ -26,7 +27,6 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
 
   private pSubscriptions: Subscription = new Subscription();
   private pAmountInit = false;
-  private pNumberPattern = /^[+-]?((\.\d+)|(\d+(\.\d+)?))$/;
 
   validData = false;
   currentCurrency: CurrencyView | undefined = undefined;
@@ -157,7 +157,7 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   	this.amountErrorMessages['min'] = `Min. amount ${this.currentCurrency?.minAmount} ${this.currentCurrency?.display}`;
   	const validators = [
   		Validators.required,
-  		Validators.pattern(this.pNumberPattern),
+  		Validators.pattern(NUMBER_PATTERN),
   		Validators.min(this.currentCurrency?.minAmount ?? 0)
   	];
   	this.amountField?.setValidators(validators);

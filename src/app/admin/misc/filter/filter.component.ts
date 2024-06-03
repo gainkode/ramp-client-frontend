@@ -60,7 +60,9 @@ const defaultFilterFields: FilterField[] = [
 	{ name: 'Flag', value: 'transactionFlag', groupName: GroupFieldName.Transaction },
 	{ name: 'Transaction Was Ever Completed', value: 'transactionWasEverCompleted', groupName: GroupFieldName.Transaction },
 	{ name: 'Preauth', value: 'preauthFlag', groupName: GroupFieldName.Payment },
-	{ name: 'Hide zero balance', value: 'zeroBalance', groupName: GroupFieldName.None }
+	{ name: 'Hide zero balance', value: 'zeroBalance', groupName: GroupFieldName.None },
+	{ name: 'Has recall number', value: 'hasRecallNumber', groupName: GroupFieldName.Transaction },
+	{ name: 'Recall number ', value: 'recallNumber', groupName: GroupFieldName.Transaction }
 ];
 
 @Component({
@@ -178,6 +180,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 			this.filteredFields = this.auth.user?.filters[this.filterType];
 			filterFieldsList();
 		} else if (this.filterType === 'dashboard') {
+			/*If no filters found and its dashboard pre-set updatedDate filter and remove form the list */
 			this.filteredFields = ['updatedDate'];
 			this.filteredFieldsList = this.filteredFieldsList.filter(item => item.value !== 'updatedDate');
 		}
@@ -357,10 +360,12 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 			'walletAddress': { key: 'walletAddress', value: [undefined] },
 			'totalBuyVolume': { key: 'totalBuyVolumeOver', value: [0] },
 			'transactionCount': { key: 'transactionCountOver', value: [0] },
+			'recallNumber': { key: 'recallNumber', value: [0] },
 			'search': { key: 'search', value: [''] },
 			'verifyWhenPaid': { key: 'verifyWhenPaid', value: [false] },
 			'transactionFlag': { key: 'transactionFlag', value: [false] },
 			'transactionWasEverCompleted': { key: 'transactionWasEverCompleted', value: [false] },
+			'hasRecallNumber': { key: 'hasRecallNumber', value: [false] },
 			'preauthFlag': { key: 'preauthFlag', value: [false] },
 			'zeroBalance': { key: 'zeroBalance', value: false },
 			'from': { key: 'from', value: [''] },
@@ -480,11 +485,13 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 				'walletAddress': { controlName: 'walletAddress', value: '' },
 				'totalBuyVolume': { controlName: 'totalBuyVolumeOver', value: 0 },
 				'transactionCount': { controlName: 'transactionCountOver', value: 0 },
+				'recallNumber': { controlName: 'recallNumber', value: 0 },
 				'search': { controlName: 'search', value: '' },
 				'from': { controlName: 'from', value: '' },
 				'verifyWhenPaid': { controlName: 'verifyWhenPaid', value: false },
 				'transactionFlag': { controlName: 'transactionFlag', value: false },
 				'transactionWasEverCompleted': { controlName: 'transactionWasEverCompleted', value: false },
+				'hasRecallNumber': { controlName: 'hasRecallNumber', value: false },
 				'preauthFlag': { controlName: 'preauthFlag', value: false },
 				'zeroBalance': { controlName: 'zeroBalance', value: false },
 			};
@@ -501,7 +508,6 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 	
 		this.applyFilters();
 		this.fields = this.originFields;
-		this.filteredFields = [];
 		this.isFilterSelected = false;
 	}
 
@@ -516,6 +522,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 	}
 
 	onFilterRemove(field: string, formControlName: string | string[]): void {
+		this.isFilterSelected = false;
 		/* 
 			Set formControlValue undefined, so that the next time the filters are applied, 
 			they can be removed from the payload
