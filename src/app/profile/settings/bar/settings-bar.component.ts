@@ -29,6 +29,10 @@ export class SettingsMenuBarComponent {
     	{
     		id: 'iplist',
     		name: 'White List'
+    	} as MenuItem,
+			{
+				id: 'apikeys',
+				name: 'API Keys'
     	} as MenuItem
     ];
 

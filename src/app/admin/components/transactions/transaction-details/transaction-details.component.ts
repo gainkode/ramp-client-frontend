@@ -188,17 +188,24 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.form.controls.transactionStatus.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(value => {
-        if (value === TransactionStatus.Refund) {
-          this.onRecallNumberModal(false);
-        }
 
-        if (value === TransactionStatus.Chargeback) {
-          this.onRecallNumberModal(true);
-        }
+        this.errorHandler.getError('', 'The transaction <code> does not have a payment order; therefore, you cannot set the Chargeback status for it. Please use the Refund status instead.');
 
-        if (!this.data.recallNumber) {
-  				this.form.controls.recallNumber.patchValue(null);
-  			}	
+        // if (value === TransactionStatus.Refund) {
+        //   this.onRecallNumberModal(false);
+        // }
+
+        // if (value === TransactionStatus.Chargeback) {
+        //   if (!this.data.paymentOrderId) {
+           
+        //   } else {
+        //     this.onRecallNumberModal(true);
+        //   }
+        // }
+
+        // if (!this.data.recallNumber) {
+  			// 	this.form.controls.recallNumber.patchValue(null);
+  			// }	
       });
     
     this.widgetOptions$ = this.getFilteredWidgets();
@@ -208,34 +215,36 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
   onRecallNumberModal(isRequired: boolean, isFastSave: boolean = false, content?: any): void {
-    const dialogRef = this.dialog.open(TransactionRecallModalComponent, {
-      width: '500px',
-      data: { isRequired }
-    });
- 
-    dialogRef.afterClosed()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(result => {
-        if (result === 'close') {
-          this.form.controls.transactionStatus.patchValue(this.data.status);
-          return;
-        }
-
-        // continue run update modal if status Refund is settled
-        if (!isRequired && isFastSave) {
-          this.amountChanged = false;
-          this.statusChanged = true;
-      
-          this.updateDialog = this.modalService.open(content, {
-            backdrop: 'static',
-            windowClass: 'modalCusSty',
-          });
-        } 
-
-        if (result?.recallNumber) {
-          this.form.controls.recallNumber.patchValue(result.recallNumber);
-        }
-    });
+    if (this.data.paymentOrderId) {
+      const dialogRef = this.dialog.open(TransactionRecallModalComponent, {
+        width: '500px',
+        data: { isRequired }
+      });
+   
+      dialogRef.afterClosed()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(result => {
+          if (result === 'close') {
+            this.form.controls.transactionStatus.patchValue(this.data.status);
+            return;
+          }
+  
+          // continue run update modal if status Refund is settled
+          if (!isRequired && isFastSave) {
+            this.amountChanged = false;
+            this.statusChanged = true;
+        
+            this.updateDialog = this.modalService.open(content, {
+              backdrop: 'static',
+              windowClass: 'modalCusSty',
+            });
+          } 
+  
+          if (result?.recallNumber) {
+            this.form.controls.recallNumber.patchValue(result.recallNumber);
+          }
+      });
+    }
   }
   
 
