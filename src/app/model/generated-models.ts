@@ -2250,6 +2250,7 @@ export type PaymentOrder = {
   provider: Scalars['String']['output'];
   providerSpecificParams?: Maybe<Array<StringMap>>;
   providerSpecificStates?: Maybe<Array<DateMap>>;
+  recallNumber?: Maybe<Scalars['String']['output']>;
   refundOperationSn?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   statusReason?: Maybe<Scalars['String']['output']>;
@@ -2523,6 +2524,8 @@ export type Query = {
   /** Get KYC information for current user */
   myKycInfo?: Maybe<KycInfo>;
   myKycStatus: Scalars['String']['output'];
+  /** This endpoint can be used to get all wallets of the current user with their description. */
+  myNewWallets?: Maybe<Array<Maybe<VaultAccount>>>;
   /** Get notifications for current user */
   myNotifications?: Maybe<UserNotificationListResult>;
   /** Transaction history for the current user */
@@ -2919,11 +2922,13 @@ export type QueryGetTransactionsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   flag?: InputMaybe<Scalars['Boolean']['input']>;
   from?: InputMaybe<Scalars['String']['input']>;
+  hasRecallNumber?: InputMaybe<Scalars['Boolean']['input']>;
   kycStatusesOnly?: InputMaybe<Array<TransactionKycStatus>>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   paymentInstrumentsOnly?: InputMaybe<Array<PaymentInstrument>>;
   paymentProvidersOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   preauth?: InputMaybe<Scalars['Boolean']['input']>;
+  recallNumber?: InputMaybe<Scalars['String']['input']>;
   riskLevelsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   sendersOrReceiversOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -3162,6 +3167,15 @@ export type QueryMyExistingWalletsArgs = {
 
 export type QueryMyFiatVaultsArgs = {
   assetsOnly?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<OrderBy>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryMyNewWalletsArgs = {
+  assetIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
+  filter?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -3982,9 +3996,11 @@ export type Transaction = {
   merchantTransferOrder?: Maybe<TransferOrder>;
   paymentOrder?: Maybe<PaymentOrder>;
   paymentOrderId?: Maybe<Scalars['String']['output']>;
+  paymentOrderRecallNumberLink?: Maybe<Scalars['String']['output']>;
   paymentProvider?: Maybe<Scalars['String']['output']>;
   rate?: Maybe<Scalars['Float']['output']>;
   rateFiatToEur?: Maybe<Scalars['Float']['output']>;
+  recallNumber?: Maybe<Scalars['String']['output']>;
   recipientName?: Maybe<Scalars['String']['output']>;
   requestParams?: Maybe<Scalars['String']['output']>;
   requiredFields?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -4199,9 +4215,11 @@ export type TransactionShort = {
   merchantFeePercent?: Maybe<Scalars['Float']['output']>;
   merchantTransferOrder?: Maybe<TransferOrder>;
   paymentOrder?: Maybe<PaymentOrder>;
+  paymentOrderRecallNumberLink?: Maybe<Scalars['String']['output']>;
   paymentProvider?: Maybe<Scalars['String']['output']>;
   rate?: Maybe<Scalars['Float']['output']>;
   rateFiatToEur?: Maybe<Scalars['Float']['output']>;
+  recallNumber?: Maybe<Scalars['String']['output']>;
   recipientName?: Maybe<Scalars['String']['output']>;
   requiredFields?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
@@ -4418,6 +4436,7 @@ export type TransactionUpdateInput = {
 
 export type TransactionUpdatePaymentOrderChanges = {
   originalOrderId?: InputMaybe<Scalars['String']['input']>;
+  recallNumber?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TransactionUpdateRefundTransferOrderChanges = {
@@ -5302,6 +5321,7 @@ export type VaultAccount = {
   id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   rawData?: Maybe<Scalars['String']['output']>;
+  total?: Maybe<Scalars['Float']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
 };
 
