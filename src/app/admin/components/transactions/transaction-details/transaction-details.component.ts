@@ -428,7 +428,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       rate: this.form.controls.rate.value,
       feeFiat: this.form.controls.fees.value ?? 0,
       status: this.form.controls.transactionStatus.value,
-      // recallNumber: this.form.controls.recallNumber.value,
       widgetId: this.form.controls.widgetId.value,
       kycStatus: this.form.controls.kycStatus.value,
       accountStatus: this.form.controls.accountStatus.value,
@@ -493,6 +492,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   updateTransaction(): void {
     this.saveInProgress = true;
     this.transactionToUpdate = this.getTransactionToUpdate();
+
+    this.transactionToUpdate.paymentOrderChanges.recallNumber = this.form.controls.recallNumber.value ?? undefined;
 
     this.adminService.updateTransaction(
       this.transactionId,
@@ -645,7 +646,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         }
       }
     }
-}
+  }
 
   onChangeOriginaOrderlIdConfirm(): void {
     if (this.originalOrderDialog) {
@@ -653,10 +654,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
 
     if (this.originalOrderId) {
-      this.transactionToUpdate.paymentOrderChanges = {
-        originalOrderId: this.originalOrderId,
-        recallNumber: this.form.controls.recallNumber.value
-      };
+      this.transactionToUpdate.paymentOrderChanges.originalOrderId = this.originalOrderId;
 
       this.originalOrderIdChanged = true;
       this.onChangeTransactionStatusConfirm(Number(this.restartTransaction));
