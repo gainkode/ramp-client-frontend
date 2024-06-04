@@ -654,7 +654,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
     if (this.originalOrderId) {
       this.transactionToUpdate.paymentOrderChanges = {
-        originalOrderId: this.originalOrderId
+        originalOrderId: this.originalOrderId,
+        recallNumber: this.form.controls.recallNumber.value
       };
 
       this.originalOrderIdChanged = true;
