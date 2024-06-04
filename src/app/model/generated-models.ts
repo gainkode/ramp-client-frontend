@@ -1337,6 +1337,7 @@ export type MutationAddMyContactArgs = {
 
 export type MutationAddMyVaultArgs = {
   assetId: Scalars['String']['input'];
+  color?: InputMaybe<Scalars['String']['input']>;
   originalId?: InputMaybe<Scalars['String']['input']>;
   vaultName?: InputMaybe<Scalars['String']['input']>;
 };
@@ -5372,6 +5373,13 @@ export type VaultAccountExAssetsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type VaultSettings = {
+  __typename?: 'VaultSettings';
+  color?: Maybe<Scalars['String']['output']>;
+  originalId?: Maybe<Scalars['String']['output']>;
+  vaultSettingsId?: Maybe<Scalars['ID']['output']>;
 };
 
 export type VersionCommit = {

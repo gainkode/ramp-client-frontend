@@ -2441,7 +2441,6 @@ mutation UpdateTransaction(
   $flag: Boolean
   $merchantFeePercent: Float
   $feePercent: Float
-  $recallNumber: String
   $type: TransactionType
   $paymentOrderChanges: TransactionUpdatePaymentOrderChanges
 ) {
@@ -2469,7 +2468,6 @@ mutation UpdateTransaction(
       flag: $flag
       merchantFeePercent: $merchantFeePercent
       feePercent: $feePercent
-      recallNumber: $recallNumber
       type: $type
       paymentOrderChanges: $paymentOrderChanges
     }
