@@ -68,6 +68,12 @@ export type ApiKeySecret = {
   userId: Scalars['String']['output'];
 };
 
+export type ApplicationVersion = {
+  __typename?: 'ApplicationVersion';
+  commit?: Maybe<VersionCommit>;
+  version?: Maybe<Scalars['String']['output']>;
+};
+
 export type AppropriateRecord = {
   __typename?: 'AppropriateRecord';
   appropriateDetails?: Maybe<Scalars['String']['output']>;
@@ -2481,7 +2487,7 @@ export type Query = {
   /** API getVerificationLink for shuftiProvider */
   getVerificationLink?: Maybe<Scalars['String']['output']>;
   /** Get current API module version */
-  getVersion?: Maybe<Scalars['String']['output']>;
+  getVersion?: Maybe<ApplicationVersion>;
   /** This endpoint can be used to get all wallets with their description. */
   getWallets?: Maybe<AssetAddressListResult>;
   /** This endpoint can be used to get a widget by id */
@@ -2494,6 +2500,7 @@ export type Query = {
   getWireTransferBankAccounts?: Maybe<WireTransferBankAccountListResult>;
   /** Returns true if liquidity deposit is completed and credited to the liquidity account */
   isLiquidityDepositCompleted?: Maybe<Scalars['Boolean']['output']>;
+  maxSellAmount?: Maybe<UserMaxSell>;
   me: User;
   /** Get my actions with filters */
   myActions: UserActionListResult;
@@ -3087,6 +3094,11 @@ export type QueryGetWireTransferBankAccountsArgs = {
 
 export type QueryIsLiquidityDepositCompletedArgs = {
   orderId: Scalars['String']['input'];
+};
+
+
+export type QueryMaxSellAmountArgs = {
+  currency?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -5005,6 +5017,11 @@ export type UserLogin = {
   userLoginId?: Maybe<Scalars['String']['output']>;
 };
 
+export type UserMaxSell = {
+  __typename?: 'UserMaxSell';
+  total?: Maybe<Scalars['Float']['output']>;
+};
+
 export enum UserMode {
   ExternalWallet = 'ExternalWallet',
   InternalWallet = 'InternalWallet',
@@ -5335,6 +5352,14 @@ export type VaultAccountExAssetsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type VersionCommit = {
+  __typename?: 'VersionCommit';
+  files?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  message?: Maybe<Scalars['String']['output']>;
+  previous?: Maybe<Scalars['String']['output']>;
+  revision?: Maybe<Scalars['String']['output']>;
 };
 
 export enum WalletAssetStatus {

@@ -144,7 +144,7 @@ export class TransactionItemFull {
 	currencyCrypto = '';
 
 	recallNumber: string | undefined;
-	hasRecallNumber: boolean;
+	paymentOrderRecallNumberLink: string | undefined;
 
 	constructor(data: Transaction | TransactionShort | null) {
 		if (data !== null) {
@@ -275,12 +275,8 @@ export class TransactionItemFull {
 			this.rate = data.rate ?? data.initialRate;
 
 			this.merchantFeePercent = data.merchantFeePercent ?? 0;
-
-			const recallNumber = '123123123132';
-			const hasRecallNumber = true;
-
-			this.recallNumber = recallNumber ?? undefined;
-			this.hasRecallNumber = hasRecallNumber ?? false;
+			this.recallNumber = data.recallNumber ?? undefined;
+			this.paymentOrderRecallNumberLink = data.paymentOrderRecallNumberLink ?? undefined;
 
 			this.feePercent = data.feePercent ?? 0;
 

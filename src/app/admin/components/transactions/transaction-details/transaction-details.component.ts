@@ -724,7 +724,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     window.open(tradeURL, '_blank');
   }
 
-  navigateToRecallNumber(uuid: string): void {
+  navigateToRecallNumber(recallNumber: string): void {
   	if (this.data.paymentOrderRecallNumberLink) {
   		const recallUrl = `${this.data.paymentOrderRecallNumberLink}/${recallNumber}`;
   		window.open(recallUrl, '_blank');
