@@ -195,6 +195,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         if (value === TransactionStatus.Chargeback) {
           this.onRecallNumberModal(true);
         }
+
+        if (!this.data.recallNumber) {
+  				this.form.controls.recallNumber.patchValue(null);
+  			}	
       });
     
     this.widgetOptions$ = this.getFilteredWidgets();
@@ -721,8 +725,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   navigateToRecallNumber(uuid: string): void {
-    const tradeURL = `https://www.kraken.com/u/trade/trades#txid=${uuid}`;
-    window.open(tradeURL, '_blank');
+  	if (this.data.paymentOrderRecallNumberLink) {
+  		const recallUrl = `${this.data.paymentOrderRecallNumberLink}/${recallNumber}`;
+  		window.open(recallUrl, '_blank');
+  	}
   }
   
   getInstrumentDetails(data: string): string[] {

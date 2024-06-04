@@ -37,6 +37,8 @@ export class Filter {
 	public verifyWhenPaid?: boolean;
 	public transactionFlag?: boolean;
 	public transactionWasEverCompleted?: boolean;
+	public recallNumber?: string;
+	public hasRecallNumber?: boolean;
 	public preauthFlag?: boolean;
 	public zeroBalance?: boolean;
 	public transactionId?: string;
@@ -79,7 +81,7 @@ export class Filter {
 		}
 
 		if(filterValues.fiatCurrency) {
-			this.fiatCurrency = filterValues.fiatCurrency
+			this.fiatCurrency = filterValues.fiatCurrency;
 		}
 
 		if (filterValues.countries) {
@@ -193,6 +195,12 @@ export class Filter {
 		}
 		if (filterValues.transactionWasEverCompleted) {
 			this.transactionWasEverCompleted = filterValues.transactionWasEverCompleted;
+		}
+		if (filterValues.recallNumber) {
+			this.recallNumber = filterValues.recallNumber;
+		}
+		if (filterValues.hasRecallNumber) {
+			this.hasRecallNumber = filterValues.hasRecallNumber;
 		}
 		if (filterValues.preauthFlag) {
 			this.preauthFlag = filterValues.preauthFlag;

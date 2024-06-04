@@ -718,6 +718,8 @@ const GET_TRANSACTIONS = gql`
     $transactionWasEverCompleted: Boolean
     $preauth: Boolean
     $fiatCurrency: String
+    $recallNumber: String
+    $hasRecallNumber: Boolean
   ) {
     getTransactions(
       transactionIdsOnly: $transactionIdsOnly
@@ -743,6 +745,8 @@ const GET_TRANSACTIONS = gql`
       filter: $filter
       flag: $flag
       transactionWasEverCompleted: $transactionWasEverCompleted
+      recallNumber: $recallNumber
+      hasRecallNumber: $hasRecallNumber
       preauth: $preauth
       fiatCurrency: $fiatCurrency
       skip: $skip
@@ -907,6 +911,8 @@ const GET_TRANSACTIONS = gql`
         hasToBeRefunded
         canBeReviewed
         merchantFeePercent
+        recallNumber
+        paymentOrderRecallNumberLink
         senderName
         recipientName
       }
@@ -2435,6 +2441,7 @@ mutation UpdateTransaction(
   $flag: Boolean
   $merchantFeePercent: Float
   $feePercent: Float
+  $recallNumber: String
   $type: TransactionType
   $paymentOrderChanges: TransactionUpdatePaymentOrderChanges
 ) {
@@ -2462,6 +2469,7 @@ mutation UpdateTransaction(
       flag: $flag
       merchantFeePercent: $merchantFeePercent
       feePercent: $feePercent
+      recallNumber: $recallNumber
       type: $type
       paymentOrderChanges: $paymentOrderChanges
     }
@@ -3422,6 +3430,8 @@ export class AdminDataService {
 			widgetIdsOnly: widgetIds,
 			flag: filter?.transactionFlag,
       transactionWasEverCompleted: filter?.transactionWasEverCompleted,
+      recallNumber: filter?.recallNumber,
+      hasRecallNumber: filter?.hasRecallNumber,
 			preauth: filter?.preauthFlag,
 			fiatCurrency: filter?.fiatCurrency,
 			kycStatusesOnly: filter?.transactionKycStatuses,
