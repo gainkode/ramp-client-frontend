@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
-import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput } from 'model/generated-models';
+import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput, TransactionUpdatePaymentOrderChanges } from 'model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, TransactionTypeList, UserStatusList } from 'model/payment.model';
 import { ScreeningAnswer, TransactionItemFull } from 'model/transaction.model';
 import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
@@ -161,7 +161,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   widgetOptions$: Observable<CommonTargetValue[]>;
   isTransactionRefreshing = false;
   instrumentDetailsData: string[] = [];
-
+  paymentOrderChanges: TransactionUpdatePaymentOrderChanges = {};
 	private readonly unsubscribe$ = new Subject<void>();
   constructor(
     private fb: FormBuilder,
@@ -420,6 +420,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       };
     }
 
+    if (this.form.controls.merchantFeePercent.value) {
+      widgetUserParamsChanges = {
+        merchantFeePercent: this.form.controls.merchantFeePercent.value ?? ''
+      };
+    }
+
+    this.paymentOrderChanges.recallNumber = this.form.controls.recallNumber.value ?? undefined;
+    
     const transactionToUpdate: TransactionUpdateInput = {
       destination: this.form.controls.address.value,
       currencyToSpend: this.form.controls.currencyToSpend.value,
@@ -493,7 +501,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.saveInProgress = true;
     this.transactionToUpdate = this.getTransactionToUpdate();
 
-    this.transactionToUpdate.paymentOrderChanges.recallNumber = this.form.controls.recallNumber.value ?? undefined;
+    this.transactionToUpdate.paymentOrderChanges = this.paymentOrderChanges;
 
     this.adminService.updateTransaction(
       this.transactionId,
@@ -654,7 +662,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
 
     if (this.originalOrderId) {
-      this.transactionToUpdate.paymentOrderChanges.originalOrderId = this.originalOrderId;
+      this.paymentOrderChanges.originalOrderId = this.originalOrderId;
 
       this.originalOrderIdChanged = true;
       this.onChangeTransactionStatusConfirm(Number(this.restartTransaction));
