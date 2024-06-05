@@ -219,7 +219,7 @@ export class TransactionItemFull {
 			this.widgetUserParams = transactionData.widgetUserParams;
 			this.comment = transactionData.comment ?? '';
 
-			this.paymentOrderId = transactionData.paymentOrderId ?? '-';
+			this.paymentOrderId = transactionData.paymentOrderId ?? undefined;
 			this.originalPaymentOrderId = transactionData.paymentOrder?.originalOrderId ?? '-';
 			this.transferOrder = data.transferOrder;
 

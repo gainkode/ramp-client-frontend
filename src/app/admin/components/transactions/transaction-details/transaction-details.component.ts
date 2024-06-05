@@ -196,10 +196,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
         if (value === TransactionStatus.Chargeback) {
           if (!this.data.paymentOrderId) {
-            this._snackBar.open(`The transaction ${this.data.code} does not have a payment order; therefore, you cannot set the Chargeback status for it. Please use the Refund status instead.`, null, { duration: 10000 });
+						this._snackBar.open(`The transaction ${this.data.code} does not have a payment order; therefore, you cannot set the Chargeback status for it. Please either use the Refund status instead or set the Paid status first and then the Chargeback status.`, null, { duration: 10000 });
             this.form.controls.transactionStatus.patchValue(this.data.status);
           } else {
-            this.onRecallNumberModal(true);
+						this.onRecallNumberModal(true);
           }
         }
 
