@@ -11,6 +11,7 @@ import {
 	AccountStatus,
 	AdminTransactionStatus,
 	PaymentInstrument,
+	PaymentOrder,
 	RiskLevel,
 	Transaction,
 	TransactionKycStatus,
@@ -73,6 +74,7 @@ export class TransactionItemFull {
 	transferOrderId = '';
 	transferOriginalOrderId = '';
 	originalPaymentOrderId = '';
+	paymentOrder: PaymentOrder | undefined;
 	paymentOrderId = '';
 	transferOrderHash = '';
 	screeningAnswer!: ScreeningAnswer;
@@ -220,6 +222,7 @@ export class TransactionItemFull {
 			this.comment = transactionData.comment ?? '';
 
 			this.paymentOrderId = transactionData.paymentOrderId ?? undefined;
+			this.paymentOrder =  transactionData.paymentOrder ?? undefined;
 			this.originalPaymentOrderId = transactionData.paymentOrder?.originalOrderId ?? '-';
 			this.transferOrder = data.transferOrder;
 

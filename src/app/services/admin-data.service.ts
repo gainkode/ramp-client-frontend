@@ -1484,6 +1484,16 @@ query {
   }
 `;
 
+const GET_IS_PAYMENT_ORDER_COMPLETED = gql`
+query IsPaymentOrderCompleted(
+  $transactionId: String!
+) {
+  isPaymentOrderCompleted(
+    transactionId: $transactionId
+  )
+}
+`;
+
 const GET_CURRENCY_PAIR_LIQUIDITY_PROVIDERS = gql`
   query GetCurrencyPairLiquidityProviders{
     getCurrencyPairLiquidityProviders{
@@ -3839,6 +3849,14 @@ export class AdminDataService {
 		} else {
 			return null;
 		}
+	}
+
+  isPaymentOrderCompleted(transactionId: string): Observable<boolean> {
+    return this.watchQuery<{ isPaymentOrderCompleted: boolean; }, any>({
+      query: GET_IS_PAYMENT_ORDER_COMPLETED,
+      variables: { transactionId },
+      fetchPolicy: 'network-only'
+    }).pipe(map(result => result.data.isPaymentOrderCompleted));
 	}
 
 	getCurrencyPairLiquidityProviders(): Observable<{ list: Array<CurrencyPairItem>; count: number; }>{

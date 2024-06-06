@@ -175,7 +175,7 @@
     border-radius: 50%;
     &--white {
         background-color: white;
-      }
+    }
 
     &--grey {
         background-color: rgb(235, 235, 235);
@@ -208,4 +208,11 @@
 
 .textarea-resize-none {
     resize: none;
+}
+
+.payment-details-status {
+    width: 30px;
+    img {
+        margin-top: -5px;
+    }
 }
