@@ -245,6 +245,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onChangePaymentCancel(): void {
+    this.originalOrderDialog.close('');
     this.form.controls.transactionStatus.patchValue(this.data.status);
   }
   
