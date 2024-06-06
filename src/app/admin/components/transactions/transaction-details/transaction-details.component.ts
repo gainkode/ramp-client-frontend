@@ -254,9 +254,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
     if (this.isFastPaid) {
       this.fastStatusChange(TransactionStatus.Paid, this.updateConfirmContent);
-    } else {
-      this.isFastPaid = false;
-    }
+    } 
+
+    this.isFastPaid = false;
   }
   
   onOriginalOrderModal(content: any): void {
