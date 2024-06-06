@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -24,6 +24,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['transaction-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
+  @ViewChild('originalorderid_confirm_content') originalOrderIdDialogContent: ElementRef | undefined = undefined;
   @Input() permission = 0;
   @Input() isScreeningInfo = false;
   @Input() set transaction(val: TransactionItemFull | undefined) {
@@ -102,7 +103,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   private amountDialog?: NgbModalRef;
   private originalOrderDialog?: NgbModalRef;
   private amountDialogContent: any;
-  private originalOrderIdDialogContent: any;
+  // private originalOrderIdDialogContent: any;
   private subscriptions: Subscription = new Subscription();
 
   selectedTabIndex: number;
@@ -131,6 +132,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   isTransactionNotDepositOrWithdrawal = false;
   isSellTransactionType = false;
   isReceiveTransactionType = false;
+  isTransactionCompleted = false;
   kycStatus = '';
   accountStatus = '';
   transferOrderBlockchainLink = '';
@@ -194,9 +196,15 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
           this.onRecallNumberModal(false);
         }
 
-        // if (value === TransactionStatus.Paid) {
-        //   this.onRecallNumberModal(false);
-        // }
+        if (value === TransactionStatus.Paid) {
+          if (this.isTransactionCompleted && this.data.paymentOrder) {
+      
+          } if (!this.isTransactionCompleted) {
+            this._snackBar.open(`ARE you sure ?`, null, { duration: 10000 });
+          } else {
+            this.onOriginalOrderModal(this.originalOrderIdDialogContent);
+          }
+        }
 
         if (value === TransactionStatus.Chargeback) {
           if (!this.data.paymentOrder) {
@@ -214,13 +222,24 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     
     this.widgetOptions$ = this.getFilteredWidgets();
 
-    this.adminService.isPaymentOrderCompleted(this.data.id).valueChanges.subscribe();
+    if (this.data.paymentOrder) {
+      this.isPaymentOrderCompleted();
+    }
 
     if (this.isScreeningInfo) {
       this.selectedTabIndex = 1;
     }
   }
   
+  onOriginalOrderModal(content: any): void {
+    if (!this.data.paymentOrder && !this.originalOrderIdChanged) {
+      this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
+        backdrop: 'static',
+        windowClass: 'modalCusSty',
+      });
+    }
+  }
+
   onRecallNumberModal(isRequired: boolean, isFastSave: boolean = false, content?: any): void {
     if (this.data.paymentOrder) {
       const dialogRef = this.dialog.open(TransactionRecallModalComponent, {
@@ -253,7 +272,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       });
     }
   }
-  
 
   private getFilteredWidgets(): Observable<CommonTargetValue[]> {
     return this.adminService.getWidgets(0, 100, 'name', false, <Filter>{}).pipe(
@@ -264,13 +282,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getFilteredWidgets(): Observable<CommonTargetValue[]> {
-    return this.adminService.getWidgets(0, 100, 'name', false, <Filter>{}).pipe(
-      map(result => result.list.map(widget => ({
-        id: widget.id,
-        title: widget.name
-      } as CommonTargetValue)))
-    );
+  private isPaymentOrderCompleted(): void {
+    this.adminService.isPaymentOrderCompleted(this.data.id).subscribe((result) => this.isTransactionCompleted = true);
   }
 
   widgetSearchFn(term: string, item: CommonTargetValue): boolean {
@@ -617,7 +630,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onPaid(content: any): void {
-    this.fastStatusChange(TransactionStatus.Paid, content);
+    this.onOriginalOrderModal(content);
   }
 
   onExchange(content: any): void {
@@ -651,10 +664,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onConfirmUpdate(statusContent: any, amountContent: any, originalOrderIdContent: any): void {
+  onConfirmUpdate(statusContent: any, amountContent: any): void {
     this.amountDialogContent = amountContent;
-    this.originalOrderIdDialogContent = originalOrderIdContent;
-
     if (this.updateDialog) {
       this.updateDialog.close('');
 
@@ -690,7 +701,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onChangeTransactionStatusConfirm(restartTransaction: number): void {
-    let continueCurrentChange = true;
     this.restartTransaction = (restartTransaction === 1);
     
     const transactionStatus = this.form.controls?.transactionStatus?.value;
@@ -699,42 +709,29 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       this.statusDialog.close('');
     }
 
-    if ((!this.data.paymentOrder) && !this.originalOrderIdChanged) {
-      if(transactionStatus === TransactionStatus.Paid) {
-        continueCurrentChange = false;
-
-        this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
-          backdrop: 'static',
-          windowClass: 'modalCusSty',
-        });
-      }
-    }
-    
-    if (continueCurrentChange) {
-      if (this.amountChanged) {
-        this.amountDialog = this.modalService.open(this.amountDialogContent, {
-          backdrop: 'static',
-          windowClass: 'modalCusSty',
-        });
-      } if (this.transactionType === TransactionType.Sell && transactionStatus === TransactionStatus.Refund){ 
-        const dialogRef = this.dialog.open(TransactionRefundModalComponent, {
-          width: '500px',
-          data: {
-            sourceWallet: this.data?.sourceWallet,
-            amountToSpend: this.form?.controls.amountToSpend.value
-          }
-        });
-     
-        dialogRef.afterClosed()
-          .pipe(takeUntil(this.unsubscribe$))
-          .subscribe(result => {
-            this.form.controls.refundOrderAddress.patchValue(<string>result.sourceWallet);
-            this.form.controls.refundOrderAmount.patchValue(<number>result.amountToSell);
-            this.updateTransaction();
-        });
-      } else {
-        this.updateTransaction();
-      }
+    if (this.amountChanged) {
+      this.amountDialog = this.modalService.open(this.amountDialogContent, {
+        backdrop: 'static',
+        windowClass: 'modalCusSty',
+      });
+    } if (this.transactionType === TransactionType.Sell && transactionStatus === TransactionStatus.Refund){ 
+      const dialogRef = this.dialog.open(TransactionRefundModalComponent, {
+        width: '500px',
+        data: {
+          sourceWallet: this.data?.sourceWallet,
+          amountToSpend: this.form?.controls.amountToSpend.value
+        }
+      });
+   
+      dialogRef.afterClosed()
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(result => {
+          this.form.controls.refundOrderAddress.patchValue(<string>result.sourceWallet);
+          this.form.controls.refundOrderAmount.patchValue(<number>result.amountToSell);
+          this.updateTransaction();
+      });
+    } else {
+      this.updateTransaction();
     }
   }
 
