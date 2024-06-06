@@ -562,7 +562,7 @@
                   </button>
                   <button *ngIf="!isReceiveTransactionType && !notPaidStatuses.includes(transactionStatus)"
                     class="btn btn-success pd-x-30 me-2 mg-t-5" type="button"
-                    (click)="onPaid(update_confirm_content)">
+                    (click)="onPaid(originalorderid_confirm_content)">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Paid
