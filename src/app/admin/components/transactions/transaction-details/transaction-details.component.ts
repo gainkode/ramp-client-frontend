@@ -199,7 +199,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         }
 
         if (value === TransactionStatus.Paid ) {
-
           if (this.data.paymentOrder) {
             this.adminService.isPaymentOrderCompleted(this.data.id).subscribe((result) => {
               this.isTransactionCompleted = result;
@@ -227,6 +226,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         if (!this.data.recallNumber) {
   				this.form.controls.recallNumber.patchValue(null);
   			}	
+
+        if (!this.data.paymentOrder && this.originalOrderIdChanged) {
+          this.originalOrderId = null;
+          this.paymentOrderChanges.originalOrderId = null;
+        }
       });
     
     this.widgetOptions$ = this.getFilteredWidgets();
@@ -245,7 +249,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
   
   onOriginalOrderModal(content: any): void {
-    if (!this.data.paymentOrder && !this.originalOrderIdChanged) {
+    if (!this.data.paymentOrder) {
       this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
         backdrop: 'static',
         windowClass: 'modalCusSty',
@@ -709,7 +713,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       this.paymentOrderChanges.originalOrderId = this.originalOrderId;
 
       this.originalOrderIdChanged = true;
-      this.onChangeTransactionStatusConfirm(Number(this.restartTransaction));
     }
   }
 
