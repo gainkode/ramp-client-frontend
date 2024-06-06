@@ -251,7 +251,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   
   onOriginalOrderModal(content: any): void {
     if (!this.data.paymentOrder) {
-      this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
+      this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent || content, {
         backdrop: 'static',
         windowClass: 'modalCusSty',
       });
