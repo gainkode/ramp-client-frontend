@@ -555,28 +555,28 @@
                   <button  type="button" 
                     *ngIf="removable && data?.canBeCancelled" 
                     class="btn btn-danger pd-x-30 me-2 mg-t-5"
-                    (click)="onDelete(delete_confirm_content)">
+                    (click)="onDelete()">
                     <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Cancel
                   </button>
                   <button *ngIf="!isReceiveTransactionType && !notPaidStatuses.includes(transactionStatus)"
                     class="btn btn-success pd-x-30 me-2 mg-t-5" type="button"
-                    (click)="onPaid(originalorderid_confirm_content)">
+                    (click)="onPaid()">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Paid
                   </button>
                   <button *ngIf="exchangeStatuses.includes(transactionStatus)"
                     class="btn btn-info pd-x-30 me-2 mg-t-5" type="button"
-                    (click)="onExchange(update_confirm_content)">
+                    (click)="onExchange()">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Exchange
                   </button>
                   <button *ngIf="!isReceiveTransactionType && data?.canBeReviewed"
                     class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
-                    (click)="onDeclined(update_confirm_content)">
+                    (click)="onDeclined()">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Decline Payment
@@ -584,14 +584,14 @@
         
                   <button *ngIf="!isReceiveTransactionType && data?.hasToBeRefunded"
                     class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
-                    (click)="onRecallNumberModal(false, true, update_confirm_content)">
+                    (click)="onRecallNumberModal(false, true)">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Refund
                   </button>
                 </div>
                 <div class="d-flex justify-content-end">
-                  <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit(update_confirm_content)">
+                  <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit()">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Save
@@ -672,8 +672,7 @@
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" 
-        (click)="onConfirmUpdate(status_confirm_content, amount_confirm_content)">
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="onConfirmUpdate()">
         Confirm
       </button>
     </div>
@@ -695,7 +694,7 @@
     <input class="form-control" type="text" [(ngModel)]="originalOrderId" required>
 
     <div class="d-flex justify-content-center align-items-center">
-      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" [disabled]="!originalOrderId" (click)="onChangeOriginaOrderlIdConfirm()">
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" [disabled]="!originalOrderId" (click)="onChangeOriginaOrderIdConfirm()">
         Save
       </button>
     </div>

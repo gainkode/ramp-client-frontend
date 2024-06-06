@@ -8,7 +8,7 @@ import { CommonTargetValue } from 'model/common.model';
 import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput, TransactionUpdatePaymentOrderChanges } from 'model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, TransactionTypeList, UserStatusList } from 'model/payment.model';
 import { ScreeningAnswer, TransactionItemFull } from 'model/transaction.model';
-import { Observable, Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
@@ -27,7 +27,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('originalorderid_confirm_content') originalOrderIdDialogContent: ElementRef | undefined = undefined;
   @ViewChild('payment_status_confirm_content') paymentStatusConfirmContent: ElementRef | undefined = undefined;
   @ViewChild('update_confirm_content') updateConfirmContent: ElementRef | undefined = undefined;
-  
+  @ViewChild('status_confirm_content') statusConfirmContent: ElementRef | undefined = undefined;
+  @ViewChild('amount_confirm_content') amountConfirmContent: ElementRef | undefined = undefined;
+  @ViewChild('delete_confirm_content') deleteConfirmContent: ElementRef | undefined = undefined;
+
   @Input() permission = 0;
   @Input() isScreeningInfo = false;
   @Input() set transaction(val: TransactionItemFull | undefined) {
@@ -105,9 +108,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   private statusDialog?: NgbModalRef;
   private amountDialog?: NgbModalRef;
   private originalOrderDialog?: NgbModalRef;
-  private amountDialogContent: any;
-  // private originalOrderIdDialogContent: any;
-  private subscriptions: Subscription = new Subscription();
+  private paymentStatusChangeDialog?: NgbModalRef;
 
   selectedTabIndex: number;
   transactionTypes = TransactionTypeList;
@@ -198,19 +199,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       .subscribe(value => {
         if (value === TransactionStatus.Refund) {
           this.onRecallNumberModal(false);
-        }
 
-        if (value === TransactionStatus.Paid ) {
-          if (this.data.paymentOrder) {
-            if (!this.isTransactionCompleted) {
-              this.originalOrderDialog = this.modalService.open(this.paymentStatusConfirmContent, {
-                backdrop: 'static',
-                windowClass: 'modalCusSty',
-              });
-            } 
-          } else {
-            this.onOriginalOrderModal(this.originalOrderIdDialogContent);
-          }
         }
 
         if (value === TransactionStatus.Chargeback) {
@@ -219,6 +208,19 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
             this.form.controls.transactionStatus.patchValue(this.data.status);
           } else {
 						this.onRecallNumberModal(true);
+          }
+        }
+
+        if (value === TransactionStatus.Paid ) {
+          if (this.data.paymentOrder) {
+            if (!this.isTransactionCompleted) {
+              this.paymentStatusChangeDialog = this.modalService.open(this.paymentStatusConfirmContent, {
+                backdrop: 'static',
+                windowClass: 'modalCusSty',
+              });
+            } 
+          } else {
+            this.onOriginalOrderModal();
           }
         }
 
@@ -243,31 +245,45 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChangePaymentCancel(): void {
+  onChangeOriginaOrderIdConfirm(): void {
+    if (this.originalOrderId) {
+      this.paymentOrderChanges.originalOrderId = this.originalOrderId;
+      this.originalOrderIdChanged = true;
+    }
+
     this.originalOrderDialog?.close('');
     this.isFastPaid = false;
+  }
+
+  onChangePaymentCancel(): void {
     this.form.controls.transactionStatus.patchValue(this.data.status);
+
+    this.onChangePaymentClose();
   }
 
   onChangePaymentConfirm(): void {
     if (this.isFastPaid) {
-      this.fastStatusChange(TransactionStatus.Paid, this.updateConfirmContent);
+      this.fastStatusChange(TransactionStatus.Paid);
     } 
 
+    this.onChangePaymentClose();
+  }
+
+  onChangePaymentClose(): void {
     this.isFastPaid = false;
-    this.originalOrderDialog?.close('');
+    this.paymentStatusChangeDialog?.close('');
   }
   
-  onOriginalOrderModal(content: any): void {
+  onOriginalOrderModal(): void {
     if (!this.data.paymentOrder) {
-      this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent || content, {
+      this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
         backdrop: 'static',
         windowClass: 'modalCusSty',
       });
     }
   }
 
-  onRecallNumberModal(isRequired: boolean, isFastSave: boolean = false, content?: any): void {
+  onRecallNumberModal(isRequired: boolean, isFastSave: boolean = false): void {
     if (this.data.paymentOrder) {
       const dialogRef = this.dialog.open(TransactionRecallModalComponent, {
         width: '500px',
@@ -287,10 +303,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
             this.amountChanged = false;
             this.statusChanged = true;
         
-            this.updateDialog = this.modalService.open(content, {
-              backdrop: 'static',
-              windowClass: 'modalCusSty',
-            });
+            this.onUpdateDialogOpen();
           } 
   
           if (result?.recallNumber) {
@@ -310,7 +323,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   private isPaymentOrderCompleted(): void {
-    this.adminService.isPaymentOrderCompleted(this.data.id).subscribe((result) => this.isTransactionCompleted = result);
+    this.adminService.isPaymentOrderCompleted(this.data.id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((result) => this.isTransactionCompleted = result);
   }
 
   widgetSearchFn(term: string, item: CommonTargetValue): boolean {
@@ -325,7 +340,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 		this.unsubscribe$.complete();
 
     this.exchangeRate.stop();
-    this.subscriptions.unsubscribe();
 	}
 
   onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
@@ -587,7 +601,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
-  onSubmit(content: any): void {
+  onSubmit(): void {
     this.submitted = true;
 
     if (this.form.valid) {
@@ -606,11 +620,15 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         this.statusChanged = this.pStatusHash !== statusHash;
         this.amountChanged = this.pAmountHash !== amountHash;
       
-      this.updateDialog = this.modalService.open(content, {
-        backdrop: 'static',
-        windowClass: 'modalCusSty',
-      });
+        this.onUpdateDialogOpen();
     }
+  }
+
+  private onUpdateDialogOpen(): void {
+    this.updateDialog = this.modalService.open(this.updateConfirmContent, {
+      backdrop: 'static',
+      windowClass: 'modalCusSty',
+    });
   }
 
   private deleteTransaction(): void {
@@ -649,46 +667,43 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     return `${adminStatusName} (${statusName})`;
   }
 
-  onDelete(content: any): void {
-    this.deleteDialog = this.modalService.open(content, {
+  onDelete(): void {
+    this.deleteDialog = this.modalService.open(this.deleteConfirmContent, {
       backdrop: 'static',
       windowClass: 'modalCusSty',
     });
   }
 
-  onPaid(content: any): void {
+  onPaid(): void {
     this.isFastPaid = true;
 
     if (this.data.paymentOrder) {
       if (!this.isTransactionCompleted) {
-        this.originalOrderDialog = this.modalService.open(this.paymentStatusConfirmContent, {
+        this.paymentStatusChangeDialog = this.modalService.open(this.paymentStatusConfirmContent, {
           backdrop: 'static',
           windowClass: 'modalCusSty',
         });
       }
     } else {
-      this.onOriginalOrderModal(content);
+      this.onOriginalOrderModal();
     }
   }
 
-  onExchange(content: any): void {
-    this.fastStatusChange(TransactionStatus.Exchanging, content);
+  onExchange(): void {
+    this.fastStatusChange(TransactionStatus.Exchanging);
   }
 
-  onDeclined(content: any): void {
-    this.fastStatusChange(TransactionStatus.PaymentDeclined, content);
+  onDeclined(): void {
+    this.fastStatusChange(TransactionStatus.PaymentDeclined);
   }
   
-  fastStatusChange(newStatus: TransactionStatus, content: any): void {
+  fastStatusChange(newStatus: TransactionStatus): void {
     this.form.controls.transactionStatus.patchValue(newStatus);
 
     this.amountChanged = false;
     this.statusChanged = true;
 
-    this.updateDialog = this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
+    this.onUpdateDialogOpen();
   }
 
   onClose(): void {
@@ -702,19 +717,18 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onConfirmUpdate(statusContent: any, amountContent: any): void {
-    this.amountDialogContent = amountContent;
+  onConfirmUpdate(): void {
     if (this.updateDialog) {
       this.updateDialog.close('');
 
       if (this.statusChanged) {
-        this.statusDialog = this.modalService.open(statusContent, {
+        this.statusDialog = this.modalService.open(this.statusConfirmContent, {
           backdrop: 'static',
           windowClass: 'modalCusSty',
         });
       } else {
         if (this.amountChanged) {
-          this.amountDialog = this.modalService.open(this.amountDialogContent, {
+          this.amountDialog = this.modalService.open(this.amountConfirmContent, {
             backdrop: 'static',
             windowClass: 'modalCusSty',
           });
@@ -722,17 +736,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
           this.updateTransaction();
         }
       }
-    }
-  }
-
-  onChangeOriginaOrderlIdConfirm(): void {
-    this.originalOrderDialog?.close('');
-    this.isFastPaid = false;
-
-    if (this.originalOrderId) {
-      this.paymentOrderChanges.originalOrderId = this.originalOrderId;
-
-      this.originalOrderIdChanged = true;
     }
   }
 
@@ -746,7 +749,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
 
     if (this.amountChanged) {
-      this.amountDialog = this.modalService.open(this.amountDialogContent, {
+      this.amountDialog = this.modalService.open(this.amountConfirmContent, {
         backdrop: 'static',
         windowClass: 'modalCusSty',
       });
