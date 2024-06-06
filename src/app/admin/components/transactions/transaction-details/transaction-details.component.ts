@@ -198,18 +198,21 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
           this.onRecallNumberModal(false);
         }
 
-        if (value === TransactionStatus.Paid && this.data.paymentOrder) {
-          this.adminService.isPaymentOrderCompleted(this.data.id).subscribe((result) => {
-            this.isTransactionCompleted = result;
-            if (!this.isTransactionCompleted && this.data.paymentOrder) {
-              this.originalOrderDialog = this.modalService.open(this.paymentStatusConfirmContent, {
-                backdrop: 'static',
-                windowClass: 'modalCusSty',
-              });
-            } else {
-              this.onOriginalOrderModal(this.originalOrderIdDialogContent);
-            }
-          });
+        if (value === TransactionStatus.Paid ) {
+
+          if (this.data.paymentOrder) {
+            this.adminService.isPaymentOrderCompleted(this.data.id).subscribe((result) => {
+              this.isTransactionCompleted = result;
+              if (!this.isTransactionCompleted && this.data.paymentOrder) {
+                this.originalOrderDialog = this.modalService.open(this.paymentStatusConfirmContent, {
+                  backdrop: 'static',
+                  windowClass: 'modalCusSty',
+                });
+              } 
+            });
+          } else {
+            this.onOriginalOrderModal(this.originalOrderIdDialogContent);
+          }
         }
 
         if (value === TransactionStatus.Chargeback) {
