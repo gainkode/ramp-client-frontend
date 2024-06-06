@@ -232,8 +232,11 @@
           </div>
           <div class="col-lg-5 col-md-12">
             <div class="card card-body pd-20 pd-md-40 border shadow-none">
-              <h5 class="card-title mg-b-20">
+              <h5 class="card-title mg-b-20 d-flex justify-content-between">
                 Payment Details
+                <div class="payment-details-status" title="Transaction Paid" *ngIf="data?.paymentOrder">
+                  <img src="assets/icons/paid-icon.svg" alt="Paid">
+                </div>
               </h5>
               <div *ngIf="form.controls.widgetId.value" class="form-group">
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">

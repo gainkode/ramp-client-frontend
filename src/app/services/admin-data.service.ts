@@ -1484,6 +1484,16 @@ query {
   }
 `;
 
+const GET_IS_PAYMENT_ORDER_COMPLETED = gql`
+query IsPaymentOrderCompleted(
+  $transactionId: String!
+) {
+  isPaymentOrderCompleted(
+    transactionId: $transactionId
+  )
+}
+`;
+
 const GET_CURRENCY_PAIR_LIQUIDITY_PROVIDERS = gql`
   query GetCurrencyPairLiquidityProviders{
     getCurrencyPairLiquidityProviders{
@@ -3839,6 +3849,35 @@ export class AdminDataService {
 		} else {
 			return null;
 		}
+	}
+
+  isPaymentOrderCompleted(transactionId: string): QueryRef<any, EmptyObject> | null {
+	  return this.apollo.watchQuery<any>({
+      query: GET_IS_PAYMENT_ORDER_COMPLETED,
+      fetchPolicy: 'network-only',
+      variables: { transactionId }
+    });
+      
+
+      // const vars: QueryGetDashboardStatsArgs = {
+      //   createdDateInterval: filter.createdDateInterval,
+      //   completedDateInterval: filter.completedDateInterval,
+      //   updateDateInterval: filter.updatedDateInterval,
+      //   userIdsOnly: filter.user ? [filter.user] : [],
+      //   widgetIdsOnly: filter.widgetNames,
+      //   sourcesOnly: filter.sources,
+      //   countriesOnly: filter.countries,
+      //   countryCodeType: CountryCodeType.Code3,
+      //   accountTypesOnly: filter.accountTypes,
+      //   fiatCurrency: filter.fiatCurrency
+      // };
+      // return this.watchQuery<{ getDashboardStats: DashboardStats; }, QueryGetDashboardStatsArgs>({
+      //   query: GET_DASHBOARD_STATS,
+      //   variables: vars,
+      //   fetchPolicy: 'network-only'
+      // }).pipe(map(result => {
+      //   return result.data.getDashboardStats;
+      // }));
 	}
 
 	getCurrencyPairLiquidityProviders(): Observable<{ list: Array<CurrencyPairItem>; count: number; }>{

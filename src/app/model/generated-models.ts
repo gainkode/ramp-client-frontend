@@ -2502,6 +2502,8 @@ export type Query = {
   getWireTransferBankAccounts?: Maybe<WireTransferBankAccountListResult>;
   /** Returns true if liquidity deposit is completed and credited to the liquidity account */
   isLiquidityDepositCompleted?: Maybe<Scalars['Boolean']['output']>;
+  /** Check if payment order status is completed */
+  isPaymentOrderCompleted?: Maybe<Scalars['Boolean']['output']>;
   maxSellAmount?: Maybe<UserMaxSell>;
   me: User;
   /** Get my actions with filters */
@@ -3100,6 +3102,11 @@ export type QueryGetWireTransferBankAccountsArgs = {
 
 export type QueryIsLiquidityDepositCompletedArgs = {
   orderId: Scalars['String']['input'];
+};
+
+
+export type QueryIsPaymentOrderCompletedArgs = {
+  transactionId: Scalars['String']['input'];
 };
 
 
@@ -5324,6 +5331,7 @@ export type VaultAccount = {
   rawData?: Maybe<Scalars['String']['output']>;
   total?: Maybe<Scalars['Float']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
+  vaultSettings?: Maybe<VaultSettings>;
 };
 
 export type VaultAccountAsset = {
