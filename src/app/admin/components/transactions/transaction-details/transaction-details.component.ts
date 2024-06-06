@@ -121,6 +121,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   kycStatuses = TransactionKycStatusList;
   transactionStatuses: TransactionStatusView[] = [];
   removable = false;
+  isFastPaid = false;
   transactionId = '';
   scriningData = {};
   transactionType: TransactionType = TransactionType.System;
@@ -242,8 +243,15 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onChangePaymentCancel(): void {
-    this.originalOrderDialog.close('');
+    this.originalOrderDialog?.close('');
+    this.isFastPaid = false;
     this.form.controls.transactionStatus.patchValue(this.data.status);
+  }
+
+  onChangePaymentConfirm(): void {
+    this.originalOrderDialog?.close('');
+    this.isFastPaid = false;
+    this.updateTransaction();
   }
   
   onOriginalOrderModal(content: any): void {
@@ -645,6 +653,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onPaid(content: any): void {
+    this.isFastPaid = true;
+
     if (this.data.paymentOrder) {
       if (!this.isTransactionCompleted) {
         this.originalOrderDialog = this.modalService.open(this.paymentStatusConfirmContent, {
@@ -712,9 +722,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onChangeOriginaOrderlIdConfirm(): void {
-    if (this.originalOrderDialog) {
-      this.originalOrderDialog.close('');
-    }
+    this.originalOrderDialog?.close('');
+    this.isFastPaid = false;
 
     if (this.originalOrderId) {
       this.paymentOrderChanges.originalOrderId = this.originalOrderId;
