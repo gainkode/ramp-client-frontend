@@ -26,6 +26,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('originalorderid_confirm_content') originalOrderIdDialogContent: ElementRef | undefined = undefined;
   @ViewChild('payment_status_confirm_content') paymentStatusConfirmContent: ElementRef | undefined = undefined;
+  @ViewChild('update_confirm_content') updateConfirmContent: ElementRef | undefined = undefined;
   
   @Input() permission = 0;
   @Input() isScreeningInfo = false;
@@ -250,8 +251,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   onChangePaymentConfirm(): void {
     this.originalOrderDialog?.close('');
-    this.isFastPaid = false;
-    this.updateTransaction();
+
+    if (this.isFastPaid) {
+      this.fastStatusChange(TransactionStatus.Exchanging, this.updateConfirmContent);
+    } else {
+      this.isFastPaid = false;
+    }
   }
   
   onOriginalOrderModal(content: any): void {
