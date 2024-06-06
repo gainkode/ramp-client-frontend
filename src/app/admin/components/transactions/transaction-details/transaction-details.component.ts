@@ -262,11 +262,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onChangePaymentConfirm(): void {
+    this.paymentStatusChangeDialog?.close('');
+
     if (this.isFastPaid) {
       this.fastStatusChange(TransactionStatus.Paid);
-    } 
-
-    this.onChangePaymentClose();
+      this.isFastPaid = false;
+    } else {
+      this.onChangePaymentClose();
+    }
   }
 
   onChangePaymentClose(): void {
