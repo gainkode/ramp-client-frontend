@@ -200,15 +200,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
         if (value === TransactionStatus.Paid ) {
           if (this.data.paymentOrder) {
-            this.adminService.isPaymentOrderCompleted(this.data.id).subscribe((result) => {
-              this.isTransactionCompleted = result;
-              if (!this.isTransactionCompleted && this.data.paymentOrder) {
-                this.originalOrderDialog = this.modalService.open(this.paymentStatusConfirmContent, {
-                  backdrop: 'static',
-                  windowClass: 'modalCusSty',
-                });
-              } 
-            });
+            if (!this.isTransactionCompleted) {
+              this.originalOrderDialog = this.modalService.open(this.paymentStatusConfirmContent, {
+                backdrop: 'static',
+                windowClass: 'modalCusSty',
+              });
+            } 
           } else {
             this.onOriginalOrderModal(this.originalOrderIdDialogContent);
           }
@@ -648,7 +645,16 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onPaid(content: any): void {
-    this.onOriginalOrderModal(content);
+    if (this.data.paymentOrder) {
+      if (!this.isTransactionCompleted) {
+        this.originalOrderDialog = this.modalService.open(this.paymentStatusConfirmContent, {
+          backdrop: 'static',
+          windowClass: 'modalCusSty',
+        });
+      }
+    } else {
+      this.onOriginalOrderModal(content);
+    }
   }
 
   onExchange(content: any): void {
