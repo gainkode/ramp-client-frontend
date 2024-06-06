@@ -25,6 +25,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('originalorderid_confirm_content') originalOrderIdDialogContent: ElementRef | undefined = undefined;
+  @ViewChild('payment_status_confirm_content') paymentStatusConfirmContent: ElementRef | undefined = undefined;
+  
   @Input() permission = 0;
   @Input() isScreeningInfo = false;
   @Input() set transaction(val: TransactionItemFull | undefined) {
@@ -196,14 +198,18 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
           this.onRecallNumberModal(false);
         }
 
-        if (value === TransactionStatus.Paid) {
-          if (this.isTransactionCompleted && this.data.paymentOrder) {
-      
-          } if (!this.isTransactionCompleted) {
-            this._snackBar.open(`ARE you sure ?`, null, { duration: 10000 });
-          } else {
-            this.onOriginalOrderModal(this.originalOrderIdDialogContent);
-          }
+        if (value === TransactionStatus.Paid && this.data.paymentOrder) {
+          this.adminService.isPaymentOrderCompleted(this.data.id).subscribe((result) => {
+            this.isTransactionCompleted = result;
+            if (!this.isTransactionCompleted && this.data.paymentOrder) {
+              this.originalOrderDialog = this.modalService.open(this.paymentStatusConfirmContent, {
+                backdrop: 'static',
+                windowClass: 'modalCusSty',
+              });
+            } else {
+              this.onOriginalOrderModal(this.originalOrderIdDialogContent);
+            }
+          });
         }
 
         if (value === TransactionStatus.Chargeback) {
@@ -229,6 +235,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     if (this.isScreeningInfo) {
       this.selectedTabIndex = 1;
     }
+  }
+
+  onChangePaymentCancel(): void {
+    this.form.controls.transactionStatus.patchValue(this.data.status);
   }
   
   onOriginalOrderModal(content: any): void {
@@ -283,7 +293,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   private isPaymentOrderCompleted(): void {
-    this.adminService.isPaymentOrderCompleted(this.data.id).subscribe((result) => this.isTransactionCompleted = true);
+    this.adminService.isPaymentOrderCompleted(this.data.id).subscribe((result) => this.isTransactionCompleted = result);
   }
 
   widgetSearchFn(term: string, item: CommonTargetValue): boolean {

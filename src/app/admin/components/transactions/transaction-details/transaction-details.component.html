@@ -234,7 +234,7 @@
             <div class="card card-body pd-20 pd-md-40 border shadow-none">
               <h5 class="card-title mg-b-20 d-flex justify-content-between">
                 Payment Details
-                <div class="payment-details-status" title="Transaction Paid" *ngIf="data?.paymentOrder">
+                <div class="payment-details-status" title="Transaction Paid" *ngIf="isTransactionCompleted">
                   <img src="assets/icons/paid-icon.svg" alt="Paid">
                 </div>
               </h5>
@@ -718,6 +718,28 @@
         No
       </button>
       <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionStatusConfirm(1)">
+        Yes
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #payment_status_confirm_content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Update transaction</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h4 class="text-center">
+      You are going to change the payment status. Are you sure want to chage to <b>PAID</b> status?
+    </h4>
+    <div class="d-flex justify-content-center align-items-center">
+      <button type="button" class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" (click)="onChangePaymentCancel()">
+        No
+      </button>
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.dismiss()">
         Yes
       </button>
     </div>
