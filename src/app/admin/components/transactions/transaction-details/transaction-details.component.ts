@@ -253,7 +253,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.originalOrderDialog?.close('');
 
     if (this.isFastPaid) {
-      this.fastStatusChange(TransactionStatus.Exchanging, this.updateConfirmContent);
+      this.fastStatusChange(TransactionStatus.Paid, this.updateConfirmContent);
     } else {
       this.isFastPaid = false;
     }
