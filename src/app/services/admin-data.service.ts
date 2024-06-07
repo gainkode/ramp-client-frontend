@@ -4648,11 +4648,11 @@ export class AdminDataService {
 		}));
 	}
 
-	updateTransaction(transactionId: string, data: TransactionUpdateInput, restartTransaction: boolean, recalculateAmounts: boolean): Observable<any> {
+	updateTransaction(transactionId: string, data: TransactionUpdateInput, launchAfterUpdate: boolean, recalculate: boolean): Observable<any> {
 		const vars = {
-			transactionId: transactionId,
-			launchAfterUpdate: restartTransaction,
-			recalculate: recalculateAmounts,
+			transactionId,
+			launchAfterUpdate,
+			recalculate,
 			...data
 		};
 
@@ -4663,10 +4663,8 @@ export class AdminDataService {
 	}
 
 	updateTransactionFlag(flag: boolean, transactionId: string): Observable<any> {
-		const vars = {
-			transactionId: transactionId,
-			flag: flag
-		};
+		const vars = { transactionId, flag };
+
 		return this.mutate({
 			mutation: UPDATE_TRANSACTION_FLAG,
 			variables: vars
@@ -4693,15 +4691,8 @@ export class AdminDataService {
 	resendAdminNotification(notificationId: string): Observable<any> {
 		return this.mutate({
 			mutation: RESEND_NOTIFICATION,
-			variables: {
-				notificationId: notificationId
-			}
-		}).pipe(tap((res) => {
-			this.snackBar.open(
-				`Message was resent`,
-				undefined, { duration: 5000 }
-			);
-		}));
+			variables: { notificationId }
+		}).pipe(tap(() => this.snackBar.open(`Message was resent`, undefined, { duration: 5000 })));
 	}
 
 	assignRole(userId: string, roleCodes: string[]): Observable<any> {
@@ -4711,12 +4702,7 @@ export class AdminDataService {
 				userId,
 				roleCodes
 			}
-		}).pipe(tap((res) => {
-			this.snackBar.open(
-				`Roles are assigned`,
-				undefined, { duration: 5000 }
-			);
-		}));
+		}).pipe(tap(() => this.snackBar.open(`Roles are assigned`, undefined, { duration: 5000 })));
 	}
 
 	removeRole(userId: string, roleCodes: string[]): Observable<any> {
@@ -4726,20 +4712,13 @@ export class AdminDataService {
 				userId,
 				roleCodes
 			}
-		}).pipe(tap((res) => {
-			this.snackBar.open(
-				`Roles are removed`,
-				undefined, { duration: 5000 }
-			);
-		}));
+    }).pipe(tap(() => this.snackBar.open(`Roles are removed`, undefined, { duration: 5000 })));
 	}
 
 	createApiKey(userId: string): Observable<any> {
 		return this.apollo.mutate({
 			mutation: CREATE_USER_API_KEY,
-			variables: {
-				userId
-			}
+			variables: { userId }
 		});
 	}
 
@@ -4767,9 +4746,7 @@ export class AdminDataService {
 	deleteApiKey(apiKeyId: string): Observable<any> {
 		return this.apollo.mutate({
 			mutation: DELETE_USER_API_KEY,
-			variables: {
-				apiKeyId
-			},
+			variables: { apiKeyId },
 		});
 	}
 
@@ -4866,6 +4843,7 @@ export class AdminDataService {
 		orderDesc: boolean,
 		filter: Filter): Observable<any> {
 		const orderFields = [{ orderBy: orderField, desc: orderDesc }];
+    
 		let vars = {};
 		if (widgetIds.length === 0) {
 			vars = {

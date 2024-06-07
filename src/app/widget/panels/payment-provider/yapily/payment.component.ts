@@ -40,6 +40,28 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
   	this.pager.init('instructions', 'Instructions');
+
+
+		const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
+  	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
+  	// const instrumentDetails = JSON.stringify(bank);
+
+  	this.transactionInput = {
+  		type: this.summary.transactionType,
+  		source: this.source,
+  		sourceVaultId: transactionSourceVaultId,
+  		currencyToSpend: this.summary.currencyFrom,
+  		currencyToReceive: (this.summary.currencyTo !== '') ? this.summary.currencyTo : undefined,
+  		amountToSpend: this.summary.amountFrom ?? 0,
+  		instrument: this.summary.providerView.instrument,
+  		// instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
+  		paymentProvider: this.summary.providerView.id ?? undefined,
+  		widgetUserParamsId: (this.userParamsId !== '') ? this.userParamsId : undefined,
+  		destination: destination,
+  		verifyWhenPaid: this.summary.transactionType === TransactionType.Buy ? this.summary.verifyWhenPaid : false
+  	};
+
+  	this.createTransactionInternal();
   }
 
   ngOnDestroy(): void {
@@ -51,7 +73,8 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   }
 
   isLoadingfunc(value: boolean): void {
-  	this.isLoading = value;
+  	// this.isLoading = value;
+
   	this.cdr.markForCheck();
   }
 
@@ -62,26 +85,8 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
 
   bankSelected(bank: PaymentBank): void {
   	this.paymentBank = bank;
-  	const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
-  	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
-  	const instrumentDetails = JSON.stringify(bank);
 
-  	this.transactionInput = {
-  		type: this.summary.transactionType,
-  		source: this.source,
-  		sourceVaultId: transactionSourceVaultId,
-  		currencyToSpend: this.summary.currencyFrom,
-  		currencyToReceive: (this.summary.currencyTo !== '') ? this.summary.currencyTo : undefined,
-  		amountToSpend: this.summary.amountFrom ?? 0,
-  		instrument: this.summary.providerView.instrument,
-  		instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
-  		paymentProvider: this.summary.providerView.id ?? undefined,
-  		widgetUserParamsId: (this.userParamsId !== '') ? this.userParamsId : undefined,
-  		destination: destination,
-  		verifyWhenPaid: this.summary.transactionType === TransactionType.Buy ? this.summary.verifyWhenPaid : false
-  	};
-
-  	this.createTransactionInternal();
+		this.preauth(this.transactionId);
   }
 
   openWindow(url: string): void {
@@ -125,23 +130,22 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   private createTransactionInternal(): void {
   	this.errorMessage = '';
   	this.isLoading = true;
+
   	this.pSubscriptions.add(
 		  this.paymentService.createTransaction(this.transactionInput)
-		  .subscribe(
-  			{
+		  .subscribe({
   				next: ({ data }) => {
   					const order = data.createTransaction as TransactionShort;
-
+							
   						if (order) {
   							const parsedInstrumentDetails = JSON.parse(order.instrumentDetails);
+
   							this.bankName = parsedInstrumentDetails?.name ?? '';
   							this.transactionId = order.transactionId;
   						}
-
-			  		this.preauth(this.transactionId);
   				},
   				error: () => this.isLoading = false,
-  					complete: () => this.cdr.markForCheck()
+  				complete: () => this.cdr.markForCheck()
   			})
   	);
   }
@@ -162,12 +166,14 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   			.subscribe({
   				next: ({ data }) => {
   					const order = data.preauth as PaymentPreauthResultShort;
+
   					this.yapilyRedirectObject = {
   						yapilyQrCodeUrl: order.openBankingObject.yapily.qrCodeUrl,
   						yapilyAuthUrl: order.openBankingObject.yapily.url,
   						bankName: this.bankName,
   						transactionId
   					} as YapilyRedirectModel;
+
   				},
   				error: (error) => {
   					console.error(error);

@@ -30,10 +30,10 @@ export class SettingsMenuBarComponent {
     		id: 'iplist',
     		name: 'White List'
     	} as MenuItem,
-			{
-				id: 'apikeys',
-				name: 'API Keys'
-    	} as MenuItem
+			// {
+			// 	id: 'apikeys',
+			// 	name: 'API Keys'
+    	// } as MenuItem
     ];
 
     constructor(private router: Router, private auth: AuthService) {
@@ -47,6 +47,6 @@ export class SettingsMenuBarComponent {
 
     onSelect(itemId: string): void {
     	this.select.emit(itemId);
-    	this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/${itemId}`);
+    	void this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/${itemId}`);
     }
 }
