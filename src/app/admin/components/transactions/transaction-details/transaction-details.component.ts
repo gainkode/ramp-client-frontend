@@ -211,9 +211,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
           }
         }
 
-        if (value === TransactionStatus.Paid ) {
+        if (value === TransactionStatus.Paid) {
           if (this.data.paymentOrder) {
-            if (!this.isTransactionCompleted) {
+            if (!this.isTransactionCompleted && !this.isFastPaid) {
               this.paymentStatusChangeDialog = this.modalService.open(this.paymentStatusConfirmContent, {
                 backdrop: 'static',
                 windowClass: 'modalCusSty',
@@ -262,11 +262,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   onChangePaymentConfirm(): void {
-    this.paymentStatusChangeDialog?.close('');
-
     if (this.isFastPaid) {
       this.fastStatusChange(TransactionStatus.Paid);
-      this.isFastPaid = false;
     } else {
       this.onChangePaymentClose();
     }
@@ -705,6 +702,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
     this.amountChanged = false;
     this.statusChanged = true;
+
+    if (this.isFastPaid) {
+      this.onChangePaymentClose();
+    }
 
     this.onUpdateDialogOpen();
   }
