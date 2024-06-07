@@ -73,7 +73,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   }
 
   isLoadingfunc(value: boolean): void {
-  	// this.isLoading = value;
+  	this.isLoading = value;
 
   	this.cdr.markForCheck();
   }
@@ -135,6 +135,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
 		  this.paymentService.createTransaction(this.transactionInput)
 		  .subscribe({
   				next: ({ data }) => {
+			
   					const order = data.createTransaction as TransactionShort;
 							
   						if (order) {
@@ -143,6 +144,9 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   							this.bankName = parsedInstrumentDetails?.name ?? '';
   							this.transactionId = order.transactionId;
   						}
+
+							this.isLoading = false,
+							this.cdr.markForCheck()
   				},
   				error: () => this.isLoading = false,
   				complete: () => this.cdr.markForCheck()
