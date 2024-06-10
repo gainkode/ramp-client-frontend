@@ -24,7 +24,6 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   bankName = '';
   transactionId = '';
   paymentBank: PaymentBank = undefined;
-  transactionInput: TransactionInput | undefined = undefined;
   newWindow: Window = undefined;
   isPaymentSuccess = false;
   private pSubscriptions: Subscription = new Subscription();
@@ -41,12 +40,11 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   	this.pager.init('instructions', 'Instructions');
 
-
 		const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
   	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
   	// const instrumentDetails = JSON.stringify(bank);
 
-  	this.transactionInput = {
+  	const transactionInput: TransactionInput = {
   		type: this.summary.transactionType,
   		source: this.source,
   		sourceVaultId: transactionSourceVaultId,
@@ -61,7 +59,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   		verifyWhenPaid: this.summary.transactionType === TransactionType.Buy ? this.summary.verifyWhenPaid : false
   	};
 
-  	this.createTransactionInternal();
+  	this.createTransactionInternal(transactionInput);
   }
 
   ngOnDestroy(): void {
@@ -127,26 +125,25 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   		});
   }
 
-  private createTransactionInternal(): void {
+  private createTransactionInternal(transaction: TransactionInput): void {
   	this.errorMessage = '';
   	this.isLoading = true;
 
   	this.pSubscriptions.add(
-		  this.paymentService.createTransaction(this.transactionInput)
+		  this.paymentService.createTransaction(transaction)
 		  .subscribe({
   				next: ({ data }) => {
-			
   					const order = data.createTransaction as TransactionShort;
 							
-  						if (order) {
-  							const parsedInstrumentDetails = JSON.parse(order.instrumentDetails);
+						if (order) {
+							const parsedInstrumentDetails = JSON.parse(order.instrumentDetails);
 
-  							this.bankName = parsedInstrumentDetails?.name ?? '';
-  							this.transactionId = order.transactionId;
-  						}
+							this.bankName = parsedInstrumentDetails?.name ?? '';
+							this.transactionId = order.transactionId;
+						}
 
-							this.isLoading = false,
-							this.cdr.markForCheck()
+						this.isLoading = false;
+						this.cdr.markForCheck();
   				},
   				error: () => this.isLoading = false,
   				complete: () => this.cdr.markForCheck()

@@ -4,8 +4,7 @@ import {
 	Output,
 	Inject,
 	AfterViewInit,
-	OnDestroy,
-	Renderer2,
+	OnDestroy
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EnvService } from 'services/env.service';
@@ -60,6 +59,7 @@ export class RecaptchaComponent implements AfterViewInit, OnDestroy {
   	};
   	this.turnstileCaptchaRender(turnstileOptions);
   }
+
   ngOnDestroy(): void {
   	if(this.widgetId){
   		window.turnstile.remove(this.widgetId);
@@ -70,17 +70,20 @@ export class RecaptchaComponent implements AfterViewInit, OnDestroy {
   		this.scriptTag = undefined;
   	}
   }
+
   turnstileCaptchaRender(turnstileOptions: TurnstileOptions): void {
   	window[CALLBACK_NAME] = () => {
   		this.widgetId = window.turnstile.render('#recaptcha', turnstileOptions);
   	};
   }
+
   includeScript(): void {
   	const head = this.document.getElementsByTagName('head')[0];
   	this.scriptTag = this.document.createElement('script');
   	this.scriptTag.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=${CALLBACK_NAME}`;
   	head.appendChild(this.scriptTag);
   }
+
   capchaResult(token: string): void {
   	localStorage.setItem('recaptchaId', token);
   	this.completed.emit(token);
