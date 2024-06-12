@@ -145,6 +145,7 @@ export class TransactionItemFull {
 	feePercent: number;
 	currencyCrypto = '';
 	isReversalProcessed: boolean;
+	reversalProcessed: Date | undefined = undefined;
 	recallNumber: string | undefined;
 	paymentOrderRecallNumberLink: string | undefined;
 
@@ -166,6 +167,13 @@ export class TransactionItemFull {
 				data.updated,
 				'dd-MM-YYYY HH:mm:ss:SSS'
 			) as string;
+
+			// this.reversalProcessed = datepipe.transform(
+			// 	data.reversalProcessed,
+			// 	'dd-MM-YYYY'
+			// ) as string;
+
+			this.reversalProcessed = (data.reversalProcessed) ? new Date(data.reversalProcessed) : undefined;
 
 			if (data.liquidityOrder?.executingResult) {
 				const exchangeExecuteData = JSON.parse(data.liquidityOrder.executingResult);

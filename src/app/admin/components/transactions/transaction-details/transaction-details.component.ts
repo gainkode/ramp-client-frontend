@@ -13,7 +13,7 @@ import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ExchangeRateService } from 'services/rate.service';
-import { getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
+import { getFormattedUtcDate, getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
 import { TransactionRecallModalComponent, TransactionRefundModalComponent } from '..';
 import { NUMBER_PATTERN } from 'utils/constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -92,6 +92,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     refundOrderAmount: this.fb.control<number>(undefined),
     recallNumber: this.fb.control<string>(undefined),
     isReversalProcessed: this.fb.control<boolean>(undefined),
+    reversalProcessed: this.fb.control<string>(undefined),
   });
 
   private pStatusHash = 0;
@@ -430,6 +431,13 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         comment: this.data.comment
       });
 
+      if (this.data.reversalProcessed) {
+        const b = `${this.data.reversalProcessed.getDate()}-${
+          this.data.reversalProcessed.getMonth() + 1
+        }-${this.data.reversalProcessed.getFullYear()}`;
+        this.form.controls.reversalProcessed.setValue(b);
+      }
+
       if (this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
         this.scriningData = this.data?.screeningData?.paymentChecks[0];
       }
@@ -506,6 +514,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.paymentOrderChanges.isReversalProcessed = this.form.controls.transactionStatus.value === this.TRANSACTION_STATUS.Chargeback ? this.form.controls.isReversalProcessed.value : false;
     
     const transactionToUpdate: TransactionUpdateInput = {
+      reversalProcessed: getFormattedUtcDate(
+  			this.form.controls.reversalProcessed.value ?? '',
+  			'-'
+  		),
       destination: this.form.controls.address.value,
       currencyToSpend: this.form.controls.currencyToSpend.value,
       currencyToReceive: this.form.controls.currencyToReceive.value,
