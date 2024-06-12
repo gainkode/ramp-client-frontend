@@ -503,6 +503,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.paymentOrderChanges.recallNumber = this.form.controls.recallNumber.value ?? undefined;
+    this.paymentOrderChanges.isReversalProcessed = this.form.controls.isReversalProcessed.value ?? false;
     
     const transactionToUpdate: TransactionUpdateInput = {
       destination: this.form.controls.address.value,
@@ -510,7 +511,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       currencyToReceive: this.form.controls.currencyToReceive.value,
       amountToSpend: this.form.controls.amountToSpend.value ?? 0,
       rate: this.form.controls.rate.value,
-      isReversalProcessed: this.form.controls.isReversalProcessed.value,
       feeFiat: this.form.controls.fees.value ?? 0,
       status: this.form.controls.transactionStatus.value,
       widgetId: this.form.controls.widgetId.value,
