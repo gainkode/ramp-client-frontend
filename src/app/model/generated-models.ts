@@ -4450,7 +4450,7 @@ export type TransactionUpdateInput = {
 export type TransactionUpdatePaymentOrderChanges = {
   originalOrderId?: InputMaybe<Scalars['String']['input']>;
   recallNumber?: InputMaybe<Scalars['String']['input']>;
-  reversalProcessed?: InputMaybe<Scalars['String']['input']>;
+  reversalProcessed?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type TransactionUpdateRefundTransferOrderChanges = {
