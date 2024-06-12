@@ -63,7 +63,7 @@ const defaultFilterFields: FilterField[] = [
 	{ name: 'Hide zero balance', value: 'zeroBalance', groupName: GroupFieldName.None },
 	{ name: 'Has recall number', value: 'hasRecallNumber', groupName: GroupFieldName.Payment },
 	{ name: 'Recall number ', value: 'recallNumber', groupName: GroupFieldName.Payment },
-	{ name: 'Has reversal processed', value: 'isReversalProcessed', groupName: GroupFieldName.Payment },
+	{ name: 'Reversal processed', value: 'reversalProcessed', groupName: GroupFieldName.Payment },
 ];
 
 @Component({
@@ -85,7 +85,8 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 	@ViewChild('completed_filter') completeFilterPicker!: AdminDateRangeComponent;
 	@ViewChild('registered_filter') registerFilterPicker!: AdminDateRangeComponent;
 	@ViewChild('updated_filter') updateFilterPicker!: AdminDateRangeComponent;
-
+	@ViewChild('reversal_processed_filter') reversalProcessedFilterPicker!: AdminDateRangeComponent;
+	
 	private filterSubject = new Subject<Filter>();
 
 	sourceOptions = TransactionSourceList;
@@ -367,7 +368,6 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 			'transactionFlag': { key: 'transactionFlag', value: [false] },
 			'transactionWasEverCompleted': { key: 'transactionWasEverCompleted', value: [false] },
 			'hasRecallNumber': { key: 'hasRecallNumber', value: [false] },
-			'isReversalProcessed': { key: 'isReversalProcessed', value: [false] },
 			'preauthFlag': { key: 'preauthFlag', value: [false] },
 			'zeroBalance': { key: 'zeroBalance', value: false },
 			'from': { key: 'from', value: [''] },
@@ -400,6 +400,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 			controlsConfig.updatedDateRangeStart = [undefined];
 			controlsConfig.updatedDateRangeEnd = [undefined];
 		}
+		if (this.fields.includes('reversalProcessed')) {
+			controlsConfig.reversalProcessedStart = [undefined];
+			controlsConfig.reversalProcessedEnd = [undefined];
+		}
 
 		this.filterForm = this.formBuilder.group(controlsConfig);
 
@@ -422,6 +426,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 		if (this.filterData?.updatedDateInterval) {
 			this.filterForm.controls.updatedDateRangeStart.setValue(this.filterData?.updatedDateInterval.from as Date);
 			this.filterForm.controls.updatedDateRangeEnd.setValue(this.filterData?.updatedDateInterval.to as Date);
+		}
+		if (this.filterData?.reversalProcessedInterval) {
+			this.filterForm.controls.reversalProcessedStart.setValue(this.filterData?.reversalProcessedInterval.from as Date);
+			this.filterForm.controls.reversalProcessedEnd.setValue(this.filterData?.reversalProcessedInterval.to as Date);
 		}
 	}
 
@@ -463,6 +471,14 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 				}
 			}
 
+			if (this.originFields.includes('reversalProcessed')) {
+				this.filterForm.controls.reversalProcessedStart.setValue(undefined);
+				this.filterForm.controls.reversalProcessedEnd.setValue(undefined);
+				if (this.reversalProcessedFilterPicker) {
+					this.reversalProcessedFilterPicker.reset();
+				}
+			}
+
 			const controlValues = {
 				'accountType': { controlName: 'accountTypes', value: [] },
 				'notificationType': { controlName: 'notificationType', value: undefined },
@@ -494,7 +510,6 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 				'transactionFlag': { controlName: 'transactionFlag', value: false },
 				'transactionWasEverCompleted': { controlName: 'transactionWasEverCompleted', value: false },
 				'hasRecallNumber': { controlName: 'hasRecallNumber', value: false },
-				'isReversalProcessed': { controlName: 'isReversalProcessed', value: false },
 				'preauthFlag': { controlName: 'preauthFlag', value: false },
 				'zeroBalance': { controlName: 'zeroBalance', value: false },
 			};

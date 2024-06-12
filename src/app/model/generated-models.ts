@@ -2236,7 +2236,6 @@ export type PaymentOrder = {
   captured?: Maybe<Scalars['Boolean']['output']>;
   created?: Maybe<Scalars['DateTime']['output']>;
   currency: Scalars['String']['output'];
-  isReversalProcessed?: Maybe<Scalars['Boolean']['output']>;
   operations?: Maybe<Array<PaymentOperation>>;
   orderId?: Maybe<Scalars['String']['output']>;
   originalOrderId?: Maybe<Scalars['String']['output']>;
@@ -2254,6 +2253,7 @@ export type PaymentOrder = {
   providerSpecificStates?: Maybe<Array<DateMap>>;
   recallNumber?: Maybe<Scalars['String']['output']>;
   refundOperationSn?: Maybe<Scalars['String']['output']>;
+  reversalProcessed?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   statusReason?: Maybe<Scalars['String']['output']>;
   transactionId?: Maybe<Scalars['String']['output']>;
@@ -2278,7 +2278,6 @@ export type PaymentOrderShort = {
   amount: Scalars['Float']['output'];
   created?: Maybe<Scalars['DateTime']['output']>;
   currency: Scalars['String']['output'];
-  isReversalProcessed?: Maybe<Scalars['Boolean']['output']>;
   operations?: Maybe<Array<PaymentOperationShort>>;
   orderId?: Maybe<Scalars['String']['output']>;
   paymentBankName?: Maybe<Scalars['String']['output']>;
@@ -2289,6 +2288,7 @@ export type PaymentOrderShort = {
   paymentInfo?: Maybe<Scalars['String']['output']>;
   paymentProcessorName?: Maybe<Scalars['String']['output']>;
   provider: Scalars['String']['output'];
+  reversalProcessed?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   statusReason?: Maybe<Scalars['String']['output']>;
   transactionId?: Maybe<Scalars['String']['output']>;
@@ -2928,13 +2928,13 @@ export type QueryGetTransactionsArgs = {
   flag?: InputMaybe<Scalars['Boolean']['input']>;
   from?: InputMaybe<Scalars['String']['input']>;
   hasRecallNumber?: InputMaybe<Scalars['Boolean']['input']>;
-  isReversalProcessed?: InputMaybe<Scalars['Boolean']['input']>;
   kycStatusesOnly?: InputMaybe<Array<TransactionKycStatus>>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   paymentInstrumentsOnly?: InputMaybe<Array<PaymentInstrument>>;
   paymentProvidersOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   preauth?: InputMaybe<Scalars['Boolean']['input']>;
   recallNumber?: InputMaybe<Scalars['String']['input']>;
+  reversalProcessedDateInterval?: InputMaybe<DateTimeInterval>;
   riskLevelsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   sendersOrReceiversOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -3989,7 +3989,6 @@ export type Transaction = {
   initialRate?: Maybe<Scalars['Float']['output']>;
   instrument?: Maybe<PaymentInstrument>;
   instrumentDetails?: Maybe<Scalars['String']['output']>;
-  isReversalProcessed?: Maybe<Scalars['Boolean']['output']>;
   kycStatus?: Maybe<TransactionKycStatus>;
   lifelineId?: Maybe<Scalars['String']['output']>;
   liquidityOrder?: Maybe<LiquidityExchangeOrder>;
@@ -4018,6 +4017,7 @@ export type Transaction = {
   requiredFields?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
   requiredUserTierId?: Maybe<Scalars['String']['output']>;
+  reversalProcessed?: Maybe<Scalars['String']['output']>;
   risk: RiskLevel;
   riskCodes?: Maybe<Array<Scalars['String']['output']>>;
   screeningAnswer?: Maybe<Scalars['String']['output']>;
@@ -4220,7 +4220,6 @@ export type TransactionShort = {
   initialRate?: Maybe<Scalars['Float']['output']>;
   instrument?: Maybe<PaymentInstrument>;
   instrumentDetails?: Maybe<Scalars['String']['output']>;
-  isReversalProcessed?: Maybe<Scalars['Boolean']['output']>;
   kycStatus?: Maybe<TransactionKycStatus>;
   lifelineId?: Maybe<Scalars['String']['output']>;
   liquidityOrder?: Maybe<LiquidityExchangeOrder>;
@@ -4237,6 +4236,7 @@ export type TransactionShort = {
   requiredFields?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
   requiredUserTierId?: Maybe<Scalars['String']['output']>;
+  reversalProcessed?: Maybe<Scalars['String']['output']>;
   risk: RiskLevel;
   riskCodes?: Maybe<Array<Scalars['String']['output']>>;
   screeningAnswer?: Maybe<Scalars['String']['output']>;
@@ -4448,9 +4448,9 @@ export type TransactionUpdateInput = {
 };
 
 export type TransactionUpdatePaymentOrderChanges = {
-  isReversalProcessed?: InputMaybe<Scalars['Boolean']['input']>;
   originalOrderId?: InputMaybe<Scalars['String']['input']>;
   recallNumber?: InputMaybe<Scalars['String']['input']>;
+  reversalProcessed?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TransactionUpdateRefundTransferOrderChanges = {

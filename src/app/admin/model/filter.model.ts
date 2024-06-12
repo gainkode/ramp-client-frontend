@@ -27,6 +27,7 @@ export class Filter {
 	public completedDateInterval?: DateTimeInterval;
 	public registrationDateInterval?: DateTimeInterval;
 	public updatedDateInterval?: DateTimeInterval;
+	public reversalProcessedInterval?: DateTimeInterval;
 	public transactionDate?: Date;
 	public walletAddress?: string;
 	public walletIds?: Array<string>;
@@ -39,7 +40,6 @@ export class Filter {
 	public transactionWasEverCompleted?: boolean;
 	public recallNumber?: string;
 	public hasRecallNumber?: boolean;
-	public isReversalProcessed?: boolean;
 	public preauthFlag?: boolean;
 	public zeroBalance?: boolean;
 	public transactionId?: string;
@@ -166,6 +166,10 @@ export class Filter {
 			this.updatedDateInterval = this.getDateTimeRange(filterValues.updatedDateRangeStart, filterValues.updatedDateRangeEnd);
 		}
 
+		if (filterValues.reversalProcessedStart || filterValues.reversalProcessedEnd) {
+			this.reversalProcessedInterval = this.getDateTimeRange(filterValues.reversalProcessedStart, filterValues.reversalProcessedEnd);
+		}
+
 		if (filterValues.walletAddress) {
 			this.walletAddress = filterValues.walletAddress;
 		}
@@ -202,9 +206,6 @@ export class Filter {
 		}
 		if (filterValues.hasRecallNumber) {
 			this.hasRecallNumber = filterValues.hasRecallNumber;
-		}
-		if (filterValues.isReversalProcessed) {
-			this.isReversalProcessed = filterValues.isReversalProcessed;
 		}
 		if (filterValues.preauthFlag) {
 			this.preauthFlag = filterValues.preauthFlag;

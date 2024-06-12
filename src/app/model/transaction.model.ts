@@ -168,13 +168,9 @@ export class TransactionItemFull {
 				'dd-MM-YYYY HH:mm:ss:SSS'
 			) as string;
 
-			// this.reversalProcessed = datepipe.transform(
-			// 	data.reversalProcessed,
-			// 	'dd-MM-YYYY'
-			// ) as string;
-
 			this.reversalProcessed = (data.reversalProcessed) ? new Date(data.reversalProcessed) : undefined;
-
+			this.isReversalProcessed = data.reversalProcessed ? true : false;
+			
 			if (data.liquidityOrder?.executingResult) {
 				const exchangeExecuteData = JSON.parse(data.liquidityOrder.executingResult);
 
@@ -287,7 +283,6 @@ export class TransactionItemFull {
 
 			this.merchantFeePercent = data.merchantFeePercent ?? 0;
 			this.recallNumber = data.recallNumber ?? undefined;
-			this.isReversalProcessed = data.isReversalProcessed ?? false;
 			this.paymentOrderRecallNumberLink = data.paymentOrderRecallNumberLink ?? undefined;
 
 			this.feePercent = data.feePercent ?? 0;
