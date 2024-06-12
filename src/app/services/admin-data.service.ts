@@ -720,7 +720,7 @@ const GET_TRANSACTIONS = gql`
     $fiatCurrency: String
     $recallNumber: String
     $hasRecallNumber: Boolean
-    $isReversalProcessed: Boolean
+    $reversalProcessedDateInterval: DateTimeInterval
   ) {
     getTransactions(
       transactionIdsOnly: $transactionIdsOnly
@@ -748,7 +748,7 @@ const GET_TRANSACTIONS = gql`
       transactionWasEverCompleted: $transactionWasEverCompleted
       recallNumber: $recallNumber
       hasRecallNumber: $hasRecallNumber
-      isReversalProcessed: $isReversalProcessed
+      reversalProcessedDateInterval: $reversalProcessedDateInterval
       preauth: $preauth
       fiatCurrency: $fiatCurrency
       skip: $skip
@@ -914,7 +914,7 @@ const GET_TRANSACTIONS = gql`
         canBeReviewed
         merchantFeePercent
         recallNumber
-        isReversalProcessed
+        reversalProcessed
         paymentOrderRecallNumberLink
         senderName
         recipientName
