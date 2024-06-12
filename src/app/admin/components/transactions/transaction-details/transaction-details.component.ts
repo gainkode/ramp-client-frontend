@@ -503,7 +503,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.paymentOrderChanges.recallNumber = this.form.controls.recallNumber.value ?? undefined;
-    this.paymentOrderChanges.isReversalProcessed = this.form.controls.isReversalProcessed.value ?? false;
+    this.paymentOrderChanges.isReversalProcessed = this.form.controls.transactionStatus.value === this.TRANSACTION_STATUS.Chargeback ? this.form.controls.isReversalProcessed.value : false;
     
     const transactionToUpdate: TransactionUpdateInput = {
       destination: this.form.controls.address.value,
