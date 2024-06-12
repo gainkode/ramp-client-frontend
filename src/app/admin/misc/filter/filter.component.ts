@@ -61,8 +61,9 @@ const defaultFilterFields: FilterField[] = [
 	{ name: 'Transaction Was Ever Completed', value: 'transactionWasEverCompleted', groupName: GroupFieldName.Transaction },
 	{ name: 'Preauth', value: 'preauthFlag', groupName: GroupFieldName.Payment },
 	{ name: 'Hide zero balance', value: 'zeroBalance', groupName: GroupFieldName.None },
-	{ name: 'Has recall number', value: 'hasRecallNumber', groupName: GroupFieldName.Transaction },
-	{ name: 'Recall number ', value: 'recallNumber', groupName: GroupFieldName.Transaction }
+	{ name: 'Has recall number', value: 'hasRecallNumber', groupName: GroupFieldName.Payment },
+	{ name: 'Recall number ', value: 'recallNumber', groupName: GroupFieldName.Payment },
+	{ name: 'Has reversal processed', value: 'isReversalProcessed', groupName: GroupFieldName.Payment },
 ];
 
 @Component({
@@ -366,6 +367,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 			'transactionFlag': { key: 'transactionFlag', value: [false] },
 			'transactionWasEverCompleted': { key: 'transactionWasEverCompleted', value: [false] },
 			'hasRecallNumber': { key: 'hasRecallNumber', value: [false] },
+			'isReversalProcessed': { key: 'isReversalProcessed', value: [false] },
 			'preauthFlag': { key: 'preauthFlag', value: [false] },
 			'zeroBalance': { key: 'zeroBalance', value: false },
 			'from': { key: 'from', value: [''] },
@@ -492,6 +494,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 				'transactionFlag': { controlName: 'transactionFlag', value: false },
 				'transactionWasEverCompleted': { controlName: 'transactionWasEverCompleted', value: false },
 				'hasRecallNumber': { controlName: 'hasRecallNumber', value: false },
+				'isReversalProcessed': { controlName: 'isReversalProcessed', value: false },
 				'preauthFlag': { controlName: 'preauthFlag', value: false },
 				'zeroBalance': { controlName: 'zeroBalance', value: false },
 			};

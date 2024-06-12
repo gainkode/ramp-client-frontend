@@ -39,6 +39,7 @@ export class Filter {
 	public transactionWasEverCompleted?: boolean;
 	public recallNumber?: string;
 	public hasRecallNumber?: boolean;
+	public isReversalProcessed?: boolean;
 	public preauthFlag?: boolean;
 	public zeroBalance?: boolean;
 	public transactionId?: string;
@@ -201,6 +202,9 @@ export class Filter {
 		}
 		if (filterValues.hasRecallNumber) {
 			this.hasRecallNumber = filterValues.hasRecallNumber;
+		}
+		if (filterValues.isReversalProcessed) {
+			this.isReversalProcessed = filterValues.isReversalProcessed;
 		}
 		if (filterValues.preauthFlag) {
 			this.preauthFlag = filterValues.preauthFlag;

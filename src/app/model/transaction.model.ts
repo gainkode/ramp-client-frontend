@@ -144,7 +144,7 @@ export class TransactionItemFull {
 	merchantFeePercent: number;
 	feePercent: number;
 	currencyCrypto = '';
-
+	isReversalProcessed: boolean;
 	recallNumber: string | undefined;
 	paymentOrderRecallNumberLink: string | undefined;
 
@@ -279,6 +279,7 @@ export class TransactionItemFull {
 
 			this.merchantFeePercent = data.merchantFeePercent ?? 0;
 			this.recallNumber = data.recallNumber ?? undefined;
+			this.isReversalProcessed = data.isReversalProcessed ?? false;
 			this.paymentOrderRecallNumberLink = data.paymentOrderRecallNumberLink ?? undefined;
 
 			this.feePercent = data.feePercent ?? 0;

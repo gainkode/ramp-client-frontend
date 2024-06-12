@@ -91,6 +91,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     refundOrderAddress: this.fb.control<string>(undefined),
     refundOrderAmount: this.fb.control<number>(undefined),
     recallNumber: this.fb.control<string>(undefined),
+    isReversalProcessed: this.fb.control<boolean>(undefined),
   });
 
   private pStatusHash = 0;
@@ -118,6 +119,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   cancelInProgress = false;
   errorMessage = '';
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
+  TRANSACTION_STATUS: typeof TransactionStatus = TransactionStatus;
   data: TransactionItemFull | undefined = undefined;
   accountStatuses = UserStatusList;
   kycStatuses = TransactionKycStatusList;
@@ -199,7 +201,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       .subscribe(value => {
         if (value === TransactionStatus.Refund) {
           this.onRecallNumberModal(false);
-
         }
 
         if (value === TransactionStatus.Chargeback) {
@@ -415,6 +416,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         currencyToReceive: this.data.currencyToReceive,
         transactionStatus: this.data.status,
         recallNumber: this.data.recallNumber,
+        isReversalProcessed: this.data.isReversalProcessed,
         kycStatus: this.data.kycStatusValue,
         widgetId: this.data.widgetId,
         accountStatus: this.data.accountStatusValue,
@@ -508,6 +510,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       currencyToReceive: this.form.controls.currencyToReceive.value,
       amountToSpend: this.form.controls.amountToSpend.value ?? 0,
       rate: this.form.controls.rate.value,
+      isReversalProcessed: this.form.controls.isReversalProcessed.value,
       feeFiat: this.form.controls.fees.value ?? 0,
       status: this.form.controls.transactionStatus.value,
       widgetId: this.form.controls.widgetId.value,
