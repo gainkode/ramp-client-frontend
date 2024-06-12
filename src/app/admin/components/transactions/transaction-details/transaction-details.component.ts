@@ -438,10 +438,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       });
 
       if (this.data.reversalProcessed) {
-        const b = `${this.data.reversalProcessed.getDate()}-${
-          this.data.reversalProcessed.getMonth() + 1
-        }-${this.data.reversalProcessed.getFullYear()}`;
-        this.form.controls.reversalProcessed.setValue(b);
+        const reversalProcessedDate = `${this.data.reversalProcessed.getDate()}-${this.data.reversalProcessed.getMonth() + 1}-${this.data.reversalProcessed.getFullYear()}`;
+        this.form.controls.reversalProcessed.setValue(reversalProcessedDate);
+      } else {
+        const newDate = new Date();
+        const currentDate = `${newDate.getDate()}-${newDate.getMonth() + 1}-${newDate.getFullYear()}`;
+        this.form.controls.reversalProcessed.setValue(currentDate);
       }
 
       if (this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){

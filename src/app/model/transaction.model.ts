@@ -168,9 +168,7 @@ export class TransactionItemFull {
 				'dd-MM-YYYY HH:mm:ss:SSS'
 			) as string;
 
-			const newDate = new Date();
-			const currentDate = `${newDate.getDate()}-${newDate.getMonth() + 1}-${newDate.getFullYear()}`;
-			this.reversalProcessed = (data.reversalProcessed) ? new Date(data.reversalProcessed) : new Date(currentDate);
+			this.reversalProcessed = (data.reversalProcessed) ? new Date(data.reversalProcessed) : undefined;
 			this.isReversalProcessed = data.reversalProcessed ? true : false;
 			
 			if (data.liquidityOrder?.executingResult) {
