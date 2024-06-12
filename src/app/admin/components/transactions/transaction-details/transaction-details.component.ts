@@ -517,10 +517,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.paymentOrderChanges.recallNumber = this.form.controls.recallNumber.value ?? undefined;
-    this.paymentOrderChanges.reversalProcessed = getFormattedUtcDate(
+    this.paymentOrderChanges.reversalProcessed = this.form.controls.isReversalProcessed.value === true ? getFormattedUtcDate(
       this.form.controls.reversalProcessed.value ?? '',
       '-'
-    );
+    ) : null;
     
     const transactionToUpdate: TransactionUpdateInput = {
       destination: this.form.controls.address.value,

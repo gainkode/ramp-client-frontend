@@ -186,7 +186,7 @@
                 </ng-select>
               </div>
 
-              <div class="row" *ngIf="form.controls.transactionStatus.value === TRANSACTION_STATUS.Chargeback">  
+              <div class="row" *ngIf="form.controls.transactionStatus.value === TRANSACTION_STATUS.Chargeback || form.controls.transactionStatus.value === TRANSACTION_STATUS.Refund">  
                 <div class="col-lg-4 col-md-12">
                   <div class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
