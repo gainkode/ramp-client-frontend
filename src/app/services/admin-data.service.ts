@@ -3442,7 +3442,7 @@ export class AdminDataService {
 			flag: filter?.transactionFlag,
       transactionWasEverCompleted: filter?.transactionWasEverCompleted,
       recallNumber: filter?.recallNumber,
-      isReversalProcessed: filter?.isReversalProcessed,
+      reversalProcessedDateInterval: filter?.reversalProcessedInterval,
       hasRecallNumber: filter?.hasRecallNumber,
 			preauth: filter?.preauthFlag,
 			fiatCurrency: filter?.fiatCurrency,
