@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateAdapter, NgbDateParserFormatter, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
 import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput, TransactionUpdatePaymentOrderChanges } from 'model/generated-models';
@@ -17,11 +17,17 @@ import { getFormattedUtcDate, getTransactionAmountHash, getTransactionStatusHash
 import { TransactionRecallModalComponent, TransactionRefundModalComponent } from '..';
 import { NUMBER_PATTERN } from 'utils/constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DateParserFormatter } from 'admin/misc/date-range/date.formatter';
+import { DateFormatAdapter } from 'admin/misc/date-range/date-format.adapter';
 
 @Component({
   selector: 'app-admin-transaction-details',
   templateUrl: 'transaction-details.component.html',
-  styleUrls: ['transaction-details.component.scss', '../../../assets/scss/_validation.scss']
+  styleUrls: ['transaction-details.component.scss', '../../../assets/scss/_validation.scss'],
+  providers: [
+		{ provide: NgbDateAdapter, useClass: DateFormatAdapter },
+		{ provide: NgbDateParserFormatter, useClass: DateParserFormatter },
+	],
 })
 export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('originalorderid_confirm_content') originalOrderIdDialogContent: ElementRef | undefined = undefined;
