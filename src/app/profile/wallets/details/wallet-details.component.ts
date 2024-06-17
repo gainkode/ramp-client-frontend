@@ -38,7 +38,6 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
     @Output() onComplete = new EventEmitter<ProfileItemContainer>();
 
     editMode = false;
-    deleteMode = false;
     inProgress = false;
     errorMessage = '';
     receiveButton = '';
@@ -131,34 +130,5 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
     		item.meta = 'withdrawal';
     	}
     	this.onComplete.emit(item);
-    }
-
-    requestDeleteWallet(): void {
-    	this.deleteMode = true;
-    }
-
-    deleteWallet(): void {
-    	this.errorMessage = '';
-    	this.inProgress = true;
-    	this.subscriptions.add(
-    		this.profileService.deleteMyVault(this.walletData?.vault ?? '').subscribe(({ data }) => {
-    			this.inProgress = false;
-    			if (data && data.deleteMyVault) {
-    				const item = new ProfileItemContainer();
-    				item.container = ProfileItemContainerType.Wallet;
-    				item.action = ProfileItemActionType.Remove;
-    				item.wallet = new WalletItem(null, '', undefined);
-    				item.wallet.vault = this.walletData?.vault ?? '';
-    				this.onComplete.emit(item);
-    			}
-    		}, (error) => {
-    			this.inProgress = false;
-    			this.errorMessage = this.errorHandler.getError(error.message, `Unable to remove the wallet`);
-    		})
-    	);
-    }
-
-    cancelDelete(): void {
-    	this.deleteMode = false;
     }
 }

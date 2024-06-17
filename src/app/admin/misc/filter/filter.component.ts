@@ -63,7 +63,7 @@ const defaultFilterFields: FilterField[] = [
 	{ name: 'Hide zero balance', value: 'zeroBalance', groupName: GroupFieldName.None },
 	{ name: 'Has recall number', value: 'hasRecallNumber', groupName: GroupFieldName.Payment },
 	{ name: 'Recall number ', value: 'recallNumber', groupName: GroupFieldName.Payment },
-	{ name: 'Reversal processed', value: 'reversalProcessed', groupName: GroupFieldName.Payment },
+	{ name: 'Reversal date', value: 'reversalProcessed', groupName: GroupFieldName.Payment },
 ];
 
 @Component({

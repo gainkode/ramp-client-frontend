@@ -203,7 +203,7 @@
                 <div class="col-lg-8 col-md-12" *ngIf="form.controls.isReversalProcessed.value">
                     <div class="form-group">
                       <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                        Reversal processed
+                        Reversal date
                       </label>
                       <input #reversal_picker="ngbDatepicker" class="form-control" placeholder="dd/mm/yyyy" name="reversal_picker"
                         ngbDatepicker formControlName="reversalProcessed" (click)="reversal_picker.toggle()">

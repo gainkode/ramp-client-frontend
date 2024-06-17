@@ -225,8 +225,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
     			walletPanel.addWallet(container.wallet);
     		} else if (container.action === ProfileItemActionType.List) {
     			walletPanel.reload();
-    		} else if (container.action === ProfileItemActionType.Remove) {
-    			walletPanel.removeWallet(container.wallet.vault);
     		} else if (container.action === ProfileItemActionType.Redirect) {
     			this.presetCurrency = container.wallet?.asset ?? '';
     			this.presetWalletId = container.wallet?.id ?? '';

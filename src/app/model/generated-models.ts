@@ -259,6 +259,12 @@ export type BlackCountryListResult = {
   list?: Maybe<Array<BlackCountry>>;
 };
 
+export type BlockchainObject = {
+  __typename?: 'BlockchainObject';
+  assets?: Maybe<Array<VaultAccountAsset>>;
+  permanentAddresses?: Maybe<Array<Maybe<VaultAccountAssetAddress>>>;
+};
+
 export type BuyOrSellStats = BaseStat & {
   __typename?: 'BuyOrSellStats';
   abandoned?: Maybe<TransactionStatsVolume>;
@@ -2530,7 +2536,7 @@ export type Query = {
   myKycInfo?: Maybe<KycInfo>;
   myKycStatus: Scalars['String']['output'];
   /** This endpoint can be used to get all wallets of the current user with their description. */
-  myNewWallets?: Maybe<Array<Maybe<VaultAccount>>>;
+  myNewWallets?: Maybe<Array<Maybe<WalletAccount>>>;
   /** Get notifications for current user */
   myNotifications?: Maybe<UserNotificationListResult>;
   /** Transaction history for the current user */
@@ -4017,7 +4023,7 @@ export type Transaction = {
   requiredFields?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
   requiredUserTierId?: Maybe<Scalars['String']['output']>;
-  reversalProcessed?: Maybe<Scalars['String']['output']>;
+  reversalProcessed?: Maybe<Scalars['DateTime']['output']>;
   risk: RiskLevel;
   riskCodes?: Maybe<Array<Scalars['String']['output']>>;
   screeningAnswer?: Maybe<Scalars['String']['output']>;
@@ -4236,7 +4242,7 @@ export type TransactionShort = {
   requiredFields?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;
   requiredUserTierId?: Maybe<Scalars['String']['output']>;
-  reversalProcessed?: Maybe<Scalars['String']['output']>;
+  reversalProcessed?: Maybe<Scalars['DateTime']['output']>;
   risk: RiskLevel;
   riskCodes?: Maybe<Array<Scalars['String']['output']>>;
   screeningAnswer?: Maybe<Scalars['String']['output']>;
@@ -5363,6 +5369,7 @@ export type VaultAccountAssetAddress = {
   addressFormat?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   legacyAddress?: Maybe<Scalars['String']['output']>;
+  permanent?: Maybe<Scalars['Boolean']['output']>;
   type?: Maybe<Scalars['String']['output']>;
 };
 
@@ -5402,6 +5409,18 @@ export type VersionCommit = {
   message?: Maybe<Scalars['String']['output']>;
   previous?: Maybe<Scalars['String']['output']>;
   revision?: Maybe<Scalars['String']['output']>;
+};
+
+export type WalletAccount = {
+  __typename?: 'WalletAccount';
+  blockchainObject?: Maybe<Array<Maybe<BlockchainObject>>>;
+  custodyProviderLink?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  rawData?: Maybe<Scalars['String']['output']>;
+  total?: Maybe<Scalars['Float']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
+  vaultSettings?: Maybe<VaultSettings>;
 };
 
 export enum WalletAssetStatus {
