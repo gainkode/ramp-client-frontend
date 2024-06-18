@@ -604,13 +604,13 @@
                     Decline Payment
                   </button>
         
-                  <button *ngIf="!isReceiveTransactionType && data?.hasToBeRefunded"
+                  <!-- <button *ngIf="!isReceiveTransactionType && data?.hasToBeRefunded"
                     class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
                     (click)="onRecallNumberModal(false, true)">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Refund
-                  </button>
+                  </button> -->
                 </div>
                 <div class="d-flex justify-content-end">
                   <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit()">
