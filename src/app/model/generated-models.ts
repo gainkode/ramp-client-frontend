@@ -405,6 +405,7 @@ export type CreateLiquidityExchangeOrderParams = {
 
 export type CreateOrUpdateVaultAccountInput = {
   autoFuel?: InputMaybe<Scalars['Boolean']['input']>;
+  color?: InputMaybe<Scalars['String']['input']>;
   defaultVault?: InputMaybe<Scalars['Boolean']['input']>;
   hiddenOnUI?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -1714,17 +1715,26 @@ export type MutationExecuteTransactionArgs = {
 
 
 export type MutationExportTransactionsToCsvArgs = {
+  accountModesOnly?: InputMaybe<Array<InputMaybe<UserMode>>>;
   accountStatusesOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   accountTypesOnly?: InputMaybe<Array<UserType>>;
   completedDateInterval?: InputMaybe<DateTimeInterval>;
   countriesOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   countryCodeType?: InputMaybe<CountryCodeType>;
   createdDateInterval?: InputMaybe<DateTimeInterval>;
+  fiatCurrency?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
+  flag?: InputMaybe<Scalars['Boolean']['input']>;
+  hasRecallNumber?: InputMaybe<Scalars['Boolean']['input']>;
+  kycStatusesOnly?: InputMaybe<Array<TransactionKycStatus>>;
   orderBy?: InputMaybe<Array<OrderBy>>;
   paymentInstrumentsOnly?: InputMaybe<Array<PaymentInstrument>>;
   paymentProvidersOnly?: InputMaybe<Array<Scalars['String']['input']>>;
+  preauth?: InputMaybe<Scalars['Boolean']['input']>;
+  recallNumber?: InputMaybe<Scalars['String']['input']>;
+  recallRegisteredDateInterval?: InputMaybe<DateTimeInterval>;
+  reversalProcessedDateInterval?: InputMaybe<DateTimeInterval>;
   riskLevelsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   sendersOrReceiversOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -1733,8 +1743,11 @@ export type MutationExportTransactionsToCsvArgs = {
   transactionIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   transactionStatusesOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   transactionTypesOnly?: InputMaybe<Array<TransactionType>>;
+  transactionWasEverCompleted?: InputMaybe<Scalars['Boolean']['input']>;
+  updateDateInterval?: InputMaybe<DateTimeInterval>;
   userIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   userTierLevelsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
+  verifyWhenPaid?: InputMaybe<Scalars['Boolean']['input']>;
   walletAddressOnly?: InputMaybe<Scalars['String']['input']>;
   widgetIdsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
 };
@@ -1972,7 +1985,8 @@ export type MutationUpdateMyContactArgs = {
 
 
 export type MutationUpdateMyVaultArgs = {
-  vaultId?: InputMaybe<Scalars['String']['input']>;
+  color?: InputMaybe<Scalars['String']['input']>;
+  vaultId: Scalars['String']['input'];
   vaultName: Scalars['String']['input'];
 };
 
@@ -2057,7 +2071,7 @@ export type MutationUpdateUserFlagArgs = {
 
 export type MutationUpdateUserVaultArgs = {
   userId: Scalars['ID']['input'];
-  vaultId?: InputMaybe<Scalars['String']['input']>;
+  vaultId: Scalars['String']['input'];
   vaultName: Scalars['String']['input'];
 };
 
@@ -2258,8 +2272,9 @@ export type PaymentOrder = {
   providerSpecificParams?: Maybe<Array<StringMap>>;
   providerSpecificStates?: Maybe<Array<DateMap>>;
   recallNumber?: Maybe<Scalars['String']['output']>;
+  recallRegistered?: Maybe<Scalars['DateTime']['output']>;
   refundOperationSn?: Maybe<Scalars['String']['output']>;
-  reversalProcessed?: Maybe<Scalars['String']['output']>;
+  reversalProcessed?: Maybe<Scalars['DateTime']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   statusReason?: Maybe<Scalars['String']['output']>;
   transactionId?: Maybe<Scalars['String']['output']>;
@@ -2294,6 +2309,7 @@ export type PaymentOrderShort = {
   paymentInfo?: Maybe<Scalars['String']['output']>;
   paymentProcessorName?: Maybe<Scalars['String']['output']>;
   provider: Scalars['String']['output'];
+  recallRegistered?: Maybe<Scalars['DateTime']['output']>;
   reversalProcessed?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   statusReason?: Maybe<Scalars['String']['output']>;
@@ -2940,6 +2956,7 @@ export type QueryGetTransactionsArgs = {
   paymentProvidersOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   preauth?: InputMaybe<Scalars['Boolean']['input']>;
   recallNumber?: InputMaybe<Scalars['String']['input']>;
+  recallRegisteredDateInterval?: InputMaybe<DateTimeInterval>;
   reversalProcessedDateInterval?: InputMaybe<DateTimeInterval>;
   riskLevelsOnly?: InputMaybe<Array<Scalars['String']['input']>>;
   sendersOrReceiversOnly?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -4018,6 +4035,7 @@ export type Transaction = {
   rate?: Maybe<Scalars['Float']['output']>;
   rateFiatToEur?: Maybe<Scalars['Float']['output']>;
   recallNumber?: Maybe<Scalars['String']['output']>;
+  recallRegistered?: Maybe<Scalars['DateTime']['output']>;
   recipientName?: Maybe<Scalars['String']['output']>;
   requestParams?: Maybe<Scalars['String']['output']>;
   requiredFields?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -4456,6 +4474,7 @@ export type TransactionUpdateInput = {
 export type TransactionUpdatePaymentOrderChanges = {
   originalOrderId?: InputMaybe<Scalars['String']['input']>;
   recallNumber?: InputMaybe<Scalars['String']['input']>;
+  recallRegistered?: InputMaybe<Scalars['DateTime']['input']>;
   reversalProcessed?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
