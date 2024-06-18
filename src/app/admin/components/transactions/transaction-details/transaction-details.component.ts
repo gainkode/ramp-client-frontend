@@ -541,7 +541,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
           '-'
         ) : null;
 
-        this.paymentOrderChanges.recallRegistered = this.form.controls.recallRegistered.value ? getFormattedUtcDate(
+        this.paymentOrderChanges.recallRegistered = this.form.controls.recallRegistered.value && this.form.controls.recallNumber.value ? getFormattedUtcDate(
           this.form.controls.recallRegistered.value ?? '',
           '-'
         ) : null;
