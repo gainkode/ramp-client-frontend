@@ -144,7 +144,6 @@ export class TransactionItemFull {
 	merchantFeePercent: number;
 	feePercent: number;
 	currencyCrypto = '';
-	isReversalProcessed: boolean;
 	reversalProcessed: Date | undefined = undefined;
 	recallRegistered: Date | undefined = undefined;
 	recallNumber: string | undefined;
@@ -172,8 +171,6 @@ export class TransactionItemFull {
 			this.reversalProcessed = (data.reversalProcessed) ? new Date(data.reversalProcessed) : undefined;
 			this.recallRegistered = (data.recallRegistered) ? new Date(data.recallRegistered) : undefined;
 
-			this.isReversalProcessed = !!(this.reversalProcessed || this.recallRegistered);
-			
 			if (data.liquidityOrder?.executingResult) {
 				const exchangeExecuteData = JSON.parse(data.liquidityOrder.executingResult);
 
