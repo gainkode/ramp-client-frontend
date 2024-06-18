@@ -4256,6 +4256,7 @@ export type TransactionShort = {
   rate?: Maybe<Scalars['Float']['output']>;
   rateFiatToEur?: Maybe<Scalars['Float']['output']>;
   recallNumber?: Maybe<Scalars['String']['output']>;
+  recallRegistered?: Maybe<Scalars['DateTime']['output']>;
   recipientName?: Maybe<Scalars['String']['output']>;
   requiredFields?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   requiredUserTier?: Maybe<SettingsKycTierShortEx>;

@@ -312,6 +312,7 @@
                                             [minTermLength]="minUsersLengthTerm" notFoundText="No users found"
                                             [loading]="isUsersLoading" [multiple]="true" formControlName="users"
                                             typeToSearchText="Type email or user name"
+                                            [closeOnSelect]="false"
                                             placeholder="Start typing to search users"
                                             [typeahead]="usersSearchInput$">
                                         </ng-select>
@@ -327,6 +328,7 @@
                                             bindValue="id" [minTermLength]="minWidgetsLengthTerm"
                                             notFoundText="No widgets found" [loading]="isWidgetsLoading"
                                             [multiple]="true" formControlName="widgets"
+                                            [closeOnSelect]="false"
                                             typeToSearchText="Type widget identifier"
                                             placeholder="Start typing to search widgets"
                                             [typeahead]="widgetsSearchInput$">
@@ -344,6 +346,7 @@
                                             bindValue="id" [minTermLength]="minWidgetNamesLengthTerm"
                                             notFoundText="No widgets found" [loading]="isWidgetsLoading"
                                             [multiple]="true" formControlName="widgetNames"
+                                            [closeOnSelect]="false"
                                             typeToSearchText="Type widget name"
                                             placeholder="Start typing to search widgets"
                                             [typeahead]="widgetNamesSearchInput$">
@@ -465,7 +468,7 @@
                                     </div>
                                     <div *ngIf="field === 'reversalProcessed'" class="form-group">
                                         <label class="main-content-label tx-11 tx-medium tx-gray-600 d-flex align-items-center justify-content-between mb-1">
-                                            Reversal date
+                                            Refund date
                                             <button type="button" class="close" aria-label="Close" (click)="onFilterRemove(field, ['reversalProcessedStart', 'reversalProcessedEnd'])">
                                                 <span aria-hidden="true" class="tx-20">&times;</span>
                                             </button>
@@ -473,6 +476,18 @@
                                         <app-admin-date-range #reversal_processed_filter
                                             [startField]="filterForm?.controls?.reversalProcessedStart ?? null"
                                             [endField]="filterForm?.controls?.reversalProcessedEnd ?? null">
+                                        </app-admin-date-range>
+                                    </div>
+                                    <div *ngIf="field === 'recallRegistered'" class="form-group">
+                                        <label class="main-content-label tx-11 tx-medium tx-gray-600 d-flex align-items-center justify-content-between mb-1">
+                                            Recall registered date
+                                            <button type="button" class="close" aria-label="Close" (click)="onFilterRemove(field, ['recallRegisteredStart', 'recallRegisteredEnd'])">
+                                                <span aria-hidden="true" class="tx-20">&times;</span>
+                                            </button>
+                                        </label>
+                                        <app-admin-date-range #recall_registered_filter
+                                            [startField]="filterForm?.controls?.recallRegisteredStart ?? null"
+                                            [endField]="filterForm?.controls?.recallRegisteredEnd ?? null">
                                         </app-admin-date-range>
                                     </div>
                                     <div *ngIf="field === 'preauthFlag'" class="form-group">

@@ -186,30 +186,26 @@
                 </ng-select>
               </div>
 
-              <div class="row" *ngIf="form.controls.transactionStatus.value === TRANSACTION_STATUS.Chargeback || form.controls.transactionStatus.value === TRANSACTION_STATUS.Refund">  
-                <div class="col-lg-4 col-md-12">
+              <div class="row" *ngIf="transactionStatusField.value === TRANSACTION_STATUS.Chargeback || transactionStatusField.value === TRANSACTION_STATUS.Refund">  
+                <div class="col-lg-6 col-md-12" *ngIf="form.controls.recallNumber.value">
                   <div class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                      Has reversal processed
+                      Recall registered date
                     </label>
-                    <div class="__tool-bar-block" style="margin-top: 8px">
-                      <div class="__toggle-switch">
-                          <input type="checkbox" id="toggle-button" class="__toggle-switch-slider" formControlName="isReversalProcessed">
-                      </div>
-                    </div>
+                    <input #recall_registered_picker="ngbDatepicker" class="form-control" placeholder="dd/mm/yyyy" name="recall_registered_picker"
+                      ngbDatepicker formControlName="recallRegistered" (click)="recall_registered_picker.toggle()">
                   </div>
                 </div>
-
-                <div class="col-lg-8 col-md-12" *ngIf="form.controls.isReversalProcessed.value">
-                    <div class="form-group">
-                      <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                        Reversal date
-                      </label>
-                      <input #reversal_picker="ngbDatepicker" class="form-control" placeholder="dd/mm/yyyy" name="reversal_picker"
-                        ngbDatepicker formControlName="reversalProcessed" (click)="reversal_picker.toggle()">
-                    </div>
+  
+                <div class="col-lg-6 col-md-12">
+                  <div class="form-group">
+                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                      {{transactionStatusField.value === TRANSACTION_STATUS.Chargeback ? 'Chargeback refunded' : 'Refunded date'}}
+                    </label>
+                    <input #reversal_picker="ngbDatepicker" class="form-control" placeholder="dd/mm/yyyy" name="reversal_picker"
+                      ngbDatepicker formControlName="reversalProcessed" (click)="reversal_picker.toggle()">
+                  </div>
                 </div>
-
               </div>
               <app-admin-details-item label="Transaction SubStatus" [value]="data?.subStatus"></app-admin-details-item>
             

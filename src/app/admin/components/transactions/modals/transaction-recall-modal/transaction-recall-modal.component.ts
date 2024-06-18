@@ -30,7 +30,7 @@ export class TransactionRecallModalComponent {
   }
 
   onSkip(): void {
-    this._dialogRef.close();
+    this._dialogRef.close('skip');
   }
 
   onClose(): void {

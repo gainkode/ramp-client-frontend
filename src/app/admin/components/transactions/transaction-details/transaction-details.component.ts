@@ -97,8 +97,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     refundOrderAddress: this.fb.control<string>(undefined),
     refundOrderAmount: this.fb.control<number>(undefined),
     recallNumber: this.fb.control<string>(undefined),
-    isReversalProcessed: this.fb.control<boolean>(undefined),
     reversalProcessed: this.fb.control<string>(undefined),
+    recallRegistered: this.fb.control<string>(undefined),
   });
 
   private pStatusHash = 0;
@@ -163,6 +163,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     return this.form.controls.merchantFeePercent;
   }
 
+  get transactionStatusField(): AbstractControl | null {
+    return this.form.controls.transactionStatus;
+  }
+
   get merchantFeeFiat(): string {
     return `${((this.merchantFeePercentField.value / 100) * this.data.amountToSpend / this.data.rate).toFixed(8)}, ${this.data.currencyCrypto}`;
   }
@@ -206,11 +210,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.form.controls.transactionStatus.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(value => {
-        if (value === TransactionStatus.Refund) {
+        if (value === TransactionStatus.Refund && this.data.status !== TransactionStatus.Refund) {
           this.onRecallNumberModal(false);
         }
 
-        if (value === TransactionStatus.Chargeback) {
+        if (value === TransactionStatus.Chargeback && this.data.status !== TransactionStatus.Chargeback) {
           if (!this.data.paymentOrder) {
 						this._snackBar.open(`The transaction ${this.data.code} does not have a payment order; therefore, you cannot set the Chargeback status for it. Please either use the Refund status instead or set the Paid status first and then the Chargeback status.`, null, { duration: 10000 });
             this.form.controls.transactionStatus.patchValue(this.data.status);
@@ -301,7 +305,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       dialogRef.afterClosed()
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(result => {
-          if (result === 'close') {
+          if (result === 'close' && this.data.status !== TransactionStatus.Chargeback) {
             this.form.controls.transactionStatus.patchValue(this.data.status);
             return;
           }
@@ -317,6 +321,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
           if (result?.recallNumber) {
             this.form.controls.recallNumber.patchValue(result.recallNumber);
           }
+
+          if (result === 'skip') {
+						this.form.controls.recallNumber.patchValue(null);
+						return;
+					}
       });
     }
   }
@@ -423,7 +432,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         currencyToReceive: this.data.currencyToReceive,
         transactionStatus: this.data.status,
         recallNumber: this.data.recallNumber,
-        isReversalProcessed: this.data.isReversalProcessed,
         kycStatus: this.data.kycStatusValue,
         widgetId: this.data.widgetId,
         accountStatus: this.data.accountStatusValue,
@@ -441,9 +449,16 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         const reversalProcessedDate = `${this.data.reversalProcessed.getDate()}-${this.data.reversalProcessed.getMonth() + 1}-${this.data.reversalProcessed.getFullYear()}`;
         this.form.controls.reversalProcessed.setValue(reversalProcessedDate);
       } else {
+        this.form.controls.reversalProcessed.setValue(undefined);
+      }
+
+      if (this.data.recallRegistered) {
+        const recallRegisteredDate = `${this.data.recallRegistered.getDate()}-${this.data.recallRegistered.getMonth() + 1}-${this.data.recallRegistered.getFullYear()}`;
+        this.form.controls.recallRegistered.setValue(recallRegisteredDate);
+      } else {
         const newDate = new Date();
         const currentDate = `${newDate.getDate()}-${newDate.getMonth() + 1}-${newDate.getFullYear()}`;
-        this.form.controls.reversalProcessed.setValue(currentDate);
+        this.form.controls.recallRegistered.setValue(currentDate);
       }
 
       if (this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
@@ -519,10 +534,18 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.paymentOrderChanges.recallNumber = this.form.controls.recallNumber.value ?? undefined;
-    this.paymentOrderChanges.reversalProcessed = this.form.controls.isReversalProcessed.value === true ? getFormattedUtcDate(
-      this.form.controls.reversalProcessed.value ?? '',
-      '-'
-    ) : null;
+
+    if (this.transactionStatusField.value === TransactionStatus.Chargeback || this.transactionStatusField.value === TransactionStatus.Refund) {
+        this.paymentOrderChanges.reversalProcessed = this.form.controls.reversalProcessed.value ? getFormattedUtcDate(
+          this.form.controls.reversalProcessed.value ?? '',
+          '-'
+        ) : null;
+
+        this.paymentOrderChanges.recallRegistered = this.form.controls.recallRegistered.value ? getFormattedUtcDate(
+          this.form.controls.recallRegistered.value ?? '',
+          '-'
+        ) : null;
+    }
     
     const transactionToUpdate: TransactionUpdateInput = {
       destination: this.form.controls.address.value,

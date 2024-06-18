@@ -28,6 +28,7 @@ export class Filter {
 	public registrationDateInterval?: DateTimeInterval;
 	public updatedDateInterval?: DateTimeInterval;
 	public reversalProcessedInterval?: DateTimeInterval;
+	public recallRegisteredInterval?: DateTimeInterval;
 	public transactionDate?: Date;
 	public walletAddress?: string;
 	public walletIds?: Array<string>;
@@ -168,6 +169,10 @@ export class Filter {
 
 		if (filterValues.reversalProcessedStart || filterValues.reversalProcessedEnd) {
 			this.reversalProcessedInterval = this.getDateTimeRange(filterValues.reversalProcessedStart, filterValues.reversalProcessedEnd);
+		}
+
+		if (filterValues.recallRegisteredStart || filterValues.recallRegisteredEnd) {
+			this.recallRegisteredInterval = this.getDateTimeRange(filterValues.recallRegisteredStart, filterValues.recallRegisteredEnd);
 		}
 
 		if (filterValues.walletAddress) {

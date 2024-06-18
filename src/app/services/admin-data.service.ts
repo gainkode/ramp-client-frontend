@@ -721,6 +721,7 @@ const GET_TRANSACTIONS = gql`
     $recallNumber: String
     $hasRecallNumber: Boolean
     $reversalProcessedDateInterval: DateTimeInterval
+    $recallRegisteredDateInterval: DateTimeInterval
   ) {
     getTransactions(
       transactionIdsOnly: $transactionIdsOnly
@@ -749,6 +750,7 @@ const GET_TRANSACTIONS = gql`
       recallNumber: $recallNumber
       hasRecallNumber: $hasRecallNumber
       reversalProcessedDateInterval: $reversalProcessedDateInterval
+      recallRegisteredDateInterval: $recallRegisteredDateInterval
       preauth: $preauth
       fiatCurrency: $fiatCurrency
       skip: $skip
@@ -915,6 +917,7 @@ const GET_TRANSACTIONS = gql`
         merchantFeePercent
         recallNumber
         reversalProcessed
+        recallRegistered
         paymentOrderRecallNumberLink
         senderName
         recipientName
@@ -3443,6 +3446,7 @@ export class AdminDataService {
       transactionWasEverCompleted: filter?.transactionWasEverCompleted,
       recallNumber: filter?.recallNumber,
       reversalProcessedDateInterval: filter?.reversalProcessedInterval,
+      recallRegisteredDateInterval: filter?.recallRegisteredInterval,
       hasRecallNumber: filter?.hasRecallNumber,
 			preauth: filter?.preauthFlag,
 			fiatCurrency: filter?.fiatCurrency,

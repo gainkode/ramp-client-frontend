@@ -47,6 +47,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   	'preauthFlag',
 		'updatedDate',
 		'reversalProcessed',
+		'recallRegistered',
 		'hasRecallNumber',
 		'recallNumber'
   ];

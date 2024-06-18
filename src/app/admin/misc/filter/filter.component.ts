@@ -63,7 +63,8 @@ const defaultFilterFields: FilterField[] = [
 	{ name: 'Hide zero balance', value: 'zeroBalance', groupName: GroupFieldName.None },
 	{ name: 'Has recall number', value: 'hasRecallNumber', groupName: GroupFieldName.Payment },
 	{ name: 'Recall number ', value: 'recallNumber', groupName: GroupFieldName.Payment },
-	{ name: 'Reversal date', value: 'reversalProcessed', groupName: GroupFieldName.Payment },
+	{ name: 'Refund date', value: 'reversalProcessed', groupName: GroupFieldName.Payment },
+	{ name: 'Recall registered date', value: 'recallRegistered', groupName: GroupFieldName.Payment },
 ];
 
 @Component({
@@ -86,7 +87,8 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 	@ViewChild('registered_filter') registerFilterPicker!: AdminDateRangeComponent;
 	@ViewChild('updated_filter') updateFilterPicker!: AdminDateRangeComponent;
 	@ViewChild('reversal_processed_filter') reversalProcessedFilterPicker!: AdminDateRangeComponent;
-	
+	@ViewChild('recall_registered_filter') recallRegisteredFilterPicker!: AdminDateRangeComponent;
+
 	private filterSubject = new Subject<Filter>();
 
 	sourceOptions = TransactionSourceList;
@@ -404,6 +406,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 			controlsConfig.reversalProcessedStart = [undefined];
 			controlsConfig.reversalProcessedEnd = [undefined];
 		}
+		if (this.fields.includes('recallRegistered')) {
+			controlsConfig.recallRegisteredStart = [undefined];
+			controlsConfig.recallRegisteredEnd = [undefined];
+		}
 
 		this.filterForm = this.formBuilder.group(controlsConfig);
 
@@ -430,6 +436,10 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 		if (this.filterData?.reversalProcessedInterval) {
 			this.filterForm.controls.reversalProcessedStart.setValue(this.filterData?.reversalProcessedInterval.from as Date);
 			this.filterForm.controls.reversalProcessedEnd.setValue(this.filterData?.reversalProcessedInterval.to as Date);
+		}
+		if (this.filterData?.recallRegisteredInterval) {
+			this.filterForm.controls.recallRegisteredStart.setValue(this.filterData?.recallRegisteredInterval.from as Date);
+			this.filterForm.controls.recallRegisteredEnd.setValue(this.filterData?.recallRegisteredInterval.to as Date);
 		}
 	}
 
@@ -476,6 +486,14 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 				this.filterForm.controls.reversalProcessedEnd.setValue(undefined);
 				if (this.reversalProcessedFilterPicker) {
 					this.reversalProcessedFilterPicker.reset();
+				}
+			}
+
+			if (this.originFields.includes('recallRegistered')) {
+				this.filterForm.controls.recallRegisteredStart.setValue(undefined);
+				this.filterForm.controls.recallRegisteredEnd.setValue(undefined);
+				if (this.recallRegisteredFilterPicker) {
+					this.recallRegisteredFilterPicker.reset();
 				}
 			}
 
