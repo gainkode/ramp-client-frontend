@@ -14,7 +14,7 @@ import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ExchangeRateService } from 'services/rate.service';
 import { getFormattedUtcDate, getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
-import { TransactionRecallModalComponent, TransactionRefundModalComponent } from '..';
+import { TransactionRefundModalComponent } from '..';
 import { NUMBER_PATTERN } from 'utils/constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateParserFormatter } from 'admin/misc/date-range/date.formatter';
@@ -210,17 +210,17 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.form.controls.transactionStatus.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(value => {
-        if (value === TransactionStatus.Refund && this.data.status !== TransactionStatus.Refund) {
-          this.onRecallNumberModal(false);
-        }
+        const recallNumber = this.form.controls.recallNumber;
 
-        if (value === TransactionStatus.Chargeback && this.data.status !== TransactionStatus.Chargeback) {
+        if (value === TransactionStatus.Chargeback) {
           if (!this.data.paymentOrder) {
 						this._snackBar.open(`The transaction ${this.data.code} does not have a payment order; therefore, you cannot set the Chargeback status for it. Please either use the Refund status instead or set the Paid status first and then the Chargeback status.`, null, { duration: 10000 });
             this.form.controls.transactionStatus.patchValue(this.data.status);
           } else {
-						this.onRecallNumberModal(true);
+						recallNumber.setValidators([Validators.required]);
           }
+        } else {
+          recallNumber.clearValidators();
         }
 
         if (value === TransactionStatus.Paid) {
@@ -235,6 +235,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
             this.onOriginalOrderModal();
           }
         }
+
+        recallNumber.updateValueAndValidity();
 
         if (!this.data.recallNumber) {
   				this.form.controls.recallNumber.patchValue(null);
@@ -291,41 +293,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
         backdrop: 'static',
         windowClass: 'modalCusSty',
-      });
-    }
-  }
-
-  onRecallNumberModal(isRequired: boolean, isFastSave: boolean = false): void {
-    if (this.data.paymentOrder) {
-      const dialogRef = this.dialog.open(TransactionRecallModalComponent, {
-        width: '500px',
-        data: { isRequired }
-      });
-   
-      dialogRef.afterClosed()
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(result => {
-          if (result === 'close' && this.data.status !== TransactionStatus.Chargeback) {
-            this.form.controls.transactionStatus.patchValue(this.data.status);
-            return;
-          }
-  
-          // continue run update modal if status Refund is settled
-          if (!isRequired && isFastSave) {
-            this.amountChanged = false;
-            this.statusChanged = true;
-        
-            this.onUpdateDialogOpen();
-          } 
-  
-          if (result?.recallNumber) {
-            this.form.controls.recallNumber.patchValue(result.recallNumber);
-          }
-
-          if (result === 'skip') {
-						this.form.controls.recallNumber.patchValue(null);
-						return;
-					}
       });
     }
   }
@@ -649,24 +616,22 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.submitted = true;
 
-    if (this.form.valid) {
-      this.transactionToUpdate = this.getTransactionToUpdate();
+    this.transactionToUpdate = this.getTransactionToUpdate();
 
-      const statusHash = getTransactionStatusHash(
-        this.transactionToUpdate.status,
-        this.transactionToUpdate.kycStatus ?? TransactionKycStatus.KycWaiting,
-        this.transactionToUpdate.accountStatus ?? AccountStatus.Closed);
+    const statusHash = getTransactionStatusHash(
+      this.transactionToUpdate.status,
+      this.transactionToUpdate.kycStatus ?? TransactionKycStatus.KycWaiting,
+      this.transactionToUpdate.accountStatus ?? AccountStatus.Closed);
 
-      const amountHash = getTransactionAmountHash(
-        this.transactionToUpdate.rate ?? this.pDefaultRate,
-        this.transactionToUpdate.amountToSpend ?? 0,
-        this.transactionToUpdate.feePercent ?? 0,
-        this.transactionToUpdate.merchantFeePercent ?? 0);
-        this.statusChanged = this.pStatusHash !== statusHash;
-        this.amountChanged = this.pAmountHash !== amountHash;
-      
-        this.onUpdateDialogOpen();
-    }
+    const amountHash = getTransactionAmountHash(
+      this.transactionToUpdate.rate ?? this.pDefaultRate,
+      this.transactionToUpdate.amountToSpend ?? 0,
+      this.transactionToUpdate.feePercent ?? 0,
+      this.transactionToUpdate.merchantFeePercent ?? 0);
+      this.statusChanged = this.pStatusHash !== statusHash;
+      this.amountChanged = this.pAmountHash !== amountHash;
+    
+    this.onUpdateDialogOpen();
   }
 
   private onUpdateDialogOpen(): void {
@@ -838,8 +803,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     window.open(tradeURL, '_blank');
   }
 
-  navigateToRecallNumber(recallNumber: string): void {
-  	if (this.data.paymentOrderRecallNumberLink) {
+  navigateToRecallNumber(): void {
+  	const recallNumber = this.form.controls.recallNumber.value;
+
+  	if (this.data.paymentOrderRecallNumberLink && recallNumber) {
   		const recallUrl = `${this.data.paymentOrderRecallNumberLink}/${recallNumber}`;
   		window.open(recallUrl, '_blank');
   	}

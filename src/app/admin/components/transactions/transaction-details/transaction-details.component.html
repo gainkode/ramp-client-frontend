@@ -186,7 +186,17 @@
                 </ng-select>
               </div>
 
-              <div class="row" *ngIf="transactionStatusField.value === TRANSACTION_STATUS.Chargeback || transactionStatusField.value === TRANSACTION_STATUS.Refund">  
+              <div class="row" *ngIf="form.controls.transactionStatus.value === TRANSACTION_STATUS.Chargeback || form.controls.transactionStatus.value === TRANSACTION_STATUS.Refund">  
+                <div class="col-lg-6 col-md-12">
+                  <div class="form-group">
+                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                      {{form.controls.transactionStatus.value === TRANSACTION_STATUS.Chargeback ? 'Chargeback refunded' : 'Refunded date'}}
+                    </label>
+                    <input #reversal_picker="ngbDatepicker" class="form-control" placeholder="dd/mm/yyyy" name="reversal_picker"
+                      ngbDatepicker formControlName="reversalProcessed" (click)="reversal_picker.toggle()">
+                  </div>
+                </div>
+  
                 <div class="col-lg-6 col-md-12" *ngIf="form.controls.recallNumber.value">
                   <div class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
@@ -196,17 +206,21 @@
                       ngbDatepicker formControlName="recallRegistered" (click)="recall_registered_picker.toggle()">
                   </div>
                 </div>
+              </div>
+
+              <div class="form-group" *ngIf="form.controls.transactionStatus.value === TRANSACTION_STATUS.Chargeback || form.controls.transactionStatus.value === TRANSACTION_STATUS.Refund">
+                <label class="main-content-label tx-11 tx-medium tx-gray-600">
+                  Recall number
+                </label>
   
-                <div class="col-lg-6 col-md-12">
-                  <div class="form-group">
-                    <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                      {{transactionStatusField.value === TRANSACTION_STATUS.Chargeback ? 'Chargeback refunded' : 'Refunded date'}}
-                    </label>
-                    <input #reversal_picker="ngbDatepicker" class="form-control" placeholder="dd/mm/yyyy" name="reversal_picker"
-                      ngbDatepicker formControlName="reversalProcessed" (click)="reversal_picker.toggle()">
-                  </div>
+                <div class="d-flex align-items-center">
+                  <input class="form-control mr-2" type="text" formControlName="recallNumber" [ngClass]="{'has-error': !form.controls.recallNumber.valid}" required>
+                  <button type="button" [disabled]="!data?.paymentOrderRecallNumberLink" (click)="navigateToRecallNumber()" mat-icon-button>
+                    <mat-icon>link</mat-icon>
+                  </button>
                 </div>
               </div>
+
               <app-admin-details-item label="Transaction SubStatus" [value]="data?.subStatus"></app-admin-details-item>
             
               <div class="form-group pe-none">
@@ -238,18 +252,6 @@
                   <app-admin-details-item label="Risk Codes" [value]="data?.riskCodes"></app-admin-details-item>
                 </div>
               </div>
-
-              <div class="form-group" *ngIf="form.controls.recallNumber.value">
-                <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                  Recall number
-                </label>
-                <mat-chip-listbox>
-                  <mat-chip class="widget-chip" (click)="navigateToRecallNumber(form.controls.recallNumber.value)">
-                    <span class="tx-13">{{form.controls.recallNumber.value}}</span>
-                  </mat-chip>
-                </mat-chip-listbox>
-              </div>
-
             </div>
           </div>
           <div class="col-lg-5 col-md-12">
@@ -603,17 +605,9 @@
                       aria-hidden="true"></span>
                     Decline Payment
                   </button>
-        
-                  <!-- <button *ngIf="!isReceiveTransactionType && data?.hasToBeRefunded"
-                    class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
-                    (click)="onRecallNumberModal(false, true)">
-                    <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-                      aria-hidden="true"></span>
-                    Refund
-                  </button> -->
                 </div>
-                <div class="d-flex justify-content-end">
-                  <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit()">
+                <div class="d-flex justify-content-end" *ngIf="!isReceiveTransactionType" >
+                  <button type="button" [disabled]="!form.valid" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit()">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Save

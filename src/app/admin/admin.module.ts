@@ -95,7 +95,6 @@ import {
 	TransactionLifelineComponent,
 	TransactionSimulationComponent,
 	TransactionRefundModalComponent,
-	TransactionRecallModalComponent
 } from './components/transactions';
 import { MatStepperModule } from '@angular/material/stepper';
 import { RawJsonModule } from 'shared/raw-json/raw-json.module';
@@ -184,7 +183,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 		TransactionLifelineComponent,
 		TransactionSimulationComponent,
-		TransactionRecallModalComponent,
 		TransactionRefundModalComponent,
 		AdminTransactionsComponent, 
 		AdminTransactionDetailsComponent, 
