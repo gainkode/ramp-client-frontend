@@ -214,7 +214,7 @@
                 </label>
   
                 <div class="d-flex align-items-center">
-                  <input class="form-control mr-2" type="text" formControlName="recallNumber" [ngClass]="{'has-error': !form.controls.recallNumber.valid}" required>
+                  <input class="form-control mr-2" type="text" formControlName="recallNumber" [ngClass]="{'has-error': !form.controls.recallNumber.valid}">
                   <button type="button" [disabled]="!data?.paymentOrderRecallNumberLink" (click)="navigateToRecallNumber()" mat-icon-button>
                     <mat-icon>link</mat-icon>
                   </button>
