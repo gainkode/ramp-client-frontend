@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { map, Observable, of } from 'rxjs';
 import { EmptyObject } from 'apollo-angular/types';
-import { TransactionSource, TransactionType, UserBalanceHistoryPeriod } from '../model/generated-models';
+import { MutationAddMyVaultArgs, MutationUpdateMyVaultArgs, TransactionSource, TransactionType, UserBalanceHistoryPeriod } from '../model/generated-models';
 
 const GET_MY_TRANSACTIONS = gql`
   query MyTransactions(
@@ -522,24 +522,14 @@ const ADD_MY_VAULT = gql`
 
 const UPDATE_MY_VAULT = gql`
   mutation UpdateMyVault(
-    $vaultId: String,
+    $vaultId: String!,
     $vaultName: String!
+    $color: String
   ) {
     updateMyVault(
       vaultId: $vaultId
       vaultName: $vaultName
-    ) {
-      name
-    }
-  }
-`;
-
-const DELETE_MY_VAULT = gql`
-  mutation DeleteMyVault(
-    $vaultId: String
-  ) {
-    deleteMyVault(
-      vaultId: $vaultId
+      color: $color
     ) {
       name
     }
@@ -832,7 +822,6 @@ export class ProfileDataService {
 	}
 
 	getMyProfit(fiatCurrency: string, selectPeriod: UserBalanceHistoryPeriod): QueryRef<any, EmptyObject> {
-		const orderFields = [{ orderBy: 'date', desc: true }];
 		return this.apollo.watchQuery<any>({
 			query: GET_MY_PROFIT,
 			variables: {
@@ -917,36 +906,29 @@ export class ProfileDataService {
 		});
 	}
 
-	addMyVault(asset: string, name: String, eth: string): Observable<any> {
-		const walletName = (name === '') ? undefined : name;
-		const ethWallet = (eth === '') ? undefined : eth;
-		const vars = {
-			assetId: asset,
-			vaultName: walletName,
-			originalId: ethWallet,
-			color: 'COLOR'
-		};
+	addMyVault(assetId: string, name: String, eth: string): Observable<any> {
+		const vaultName = (name === '') ? undefined : name;
+		const originalId = (eth === '') ? undefined : eth;
+
 		return this.apollo.mutate({
 			mutation: ADD_MY_VAULT,
-			variables: vars
+			variables: <MutationAddMyVaultArgs>{
+        assetId,
+        vaultName,
+        originalId,
+        color: 'COLOR'
+      }
 		});
 	}
 
-	updateMyVault(vault: string, name: string): Observable<any> {
+	updateMyVault(vaultId: string, vaultName: string): Observable<any> {
+
 		return this.apollo.mutate({
 			mutation: UPDATE_MY_VAULT,
-			variables: {
-				vaultId: vault,
-				vaultName: name
-			},
-		});
-	}
-
-	deleteMyVault(id: string): Observable<any> {
-		return this.apollo.mutate({
-			mutation: DELETE_MY_VAULT,
-			variables: {
-				vaultId: id
+			variables: <MutationUpdateMyVaultArgs>{
+				vaultId,
+				vaultName,
+        color: 'Clore-test'
 			},
 		});
 	}

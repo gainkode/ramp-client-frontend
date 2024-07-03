@@ -105,7 +105,7 @@
 
             <!-- Buttons -->
             <div class="__profile-details-button-container">
-                <button type="button" class="__outlined-button" (click)="receiveStart()">
+                <button type="button" class="__outlined-button" (click)="transactionAction('receive')">
                     <mat-icon style="font-size: 18px;margin-top: 8px;">
                         file_download
                     </mat-icon>
@@ -113,7 +113,7 @@
                         {{receiveButton}}
                     </span>
                 </button>
-                <button type="button" class="__outlined-button __button-wide-separator" (click)="sendStart()">
+                <button type="button" class="__outlined-button __button-wide-separator" (click)="transactionAction('send')">
                     <mat-icon style="font-size: 18px;margin-top: 8px;">
                         file_upload
                     </mat-icon>

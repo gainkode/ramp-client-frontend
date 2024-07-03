@@ -2088,19 +2088,6 @@ const DELETE_WIDGET = gql`
   }
 `;
 
-const DELETE_USER_VAULT = gql`
-mutation DeleteUserVault(
-  $userId: ID!
-  $vaultId: String
-) {
-  deleteUserVault(
-    userId: $userId
-    vaultId: $vaultId
-  ) {
-    userVaultId
-  }
-}
-`;
 
 const UPDATE_USER_VAULT = gql`
 mutation UpdateUserVault(
@@ -4522,21 +4509,6 @@ export class AdminDataService {
 		}).pipe(tap((res) => {
 			this.snackBar.open(
 				`Widget was deleted`,
-				undefined, { duration: 5000 }
-			);
-		}));
-	}
-
-	deleteWallet(vaultId: string, userId: string): Observable<any> {
-		return this.mutate({
-			mutation: DELETE_USER_VAULT,
-			variables: {
-				vaultId,
-				userId
-			}
-		}).pipe(tap((res) => {
-			this.snackBar.open(
-				`Wallet was deleted`,
 				undefined, { duration: 5000 }
 			);
 		}));

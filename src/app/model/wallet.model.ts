@@ -43,9 +43,11 @@ export class WalletItem {
 			this.available = data.available ?? 0;
 			this.availableFiat = data.availableFiat ?? 0;
 			this.name = data.vaultName ?? '';
+			 
 			if (this.asset !== '' && currency) {
 				this.pIconUrl = `assets/svg-crypto/${getCryptoSymbol(currency.code).toLowerCase()}.svg`;
 			}
+
 			if (currency) {
 				this.code = currency.code;
 				this.pCurrencyName = `${currency.display} - ${currency.name.toUpperCase()}`;
@@ -70,14 +72,6 @@ export class WalletItem {
 
 	get availableFullFiat(): string {
 		return `${getCurrencySign(this.asset)}${this.available.toFixed(2)}`;
-	}
-
-	get totalValue(): string {
-		return `${getCurrencySign(this.fiat)}${this.totalFiat.toFixed(2)}`;
-	}
-
-	get totalFullFiat(): string {
-		return `${getCurrencySign(this.asset)}${this.total.toFixed(2)}`;
 	}
 
 	get nameValue(): string {

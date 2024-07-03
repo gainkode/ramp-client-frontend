@@ -1,11 +1,10 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { E } from '@angular/cdk/keycodes';
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { VaultAccount } from 'model/generated-models';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
 import { WalletItem } from 'model/wallet.model';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ProfileDataService } from 'services/profile.service';
@@ -106,29 +105,17 @@ export class ProfileWalletDetailsComponent implements OnDestroy {
     	}
     }
 
-    receiveStart(): void {
+    transactionAction(type: 'receive' | 'send'): void {
     	const item = new ProfileItemContainer();
     	item.container = ProfileItemContainerType.Wallet;
     	item.action = ProfileItemActionType.Redirect;
     	item.wallet = this.walletData;
-    	if (this.walletData?.crypto === true) {
-    		item.meta = 'receive';
-    	} else {
-    		item.meta = 'deposit';
-    	}
-    	this.onComplete.emit(item);
-    }
 
-    sendStart(): void {
-    	const item = new ProfileItemContainer();
-    	item.container = ProfileItemContainerType.Wallet;
-    	item.action = ProfileItemActionType.Redirect;
-    	item.wallet = this.walletData;
-    	if (this.walletData?.crypto === true) {
-    		item.meta = 'send';
-    	} else {
-    		item.meta = 'withdrawal';
-    	}
+			if (type === 'receive') {
+				item.meta = this.walletData?.crypto ? 'receive' : 'deposit';
+			} else {
+				item.meta = this.walletData?.crypto ? 'send' : 'withdrawal';
+			}
     	this.onComplete.emit(item);
     }
 }

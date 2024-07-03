@@ -46,7 +46,6 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     };
 
     private subscriptions: Subscription = new Subscription();
-    private walletsLoaded = false;
 
     constructor(
     	private clipboard: Clipboard,
@@ -94,11 +93,10 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     	this.inProgress = true;
     	this.wallets = [];
     	const walletsData$ = this.profileService.getMyExistingWallets(this.selectedCurrency.symbol).valueChanges.pipe(take(1));
-    	const currentUser = this.auth.user;
-    	const userFiat = currentUser?.defaultFiatCurrency ?? 'EUR';
+
     	this.subscriptions.add(
     		walletsData$.subscribe(({ data }) => {
-					console.log(data);
+
     			const dataList = data.myExistingWallets as WalletShortShortListResult;
     			if (dataList !== null) {
     				const count = dataList?.count ?? 0;
@@ -106,7 +104,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
 							this.useExistingWalletField?.setValue(true);
     					this.wallets = dataList?.list;
     				}
-    				this.walletsLoaded = true;
+    		
     			}
     			this.inProgress = false;
     		}, (error) => {
@@ -114,7 +112,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     			if (this.auth.token !== '') {
     				this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load crypto wallets');
     			} else {
-    				this.router.navigateByUrl('/');
+    				void this.router.navigateByUrl('/');
     			}
     		})
     	);
@@ -153,15 +151,18 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     private createWallet(currency: string, walletName: string, existingWallet: string): void {
     	this.errorMessage = '';
     	this.inProgress = true;
+
     	this.subscriptions.add(
     		this.profileService.addMyVault(
     			currency,
     			walletName,
     			existingWallet).subscribe(({ data }) => {
     			this.inProgress = false;
-    			if (data && data.addMyVault) {
+
+    			if (data?.addMyVault) {
     				const result = data.addMyVault as VaultAccount;
     				let walletAddress = '';
+						
     				result.assets?.forEach(x => {
     					x.addresses?.forEach(a => {
     						if (a.address && a.addressFormat?.toLowerCase() === 'LEGACY') {
@@ -169,6 +170,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     						}
     					});
     				});
+
     				const walletData = {
     					address: walletAddress,
     					assetId: currency,
@@ -178,22 +180,18 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     					vaultId: result.id,
     					vaultName: walletName
     				} as AssetAddressShort;
+
     				const currencyItem = this.cryptoList.find(x => x.symbol === currency);
     				this.wallet = new WalletItem(walletData, this.auth.user?.defaultFiatCurrency ?? 'EUR', currencyItem);
-    				if (walletAddress != '') {
-    					this.complete(ProfileItemActionType.Create);
-    				} else {
-    					this.complete(ProfileItemActionType.List);
-    				}
-    				// this.completeMode = true;
-    				// this.title = 'New wallet created!';
+
+						this.complete(walletAddress !== '' ? ProfileItemActionType.Create : ProfileItemActionType.List);
     			}
     		}, (error) => {
     			this.inProgress = false;
     			if (this.auth.token !== '') {
     				this.errorMessage = this.errorHandler.getError(error.message, `Unable to create a new wallet`);
     			} else {
-    				this.router.navigateByUrl('/');
+    				void this.router.navigateByUrl('/');
     			}
     		})
     	);
