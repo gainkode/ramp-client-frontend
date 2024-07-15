@@ -150,8 +150,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	wallet: [undefined, { validators: [], updateOn: 'change' }]
   });
 
-  termsLink = EnvService.terms_link;
-  privacyLink = EnvService.privacy_link;
+  termsLink = 'https://iramp.io/terms-and-conditions/';
+  privacyLink = 'https://iramp.io/privacy-policy/';
   isBuyButton = false;
   isSellButton = false;
   
