@@ -311,9 +311,11 @@ export enum CallbackStatus {
 }
 
 export enum CallbackType {
+  ExternalAuthGuard = 'ExternalAuthGuard',
   ExternalMonoovaPayoutCallback = 'ExternalMonoovaPayoutCallback',
   ExternalAu10tixCallback = 'externalAu10tixCallback',
   ExternalCoriunderCallback = 'externalCoriunderCallback',
+  ExternalDocumentsCallback = 'externalDocumentsCallback',
   ExternalFibonatixCallback = 'externalFibonatixCallback',
   ExternalFireblocksCallback = 'externalFireblocksCallback',
   ExternalFlashfxCallback = 'externalFlashfxCallback',
@@ -2275,6 +2277,8 @@ export type PaymentOrder = {
   recallRegistered?: Maybe<Scalars['DateTime']['output']>;
   refundOperationSn?: Maybe<Scalars['String']['output']>;
   reversalProcessed?: Maybe<Scalars['DateTime']['output']>;
+  sigantureOriginalId?: Maybe<Scalars['String']['output']>;
+  signedAt?: Maybe<Scalars['DateTime']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   statusReason?: Maybe<Scalars['String']['output']>;
   transactionId?: Maybe<Scalars['String']['output']>;
@@ -2311,6 +2315,8 @@ export type PaymentOrderShort = {
   provider: Scalars['String']['output'];
   recallRegistered?: Maybe<Scalars['DateTime']['output']>;
   reversalProcessed?: Maybe<Scalars['String']['output']>;
+  sigantureOriginalId?: Maybe<Scalars['String']['output']>;
+  signedAt?: Maybe<Scalars['DateTime']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   statusReason?: Maybe<Scalars['String']['output']>;
   transactionId?: Maybe<Scalars['String']['output']>;
@@ -4836,6 +4842,7 @@ export type UserAddressAsset = {
   displayName?: Maybe<Scalars['String']['output']>;
   network?: Maybe<Scalars['String']['output']>;
   originalAssetId?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
   userAddress?: Maybe<Scalars['String']['output']>;
   userAddressAssetId?: Maybe<Scalars['ID']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
@@ -5211,6 +5218,7 @@ export enum UserRoleObjectCode {
   Dashboard = 'DASHBOARD',
   DashboardMerchant = 'DASHBOARD_MERCHANT',
   DashboardWalletBalances = 'DASHBOARD_WALLET_BALANCES',
+  Documents = 'DOCUMENTS',
   Exchanger = 'EXCHANGER',
   Fees = 'FEES',
   Kyc = 'KYC',

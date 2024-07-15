@@ -8,9 +8,7 @@ import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
 import { AdminNotificationsComponent } from './components/notifications/notifications.component';
 import { AdminMessagesComponent } from './components/message/messages.component';
 import { AdminRisksComponent } from './components/risks/risks.component';
-import { AdminCustomersComponent } from './components/users/customers/customers.component';
 import { AdminSystemUsersComponent } from './components/users/system/users.component';
-import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 import { AdminWidgetsComponent } from './components/widgets/widgets.component';
 import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.component';
@@ -22,6 +20,7 @@ import { UserRoleObjectCode } from 'model/generated-models';
 import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, TransactionLifelineComponent, TransactionSimulationComponent } from './components/transactions';
 import { AdminDashboardWrapperComponent, DashboardAdminComponent, DashboardMerchantComponent } from './components/dashboard';
 import { AdminApiKeysComponent, AdminCommonSettingsComponent, AdminCurrencyPairsComponent, FaqPageComponent } from './components/settings';
+import { AdminCustomersComponent } from './components/users/customers';
 
 export const routes: Routes = [
 	{
@@ -152,28 +151,6 @@ export const routes: Routes = [
 				component: AdminUserDevicesComponent,
 				data: { header: 'White List' }
 			},
-			// {
-			// 	path: 'crypto-wallets',
-			// 	data: { code: UserRoleObjectCode.Wallets },
-			// 	canActivate: [AdminGuard],
-			// 	children: [
-			// 		{
-			// 			path: 'users/:userid',
-			// 			component: AdminCryptoWalletsComponent,
-			// 			data: { header: 'Customer crypto wallets' }
-			// 		},
-			// 		{
-			// 			path: 'vaults/:vaultids',
-			// 			component: AdminCryptoWalletsComponent,
-			// 			data: { header: 'Transaction crypto wallets' }
-			// 		},
-			// 		{
-			// 			path: '',
-			// 			component: AdminCryptoWalletsComponent,
-			// 			data: { header: 'Wallets' }
-			// 		},
-			// 	]
-			// },
 			{
 				path: 'fiat-wallets',
 				data: { code: UserRoleObjectCode.Wallets },

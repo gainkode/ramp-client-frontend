@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { NgbDateAdapter, NgbDateParserFormatter, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
-import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput, TransactionUpdatePaymentOrderChanges } from 'model/generated-models';
+import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput, TransactionUpdatePaymentOrderChanges, UserRoleObjectCode } from 'model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, TransactionTypeList, UserStatusList } from 'model/payment.model';
 import { ScreeningAnswer, TransactionItemFull } from 'model/transaction.model';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
@@ -181,6 +181,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   widgetOptions$: Observable<CommonTargetValue[]>;
   isTransactionRefreshing = false;
+  isTransactionDocsAllowed = 0;
   instrumentDetailsData: string[] = [];
   paymentOrderChanges: TransactionUpdatePaymentOrderChanges = {};
 	private readonly unsubscribe$ = new Subject<void>();
@@ -193,7 +194,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     private errorHandler: ErrorService,
     private exchangeRate: ExchangeRateService,
     private _snackBar: MatSnackBar,
-    private adminService: AdminDataService) { }
+    private adminService: AdminDataService) {
+      this.isTransactionDocsAllowed = this.auth.isPermittedObjectCode(UserRoleObjectCode.Documents);
+  }
 
   ngOnInit(): void {
     this.getSettingsCommon();

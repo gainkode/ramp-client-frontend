@@ -62,6 +62,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   sendMessageError = '';
   inProgress = false;
   permission = 0;
+	isCustomerDocsAllowed = 0;
   selectedCustomer?: UserItem;
   selected = false;
   customers: UserItem[] = [];
@@ -93,6 +94,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   		this.filter.users = [filterUserId as string];
   	}
   	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Customers);
+		this.isCustomerDocsAllowed = this.auth.isPermittedObjectCode(UserRoleObjectCode.Documents);
   }
 
   ngOnInit(): void {
@@ -122,10 +124,6 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
 
   showTransactions(id: string): void {
   	void this.router.navigateByUrl(`/admin/transactions/users/${id}`);
-  }
-
-  showWallets(id: string): void {
-  	// void this.router.navigateByUrl(`/admin/crypto-wallets/users/${id}`);
   }
 
   selectAll(): void {
@@ -206,6 +204,7 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   		this.sortedField,
   		this.sortedDesc,
   		this.filter).pipe(take(1));
+			
   	this.selected = false;
 
 	  this.subscriptions.add(

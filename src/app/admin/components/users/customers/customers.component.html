@@ -60,13 +60,6 @@
                           compare_arrows
                         </i>
                       </button>
-                      <button type="button" mat-icon-button class="row-button" matTooltip="Customer's wallets"
-                        matTooltipClass="info-tooltip" [attr.aria-label]="'Customer wallets'"
-                        (click)="showWallets(element.id)">
-                        <i class="material-icons tx-20">
-                          account_balance_wallet
-                        </i>
-                      </button>
                       <button type="button" mat-icon-button class="row-button" matTooltip="White List"
                         matTooltipClass="info-tooltip" [attr.aria-label]="'User roles'" (click)="showWhiteList(element.id)">
                         <i class="material-icons tx-20">
@@ -325,7 +318,7 @@
                   </ng-template>
                   
                 </mat-tab>
-                <mat-tab label="Customer Docs">
+                <mat-tab *ngIf="isCustomerDocsAllowed" label="Customer Docs">
                   <ng-template matTabContent>
                     <app-admin-customer-docs 
                       [userId]="selectedCustomer.id" 

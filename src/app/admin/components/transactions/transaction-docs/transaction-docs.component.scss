@@ -1,0 +1,51 @@
+.inputs-wrap {
+    margin-top: 10px;
+}
+
+.w-500px {
+  width: 500px; 
+}
+
+mat-form-field {
+    margin: 0 16px;
+    width: calc(100% - 32px) !important;
+  
+    &.size-third {
+      width: calc(33.33% - 32px) !important;
+    }
+  
+    &.size-two-third {
+      width: calc(66.66% - 32px) !important;
+    }
+  
+    &.size-smaller {
+      width: calc(40% - 32px) !important;
+    }
+  
+    &.size-wider {
+      width: calc(60% - 32px) !important;
+    }
+}
+
+.create_docs-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 15px;
+}
+
+.docs-wrapper {
+  position: relative;
+  min-height: 300px;
+
+		&.emptyData:after {
+      content: 'No Data';
+      position: absolute;
+      top: 50%;
+      left: 40%;
+		}
+}
+
+.flex {
+  display: flex !important;
+}

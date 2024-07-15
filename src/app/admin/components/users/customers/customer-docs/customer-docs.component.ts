@@ -12,6 +12,7 @@ import { customFilterPredicate } from 'components/data-list/table/filter-predica
 import { HttpEventType } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogBox } from 'components/dialogs/delete-box.dialog';
+import { CustomerDocsStateService } from '../services/customer-docs.state';
 
 @Component({
 	selector: 'app-admin-customer-docs',
@@ -28,6 +29,11 @@ import { DeleteDialogBox } from 'components/dialogs/delete-box.dialog';
 		  ])
 		])
 	  ],
+	providers: [
+		CustomerDocsApi,
+		CustomerDocsStateService,
+		CustomerDocsFacadeService,
+	],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminCustomerDocsComponent implements OnInit, OnDestroy {
