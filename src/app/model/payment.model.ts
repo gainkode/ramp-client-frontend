@@ -186,16 +186,19 @@ export class CurrencyView {
 	constructor(data: SettingsCurrency) {
 		this.symbol = data.symbol;
 		this.code = data.symbol;
+
 		if (data.displaySymbol) {
 			this.code = data.displaySymbol;
 		}
+		
 		this.currencyBlockchain = data.currencyBlockchain;
+		
 		if (data.currencyBlockchain === CurrencyBlockchain.Ethereum) {
 			this.stable = true;
-			this.display = `${this.code} (ERC20)`;
+			this.display = `${this.code}`;
 		} else if (data.currencyBlockchain === CurrencyBlockchain.Tron) {
 			this.stable = true;
-			this.display = `${this.code} (TRC20)`;
+			this.display = `${this.code}`;
 		} else {
 			this.display = this.code;
 		}

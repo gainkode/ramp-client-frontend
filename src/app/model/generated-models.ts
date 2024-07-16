@@ -311,9 +311,11 @@ export enum CallbackStatus {
 }
 
 export enum CallbackType {
+  ExternalAuthGuard = 'ExternalAuthGuard',
   ExternalMonoovaPayoutCallback = 'ExternalMonoovaPayoutCallback',
   ExternalAu10tixCallback = 'externalAu10tixCallback',
   ExternalCoriunderCallback = 'externalCoriunderCallback',
+  ExternalDocumentsCallback = 'externalDocumentsCallback',
   ExternalFibonatixCallback = 'externalFibonatixCallback',
   ExternalFireblocksCallback = 'externalFireblocksCallback',
   ExternalFlashfxCallback = 'externalFlashfxCallback',
@@ -2275,6 +2277,8 @@ export type PaymentOrder = {
   recallRegistered?: Maybe<Scalars['DateTime']['output']>;
   refundOperationSn?: Maybe<Scalars['String']['output']>;
   reversalProcessed?: Maybe<Scalars['DateTime']['output']>;
+  sigantureOriginalId?: Maybe<Scalars['String']['output']>;
+  signedAt?: Maybe<Scalars['DateTime']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   statusReason?: Maybe<Scalars['String']['output']>;
   transactionId?: Maybe<Scalars['String']['output']>;
@@ -2311,6 +2315,8 @@ export type PaymentOrderShort = {
   provider: Scalars['String']['output'];
   recallRegistered?: Maybe<Scalars['DateTime']['output']>;
   reversalProcessed?: Maybe<Scalars['String']['output']>;
+  sigantureOriginalId?: Maybe<Scalars['String']['output']>;
+  signedAt?: Maybe<Scalars['DateTime']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   statusReason?: Maybe<Scalars['String']['output']>;
   transactionId?: Maybe<Scalars['String']['output']>;
@@ -2371,6 +2377,34 @@ export enum PaymentProviderPayoutType {
   All = 'all',
   Benchmark = 'benchmark'
 }
+
+export type PlatformInfo = {
+  __typename?: 'PlatformInfo';
+  adminFont?: Maybe<Scalars['String']['output']>;
+  apiTimeout?: Maybe<Scalars['Int']['output']>;
+  baseColor?: Maybe<Scalars['String']['output']>;
+  cookieLink?: Maybe<Scalars['String']['output']>;
+  cryptoWidgetBgMask?: Maybe<Scalars['Boolean']['output']>;
+  cryptoWidgetBgName?: Maybe<Scalars['String']['output']>;
+  cryptoWidgetFinishLink?: Maybe<Scalars['String']['output']>;
+  googleId?: Maybe<Scalars['String']['output']>;
+  mainFont?: Maybe<Scalars['String']['output']>;
+  privacyLink?: Maybe<Scalars['String']['output']>;
+  product?: Maybe<Scalars['String']['output']>;
+  productFull?: Maybe<Scalars['String']['output']>;
+  recaptchaId?: Maybe<Scalars['String']['output']>;
+  recaptchaProvider?: Maybe<Scalars['String']['output']>;
+  recaptchaSiteKey?: Maybe<Scalars['String']['output']>;
+  showBuySell?: Maybe<Scalars['Boolean']['output']>;
+  showCookie?: Maybe<Scalars['Boolean']['output']>;
+  showCreateTransactionUpdateRate?: Maybe<Scalars['Boolean']['output']>;
+  showDepositWithdrawal?: Maybe<Scalars['Boolean']['output']>;
+  showExpressTransfer?: Maybe<Scalars['Boolean']['output']>;
+  showPrivacy?: Maybe<Scalars['Boolean']['output']>;
+  showTerms?: Maybe<Scalars['Boolean']['output']>;
+  supportEmail?: Maybe<Scalars['String']['output']>;
+  termsLink?: Maybe<Scalars['String']['output']>;
+};
 
 export type PostAddress = {
   addressEndDate?: InputMaybe<Scalars['DateTime']['input']>;
@@ -2452,6 +2486,7 @@ export type Query = {
   getOpenBankingDetails?: Maybe<OpenBankingDetails>;
   /** Get payment providers */
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  getPlatformInfo: PlatformInfo;
   /** Get common settings */
   getPreSettingsCommon?: Maybe<PreSettingsCommon>;
   /** Get the exchange rate of several currencies to one */
@@ -4836,6 +4871,7 @@ export type UserAddressAsset = {
   displayName?: Maybe<Scalars['String']['output']>;
   network?: Maybe<Scalars['String']['output']>;
   originalAssetId?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
   userAddress?: Maybe<Scalars['String']['output']>;
   userAddressAssetId?: Maybe<Scalars['ID']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
@@ -5211,6 +5247,7 @@ export enum UserRoleObjectCode {
   Dashboard = 'DASHBOARD',
   DashboardMerchant = 'DASHBOARD_MERCHANT',
   DashboardWalletBalances = 'DASHBOARD_WALLET_BALANCES',
+  Documents = 'DOCUMENTS',
   Exchanger = 'EXCHANGER',
   Fees = 'FEES',
   Kyc = 'KYC',

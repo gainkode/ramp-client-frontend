@@ -68,6 +68,7 @@ $font_main: var(--font_main);
     transition: background-color .2s;
     &--dark {
         background-color: $color_black !important;
+        height: 100vh;
         .widget__container-2 {
             background-color: $color_black !important;
             transition: background-color .2s;

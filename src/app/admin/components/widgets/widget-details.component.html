@@ -7,6 +7,7 @@
             <h5 class="card-title mg-b-20">
               Widget Data
             </h5>
+            
             <app-admin-details-item label="Widget ID" [value]="widgetDetails?.id || ''">
             </app-admin-details-item>
             <app-admin-details-item label="Widget link" [value]="widgetDetails?.maskLink || ''">
@@ -102,7 +103,7 @@
                       Allow to pay if kyc failed
                     </div>
                 </div>
-                <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__tool-bar-block mg-l-10-f">
                     <div class="__toggle-switch">
                         <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
                             formControlName="allowToPayIfKycFailed">
@@ -117,7 +118,7 @@
                       New Vault Per Transaction 
                     </div>
                 </div>
-                <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__tool-bar-block mg-l-10-f">
                     <div class="__toggle-switch">
                         <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
                             formControlName="newVaultPerTransaction">
@@ -133,7 +134,7 @@
                       Kyc Before Payment
                     </div>
                 </div>
-                <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__tool-bar-block mg-l-10-f">
                     <div class="__toggle-switch">
                         <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
                             formControlName="kycBeforePayment">
@@ -149,7 +150,7 @@
                       Disclaimer
                     </div>
                 </div>
-                <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__tool-bar-block mg-l-10-f">
                     <div class="__toggle-switch">
                         <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
                             formControlName="disclaimer">
@@ -165,7 +166,7 @@
                       2FA
                     </div>
                 </div>
-                <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__tool-bar-block mg-l-10-f">
                     <div class="__toggle-switch">
                         <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
                             formControlName="twoFA">
@@ -181,7 +182,7 @@
                       Show Rate
                     </div>
                 </div>
-                <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__tool-bar-block mg-l-10-f">
                     <div class="__toggle-switch">
                         <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
                             formControlName="showRate">
@@ -197,7 +198,7 @@
                       Mask
                     </div>
                 </div>
-                <div class="__tool-bar-block" style="margin-left: 10px">
+                <div class="__tool-bar-block mg-l-10-f">
                     <div class="__toggle-switch">
                         <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
                             formControlName="masked">
@@ -216,12 +217,12 @@
               <table mat-table [dataSource]="currenciesTable">
                 <ng-container matColumnDef="details">
                   <th *matHeaderCellDef>
-                    <i class="material-icons cursor-icon" style="font-size: 20px;" (click)="addWidgetDestinationAddress()">
+                    <i class="material-icons cursor-icon tx-20" (click)="addWidgetDestinationAddress()">
                       add_circle
                     </i>
                   </th>
                   <td *matCellDef="let element">
-                    <i class="material-icons cursor-icon" style="font-size: 20px;" (click)="delWidgetDestinationAddress(element)">
+                    <i class="material-icons cursor-icon tx-20" (click)="delWidgetDestinationAddress(element)">
                       cancel
                     </i>
                   </td>
@@ -268,12 +269,12 @@
               <table mat-table [dataSource]="merchantFeeDestinationCurrencies">
                 <ng-container matColumnDef="details">
                   <th *matHeaderCellDef>
-                    <i class="material-icons cursor-icon" style="font-size: 20px;" (click)="addMerchantFeeDestinationAddress()">
+                    <i class="material-icons cursor-icon tx-20" (click)="addMerchantFeeDestinationAddress()">
                       add_circle
                     </i>
                   </th>
                   <td *matCellDef="let element">
-                    <i class="material-icons cursor-icon" style="font-size: 20px;" (click)="delMerchantFeeDestinationAddress(element)">
+                    <i class="material-icons cursor-icon tx-20" (click)="delMerchantFeeDestinationAddress(element)">
                       cancel
                     </i>
                   </td>
@@ -403,16 +404,18 @@
           </div>
     
           <div class="d-flex justify-content-end">
-            <button *ngIf="permission>1" class="btn btn-primary pd-x-30 me-2 mg-t-5">
-              <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-              Save
-            </button>
-            <button *ngIf="permission>1" class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button"
-              (click)="onDeleteWidget(delete_confirm_content)">
-              <span *ngIf="deleteInProgress" class="spinner-border spinner-border-sm" role="status"
-                aria-hidden="true"></span>
-              Delete
-            </button>
+            <ng-contrainer *ngIf="permission > 1">
+              <button type="submit"class="btn btn-primary pd-x-30 me-2 mg-t-5">
+                <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Save
+              </button>
+              <button class="btn btn-danger pd-x-30 me-2 mg-t-5" type="button" (click)="onDeleteWidget(delete_confirm_content)">
+                <span *ngIf="deleteInProgress" class="spinner-border spinner-border-sm" role="status"
+                  aria-hidden="true"></span>
+                Delete
+              </button>
+            </ng-contrainer>
+          
             <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="close.emit()">
               Close
             </button>
@@ -435,14 +438,14 @@
     </button>
   </div>
   <div class="modal-body">
-    <h4 style="text-align: center;">
+    <h4 class="text-center">
       You are going to delete selected widget. Confirm operation.
     </h4>
-    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+    <div class="d-flex justify-content-center align-items-center">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button class="btn btn-danger pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
+      <button type="button" class="btn btn-danger pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
         Confirm
       </button>
     </div>

@@ -5,7 +5,7 @@ import { Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms'
 import { LoginResult, UserType } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
 import { Subscription } from 'rxjs';
-import { EnvService } from 'services/env.service';
+import { AppConfig } from 'core/app-config';
 
 @Component({
 	selector: 'app-signup-panel',
@@ -102,10 +102,11 @@ export class SignUpPanelComponent implements OnInit, OnDestroy {
     constructor(
     	private auth: AuthService,
     	private errorHandler: ErrorService,
+			private config: AppConfig,
     	private formBuilder: UntypedFormBuilder) {
-    	this.termsLink = EnvService.terms_link;
-    	this.privacyLink = EnvService.privacy_link;
-    	this.showPrivacyLink = EnvService.show_privacy_link;
+    	this.termsLink = this.config.platformInfo.termsLink;
+    	this.privacyLink = this.config.platformInfo.privacyLink;
+    	this.showPrivacyLink = this.config.platformInfo.showPrivacy;
     }
 
     ngOnInit(): void {
