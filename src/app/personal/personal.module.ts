@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -69,8 +69,5 @@ export class MaterialModule { }
 		// Profile main
 		PersonalComponent],
 	providers: [PersonalGuard],
-	schemas: [
-		CUSTOM_ELEMENTS_SCHEMA
-	]
 })
 export class PersonalModule { }

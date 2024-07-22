@@ -18,7 +18,7 @@ export class WalletValidator {
 			const currencyControl = group.controls[currencyField];
 			const transactionControl = group.controls[transactionField];
 
-			if (!addressControl || addressControl?.value?.length === 0 || addressControl?.value == '' || !currencyControl || !transactionControl) {
+			if (!addressControl || addressControl?.value?.length === 0 || addressControl?.value === '' || !currencyControl || !transactionControl) {
 				return null;
 			}
 			if (transactionControl.value !== TransactionType.Buy) {

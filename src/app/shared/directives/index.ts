@@ -1,0 +1,1 @@
+export * from './address-validator/address-validator.component';

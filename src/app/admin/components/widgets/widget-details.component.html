@@ -25,7 +25,7 @@
                 typeToSearchText="Type email or user name" placeholder="Start typing to search a user"
                 [typeahead]="usersSearchInput$" required>
               </ng-select>
-              <div *ngIf="(form.controls.user.touched || submitted) && (form.controls.user.errors?.['required'])"
+              <div *ngIf="(form.controls.user.touched) && (form.controls.user.errors?.['required'])"
                 class="tx-danger">
                 <small>
                   Please specify a user
@@ -39,9 +39,9 @@
                 <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
               </label>
               <input class="form-control"
-                [ngClass]="{'has-error': (form.controls.name.touched || submitted) && !form.controls.name.valid}"
+                [ngClass]="{'has-error': (form.controls.name.touched) && !form.controls.name.valid}"
                 type="text" formControlName="name" maxlength="50" required>
-              <div *ngIf="(form.controls.name.touched || submitted) && (form.controls.name.errors?.['required'])"
+              <div *ngIf="(form.controls.name.touched) && (form.controls.name.errors?.['required'])"
                 class="tx-danger">
                 <small>
                   Widget name is required
@@ -233,10 +233,18 @@
                       Currency
                     </th>
                     <td *matCellDef="let element" class="widget-list-data-column">
-                      <ng-select [(ngModel)]="element.currency" [ngModelOptions]="{standalone: true}" [items]="currencyOptionsCrypto" bindLabel="display" bindValue="symbol" 
-                        [clearable]=true [clearOnBackspace]=true [multiple]="false" [closeOnSelect]="false">
+                      <ng-select 
+                        (change)="element.destination = ''"
+                        [(ngModel)]="element.currency" 
+                        [ngModelOptions]="{standalone: true}" 
+                        [items]="currencyDestinationOptions" 
+                        bindLabel="display" 
+                        bindValue="symbol" 
+                        [clearable]="false"
+                        [clearOnBackspace]="true" 
+                        [hideSelected]="true"
+                        [closeOnSelect]="true">
                       </ng-select>
-                      <!-- {{element.currency}} -->
                     </td>
                   </ng-container>
         
@@ -244,15 +252,19 @@
                     <th *matHeaderCellDef>
                       Destination
                     </th>
-                    <td *matCellDef="let element" class="widget-list-data-column">
-                      <input class="form-control"
-                      type="text" [(ngModel)]="element.destination" maxlength="50" [ngModelOptions]="{standalone: true}" [required]="destinationRequired">
-                      <div *ngIf="destinationRequired && !element.destination"
-                        class="tx-danger">
-                        <small>
-                          Destination is required
-                        </small>
-                      </div>
+                    <td *matCellDef="let element; let i = index" class="widget-list-data-column">
+                      <input 
+                        [id]="'input-' + i" 
+                        appAddressValidator
+                        [elCurrency]="element.currency"
+                        [elRequired]="element.destinationRequired"
+                        class="form-control"
+                        [ngClass]="{'has-error': element.destinationRequired && !element.destination}"
+                        type="text" 
+                        [(ngModel)]="element.destination" 
+                        maxlength="50" 
+                        [ngModelOptions]="{standalone: true}" 
+                        [required]="element.destinationRequired">
                     </td>
                   </ng-container>
         
@@ -266,7 +278,7 @@
               Merchant fee destination
             </h5>
             <div class="form-group">
-              <table mat-table [dataSource]="merchantFeeDestinationCurrencies">
+              <table mat-table [dataSource]="merchantFeeDestinationTable">
                 <ng-container matColumnDef="details">
                   <th *matHeaderCellDef>
                     <i class="material-icons cursor-icon tx-20" (click)="addMerchantFeeDestinationAddress()">
@@ -285,10 +297,18 @@
                       Currency
                     </th>
                     <td *matCellDef="let element" class="widget-list-data-column">
-                      <ng-select [(ngModel)]="element.currency" [ngModelOptions]="{standalone: true}" [items]="currencyOptionsCrypto" bindLabel="display" bindValue="symbol" 
-                        [clearable]=true [clearOnBackspace]=true [multiple]="false" [closeOnSelect]="false">
+                      <ng-select 
+                        (change)="element.destination = ''"
+                        [(ngModel)]="element.currency" 
+                        [ngModelOptions]="{standalone: true}" 
+                        [items]="currencyMerchantDestinationOptions" 
+                        bindLabel="display" 
+                        bindValue="symbol" 
+                        [clearable]="false"
+                        [clearOnBackspace]="true" 
+                        [hideSelected]="true"
+                        [closeOnSelect]="true">
                       </ng-select>
-                      <!-- {{element.currency}} -->
                     </td>
                   </ng-container>
         
@@ -296,15 +316,19 @@
                     <th *matHeaderCellDef>
                       Destination
                     </th>
-                    <td *matCellDef="let element" class="widget-list-data-column">
-                      <input class="form-control"
-                      type="text" [(ngModel)]="element.destination" maxlength="50" [ngModelOptions]="{standalone: true}" [required]="destinationRequired">
-                      <div *ngIf="destinationRequired && !element.destination"
-                        class="tx-danger">
-                        <small>
-                          Destination is required
-                        </small>
-                      </div>
+                    <td *matCellDef="let element; let i = index" class="widget-list-data-column">
+                      <input 
+                        [id]="'m-input-' + i" 
+                        appAddressValidator
+                        [elCurrency]="element.currency"
+                        [elRequired]="true"
+                        class="was-validated form-control"
+                        [ngClass]="{'has-error': !element.destination}"
+                        type="text" 
+                        [(ngModel)]="element.destination" 
+                        [ngModelOptions]="{standalone: true}"
+                        maxlength="50"
+                        [required]="true">
                     </td>
                   </ng-container>
         
@@ -362,7 +386,7 @@
                 formControlName="liquidityProvider" [clearable]=false [clearOnBackspace]=false required>
               </ng-select>
               <div
-                *ngIf="(form.controls.liquidityProvider.touched || submitted) && (form.controls.liquidityProvider.errors?.['required'])"
+                *ngIf="(form.controls.liquidityProvider.touched) && (form.controls.liquidityProvider.errors?.['required'])"
                 class="tx-danger">
                 <small>
                   Liquidity provider name is required
@@ -404,8 +428,8 @@
           </div>
     
           <div class="d-flex justify-content-end">
-            <ng-contrainer *ngIf="permission > 1">
-              <button type="submit"class="btn btn-primary pd-x-30 me-2 mg-t-5">
+            <ng-container *ngIf="permission > 1">
+              <button type="submit"class="btn btn-primary pd-x-30 me-2 mg-t-5" [disabled]="!form.valid">
                 <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 Save
               </button>
@@ -414,7 +438,7 @@
                   aria-hidden="true"></span>
                 Delete
               </button>
-            </ng-contrainer>
+            </ng-container>
           
             <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="close.emit()">
               Close

@@ -117,8 +117,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowSelected(row)"></tr>
     </table>
 
-    <mat-mdc-paginator color="accent" *ngIf="(recent) ? false : (notificationCount > pageCounts[0] && notificationCount > 0)"
+    <mat-paginator color="accent" *ngIf="(recent) ? false : (notificationCount > pageCounts[0] && notificationCount > 0)"
         class="__profile-data-table" [pageIndex]="pageIndex" [length]="notificationCount" [pageSize]="pageSize"
         [pageSizeOptions]="pageCounts" showFirstLastButtons (page)="handlePage($event)">
-    </mat-mdc-paginator>
+    </mat-paginator>
 </div>

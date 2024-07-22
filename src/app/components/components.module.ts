@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { QRCodeModule } from 'angularx-qrcode';
@@ -15,6 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
@@ -88,6 +89,7 @@ const materialModules = [
 	MatCheckboxModule,
 	MatSelectModule,
 	MatTooltipModule,
+	MatToolbarModule,
 	MatChipsModule,
 	MatDatepickerModule,
 	MatNativeDateModule,
@@ -202,7 +204,6 @@ const formControlComponents = [
 		ContactsFilterBarComponent,
 		NotificationsFilterBarComponent,
 		WidgetInputGroupComponent
-	],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA],
+	]
 })
 export class ComponentsModule {}
