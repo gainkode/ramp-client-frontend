@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef, WatchQueryOptions } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
 import {
@@ -3055,13 +3055,12 @@ export class AdminDataService {
 			accountTypesOnly: filter.accountTypes,
 			fiatCurrency: filter.fiatCurrency
 		};
+
 		return this.watchQuery<{ getDashboardStats: DashboardStats; }, QueryGetDashboardStatsArgs>({
 			query: GET_DASHBOARD_STATS,
 			variables: vars,
 			fetchPolicy: 'network-only'
-		}).pipe(map(result => {
-			return result.data.getDashboardStats;
-		}));
+		}).pipe(map(result => result.data.getDashboardStats));
 	}
 
 	getDashboardMerchantStats(filter: Filter): Observable<DashboardMerchantStats> {
@@ -3082,9 +3081,7 @@ export class AdminDataService {
 			query: GET_DASHBOARD_MERCHANT_STATS,
 			variables: vars,
 			fetchPolicy: 'network-only'
-		}).pipe(map(result => {
-			return result.data.getDashboardMerchantStats;
-		}));
+		}).pipe(map(result => result.data.getDashboardMerchantStats));
 	}
   
 
