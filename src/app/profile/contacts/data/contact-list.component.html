@@ -131,8 +131,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-mdc-paginator color="accent" *ngIf="contactCount > pageCounts[0] && contactCount > 0"
+    <mat-paginator color="accent" *ngIf="contactCount > pageCounts[0] && contactCount > 0"
         class="__profile-data-table" [pageIndex]="pageIndex" [length]="contactCount"
         [pageSize]="pageSize" [pageSizeOptions]="pageCounts" showFirstLastButtons (page)="handlePage($event)">
-    </mat-mdc-paginator>
+    </mat-paginator>
 </div>

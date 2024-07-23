@@ -60,8 +60,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-mdc-paginator color="accent" *ngIf="keyCount > pageCounts[0] && keyCount > 0"
+    <mat-paginator color="accent" *ngIf="keyCount > pageCounts[0] && keyCount > 0"
         class="__profile-data-table" [pageIndex]="pageIndex" [length]="keyCount" [pageSize]="pageSize"
         [pageSizeOptions]="pageCounts" showFirstLastButtons (page)="handlePage($event)">
-    </mat-mdc-paginator>
+    </mat-paginator>
 </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -17,6 +17,7 @@ import { CommonDataService } from 'services/common-data.service';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
 import { MatTableDataSource } from '@angular/material/table';
 import { NUMBER_PATTERN } from 'utils/constants';
+import { AddressValidatorDirective } from 'shared/directives';
 
 @Component({
 	selector: 'app-admin-widget-details',
@@ -24,6 +25,9 @@ import { NUMBER_PATTERN } from 'utils/constants';
 	styleUrls: ['widget-details.component.scss', '../../assets/scss/_validation.scss']
 })
 export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
+	@ViewChildren(AddressValidatorDirective) inputElements!: QueryList<AddressValidatorDirective>;
+	// @ViewChildren(AddressValidatorDirective) inputElements!: QueryList<AddressValidatorDirective>;
+
 	widgetDetails!: WidgetItem;
   @Input() permission = 0;
   @Input()
@@ -48,16 +52,14 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	'minAmount',
 		'maxAmount'
   ];
-  submitted = false;
   isLoading = false;
   saveInProgress = false;
   deleteInProgress = false;
   errorMessage = '';
-  currencyOptionsCrypto: CurrencyView[] = [];
-	currencyOptions: CurrencyView[] = [];
+	currencyDestinationOptions: CurrencyView[] = [];
+	currencyMerchantDestinationOptions: CurrencyView[] = [];
   currenciesTable: any = [];
-	merchantFeeDestinationCurrencies: any = [];
-	currencyAmountsTable: any = [];
+	merchantFeeDestinationTable: any = [];
   currencyOptionsFiat: CurrencyView[] = [];
   paymentProviderOptions: PaymentProviderView[] = [];
   filteredProviders: PaymentProviderView[] = [];
@@ -73,12 +75,10 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   minUsersLengthTerm = 1;
   widgetAdditionalSettings: Record<string, any> = {};
   adminAdditionalSettings: Record<string, any> = {};
-  destinationRequired = false;
 
   form = this.formBuilder.group({
   	id: [null],
   	countries: [[]],
-  	currenciesCrypto: [[]],
   	currenciesFiat: [[]],
   	destinationAddress: [''],
   	instruments: [[]],
@@ -181,7 +181,6 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   					countries: widget.countriesCode2?.map(code2 => {
   						return this.countryOptions.find(c => c.code2 === code2);
   					}) ?? [],
-  					currenciesCrypto: widget.currenciesCrypto ?? [],
   					currenciesFiat: widget.currenciesFiat ?? [],
   					destinationAddress: widget.destinationAddress ?? '',
   					instruments: widget.instruments ?? [],
@@ -213,7 +212,6 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   private getWidgetItem(): WidgetItem | undefined {
   	const widget = new WidgetItem(null);
   	const formValue = this.form.value;
-  	this.destinationRequired = false;
 
   	widget.id = formValue.id;
   	widget.name = formValue.name;
@@ -228,52 +226,64 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	this.widgetAdditionalSettings.maxAmountFrom = formValue.maxAmountFrom;
   	this.widgetAdditionalSettings.minAmountFrom = formValue.minAmountFrom;
   	this.widgetAdditionalSettings.disclaimer = formValue.disclaimer;
-		
-		if(this.currencyAmountsTable._data._value && this.currencyAmountsTable._data._value.length > 0){
-			this.widgetAdditionalSettings.amounts = [];
+		if (this.currenciesTable._data._value?.length > 0) {
 
-			for(const currency of this.currencyAmountsTable._data._value){
-				if(currency.currency && (currency.minAmount || currency.maxAmount)){
-					this.widgetAdditionalSettings.amounts.push({
-						currency: currency.currency,
-						minAmount: currency.minAmount,
-						maxAmount: currency.maxAmount
-					});
+			// allow save with atlease one item with currency
+			if (this.currenciesTable._data._value[0].currency) {
+
+				// if atleast one with destination - set all rows required
+				if (this.currenciesTable._data._value?.some(e => e.destination)) {
+					this.currenciesTable._data._value.forEach(c => c.destinationRequired = true);
+		
+					// if all items with destination allow SAVE
+					if (this.currenciesTable._data._value.every(e => e.currency && e.destination !== ' ' && e.destination)) {
+						for (const cryptoCurrency of this.currenciesTable._data._value) {
+							if (cryptoCurrency.selected) {
+								widget.currenciesCrypto.push(cryptoCurrency.currency);
+			
+								widget.destinationAddress.push({
+									currency: cryptoCurrency.currency,
+									destination: cryptoCurrency.destination
+								});
+							}
+						}
+					} else {
+						return undefined;
+					}
 				}
+				
+				// if all items without destination allow SAVE
+				if (this.currenciesTable._data._value.every(e => e.currency && !e.destination)) {
+					this.currenciesTable._data._value.forEach(c => c.destinationRequired = false);
+		
+					for (const cryptoCurrency of this.currenciesTable._data._value) {
+						if(cryptoCurrency.selected){
+							widget.currenciesCrypto.push(cryptoCurrency.currency);
+						}
+					}
+				} 
 			}
+
 		}
 
-  	if(this.currenciesTable._data._value && this.currenciesTable._data._value.length > 0){
-
-  		for(const cryptoCurrency of this.currenciesTable._data._value){
-  			if(cryptoCurrency.selected){
-  				widget.currenciesCrypto.push(cryptoCurrency.currency);
-  				
-					if(cryptoCurrency.destination && cryptoCurrency.destination !== ''){
-  					this.destinationRequired = true;
-  					widget.destinationAddress.push({
-  						currency: cryptoCurrency.currency,
-  						destination: cryptoCurrency.destination
-  					});
-  				} else if (this.destinationRequired) {
-  					return undefined;
-  				}
+		if (this.merchantFeeDestinationTable._data._value?.length > 0){
+  		for (const cryptoCurrency of this.merchantFeeDestinationTable._data._value) {
+  			if (cryptoCurrency.selected) {
+					widget.merchantFeeDestinationAddress.push({
+						currency: cryptoCurrency.currency,
+						destination: cryptoCurrency.destination
+					});
   			}
   		}
   	}
 
-		if(this.merchantFeeDestinationCurrencies._data._value && this.merchantFeeDestinationCurrencies._data._value.length > 0){
-  		for(const cryptoCurrency of this.merchantFeeDestinationCurrencies._data._value){
-  			if(cryptoCurrency.selected){
-  				if(cryptoCurrency.destination && cryptoCurrency.destination !== ''){
-  					widget.merchantFeeDestinationAddress.push({
-  						currency: cryptoCurrency.currency,
-  						destination: cryptoCurrency.destination
-  					});
-  				}
-  			}
-  		}
-  	}
+		if (widget.merchantFeeDestinationAddress.some(widget => !widget.currency || !widget.destination || widget.destination === '')) {
+			return undefined;
+		} 
+
+		if (this.inputElements.some((input: any) => input.el.nativeElement.hasAttribute('data-error'))) {
+			return undefined;
+		} 
     
 		widget.additionalSettings = JSON.stringify(this.widgetAdditionalSettings);
   	widget.currenciesFiat = formValue.currenciesFiat;
@@ -305,7 +315,6 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 					const providers = res[0].data.getPaymentProviders as PaymentProvider[];
 					const currencySettings = res[1].data.getSettingsCurrency as SettingsCurrencyWithDefaults;
 					
-					this.paymentProviderOptions = [];
 					this.paymentProviderOptions = providers?.map((val) => new PaymentProviderView(val)) as PaymentProviderView[];
 
 					this.filterPaymentProviders(this.form.get('instruments')?.value ?? []);
@@ -314,56 +323,59 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 						if (currencySettings.settingsCurrency.list && currencySettings.settingsCurrency.list?.length !== 0){
 							const currenciesCrypto: CurrencyView[] = [];
 							const currenciesFiat: CurrencyView[] = [];
-							const formValue = this.form.value;
-	
+
 							for(const currency of currencySettings.settingsCurrency.list){
 								if(currency.fiat === false){
 									const widgetDestination = this.widgetDetails?.destinationAddress?.find(wallet => wallet.currency === currency.symbol);
 									const merchantFeeDestination = this.widgetDetails?.merchantFeeDestinationAddress?.find(wallet => wallet.currency === currency.symbol);
-									const currencySelectedWithoutDestination = formValue.currenciesCrypto.find(item=> item === currency.symbol);
-									
+									const currencySelectedWithoutDestination = this.widgetDetails?.currenciesCrypto.find(item => item === currency.symbol);
+
 									currenciesCrypto.push(new CurrencyView(currency));
 									
 									if (widgetDestination) {
 										this.currenciesTable.push(
-											{ currency: currency.symbol, destination: widgetDestination.destination, selected: true }
+											{ 
+												currency: currency.symbol, 
+												destination: widgetDestination.destination, 
+												destinationRequired: true, 
+												selected: true
+											}
 										);
-									} else if(currencySelectedWithoutDestination) {
+									} else if (currencySelectedWithoutDestination) {
 										this.currenciesTable.push(
-											{ currency: currency.symbol, destination: '', selected: true }
+											{ 
+												currency: currency.symbol, 
+												destination: '', 
+												destinationRequired: false,
+												selected: true
+											}
 										);
 									}
-	
+									
 									if (merchantFeeDestination) {
-										this.merchantFeeDestinationCurrencies.push(
-											{ currency: currency.symbol, destination: merchantFeeDestination.destination, selected: true }
+										this.merchantFeeDestinationTable.push(
+											{ 
+												currency: currency.symbol, 
+												destination: merchantFeeDestination.destination,
+												selected: true
+											}
 										);
 									}
 								} else if (currency.fiat === true) {
 									currenciesFiat.push(new CurrencyView(currency));
 								}
-	
-								const widgetAmount = this.widgetAdditionalSettings?.amounts?.find(item => item.currency === currency.symbol);
-								if(widgetAmount){
-									this.currencyAmountsTable.push(
-										{ currency: currency.symbol, minAmount: widgetAmount.minAmount, maxAmount: widgetAmount.maxAmount }
-									);
-								}
-	
 							}
-							this.currencyOptionsCrypto = currenciesCrypto;
+
 							this.currencyOptionsFiat = currenciesFiat;
-							this.currencyOptions = this.currencyOptions.concat(currenciesCrypto, currenciesFiat);
+
+							this.currencyDestinationOptions = [...currenciesCrypto];
+							this.currencyMerchantDestinationOptions = [...currenciesCrypto];
+
 							this.currenciesTable = new MatTableDataSource(this.currenciesTable);
-							this.currencyAmountsTable = new MatTableDataSource(this.currencyAmountsTable);
-							this.merchantFeeDestinationCurrencies = new MatTableDataSource(this.merchantFeeDestinationCurrencies);
+							this.merchantFeeDestinationTable = new MatTableDataSource(this.merchantFeeDestinationTable);
 						}
-					} else {
-						this.currencyAmountsTable = [];
-						this.currenciesTable = [];
-						this.currencyOptionsCrypto = [];
-						this.currencyOptionsFiat = [];
-					}
+					} 
+
 					this.isLoading = false;
 				},
 				error: (error) => {
@@ -396,10 +408,28 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-  	this.submitted = true;
+		this.saveInProgress = true;
+  	const widgetItem = this.getWidgetItem();
 
-  	if (this.form.valid) {
-  		this.onSave();
+  	if (widgetItem) {
+			this.adminService.saveWidget(widgetItem)
+				.pipe(takeUntil(this.destroy$))
+				.subscribe({
+					next: () => {
+						this.saveInProgress = false;
+						this.save.emit();
+					},
+					error: (error) => {
+						this.saveInProgress = false;
+						this.errorMessage = error;
+						
+						if (this.auth.token === '') {
+							void this.router.navigateByUrl('/');
+						}
+					} 
+				});
+  	} else {
+  		this.saveInProgress = false;
   	}
   }
 
@@ -415,13 +445,32 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   }
 
   addWidgetDestinationAddress(): void{
-  	this.currenciesTable._data._value.push({ currency: '', destination: '', selected: true });
+		if (this.currenciesTable._data._value?.length > 0) {
+			const lastTableElement = this.currenciesTable._data._value.at(-1);
+
+			if (!lastTableElement.currency) return;
+		
+			if (this.currenciesTable._data._value.some(e => e.destination)) {
+				// if some contains destination, set all destinationRequired = true
+				this.currenciesTable._data._value.forEach(c => c.destinationRequired = true);
+				this.currenciesTable._data._value.push({ currency: null, destination: '', destinationRequired: true, selected: true });
+
+			} else if (this.currenciesTable._data._value.every(e => !e.destination)) {
+				// if every NOT contains destination, set all destinationRequired = false
+				this.currenciesTable._data._value.forEach(c => c.destinationRequired = false);
+				this.currenciesTable._data._value.push({ currency: null, destination: '', destinationRequired: false, selected: true });
+				
+			}
+		} else {
+			this.currenciesTable._data._value.push({ currency: null, destination: '', destinationRequired: false, selected: true });
+		}
+
   	this.currenciesTable = new MatTableDataSource(this.currenciesTable._data._value);
   }
 
   delWidgetDestinationAddress(element: any): void{
   	const currenciesTableDel: Record<string, any>[] = [];
-
+		
   	for(const item of this.currenciesTable._data._value){
   		if(item.currency !== element.currency){
   			currenciesTableDel.push(item);
@@ -429,48 +478,39 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	}
 
   	this.currenciesTable = new MatTableDataSource(currenciesTableDel);
+
+		if (this.currenciesTable._data._value?.length > 0) {
+			if (this.currenciesTable._data._value.some(e => e.destination)) {
+				// if some contains destination, set all destinationRequired = true
+				this.currenciesTable._data._value.forEach(c => c.destinationRequired = true);
+			} else if (this.currenciesTable._data._value.every(e => !e.destination)) {
+				// if every NOT contains destination, set all destinationRequired = false
+				this.currenciesTable._data._value.forEach(c => c.destinationRequired = false);
+			} 
+		}
   }
 
 	addMerchantFeeDestinationAddress(): void{
-  	this.merchantFeeDestinationCurrencies._data._value.push({ currency: '', destination: '', selected: true });
-  	this.merchantFeeDestinationCurrencies = new MatTableDataSource(this.merchantFeeDestinationCurrencies._data._value);
+		const lastTableElement = this.merchantFeeDestinationTable._data._value.at(-1);
+
+		if (lastTableElement) {
+			if (!lastTableElement.currency || !lastTableElement.destination) return;
+		}
+
+  	this.merchantFeeDestinationTable._data._value.push({ currency: null, destination: '', selected: true });
+  	this.merchantFeeDestinationTable = new MatTableDataSource(this.merchantFeeDestinationTable._data._value);
   }
 
   delMerchantFeeDestinationAddress(element: any): void{
-  	const merchantFeeDestinationCurrenciesDel: Record<string, any>[] = [];
+  	const merchantFeeDestinationTableDel: Record<string, any>[] = [];
 
-  	for(const item of this.merchantFeeDestinationCurrencies._data._value){
+  	for(const item of this.merchantFeeDestinationTable._data._value){
   		if(item.currency !== element.currency){
-  			merchantFeeDestinationCurrenciesDel.push(item);
+  			merchantFeeDestinationTableDel.push(item);
   		}
   	}
 
-  	this.merchantFeeDestinationCurrencies = new MatTableDataSource(merchantFeeDestinationCurrenciesDel);
-  }
-
-  private onSave(): void {
-  	this.saveInProgress = true;
-  	const widgetItem = this.getWidgetItem();
-
-  	if (widgetItem) {
-			this.adminService.saveWidget(widgetItem)
-				.pipe(takeUntil(this.destroy$))
-				.subscribe({
-					next: () => {
-						this.saveInProgress = false;
-						this.save.emit();
-					},
-					error: (error) => {
-						this.saveInProgress = false;
-						this.errorMessage = error;
-						if (this.auth.token === '') {
-							void this.router.navigateByUrl('/');
-						}
-					} 
-				});
-  	} else {
-  		this.saveInProgress = false;
-  	}
+  	this.merchantFeeDestinationTable = new MatTableDataSource(merchantFeeDestinationTableDel);
   }
 
   private deleteWidget(id: string): void {

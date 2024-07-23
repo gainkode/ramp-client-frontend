@@ -9,7 +9,7 @@
                 <div class="__auth-account-type-tab __auth-account-type-tab-left __auth-account-type-tab-selected">
                     Personal Account
                 </div>
-                <div *ngIf="preSettingsCommon.allowMercahntSignUp === true" class="__auth-account-type-tab __auth-account-type-tab-right"
+                <div *ngIf="preSettingsCommon?.allowMercahntSignUp === true" class="__auth-account-type-tab __auth-account-type-tab-right"
                     (click)="router.navigateByUrl('/merchant/auth/register')">
                     Business Account
                 </div>

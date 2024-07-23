@@ -2,8 +2,9 @@
 
 .order-details {
     &__wrapper { 
-        width: 900px;
-        height: 590px;
+        // width: 900px;
+        width: auto;
+        height: 630px;
         justify-content: center;  
         display: flex; 
     }
@@ -13,17 +14,12 @@
         grid-template-columns: auto 56px;
         grid-template-rows: 36px;
         margin: auto;
-    
-        // @media (max-width: #{$widget_max_width}px) {
-        //     grid-template-rows: 56px;
-        //     height: 56px;
-        // }
     } 
     &__content {
         position: relative;
         padding: 24px 0;
         background: white;
-        height: 590px;
+        height: 630px;
         // border-radius: 8px;
         &-header {
             display: flex;
@@ -421,7 +417,6 @@ $border-color_1: #444;
 		border-color: $border-color_1;
 	}
 }
-
     
 @media (max-width: 567.9px) {
     .order-details__wrapper {

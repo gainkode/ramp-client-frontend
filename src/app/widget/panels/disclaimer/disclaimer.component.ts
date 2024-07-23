@@ -6,12 +6,12 @@ import {
   Output,
   inject,
 } from '@angular/core';
+import { AppConfig } from 'core/app-config';
 import { disclaimerDataDefault } from 'model/custom-data.model';
 import { CustomTextList, CustomTextType } from 'model/custom-text.model';
 import { PageType } from 'model/generated-models';
 import { take, takeUntil } from 'rxjs';
 import { CommonDataService } from 'services/common-data.service';
-import { EnvService } from 'services/env.service';
 import { UnsubscriberBase } from 'services/unsubscriber.base';
 
 @Component({
@@ -33,12 +33,12 @@ export class WidgetDisclaimerComponent extends UnsubscriberBase implements OnIni
   @Output() onNext = new EventEmitter();
 
   done = false;
-  termsLink = EnvService.terms_link;
-  productName = EnvService.productFull;
+  termsLink = this.config.platformInfo.termsLink;
+  productName = this.config.platformInfo.productFull;
   textData = new CustomTextList([]);
   TEXT_TYPE: typeof CustomTextType = CustomTextType;
   inProgress = false;
-  constructor() {
+  constructor(private config: AppConfig) {
     super();
   }
 

@@ -17,6 +17,7 @@ import { EnvService } from 'services/env.service';
 import { ThemeService } from 'services/theme-service';
 import { ProfileDataService } from 'services/profile.service';
 import { NUMBER_PATTERN } from 'utils/constants';
+import { AppConfig } from 'core/app-config';
 
 @Component({
 	selector: 'app-widget-internal-overview',
@@ -150,8 +151,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	wallet: [undefined, { validators: [], updateOn: 'change' }]
   });
 
-  termsLink = EnvService.terms_link;
-  privacyLink = EnvService.privacy_link;
+  termsLink = this.config.platformInfo.termsLink;
+  privacyLink = this.config.platformInfo.privacyLink;
   isBuyButton = false;
   isSellButton = false;
   
@@ -215,6 +216,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	public transloco: TranslocoService,
   	private router: Router,
   	private auth: AuthService,
+		private config: AppConfig,
   	private commonService: CommonDataService,
   	private paymentService: PaymentDataService,
   	private errorHandler: ErrorService,

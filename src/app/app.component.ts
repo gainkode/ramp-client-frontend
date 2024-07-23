@@ -68,7 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
 					deny: 'Decline',
 					allow: 'Accept',
 					link: 'Cookies Policy',
-					href: EnvService.cookie_link,
+					href: 'https://iramp.io/cookies-policy/',
 					policy: 'Cookie Policy'
 				},
 				onStatusChange: function (status: any) {

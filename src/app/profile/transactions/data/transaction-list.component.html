@@ -190,8 +190,8 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-mdc-paginator color="accent" *ngIf="(recent) ? false : (transactionCount > pageCounts[0] && transactionCount > 0)"
+    <mat-paginator color="accent" *ngIf="(recent) ? false : (transactionCount > pageCounts[0] && transactionCount > 0)"
         class="__profile-data-table" [pageIndex]="pageIndex" [length]="transactionCount" [pageSize]="pageSize"
         [pageSizeOptions]="pageCounts" showFirstLastButtons (page)="handlePage($event)">
-    </mat-mdc-paginator>
+    </mat-paginator>
 </div>

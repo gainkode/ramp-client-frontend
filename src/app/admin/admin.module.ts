@@ -1,6 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from '@angular/core';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -115,6 +113,7 @@ import {
 
 import { FeeSimiliarPanelComponent } from './components/fees/details/fee-similiar-panel/fee-similiar-panel.component';
 import { CostSimiliarPanelComponent } from './components/costs/schemes/cost-similiar-panel/cost-similiar-panel.component';
+import { SharedModule } from 'shared/shared.module';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -125,11 +124,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 @NgModule({
 	imports: [
 		NgxMaskModule.forRoot(), 
-		CommonModule,
+		SharedModule,
 		TableModule,
 		NgSelectModule,
-		FormsModule,
-		ReactiveFormsModule,
 		NgbModule,
 		MatCardModule,
 		MatChipsModule,
@@ -248,8 +245,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 			provide: PERFECT_SCROLLBAR_CONFIG,
 			useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
 		}
-	],
-	schemas: [CUSTOM_ELEMENTS_SCHEMA]
+	]
 })
 export class AdminModule {
 }

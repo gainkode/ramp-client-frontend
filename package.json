@@ -49,7 +49,7 @@
     "graphql": "^15.5.0",
     "graphql-ws": "^5.11.1",
     "jquery": "^1.9.1",
-    "multicoin-address-validator": "0.5.12",
+    "multicoin-address-validator": "0.5.20",
     "ng-apexcharts": "^1.5.12",
     "ng-recaptcha": "11.0.0",
     "ngx-color-picker": "14.0.0",

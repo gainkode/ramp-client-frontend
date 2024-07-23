@@ -2378,6 +2378,34 @@ export enum PaymentProviderPayoutType {
   Benchmark = 'benchmark'
 }
 
+export type PlatformInfo = {
+  __typename?: 'PlatformInfo';
+  adminFont?: Maybe<Scalars['String']['output']>;
+  apiTimeout?: Maybe<Scalars['Int']['output']>;
+  baseColor?: Maybe<Scalars['String']['output']>;
+  cookieLink?: Maybe<Scalars['String']['output']>;
+  cryptoWidgetBgMask?: Maybe<Scalars['Boolean']['output']>;
+  cryptoWidgetBgName?: Maybe<Scalars['String']['output']>;
+  cryptoWidgetFinishLink?: Maybe<Scalars['String']['output']>;
+  googleId?: Maybe<Scalars['String']['output']>;
+  mainFont?: Maybe<Scalars['String']['output']>;
+  privacyLink?: Maybe<Scalars['String']['output']>;
+  product?: Maybe<Scalars['String']['output']>;
+  productFull?: Maybe<Scalars['String']['output']>;
+  recaptchaId?: Maybe<Scalars['String']['output']>;
+  recaptchaProvider?: Maybe<Scalars['String']['output']>;
+  recaptchaSiteKey?: Maybe<Scalars['String']['output']>;
+  showBuySell?: Maybe<Scalars['Boolean']['output']>;
+  showCookie?: Maybe<Scalars['Boolean']['output']>;
+  showCreateTransactionUpdateRate?: Maybe<Scalars['Boolean']['output']>;
+  showDepositWithdrawal?: Maybe<Scalars['Boolean']['output']>;
+  showExpressTransfer?: Maybe<Scalars['Boolean']['output']>;
+  showPrivacy?: Maybe<Scalars['Boolean']['output']>;
+  showTerms?: Maybe<Scalars['Boolean']['output']>;
+  supportEmail?: Maybe<Scalars['String']['output']>;
+  termsLink?: Maybe<Scalars['String']['output']>;
+};
+
 export type PostAddress = {
   addressEndDate?: InputMaybe<Scalars['DateTime']['input']>;
   addressStartDate?: InputMaybe<Scalars['DateTime']['input']>;
@@ -2458,6 +2486,7 @@ export type Query = {
   getOpenBankingDetails?: Maybe<OpenBankingDetails>;
   /** Get payment providers */
   getPaymentProviders?: Maybe<Array<PaymentProvider>>;
+  getPlatformInfo: PlatformInfo;
   /** Get common settings */
   getPreSettingsCommon?: Maybe<PreSettingsCommon>;
   /** Get the exchange rate of several currencies to one */

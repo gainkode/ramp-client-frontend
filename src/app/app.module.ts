@@ -34,6 +34,7 @@ import { TranslocoRootModule } from 'transloco-root.module';
 import { AppGuard } from 'app.guard';
 import { Router } from '@angular/router';
 import { ForbiddenComponent } from 'components/common/forbidden/forbidden.component';
+import { CoreModule } from 'core/core.module';
 
 function socialConfigFactory(): SocialAuthServiceConfig {
 	EnvServiceFactory.call(undefined);
@@ -58,6 +59,7 @@ function socialConfigFactory(): SocialAuthServiceConfig {
 		AppRoutingModule,
 		HttpClientModule,
 		BrowserAnimationsModule,
+		CoreModule,
 		SocialLoginModule,
 		DirectiveModule,
 		TranslocoRootModule,
