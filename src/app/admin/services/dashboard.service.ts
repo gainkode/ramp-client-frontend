@@ -62,7 +62,7 @@ export class DashboardService implements OnDestroy {
 						transactionsTotal: 0,
 						usersTotal: 0
 					});
-				}),);
+				}));
 	}
 
 	load(): void {
@@ -73,13 +73,27 @@ export class DashboardService implements OnDestroy {
 			.pipe(
 				takeUntil(this._destroy$),
 				take(1), 
-				finalize(() => this.loading = false)
+				finalize(() => this.loading = false),
+				catchError(() => {
+					this._snackBar.open('There was an error getting dashboard data. Please contact R&D', null, { duration: 5000 });
+					
+					return of(null);
+				})
 			).subscribe({
 				complete: () => this.loading = false,
-				next: rawData => {
-					rawData = this.filterCardData(rawData);
-
+				next: dashboardStats => {
 					this.loading = false;
+
+					if (!this.isLoadedSubject.value) {
+						this.isLoadedSubject.next(true);
+					}
+
+					if (dashboardStats === null) {
+						this.dataSubject.next(null);
+						return;
+					}
+					
+					const rawData = this.filterCardData(dashboardStats);
 
 					// region Total
 					const totalData: DashboardCardData = {
@@ -793,10 +807,6 @@ export class DashboardService implements OnDestroy {
 					};
 		
 					this.dataSubject.next(data);
-		
-					if (!this.isLoadedSubject.value) {
-						this.isLoadedSubject.next(true);
-					}
 				},
 				error: () => {
 					this.loading = false;

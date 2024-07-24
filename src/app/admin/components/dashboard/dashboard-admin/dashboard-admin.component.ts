@@ -4,7 +4,7 @@ import { Filter } from 'admin/model/filter.model';
 import { DashboardService } from 'admin/services/dashboard.service';
 import { DateTimeInterval, SettingsCurrencyWithDefaults } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
-import { Subscription, take } from 'rxjs';
+import { Subject, take, takeUntil } from 'rxjs';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { EnvService } from 'services/env.service';
@@ -27,26 +27,22 @@ export class DashboardAdminComponent implements OnInit, OnDestroy {
 		'widgetName',
 		'fiatCurrency'
 	];
-	liquidityProviderName = '';
-	showDeposits = false;
-	showWithdrawals = false;
+	showDeposits = EnvService.deposit_withdrawal;
+	showWithdrawals = EnvService.deposit_withdrawal;
 	defaultFilter: Filter | undefined = undefined;
 	adminAdditionalSettings: Record<string, any> = {};
 	fiatCurrencies: Array<CurrencyView> = [];
-
-	private subscriptions: Subscription = new Subscription();
-
+	private readonly _destroy$ = new Subject<void>();
 	constructor(
 		private commonDataService: CommonDataService,
 		private router: Router,
 		public dashboardService: DashboardService,
 		private auth: AuthService) {
-		this.liquidityProviderName = 'Liquidity provider balances';
-		this.showDeposits = EnvService.deposit_withdrawal;
-		this.showWithdrawals = EnvService.deposit_withdrawal;
+			
 		const currentDate = new Date();
 		const fromDate = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0));
 		const toDate = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59, 999));
+
 		this.defaultFilter = {
 			updatedDateInterval: {
 				from: fromDate,
@@ -55,23 +51,12 @@ export class DashboardAdminComponent implements OnInit, OnDestroy {
 		} as Filter;
 	}
 
-	private loadCommonSettings(): void{
-		const settingsCommon = this.auth.getLocalSettingsCommon();
-		if(settingsCommon){
-			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-			if(this.adminAdditionalSettings?.tabs?.dashboard?.filterFields){
-				this.filterFields = this.adminAdditionalSettings.tabs.dashboard.filterFields;
-			}
-		}
-	}
 	ngOnInit(): void {
 		this.loadCurrencies();
 		this.loadCommonSettings();
-		this.subscriptions.add(
-			this.dashboardService.data.subscribe(d => {
-			})
-		);
+
 		this.auth.getLocalSettingsCommon();
+
 		if (this.auth.user?.filters?.dashboard?.includes('updatedDate') || !this.auth.user?.filters ) {
 			this.dashboardService.setFilter(this.defaultFilter);
 		} else {
@@ -79,32 +64,44 @@ export class DashboardAdminComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private loadCurrencies(): void {
-		this.subscriptions.add(
-			this.commonDataService.getSettingsCurrency()?.valueChanges.pipe(take(1))
-				.subscribe({
-					next: ({ data }) => {
-						const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-
-						if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-							this.fiatCurrencies = currencySettings.settingsCurrency.list
-								?.map((val) => new CurrencyView(val)) as CurrencyView[];
-							this.fiatCurrencies = this.fiatCurrencies.filter(item => item.fiat);
-						} else {
-							this.fiatCurrencies = [];
-						}
-					},
-					error: () => {
-						if (this.auth.token === '') {
-							void this.router.navigateByUrl('/');
-						}
-					},
-				})
-		);
+	ngOnDestroy(): void {
+		this._destroy$.next();
+		this._destroy$.complete();
 	}
 
-	ngOnDestroy(): void {
-		this.subscriptions.unsubscribe();
+	private loadCommonSettings(): void{
+		const settingsCommon = this.auth.getLocalSettingsCommon();
+
+		if(settingsCommon){
+			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+			
+			if(this.adminAdditionalSettings?.tabs?.dashboard?.filterFields){
+				this.filterFields = this.adminAdditionalSettings.tabs.dashboard.filterFields;
+			}
+		}
+	}
+
+	private loadCurrencies(): void {
+		this.commonDataService.getSettingsCurrency()?.valueChanges
+			.pipe(take(1), takeUntil(this._destroy$))
+			.subscribe({
+				next: ({ data }) => {
+					const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+
+					if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+						this.fiatCurrencies = currencySettings.settingsCurrency.list
+							?.map((val) => new CurrencyView(val)) as CurrencyView[];
+						this.fiatCurrencies = this.fiatCurrencies.filter(item => item.fiat);
+					} else {
+						this.fiatCurrencies = [];
+					}
+				},
+				error: () => {
+					if (this.auth.token === '') {
+						void this.router.navigateByUrl('/');
+					}
+				},
+			});
 	}
 
 	handleFilterApplied(filter: Filter): void {
