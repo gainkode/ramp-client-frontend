@@ -1,10 +1,7 @@
 <div class="event-details">
 	<div class="event-details__container">
 		<h4 class="event-details__title">Signature Details</h4>
-		<!-- <p>
-			Message: <code>{{ signatureDocument?.message }}</code>
-		</p>
-		<p>Event: {{ auditLog?.event }}</p> -->
+
 		<p>Created: {{ signatureDocument?.createdAt| date: 'MMMM d, y, h:mm:ss' }}</p>
     <p>Executed: {{ signatureDocument?.executedAt| date: 'MMMM d, y, h:mm:ss' }}</p>
 
@@ -13,79 +10,17 @@
 
     <p>Created: {{ signatureDocument?.createdAt| date: 'MMMM d, y, h:mm:ss' }}</p>
     <p>Executed: {{ signatureDocument?.executedAt| date: 'MMMM d, y, h:mm:ss' }}</p>
-<!-- 
-		<p>User: {{ auditLog?.nickname }}, Email: {{ auditLog?.email }}</p>
-		<p *ngIf="auditLog?.saved && auditLog?.event !== 'RI Sold'">Savings: ${{ auditLog?.saved }}</p>
-		<p *ngIf="auditLog?.res_id">
-			Resource ID: {{ auditLog?.res_id }}
-			<span *ngIf="auditLog?.previous_res_id" class="badge badge-light cursor-help">
-				Original ID: {{ auditLog?.previous_res_id }}
-			</span>
-		</p>
-		<p *ngIf="auditLog?.res_link">
-			Link to resource: <a href="{{ auditLog?.res_link }}" target="_blank">Show in AWS Console</a>
-		</p>
-		<p *ngIf="auditLog?.region">Region: {{ auditLog?.region }}</p>
-		<p *ngIf="auditLog?.tenancy">Tenancy: {{ auditLog?.tenancy }}</p>
-		<p *ngIf="auditLog?.instanceType">Instance type: {{ auditLog?.instanceType }}</p>
-		<p *ngIf="auditLog?.instanceCount">Instance count: {{ auditLog?.instanceCount }}</p>
-		<p *ngIf="auditLog?.platform">Platform: {{ auditLog?.platform }}</p>
-		<p *ngIf="auditLog?.volume_id">Volume ID: {{ auditLog?.volume_id }}</p>
-		<p *ngIf="auditLog?.instance_id">Instance ID: {{ auditLog?.instance_id }}</p>
-		<p *ngIf="auditLog?.chunk_size">Chunk Size: {{ auditLog?.chunk_size }}</p>
-		<p *ngIf="auditLog?.threshold">Threshold: {{ auditLog?.threshold }}</p>
-		<p *ngIf="auditLog?.policy_uuid">Policy UUID: {{ auditLog?.policy_uuid }}</p>
-		<p *ngIf="auditLog?.offeringClass">
-			Reserved Instance Type: {{ auditLog?.offeringClass | titlecase }} {{ auditLog?.offeringType }}
-		</p>
-		<p *ngIf="auditLog?.upfrontPrice">
-			One-time payment (Upfront price): ${{ auditLog?.upfrontPrice | number: '0.0-2' }}
-		</p>
-		<p *ngIf="auditLog?.effectiveRate && auditLog.event !== 'RI Sold'">
-			Reserved Instance Effective Rate: ${{ auditLog?.effectiveRate | number: '0.0-3'
-			}}<span class="text-muted text-sm-80">/hr</span>
-		</p>
-		<p *ngIf="auditLog?.effectiveRate && auditLog?.event === 'RI Sold' && auditLog?.offeringType === 'All Upfront'">
-			Monthly price: ${{ auditLog?.upfrontPrice / auditLog?.originalTermMonth | number: '0.0-2' }}
-		</p>
-		<p *ngIf="auditLog?.ondemandRate && auditLog?.event !== 'RI Sold'">
-			On-demand Rate: ${{ auditLog?.ondemandRate | number: '0.0-3' }}
-			<span class="text-muted text-sm-80">/hr</span>
-		</p>
-		<p *ngIf="auditLog?.savingRatio">Saving:{{ auditLog?.savingRatio ? auditLog?.savingRatio + '%' : '' }}</p>
-		<p *ngIf="auditLog?.durationMonths">
-			Term Duration:{{ auditLog?.durationMonths }} <span class="text-muted text-sm-80">mo</span>
-		</p>
-		<p *ngIf="auditLog?.spAccount">Account ID: {{ auditLog?.spAccount }}</p>
-		<p *ngIf="auditLog?.sellingPrice">Selling Price: ${{ auditLog?.sellingPrice }}</p>
-	</div>
-	<div class="event-details__container" *ngIf="auditLog?.instances">
-		<h4 class="event-details__title">Scheduled Instances</h4>
+	</div> 
+  <div class="event-details__container">
+		<h4 class="event-details__title">Signature Details</h4>
 
-		<table class="event-details__table">
-			<thead>
-				<tr>
-					<th>#</th>
-					<th>Instance ID</th>
-					<th>Instance Type</th>
-					<th>Platform</th>
-					<th>Region</th>
-					<th>Tenancy</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let instance of auditLog?.instances; let i = index">
-					<td>{{ i + 1 }}</td>
-					<td class="instance-id">
-						<a [href]="linkToLogInstance(instance)">{{ instance.InstanceId }}</a>
-						<i class="far fa-copy cursor-link ml-1" tooltip="Copy" (click)="copyText(instance.InstanceId)"></i> -->
-					<!-- </td>
-					<td>{{ instance.InstanceType }}</td>
-					<td>{{ instance.Platform }}</td>
-					<td>{{ instance.Region }}</td>
-					<td>{{ instance.Tenancy }}</td>
-				</tr> -->
-			<!-- </tbody> -->
-		<!-- </table> -->
+		<p>Created: {{ signatureDocument?.createdAt| date: 'MMMM d, y, h:mm:ss' }}</p>
+    <p>Executed: {{ signatureDocument?.executedAt| date: 'MMMM d, y, h:mm:ss' }}</p>
+
+    <p>Created: {{ signatureDocument?.createdAt| date: 'MMMM d, y, h:mm:ss' }}</p>
+    <p>Executed: {{ signatureDocument?.executedAt| date: 'MMMM d, y, h:mm:ss' }}</p>
+
+    <p>Created: {{ signatureDocument?.createdAt| date: 'MMMM d, y, h:mm:ss' }}</p>
+    <p>Executed: {{ signatureDocument?.executedAt| date: 'MMMM d, y, h:mm:ss' }}</p>
 	</div> 
 </div>
