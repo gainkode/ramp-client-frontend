@@ -114,6 +114,7 @@ import {
 import { FeeSimiliarPanelComponent } from './components/fees/details/fee-similiar-panel/fee-similiar-panel.component';
 import { CostSimiliarPanelComponent } from './components/costs/schemes/cost-similiar-panel/cost-similiar-panel.component';
 import { SharedModule } from 'shared/shared.module';
+import { SigntatureDocDetailsComponent } from './components/transactions/transaction-docs/signtature-doc-details/signtature-doc-details.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -185,6 +186,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminTransactionDetailsComponent, 
 		AdminTransactionStatusHistoryComponent, 
 		AdminTransactionCreateComponent,
+		SigntatureDocDetailsComponent,
 		AdminFiatWalletsComponent, 
 		AdminFiatWalletDetailsComponent,
 		AdminCryptoWalletsComponent, 

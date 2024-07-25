@@ -12,11 +12,14 @@ import { TransactionDocsApi } from '../services/transaction-docs.api';
 import { TransactionDocsFacadeService } from '../services/transaction-docs.service';
 import { TransactionDocsStateService } from '../services/transaction-docs.state';
 import { SignaturesConfig } from './transaction-docs.config';
+import { tableAnimation } from 'components/data-list/table/table.animation';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-admin-transaction-docs',
   templateUrl: './transaction-docs.component.html',
   styleUrls: ['./transaction-docs.component.scss'],
+	animations: tableAnimation,
   providers: [
     TransactionDocsApi,
     TransactionDocsStateService,
@@ -27,7 +30,6 @@ import { SignaturesConfig } from './transaction-docs.config';
 export class TransactionDocsComponent implements OnInit, OnDestroy {
 	@Input() userId: string;
 	public readonly config: TableColumnConfig<SignatureDocument>[] = SignaturesConfig;
-	public columnsToDisplay: TableColumnConfig<SignatureDocument>[] = SignaturesConfig;
 	public readonly tableDataSource = new MatTableDataSource<SignatureDocument>([]);
 	public readonly isLoading$: Observable<boolean> = this.service.getState$.pipe(map(x => x?.isLoading));
 	public readonly isLoaded$: Observable<boolean> = this.service.getState$.pipe(map(x => x?.isLoaded));
@@ -39,9 +41,12 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 
 	form = this.fb.group({
 		status: new FormControl<SignatureStatus>(SignatureStatus.COMPLETED, Validators.required),
+		createdAt: new FormControl<string | Date>(undefined),
+		executedAt: new FormControl<string | Date>(undefined),
 	});
 
 	isEditDocument = false;
+	public expandedElement: SignatureDocument;
 	dataSource$: Observable<SignatureDocument[]>;
 	formData: FormData;
 	uploadProgress: number;
@@ -107,7 +112,16 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 			.pipe(map(x => x?.documents), takeUntil(this.destroy$))
 			.subscribe((data) => {
 				this.selectedSignature = data[0];
+				const datepipe = new DatePipe('en-US');
+				
+				this.form.patchValue({
+						status: this.selectedSignature.status,
+						executedAt: datepipe.transform(this.selectedSignature.executedAt, 'dd MMM YYYY') as string,
+						createdAt:  datepipe.transform(this.selectedSignature.createdAt, 'dd MMM YYYY HH:mm:ss') as string,
+				});
+			
 				console.log(this.selectedSignature)
+
 				this.tableDataSource.data = this.selectedSignature.signatureDocument;
 			});
 	}
@@ -153,6 +167,10 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 
 	onFileDownload(document: SignatureDocument): void {
 		this.service.onLoadFiles(document).pipe(takeUntil(this.destroy$)).subscribe();
+	}
+
+	public showDetail($event: SignatureDocument): void {
+		this.expandedElement = $event;
 	}
 
 	private mapFormToEntity(): void {
