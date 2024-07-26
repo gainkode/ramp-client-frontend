@@ -1,0 +1,73 @@
+<div class="card card-body pd-20 pd-md-40 border shadow-none" *ngIf="riskAlertTypes">
+  <h5 class="card-title mg-b-20 d-flex justify-content-between">
+    Extra Fees
+    <span class="m-0 error tx-12 tx-transform-none">{{isListItemContainDuplicate ? 'Extra fees cointains duplicates' : ''}}</span>
+  </h5>
+  <div class="form-group">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="details">
+        <th *matHeaderCellDef>
+          <i class="material-icons cursor-icon tx-20" (click)="addFeeRiskCode()">
+            add_circle
+          </i>
+        </th>
+        <td *matCellDef="let i = index"  class="mat-column-fee-risk-table mat-column-fee-risk-table-details">
+          <i class="material-icons cursor-icon tx-20" (click)="deleteFeeRiskCode(i)">
+            cancel
+          </i>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="riskCode">
+        <th *matHeaderCellDef>
+          Risk Code
+        </th>
+        <td *matCellDef="let element" class="mat-column-fee-risk-table mat-column-fee-risk-table-riskCode">
+          <ng-select 
+            [(ngModel)]="element.riskCode" 
+            [ngModelOptions]="{standalone: true}" 
+            [items]="riskAlertTypes" 
+            bindLabel="riskAlertTypeCode" 
+            bindValue="riskAlertTypeCode" 
+            [clearable]="false"
+            [clearOnBackspace]="true" 
+            [hideSelected]="true"
+            [closeOnSelect]="true">
+            <ng-template ng-option-tmp let-item="item">
+              <span class="tx-13">{{item.riskAlertTypeCode}}</span>
+              <br />
+							<small class="tx-12" style="white-space: initial;">{{item.description}}</small>
+						</ng-template>
+          </ng-select>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fee">
+        <th *matHeaderCellDef>
+          Fee
+        </th>
+        <td *matCellDef="let element; let i = index" class="mat-column-fee-risk-table mat-column-fee-risk-table-feePercent">
+            <div class="input-group">
+              <input 
+                style="padding: 1px 6px;"
+                [id]="'input-' + i" 
+                class="form-control"
+                [ngClass]="{'has-error': element.feePercent === null || element.feePercent === '' }"
+                type="text" 
+                [(ngModel)]="element.feePercent" 
+                maxlength="4" 
+                [ngModelOptions]="{standalone: true}" 
+                [required]="true">
+  
+              <div class="input-group-append">
+                <span style="padding: 1px 2px;" class="input-group-text">%</span>
+              </div>
+            </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

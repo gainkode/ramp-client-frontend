@@ -1,7 +1,8 @@
 import { CommonTargetValue } from './common.model';
 import { getCountry, getCountryByCode3 } from './country-code.model';
 import {
-	SettingsFee, PaymentInstrument, TransactionType, SettingsFeeTargetFilterType, UserType, UserMode, TransactionSource
+	SettingsFee, PaymentInstrument, TransactionType, SettingsFeeTargetFilterType, UserType, UserMode, TransactionSource,
+	RiskAlertCodes
 } from './generated-models';
 import {
 	PaymentInstrumentList,
@@ -153,6 +154,12 @@ export class FeeScheme {
 	}
 }
 
+export interface RiskFeeCode {
+	riskCode: RiskAlertCodes;
+	feePercent: number;
+	selected?: boolean;
+}
+
 export class FeeShemeTerms {
 	transactionFees!: number;
 	minTransactionFee!: number;
@@ -161,10 +168,12 @@ export class FeeShemeTerms {
 	chargebackFees!: number;
 	monthlyFees!: number;
 	minMonthlyFees!: number;
+	riskFees: RiskFeeCode[];
 
 	constructor(data: string) {
 		if (data !== '') {
 			const terms = JSON.parse(data);
+
 			this.transactionFees = terms.Transaction_fee;
 			this.minTransactionFee = terms.Min_transaction_fee;
 			this.rollingReserves = terms.Rolling_reserves;
@@ -172,6 +181,8 @@ export class FeeShemeTerms {
 			this.chargebackFees = terms.Chargeback_fees;
 			this.monthlyFees = terms.Monthly_fees;
 			this.minMonthlyFees = terms.Min_monthly_fees;
+			this.minMonthlyFees = terms.Min_monthly_fees;
+			this.riskFees = terms.Risk_fees;
 		}
 	}
 
@@ -183,7 +194,8 @@ export class FeeShemeTerms {
 			Rolling_reserves_days: this.rollingReservesDays,
 			Chargeback_fees: this.chargebackFees,
 			Monthly_fees: this.monthlyFees,
-			Min_monthly_fees: this.minMonthlyFees
+			Min_monthly_fees: this.minMonthlyFees,
+			Risk_fees: this.riskFees,
 		});
 	}
 }

@@ -53,11 +53,12 @@ export class AdminCountryBlackListDetailsComponent implements OnDestroy {
   private addCountry(code3: string): void {
   	this.errorMessage = '';
   	const c = getCountryByCode3(code3);
+		
   	if (c) {
   		this.saveInProgress = true;
-  		const requestData$ = this.adminService.addBlackCountry(c.code2);
   		this.subscriptions.add(
-  			requestData$.subscribe(({ data }) => {
+  			this.adminService.addBlackCountry(c.code2)
+					.subscribe(() => {
   				this.saveInProgress = false;
   				this.save.emit();
   			}, (error) => {

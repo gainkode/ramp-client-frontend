@@ -113,6 +113,7 @@ import {
 import { FeeSimiliarPanelComponent } from './components/fees/details/fee-similiar-panel/fee-similiar-panel.component';
 import { CostSimiliarPanelComponent } from './components/costs/schemes/cost-similiar-panel/cost-similiar-panel.component';
 import { SharedModule } from 'shared/shared.module';
+import { FeeRiskCodesComponent } from './components/fees/details/fee-risk-codes/fee-risk-codes.component';
 
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
@@ -229,6 +230,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminApiKeyDetailsComponent, 
 		AdminCurrencyPairsComponent, 
 		AdminCurrencyPairDetailsComponent,
+		
+		FeeRiskCodesComponent,
 		FaqPageComponent
 	],
 	providers: [

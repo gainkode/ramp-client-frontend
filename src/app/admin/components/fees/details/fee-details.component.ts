@@ -1,19 +1,20 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
 import { CountryFilterList } from 'model/country-code.model';
-import { FeeScheme, TransactionSourceFilterList } from 'model/fee-scheme.model';
+import { FeeScheme, RiskFeeCode, TransactionSourceFilterList } from 'model/fee-scheme.model';
 import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, SettingsFeeSimilarResult, SettingsFeeTargetFilterType, TransactionType, UserMode, UserType } from 'model/generated-models';
 import { CurrencyView, FeeTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserModeList, UserTypeList } from 'model/payment.model';
-import { Observable, Subject, Subscription, concat, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { Observable, Subject, concat, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, startWith, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
+import { FeeRiskCodesComponent } from './fee-risk-codes/fee-risk-codes.component';
 
 @Component({
 	selector: 'app-admin-fee-details',
@@ -21,9 +22,9 @@ import { getCheckedProviderList, getProviderList } from 'utils/utils';
 	styleUrls: ['fee-details.component.scss', '../../../assets/scss/_validation.scss']
 })
 export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
+	@ViewChild('feeRiskCodes') feeRiskCodes: FeeRiskCodesComponent;
   @Input() permission = 0;
-  @Input()
-  set currentScheme(scheme: FeeScheme | undefined) {
+  @Input() set currentScheme(scheme: FeeScheme | undefined) {
   	this.setFormData(scheme);
   	this.settingsId = (scheme) ? scheme?.id : '';
   	this.createNew = (this.settingsId === '');
@@ -31,7 +32,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
-  private subscriptions: Subscription = new Subscription();
+
   private removeDialog: NgbModalRef | undefined = undefined;
   private settingsId = '';
   TARGET_TYPE: typeof SettingsFeeTargetFilterType = SettingsFeeTargetFilterType;
@@ -42,6 +43,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   errorMessage = '';
   defaultSchemeName = '';
   currencyOptions: CurrencyView[] = [];
+	riskFees: RiskFeeCode[] = [];
   userTypeOptions = UserTypeList;
   userModes = UserModeList;
   transactionTypes = TransactionTypeList;
@@ -85,6 +87,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 		widgetIds: [undefined]
   });
 
+	private readonly destroy$ = new Subject<void>();
   constructor(
   	private formBuilder: UntypedFormBuilder,
   	private router: Router,
@@ -95,12 +98,14 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-  	this.subscriptions.add(
-  		this.form.get('target')?.valueChanges.subscribe(() => this.updateTarget())
-  	);
-  	this.subscriptions.add(
-  		this.form.get('instrument')?.valueChanges.subscribe(val => this.filterPaymentProviders(val))
-  	);
+		this.form.get('target')?.valueChanges
+			.pipe(takeUntil(this.destroy$))
+			.subscribe(() => this.updateTarget());
+
+		this.form.get('instrument')?.valueChanges
+			.pipe(takeUntil(this.destroy$))
+			.subscribe(val => this.filterPaymentProviders(val));
+
   	this.loadCommonSettings();
   	this.getPaymentProviders();
   	this.loadCurrencies();
@@ -108,7 +113,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-  	this.subscriptions.unsubscribe();
+		this.destroy$.next();
+		this.destroy$.complete();
   }
 
   private loadCommonSettings(): void{
@@ -124,18 +130,19 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   }
 
   private loadCurrencies(): void {
-  	this.subscriptions.add(
-  		this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-  			const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-  			if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-  				this.currencyOptions = currencySettings.settingsCurrency.list?. map((val) => new CurrencyView(val)) as CurrencyView[];
-  			} else {
-  				this.currencyOptions = [];
-  			}
-  		}, (error) => {
-  			this.errorMessage = error;
-  		})
-  	);
+		this.commonService.getSettingsCurrency()?.valueChanges
+			.pipe(take(1), takeUntil(this.destroy$))
+			.subscribe(({ data }) => {
+				const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+
+				if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+					this.currencyOptions = currencySettings.settingsCurrency.list?. map((val) => new CurrencyView(val)) as CurrencyView[];
+				} else {
+					this.currencyOptions = [];
+				}
+			}, (error) => {
+				this.errorMessage = error;
+			});
   }
 
   private setFormData(scheme: FeeScheme | undefined): void {
@@ -174,6 +181,16 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		// Terms
   		this.form.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
   		this.form.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
+
+			scheme?.terms?.riskFees.forEach(item => {
+        this.riskFees.push(
+          { 
+            riskCode: item.riskCode, 
+            feePercent: item.feePercent,
+            selected: true
+          }
+        );
+      });
 
   		this.setTargetValidator();
   		this.setTargetValueParams();
@@ -216,31 +233,34 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	data.currenciesTo = this.form.get('currenciesTo')?.value as Array<string>;
 	
   	const instrument = this.form.get('instrument')?.value;
-  	if (instrument === undefined || instrument === null) {
-  		data.instrument = [];
-  	} else {
-  		data.instrument = [instrument];
-  	}
+		
+		data.instrument = instrument === undefined || instrument === null ? [] : [instrument];
+
   	data.provider = this.form.get('provider')?.value as string[];
+
   	// terms
   	data.terms.transactionFees = Number(this.form.get('transactionFees')?.value);
   	data.terms.minTransactionFee = Number(this.form.get('minTransactionFee')?.value);
+
+		data.terms.riskFees = this.feeRiskCodes.mapFeeRiskCodes();
+
   	return data;
   }
 
-  private setTargetValues(values: string[]): void {
+  private setTargetValues(users: string[]): void {
   	if (this.targetType === SettingsFeeTargetFilterType.AccountId) {
-  		const filter = new Filter({
-  			users: values
-  		});
-  		this.subscriptions.add(
-  			this.getFilteredAccounts(filter).subscribe(result => {
-  				this.targetsOptions$ = of(result);
-  				this.form.get('targetValues')?.setValue(result);
-  			})
-  		);
+  		const filter = new Filter({ users });
+
+			this.getFilteredAccounts(filter)
+				.pipe(takeUntil(this.destroy$))
+				.subscribe(result => {
+					this.targetsOptions$ = of(result);
+					this.form.get('targetValues')?.setValue(result);
+				});
+
   	} else if (this.targetType === SettingsFeeTargetFilterType.Country) {
-  		const data = values.map(x => {
+			
+  		const data = users.map(x => {
   			const c = CountryFilterList.find(c => c.id === x);
   			if (c) {
   				c.imgClass = 'country-flag-admin';
@@ -249,13 +269,16 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   				return new CommonTargetValue();
   			}
   		}).filter(x => x.id !== '');
+
   		this.targetsOptions$ = of(data);
   		this.form.get('targetValues')?.setValue(data);
   	} else if (this.targetType === SettingsFeeTargetFilterType.InitiateFrom) {
-  		const data = values.map(x => {
+			
+  		const data = users.map(x => {
   			const c = TransactionSourceFilterList.find(c => c.id === x);
 			  return c ?? new CommonTargetValue();
   		}).filter(x => x.id !== '');
+			
   		this.targetsOptions$ = of(data);
   		this.form.get('targetValues')?.setValue(data);
   	} else {
@@ -265,6 +288,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   private setTargetValueParams(): void {
   	this.targetType = this.form.get('target')?.value as SettingsFeeTargetFilterType;
+		
   	switch (this.targetType) {
   		case SettingsFeeTargetFilterType.None: {
   			this.targetEntity = ['', ''];
@@ -319,7 +343,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 			debounceTime(300),
 			distinctUntilChanged(),
 			switchMap(searchString => {
-					if (searchString === null && !initialLoadDone && this.widgetIds.length) {
+					if (searchString === null && !initialLoadDone && this.widgetIds?.length) {
 							this.isWidgetsLoading = true;
 							initialLoadDone = true;
 							return this.getFilteredWidgets(new Filter({ widgets: this.widgetIds })).pipe(
@@ -414,39 +438,67 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   }
 
   private setTargetValidator(): void {
-  	const val = this.form.get('target')?.value;
-  	this.targetType = val ?? SettingsFeeTargetFilterType.None as SettingsFeeTargetFilterType;
+  	const targetValue = this.form.get('target')?.value;
+  	this.targetType = targetValue ?? SettingsFeeTargetFilterType.None as SettingsFeeTargetFilterType;
+
   	const targetValuesControl = this.form.get('targetValues');
-  	if (val === SettingsFeeTargetFilterType.None) {
+
+  	if (targetValue === SettingsFeeTargetFilterType.None) {
   		targetValuesControl?.clearValidators();
   	} else {
   		targetValuesControl?.setValidators([Validators.required]);
   	}
+		
   	targetValuesControl?.updateValueAndValidity();
   }
 
   private getPaymentProviders(): void {
   	this.providers = [];
-  	const data$ = this.adminService.getProviders()?.valueChanges;
-  	this.subscriptions.add(
-  		data$.subscribe(({ data }) => {
-  			const providers = data.getPaymentProviders as PaymentProvider[];
-  			this.providers = providers?.map((val) => new PaymentProviderView(val));
-  			const instrument = this.form.get('instrument')?.value;
-  			this.filterPaymentProviders([instrument]);
-  		})
-  	);
+
+		this.adminService.getProviders()?.valueChanges
+			.pipe(takeUntil(this.destroy$))
+			.subscribe(({ data }) => {
+				const providers = data.getPaymentProviders as PaymentProvider[];
+				this.providers = providers?.map((val) => new PaymentProviderView(val));
+				const instrument = this.form.get('instrument')?.value;
+				this.filterPaymentProviders([instrument]);
+			});
   }
 
   onSubmit(): void {
   	this.submitted = true;
+
   	if (this.form.valid) {
-  		this.saveScheme(this.setSchemeData());
+			const scheme = this.setSchemeData();
+			const isRiskFeesContainsDuplicates = this.feeRiskCodes.riskFeesContainsDuplicates();
+
+			if (scheme.terms.riskFees.some(item => !item.riskCode || !item.feePercent) || isRiskFeesContainsDuplicates) {
+				return undefined;
+			} 
+
+			this.errorMessage = '';
+			this.saveInProgress = true;
+
+			this.adminService.saveFeeSettings(scheme)
+				.pipe(
+					finalize(() => this.saveInProgress = false), 
+					takeUntil(this.destroy$))
+				.subscribe({
+					next: () => this.save.emit(),
+					error: (errorMessage) => {
+						this.errorMessage = errorMessage;
+						
+						if (this.auth.token === '') {
+							void this.router.navigateByUrl('/');
+						}
+					}
+			});
   	}
   }
 
   onTest(): void {
   	this.submitted = true;
+
   	if (this.form.valid) {
   		this.getSimilarSchemes(this.setSchemeData());
   	}
@@ -457,13 +509,15 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
   	});
-  	this.subscriptions.add(
-  		this.removeDialog.closed.subscribe(() => this.deleteSchemeConfirmed(this.settingsId ?? ''))
-  	);
+
+  	this.removeDialog.closed
+			.pipe(takeUntil(this.destroy$))
+			.subscribe(() => this.deleteSchemeConfirmed(this.settingsId ?? ''));
   }
 
   onStateChangeScheme(): void {
   	this.disableInProgress = true;
+
   	if (this.deleted) {
   		this.enableScheme();
   	} else {
@@ -472,53 +526,36 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   }
 
   disableScheme(): void {
-  	const requestData$ = this.adminService.disableFeeSettings(this.settingsId);
-		
-  	this.subscriptions.add(
-  		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
-  			next: () => this.save.emit(),
-  			error: (errorMessage) => {
-  				this.errorMessage = errorMessage;
-  				if (this.auth.token === '') {
-  					void this.router.navigateByUrl('/');
-  				}
-  			},
-  		})
-  	);
+		this.adminService.disableFeeSettings(this.settingsId)
+			.pipe(
+				finalize(() => this.saveInProgress = false),
+				takeUntil(this.destroy$))
+			.subscribe({
+				next: () => this.save.emit(),
+				error: (errorMessage) => {
+					this.errorMessage = errorMessage;
+					if (this.auth.token === '') {
+						void this.router.navigateByUrl('/');
+					}
+				},
+			});
   }
   enableScheme(): void {
   	this.disableInProgress = true;
-  	const requestData$ = this.adminService.enableFeeSettings(this.settingsId);
 
-  	this.subscriptions.add(
-  		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
-  			next: () => this.save.emit(),
-  			error: (errorMessage) => {
-  				this.errorMessage = errorMessage;
-  				if (this.auth.token === '') {
-  					void this.router.navigateByUrl('/');
-  				}
-  			},
-  		})
-  	);
-  }
-
-  private saveScheme(scheme: FeeScheme): void {
-  	this.errorMessage = '';
-  	this.saveInProgress = true;
-  	const requestData$ = this.adminService.saveFeeSettings(scheme);
-  	
-  	this.subscriptions.add(
-  		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
-  			next: () => this.save.emit(),
-  			error: (errorMessage) => {
-  				this.errorMessage = errorMessage;
-  				if (this.auth.token === '') {
-  					void this.router.navigateByUrl('/');
-  				}
-  			},
-  		})
-  	);
+		this.adminService.enableFeeSettings(this.settingsId)
+			.pipe(
+				finalize(() => this.saveInProgress = false),
+				takeUntil(this.destroy$))
+			.subscribe({
+				next: () => this.save.emit(),
+				error: (errorMessage) => {
+					this.errorMessage = errorMessage;
+					if (this.auth.token === '') {
+						void this.router.navigateByUrl('/');
+					}
+				}
+			});
   }
 
   private getSimilarSchemes(scheme: FeeScheme): void {
@@ -530,18 +567,19 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   deleteSchemeConfirmed(id: string): void {
   	this.errorMessage = '';
   	this.saveInProgress = true;
-  	const requestData$ = this.adminService.deleteFeeSettings(id);
 
-  	this.subscriptions.add(
-  		requestData$.pipe(finalize(() => this.saveInProgress = false)).subscribe({
-  			next: () => this.save.emit(),
-  			error: (errorMessage) => {
-  				this.errorMessage = errorMessage;
-  				if (this.auth.token === '') {
-  					void this.router.navigateByUrl('/');
-  				}
-  			},
-  		})
-  	);
+		this.adminService.deleteFeeSettings(id)
+			.pipe(
+				finalize(() => this.saveInProgress = false),
+				takeUntil(this.destroy$))
+			.subscribe({
+				next: () => this.save.emit(),
+				error: (errorMessage) => {
+					this.errorMessage = errorMessage;
+					if (this.auth.token === '') {
+						void this.router.navigateByUrl('/');
+					}
+				}
+		});
   }
 }
