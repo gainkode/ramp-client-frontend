@@ -182,7 +182,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('transactionFees')?.setValue(scheme?.terms.transactionFees);
   		this.form.get('minTransactionFee')?.setValue(scheme?.terms.minTransactionFee);
 
-			scheme?.terms?.riskFees.forEach(item => {
+			scheme?.terms?.riskFees?.forEach(item => {
         this.riskFees.push(
           { 
             riskCode: item.riskCode, 
