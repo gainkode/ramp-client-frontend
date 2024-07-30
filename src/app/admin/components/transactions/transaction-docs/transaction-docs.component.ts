@@ -52,6 +52,7 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 	uploadProgress: number;
 	uploadSub: Subscription;
 	selectedSignature: Signature;
+	isSignatureAdd = false;
 	constructor(
 		private fb: FormBuilder,
 		private cdr: ChangeDetectorRef,
@@ -111,18 +112,20 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 		this.service.getState$
 			.pipe(map(x => x?.documents), takeUntil(this.destroy$))
 			.subscribe((data) => {
-				this.selectedSignature = data[0];
-				const datepipe = new DatePipe('en-US');
-				
-				this.form.patchValue({
-						status: this.selectedSignature.status,
-						executedAt: datepipe.transform(this.selectedSignature.executedAt, 'dd MMM YYYY') as string,
-						createdAt:  datepipe.transform(this.selectedSignature.createdAt, 'dd MMM YYYY HH:mm:ss') as string,
-				});
-			
-				console.log(this.selectedSignature)
+				if (data?.length === 0) {
+					this.isSignatureAdd = true;
+				} else {
+					this.selectedSignature = data[0];
+					const datepipe = new DatePipe('en-US');
+					
+					this.form.patchValue({
+							status: this.selectedSignature.status,
+							executedAt: datepipe.transform(this.selectedSignature.executedAt, 'dd MMM YYYY') as string,
+							createdAt:  datepipe.transform(this.selectedSignature.createdAt, 'dd MMM YYYY HH:mm:ss') as string,
+					});
 
-				this.tableDataSource.data = this.selectedSignature.signatureDocument;
+					this.tableDataSource.data = this.selectedSignature.signatureDocument;
+				}
 			});
 	}
 

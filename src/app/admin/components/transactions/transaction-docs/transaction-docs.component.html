@@ -13,18 +13,20 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="size-wider">
-      <mat-label>Created</mat-label>
-      <input matInput type="text" formControlName="createdAt" [readonly]="true"/>
-    </mat-form-field>
+    <fieldset *ngIf="!isSignatureAdd">
+      <mat-form-field appearance="outline" class="size-wider">
+        <mat-label>Created</mat-label>
+        <input matInput type="text" formControlName="createdAt" [readonly]="true"/>
+      </mat-form-field>
+  
+      <mat-form-field appearance="outline" class="size-smaller">
+        <mat-label>Executed</mat-label>
+        <input matInput type="text" formControlName="executedAt" [readonly]="true"/>
+      </mat-form-field>
+    </fieldset>
 
-    <mat-form-field appearance="outline" class="size-smaller">
-      <mat-label>Executed</mat-label>
-      <input matInput type="text" formControlName="executedAt" [readonly]="true"/>
-    </mat-form-field>
   </div>
 </div>
-
 
 <!-- <button class="btn btn-primary mg-t-10 mg-b-10 tx-14" type="button" (click)="onAddDocument()">Add Document</button> -->
 

@@ -25,8 +25,7 @@ export class ApiFacadeService {
 	}
 
 	public post<T>(uri: string, body: any = {}, options: IRequestOptions = {}): Observable<T> {
-		// return this.httpClient.post<T>(this.makeUri(this.apiUrl, uri), body, this.concatAuthOptions(options));
-		return this.httpClient.post<T>(this.makeUri('https://8e14-46-172-248-169.ngrok-free.app', uri), body, this.concatAuthOptions(options));
+		return this.httpClient.post<T>(this.makeUri(this.apiUrl, uri), body, this.concatAuthOptions(options));
 	}
 
 	public postFormData(uri: string, body: FormData): Observable<HttpEvent<Object>> {
