@@ -46,12 +46,6 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	'destination'
   ];
 
-	displayedAmountColumns: string[] = [
-  	'details',
-  	'currency',
-  	'minAmount',
-		'maxAmount'
-  ];
   isLoading = false;
   saveInProgress = false;
   deleteInProgress = false;
@@ -128,6 +122,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
 		this.destroy$.next();
+		this.destroy$.complete();
   }
 
   private loadCommonSettings(): void{

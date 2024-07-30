@@ -953,6 +953,7 @@ export enum LiquidityDepositOrderStatus {
 
 export type LiquidityExchangeOrder = {
   __typename?: 'LiquidityExchangeOrder';
+  baseCurrency?: Maybe<Scalars['String']['output']>;
   created: Scalars['DateTime']['output'];
   error?: Maybe<Scalars['String']['output']>;
   executed?: Maybe<Scalars['DateTime']['output']>;
@@ -966,6 +967,7 @@ export type LiquidityExchangeOrder = {
   providerSpecificStates?: Maybe<Array<DateMap>>;
   published?: Maybe<Scalars['DateTime']['output']>;
   publishingResult?: Maybe<Scalars['String']['output']>;
+  queryCurrency?: Maybe<Scalars['String']['output']>;
   side: LiquidityExchangeOrderSide;
   state: LiquidityExchangeOrderState;
   status: Scalars['String']['output'];
@@ -1011,6 +1013,7 @@ export enum LiquidityProvider {
   Bitstamp = 'Bitstamp',
   GetCoins = 'GetCoins',
   Kraken = 'Kraken',
+  Okx = 'Okx',
   PrimeTrustLiquidity = 'PrimeTrustLiquidity',
   Xbo = 'Xbo'
 }
@@ -2493,6 +2496,8 @@ export type Query = {
   getRates?: Maybe<Array<Rate>>;
   /** Get receive wallets for users */
   getReceiveWallets?: Maybe<AssetAddressShortListResult>;
+  /** This endpoint can be used to get all risk alert types. */
+  getRiskAlertTypes?: Maybe<Array<Maybe<RiskAlertType>>>;
   getRiskAlerts?: Maybe<RiskAlertResultList>;
   /** Get Roles */
   getRoles?: Maybe<Array<UserRole>>;

@@ -62,7 +62,8 @@ import {
 	SettingsFeeSimilarResult,
   SettingsCostSimilarResult,
   TransactionSimulatorResult,
-  UserFilterInput
+  UserFilterInput,
+  RiskAlertType
 } from '../model/generated-models';
 import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -659,6 +660,17 @@ const GET_RISK_ALERTS = gql`
         userId
         user { firstName, lastName, email, mode, type }
       }
+    }
+  }
+`;
+
+const GET_RISK_ALERT_TYPES = gql`
+  query GetRiskAlertTypes {
+    getRiskAlertTypes {
+      riskAlertTypeCode
+      description
+      created
+      disabled
     }
   }
 `;
@@ -3363,6 +3375,13 @@ export class AdminDataService {
 				};
 			}
 		}));
+	}
+
+  getRiskAlertTypes(): Observable<RiskAlertType[]> {
+		return this.watchQuery<{ getRiskAlertTypes: RiskAlertType[]; }, any>({
+			query: GET_RISK_ALERT_TYPES,
+			fetchPolicy: 'network-only'
+		}).pipe(map(res => res.data.getRiskAlertTypes));
 	}
 
 	getDevices(userId: string): Observable<{ list: Array<DeviceItem>; count: number; }> {
