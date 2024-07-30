@@ -154,13 +154,6 @@
               [closeOnSelect]="false"
               >
             </ng-select>
-            <div
-              *ngIf="(form.controls.provider.touched || submitted) && (form.controls.provider.errors?.['required'])"
-              class="tx-danger">
-              <small>
-                Please specify at least one provider
-              </small>
-            </div>
             <app-fee-similiar-panel [targetField]="(similarSchemas$ | async)?.targetPaymentProviders"> </app-fee-similiar-panel>
           </div>
 

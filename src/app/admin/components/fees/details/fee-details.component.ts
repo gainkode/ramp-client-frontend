@@ -81,7 +81,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   	userType: [undefined],
   	userMode: [[]],
   	trxType: [undefined],
-  	provider: [undefined, Validators.required],
+  	provider: [undefined],
   	transactionFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
   	minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
 		widgetIds: [undefined]
