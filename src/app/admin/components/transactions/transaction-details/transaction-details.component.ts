@@ -259,6 +259,20 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngOnDestroy(): void {
+		this.unsubscribe$.next();
+		this.unsubscribe$.complete();
+
+    this.exchangeRate.stop();
+	}
+
+  onChangeOriginaOrderIdCancel(): void {
+    this.form.controls.transactionStatus.patchValue(this.data.status);
+    
+    this.originalOrderDialog?.close('');
+    this.isFastPaid = false;
+  }
+
   onChangeOriginaOrderIdConfirm(): void {
     if (this.originalOrderId) {
       this.paymentOrderChanges.originalOrderId = this.originalOrderId;
@@ -292,6 +306,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     if (!this.data.paymentOrder) {
       this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
         backdrop: 'static',
+        keyboard: false,
         windowClass: 'modalCusSty',
       });
     }
@@ -318,13 +333,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     return item.title.toLocaleLowerCase().indexOf(term) > -1 ||
     item.id && item.id.toLocaleLowerCase().indexOf(term) > -1;
   }
-
-  ngOnDestroy(): void {
-		this.unsubscribe$.next();
-		this.unsubscribe$.complete();
-
-    this.exchangeRate.stop();
-	}
 
   onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
     if (rate) {
@@ -687,13 +695,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   onPaid(): void {
     this.isFastPaid = true;
 
-    if (this.data.paymentOrder) {
-      if (!this.isTransactionCompleted) {
-        this.paymentStatusChangeDialog = this.modalService.open(this.paymentStatusConfirmContent, {
-          backdrop: 'static',
-          windowClass: 'modalCusSty',
-        });
-      }
+    if (this.data.paymentOrder && !this.isTransactionCompleted) {
+      this.paymentStatusChangeDialog = this.modalService.open(this.paymentStatusConfirmContent, {
+        backdrop: 'static',
+        windowClass: 'modalCusSty',
+      });
     } else {
       this.onOriginalOrderModal();
     }

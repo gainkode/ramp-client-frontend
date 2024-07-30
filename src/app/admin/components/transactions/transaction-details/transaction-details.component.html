@@ -698,7 +698,7 @@
 <ng-template #originalorderid_confirm_content let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Update transaction</h5>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <button type="button" class="close" aria-label="Close" (click)="onChangeOriginaOrderIdCancel()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -742,7 +742,7 @@
 <ng-template #payment_status_confirm_content let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Update transaction</h5>
-    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <button type="button" class="close" aria-label="Close" (click)="onChangePaymentCancel()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
