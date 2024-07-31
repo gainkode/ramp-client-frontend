@@ -124,7 +124,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
   	this.pSubscriptions.add(this.currencyField?.valueChanges.subscribe(val => this.onCurrencyUpdated(val)));
-  	this.pSubscriptions.add(this.amountField?.valueChanges.subscribe(val => this.onAmountUpdated(val)));
+  	this.pSubscriptions.add(this.amountField?.valueChanges.subscribe(() => this.onAmountUpdated()));
   	this.pSubscriptions.add(this.walletField?.valueChanges.subscribe(val => this.onWalletUpdated(val)));
   	this.pSubscriptions.add(this.contactField?.valueChanges.subscribe(val => this.onContactUpdated(val)));
   	if (this.presetCurrency === '') {
@@ -296,7 +296,7 @@ export class WidgetSendDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private onAmountUpdated(val: any): void {
+  private onAmountUpdated(): void {
   	if (this.amountField?.valid) {
   		this.zeroAmount = (this.amountField.value === '0');
   	} else {

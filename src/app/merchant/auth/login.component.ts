@@ -41,14 +41,14 @@ export class MerchantLoginComponent implements OnDestroy {
 			}
 		});
 		this.subscriptions.add(
-			dialogRef.afterClosed().subscribe(result => {
+			dialogRef.afterClosed().subscribe(() => {
 				void this.router.navigateByUrl('/personal/auth/login');
 			})
 		);
 	}
 
 	private showWrongUserModeRedirectDialog(): void {
-		const dialogRef = this.dialog.open(CommonDialogBox, {
+		this.dialog.open(CommonDialogBox, {
 			width: '550px',
 			data: {
 				title: '',//Authentication

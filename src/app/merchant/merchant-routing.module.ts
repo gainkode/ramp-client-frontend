@@ -21,13 +21,13 @@ export const routes: Routes = [
 	{ 
 		path: 'auth/login', 
 		component: MerchantLoginComponent,
-		data: {authRoute: true},
+		data: { authRoute: true },
 		canActivate: [MerchantGuard]
 	},
 	{ 
 		path: 'auth/register', 
 		component: MerchantRegisterComponent,
-		data: {authRoute: true},
+		data: { authRoute: true },
 		canActivate: [MerchantGuard]
 	},
 	{ path: 'auth/restore', component: MerchantRestoreComponent },
@@ -47,7 +47,7 @@ export const routes: Routes = [
 			{ path: 'transactions', component: ProfileTransactionsComponent },
 			{ path: '**', redirectTo: 'home' }
 		],
-		data: {mainAuthentificatedRoute: true},
+		data: { mainAuthentificatedRoute: true },
 		canActivate: [MerchantGuard]
 	},
 	// Authenticated account profile

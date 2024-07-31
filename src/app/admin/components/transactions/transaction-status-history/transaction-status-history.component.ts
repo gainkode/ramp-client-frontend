@@ -169,7 +169,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   			this.transactionStatusHistory = list;
   			this.transactionCount = count;
   			this.inProgress = false;
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
@@ -186,7 +186,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   		statusListData$.valueChanges.subscribe(({ data }) => {
   			this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
   			this.loadCurrencies();
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
@@ -208,7 +208,7 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   				this.currencyOptions = [];
   			}
   			this.loadTransactions();
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');

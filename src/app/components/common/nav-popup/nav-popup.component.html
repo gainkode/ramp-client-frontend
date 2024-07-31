@@ -14,7 +14,7 @@
         </div>
         <mat-icon class="__nav-popup-arrow">{{menuArrow}}</mat-icon>
     </button>
-    <mat-menu #menu="matMenu" class="__popup-menu-panel" (closed)="onMenuClosed($event)">
+    <mat-menu #menu="matMenu" class="__popup-menu-panel" (closed)="onMenuClosed()">
         <div *ngFor="let item of items;let i=index;">
             <button type="button" class="__popup-menu-button" (click)="clickItem(item)">
                 <div class="__popup-menu-button-content">

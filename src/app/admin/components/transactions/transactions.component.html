@@ -270,18 +270,22 @@
           </div>
 
           <ng-template #details_content let-modal>
-            <div class="modal-header">
-              <h5 class="modal-title">Transaction details</h5>
+            <div class="modal-body tabs">
+              <app-admin-transaction-details 
+                [permission]="permission" 
+                [transaction]="selectedTransaction"
+                [currencies]="currencyOptions" 
+                [isScreeningInfo]="isScreeningInfo" 
+                [userStatuses]="userStatuses" 
+                (save)="onSaveTransaction()"
+                (close)="onCloseDetails()">
+              </app-admin-transaction-details>
+
               <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body pt-0">
-              <app-admin-transaction-details [permission]="permission" [transaction]="selectedTransaction"
-                [currencies]="currencyOptions" [isScreeningInfo]="isScreeningInfo" [userStatuses]="userStatuses" (save)="onSaveTransaction()"
-                (close)="onCloseDetails()">
-              </app-admin-transaction-details>
-            </div>
+            
           </ng-template>
 
           <ng-template #create_content let-modal>

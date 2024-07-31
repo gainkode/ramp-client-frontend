@@ -9,7 +9,7 @@ export class WidgetIframeComponent {
   @Input() widgetLink = '';
 
   ngOnInit() {
-    console.log(this.widgetLink)
+    console.log(this.widgetLink);
   }
   allow = 'camer';
 

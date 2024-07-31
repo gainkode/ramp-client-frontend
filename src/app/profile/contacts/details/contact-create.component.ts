@@ -98,7 +98,7 @@ export class ProfileContactCreateComponent implements OnInit, OnDestroy {
     	this.errorMessage = '';
     	this.inProgress = true;
     	this.subscriptions.add(
-    		this.profileService.saveMyContact('', userName, email, crypto, address).subscribe(({ data }) => {
+    		this.profileService.saveMyContact('', userName, email, crypto, address).subscribe(() => {
     			this.inProgress = false;
     			const item = new ProfileItemContainer();
     			item.container = ProfileItemContainerType.Contact;

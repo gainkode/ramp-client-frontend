@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, SettingsFeeShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from '../model/generated-models';
+import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from '../model/generated-models';
 import { WidgetSettings, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
 import { CheckoutSummary, PaymentProviderInstrumentView } from '../model/payment.model';
 import { AuthService } from './auth.service';

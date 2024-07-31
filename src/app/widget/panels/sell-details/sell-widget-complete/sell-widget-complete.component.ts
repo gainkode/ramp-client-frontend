@@ -16,8 +16,8 @@ import { EnvService } from 'services/env.service';
 	]
 })
 export class WidgetSellCompleteComponent implements OnInit, OnDestroy {
-  @Input() address: string = '';
-  @Input() amount: number = 0;
+  @Input() address = '';
+  @Input() amount = 0;
 	@Input() currency: string | undefined = undefined;
   @Output() onProgress = new EventEmitter<boolean>();
 	@Output() onFinish = new EventEmitter();
@@ -63,7 +63,7 @@ export class WidgetSellCompleteComponent implements OnInit, OnDestroy {
 					this.sellectedCurrency = currencyList.find((x) => x.symbol === this.currency);
 					this.onProgress.emit(false);
   			},
-  			(error) => {
+  			() => {
   				this.onProgress.emit(false);
   			})
   	);

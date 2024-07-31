@@ -5,7 +5,7 @@
         </span>
         <app-signup-panel [widget]="true" [userType]="userType" [userName]="email" [wizardButtons]="true"
             [errorMessage]="errorMessage" (error)="registerError($event)" (progressChange)="onProgress.emit($event)"
-            (onBack)="onBack.emit()" (registered)="registerComplete($event)">
+            (onBack)="onBack.emit()" (registered)="registerComplete()">
         </app-signup-panel>
     </div>
     

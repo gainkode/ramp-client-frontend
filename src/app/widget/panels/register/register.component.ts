@@ -23,7 +23,7 @@ export class WidgetRegisterComponent {
     	this.errorMessage = error;
     }
 
-    registerComplete(email: string): void {
+    registerComplete(): void {
     	this.success = true;
     }
 }

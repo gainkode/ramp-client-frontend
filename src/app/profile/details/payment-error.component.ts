@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
 import { PaymentErrorDetails, PaymentWidgetType } from 'model/payment-base.model';
 import { ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
-import { AuthService } from 'services/auth.service';
 
 @Component({
 	selector: 'app-profile-payment-error',
@@ -15,7 +13,7 @@ export class ProfilePaymentErrorComponent implements OnInit {
 
     transactionType = '';
 
-    constructor(private router: Router, private auth: AuthService) { }
+    constructor() { }
 
     ngOnInit(): void {
     	if (this.error?.paymentType === PaymentWidgetType.Buy) {

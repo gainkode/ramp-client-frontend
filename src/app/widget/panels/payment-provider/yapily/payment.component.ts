@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { PaymentBank, PaymentBankInput, PaymentPreauthResultShort, TransactionInput, TransactionShort, TransactionSource, TransactionType, YapilyAuthorizationRequestStatus } from 'model/generated-models';
 import { CheckoutSummary } from 'model/payment.model';
@@ -30,7 +29,6 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   private pPaymentStatusSchangedSubscription: Subscription | undefined = undefined;
   constructor(
   	private cdr: ChangeDetectorRef,
-  	private readonly http: HttpClient,
   	private notification: NotificationService,
   	public paymentService: PaymentDataService,
   	public pager: WidgetPaymentPagerService

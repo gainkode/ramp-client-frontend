@@ -1,9 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { Filter } from 'admin/model/filter.model';
+import { TransactionItemFull } from 'model/transaction.model';
 import { Observable, ReplaySubject, Subscription, lastValueFrom } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
-import { Filter } from 'admin/model/filter.model';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TransactionItemFull } from 'model/transaction.model';
 
 @Injectable()
 export class TransactionService implements OnDestroy {
@@ -24,7 +23,7 @@ export class TransactionService implements OnDestroy {
 
 	private subscriptions: Subscription = new Subscription();
 
-	constructor(private adminDataService: AdminDataService, private _snackBar: MatSnackBar) { }
+	constructor(private adminDataService: AdminDataService) { }
 
 	ngOnDestroy(): void {
 		this.subscriptions.unsubscribe();

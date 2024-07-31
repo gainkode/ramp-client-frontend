@@ -519,7 +519,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   	this.walletField?.updateValueAndValidity();
   }
 
-  private sendData(spend: number | undefined, receive: number | undefined): void {
+  private sendData(): void {
   	if (this.pInitState === false) {
   		const data = new CheckoutSummary();
   		if (this.amountSpendField?.valid) {
@@ -722,7 +722,7 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   			}
   		}
 
-  		this.sendData(undefined, undefined);
+  		this.sendData();
   	}
   }
   
@@ -914,7 +914,8 @@ export class WidgetOrderDetailsComponent implements OnInit, OnDestroy, AfterView
   		false;
   	this.pSpendChanged = false;
   	this.pReceiveChanged = false;
-  	this.sendData(spend, receive);
+		
+  	this.sendData();
   }
 
   showPersonalVerification(): void {

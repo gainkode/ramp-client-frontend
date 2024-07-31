@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MenuItem } from '../../../model/common.model';
-import { MatMenuTrigger, MenuCloseReason } from '@angular/material/menu';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar, MatSnackBarHorizontalPosition, MatSnackBarRef, MatSnackBarVerticalPosition, MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { AuthService } from 'services/auth.service';
 import { NotificationService } from 'services/notification.service';
@@ -110,7 +110,7 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     					if (error.message === 'Access denied') {
     						this.subscriptions.add(
     							this.auth.refreshToken().subscribe(
-    								({ data }) => {
+    								() => {
     									console.log('Token refreshed');
     									setTimeout(() => {
     										this.subscriptions.add(
@@ -145,10 +145,8 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     private loadTransactionsTotal(): void {
     	const totalData = this.commonService.getMyTransactionsTotal();
     	this.subscriptions.add(
-    		totalData.valueChanges.pipe(take(1)).subscribe(({ data }) => {
+    		totalData.valueChanges.pipe(take(1)).subscribe(() => {
     			this.startNotifications();
-    		}, (error) => {
-
     		})
     	);
     }
@@ -178,22 +176,13 @@ export class NavPopupComponent implements OnInit, OnDestroy {
 
     kycNotificationTest(): void {
     	this.subscriptions.add(
-    		this.notification.sendTestKycNotification().subscribe(({ data }) => {
-    			// data
-    		}, (error) => {
-    			// error
-    		})
+    		this.notification.sendTestKycNotification().subscribe()
     	);
     }
 
     userNotificationTest(): void {
     	this.subscriptions.add(
-    		this.notification.sendTestNotification().subscribe(({ data }) => {
-    			// data
-    		}, (error) => {
-    			// error
-    		})
-    	);
+    		this.notification.sendTestNotification().subscribe());
     }
 
     onMenuOpened(): void {
@@ -201,7 +190,7 @@ export class NavPopupComponent implements OnInit, OnDestroy {
     	this.menuArrow = 'expand_less';
     }
 
-    onMenuClosed(reason: MenuCloseReason): void {
+    onMenuClosed(): void {
     	this.menuOpened = false;
     	this.menuArrow = 'expand_more';
     }

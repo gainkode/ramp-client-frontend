@@ -205,7 +205,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		this.removeDialog.closed.subscribe(val => {
+  		this.removeDialog.closed.subscribe(() => {
   			this.deleteAccountConfirmed(this.settingsId ?? '');
   		})
   	);
@@ -233,7 +233,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.saveBankAccountSettings(account, this.createNew);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {
@@ -251,7 +251,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.deleteBankAccountSettings(id);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {

@@ -210,9 +210,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     	console.log('Started KYC notifications [login-panel]');
     	this.subscriptions.add(
     		this.notification.subscribeToKycNotifications().subscribe(
-    			({ data }) => {
-    				this.loadAccountData();
-    			},
+    			() => this.loadAccountData(),
     			(error) => {
     				console.error('KYC notification error', error);
     			}

@@ -50,7 +50,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     }
 
     onVerify(tier: TierItem): void {
-    	const dialogRef = this.dialog.open(KycVerificationDialogBox, {
+    	this.dialog.open(KycVerificationDialogBox, {
     		width: '700px',
     		height: '80%',
     		data: {
@@ -89,7 +89,7 @@ export class ProfileVerificationSettingsComponent implements OnInit, OnDestroy {
     			tiersData$.subscribe(({ data }) => {
     				this.progressChange.emit(false);
     				if (this.auth.user) {
-    					this.tiers = getTierBlocks(this.auth.user, this.verifiedTierId, data.mySettingsKycTiers);
+    					this.tiers = getTierBlocks(this.auth.user, data.mySettingsKycTiers);
     				}
     				this.kycUrl = settingsCommon.kycBaseAddress as string;
     			}, (error) => {

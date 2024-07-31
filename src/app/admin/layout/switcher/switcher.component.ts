@@ -289,7 +289,7 @@ export class AdminSwitcherComponent implements OnInit {
   	sessionStorage.setItem('BgImage', img);
   	// this.body?.classList.add(img);
   	const allImg = document.querySelectorAll('.bg-img');
-  	allImg.forEach((el, i) => {
+  	allImg.forEach((el) => {
   		const ele = el.classList[0];
   		this.body?.classList.remove(ele);
   		this.body?.classList.add(img);

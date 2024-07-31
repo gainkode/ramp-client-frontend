@@ -38,14 +38,9 @@ export class ExchangeRateService {
 	}
 
 	stop(): void {
-		this.active = false;
 		// service shouldn't be stopped as it is a single-ton service
 
-		// this.pSubscriptions.unsubscribe();
-		// if (this.pRateSubscription) {
-		//     this.pRateSubscription.unsubscribe();
-		//     this.pRateSubscription = undefined;
-		// }
+		this.active = false;
 	}
 
 	update(): void {
@@ -84,7 +79,9 @@ export class ExchangeRateService {
 			return true;
 		}
 		let result = true;
+		
 		this.errorMessage = '';
+
 		if (this.countDownInit) {
 			let currencyFrom = '';
 			let currencyTo = '';

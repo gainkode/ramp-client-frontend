@@ -1,4 +1,4 @@
-<div *ngIf="data" class="card card-body pd-20 pd-md-40 border shadow-none" style="overflow: hidden;">
+<div *ngIf="data" class="card card-body pd-20 pd-md-40 border shadow-none overflow-hidden">
     <h5 class="card-title mg-b-20">
         {{title}}
     </h5>
@@ -15,7 +15,6 @@
                 <ng-container *ngIf="col.type !== 'count-volume'">
                     <p>{{row[col.key]}}</p>
                 </ng-container>
-                <button *ngIf="col.type === 'action'" mat-button>Show all</button>
             </div>
         </div>
     </div>

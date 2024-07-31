@@ -1,7 +1,7 @@
 import { KycProvider, SettingsKycTierShortEx, SettingsKycTierShortExListResult, User } from '../model/generated-models';
 import { TierItem } from '../model/identification.model';
 
-export function getTierBlocks(user: User, verifiedTierId: string, tiersData: SettingsKycTierShortExListResult): TierItem[] {
+export function getTierBlocks(user: User, tiersData: SettingsKycTierShortExListResult): TierItem[] {
 	let tiers: TierItem[] = [];
 	if ((tiersData.count ?? 0 > 0) && tiersData.list) {
 		const rawTiers = [...tiersData.list];

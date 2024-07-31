@@ -112,8 +112,6 @@ export class AdminSidebarComponent implements OnInit {
 		sidemenu?.addEventListener('scroll', () => { }, { passive: false });
 		sidemenu?.addEventListener('wheel', () => { }, { passive: false });
 
-		//switcherArrowFn();
-
 		fromEvent(window, 'resize').subscribe(() => {
 			if (window.innerWidth > 772) {
 				document.querySelector('body.horizontal')?.classList.remove('sidenav-toggled');
@@ -123,7 +121,7 @@ export class AdminSidebarComponent implements OnInit {
         window.innerWidth > 772
 			) {
 				const li = document.querySelectorAll('.side-menu li');
-				li.forEach((e, i) => {
+				li.forEach((e) => {
 					e.classList.remove('is-expanded');
 				});
 			}

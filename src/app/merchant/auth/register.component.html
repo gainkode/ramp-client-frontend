@@ -17,7 +17,7 @@
             <mat-progress-bar *ngIf="inProgress" color="accent" mode="indeterminate"></mat-progress-bar>
             <div class="__auth-data-container">
                 <app-signup-panel [errorMessage]="errorMessage" [userType]="USER_TYPE.Merchant" (error)="onError($event)"
-                    (progressChange)="onProgressChange($event)" (registered)="onRegistered($event)">
+                    (progressChange)="onProgressChange($event)" (registered)="onRegistered()">
                 </app-signup-panel>
             </div>
         </div>

@@ -180,7 +180,7 @@ export class SendWidgetComponent implements OnInit, OnDestroy {
 			destination: this.summary.address,
 			verifyWhenPaid: false,
 			treatAsGrossAmount: this.summary.treatAsGrossAmount
-		}
+		};
 
 		this.createTransactionInternal();
   }

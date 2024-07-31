@@ -18,7 +18,7 @@ export const customFilterPredicate = <T>(data: T, filterName: string): boolean =
 			// that has a very low chance of being typed in by somebody in a text field. This one in
 			// particular is "White up-pointing triangle with dot" from
 			// https://en.wikipedia.org/wiki/List_of_Unicode_characters
-			return currentTerm + (data as { [key: string]: any })[key] + '◬';
+			return currentTerm + (data as { [key: string]: any; })[key] + '◬';
 		}, '')
 		.toLowerCase();
 

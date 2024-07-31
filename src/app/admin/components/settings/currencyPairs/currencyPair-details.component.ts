@@ -83,22 +83,23 @@ export class AdminCurrencyPairDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private loadCurrencies(): void {
-  	this.subscriptions.add(
-  		this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-  			this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe(({ data }) => {
-  				const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
-  				if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-  					this.currencyOptions = currencySettings.settingsCurrency.list?. map((val) => new CurrencyView(val)) as CurrencyView[];
-  				} else {
-  					this.currencyOptions = [];
-  				}
-  			}, (error) => {
-  				this.errorMessage = error;
-  			});
-  		})
-  	);
-  }
+	private loadCurrencies(): void {
+		this.subscriptions.add(
+			this.commonService.getSettingsCurrency()?.valueChanges.pipe(take(1)).subscribe({
+				next: ({ data }) => {
+					const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+					if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+						this.currencyOptions = currencySettings.settingsCurrency.list?.map((val) => new CurrencyView(val)) as CurrencyView[];
+					} else {
+						this.currencyOptions = [];
+					}
+				},
+				error: (error) => {
+					this.errorMessage = error;
+				}
+			})
+		);
+	}
 
   onSubmit(): void {
   	this.submitted = true;
@@ -109,12 +110,12 @@ export class AdminCurrencyPairDetailsComponent implements OnInit, OnDestroy {
 
   private getLuqidityProviders(): void {
   	this.saveInProgress = true;
-  	const listData$ = this.adminService.getLiquidityProviders().pipe(take(1));
+
   	this.subscriptions.add(
-  		listData$.subscribe(({ list, count }) => {
+  		this.adminService.getLiquidityProviders().pipe(take(1)).subscribe(({ list }) => {
   			this.liquidityProviders = list;
   			this.onSave();
-  		}, (error) => {
+  		}, () => {
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
   			}
@@ -122,7 +123,7 @@ export class AdminCurrencyPairDetailsComponent implements OnInit, OnDestroy {
   	);
   }
   private onSave(): void {
-  	const liquidityProvider = this.liquidityProviders.find(item => item.name?.id == this.form.get('liquidityProvider')?.value);
+  	const liquidityProvider = this.liquidityProviders.find(item => item.name?.id === this.form.get('liquidityProvider')?.value);
   	const rate = parseFloat(this.form.get('rate')?.value);
   	const requestData$ = this.adminService.createCurrencyPair(
   		this.form.get('fromCurrency')?.value,
@@ -131,7 +132,7 @@ export class AdminCurrencyPairDetailsComponent implements OnInit, OnDestroy {
   		rate
   	);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {

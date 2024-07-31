@@ -221,7 +221,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   				val.statusInfo = this.userStatuses.find(x => x.key === val.status);
   			});
   			this.inProgress = false;
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
@@ -238,7 +238,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   		statusListData$.valueChanges.subscribe(({ data }) => {
   			this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
   			this.loadCurrencies();
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
@@ -261,7 +261,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   				this.currencyOptions = [];
   			}
   			this.loadTransactions();
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
@@ -274,9 +274,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   	const transaction = this.transactions.find(x => x.id === transactionId);
   	if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
   		void this.router.navigateByUrl(`/admin/fiat-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
-  	} else {
-  		// void this.router.navigateByUrl(`/admin/crypto-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
-  	}
+  	} 
   }
 
   refresh(): void {
@@ -291,12 +289,12 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   		this.filter
   	);
   	this.subscriptions.add(
-  		exportData$.subscribe(({ data }) => {
+  		exportData$.subscribe(() => {
   			this.modalService.open(content, {
   				backdrop: 'static',
   				windowClass: 'modalCusSty',
   			});
-  		}, (error) => {
+  		}, () => {
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
   			}
@@ -323,9 +321,9 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
   		this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id)
   	);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.transactions.forEach(x => x.selected = false);
-  		}, (error) => {
+  		}, () => {
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
   			}

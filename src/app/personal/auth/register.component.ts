@@ -23,11 +23,11 @@ export class PersonalRegisterComponent implements OnInit{
 	ngOnInit() {
 		this.subscriptions.add(
 			this.auth.getPreSettingsCommon().subscribe({
-				next: ({data}) => {
+				next: ({ data }) => {
 					this.preSettingsCommon = data.getPreSettingsCommon;
 				}
 			})
-		)
+		);
 	}
 
 	onError(error: string): void {
@@ -38,7 +38,7 @@ export class PersonalRegisterComponent implements OnInit{
 		this.inProgress = visible;
 	}
 
-	onRegistered(email: string): void {
-		this.router.navigateByUrl('/personal/auth/success/signup');
+	onRegistered(): void {
+		void this.router.navigateByUrl('/personal/auth/success/signup');
 	}
 }

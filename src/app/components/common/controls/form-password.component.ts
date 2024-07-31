@@ -60,7 +60,7 @@ export class FormPasswordBoxComponent implements ControlValueAccessor, OnInit, O
 
     ngOnInit(): void {
     	this.subscriptions.add(
-    		this.control?.valueChanges.subscribe(val => {
+    		this.control?.valueChanges.subscribe(() => {
     			this.initialized = true;
     			this.errorMessage = this.getError();
     		})

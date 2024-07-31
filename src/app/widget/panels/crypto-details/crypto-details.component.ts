@@ -89,7 +89,7 @@ export class WidgetCryptoDetailsComponent implements OnInit, OnDestroy {
   	}
   	this.loadDetailsForm();
   	this.pSubscriptions.add(this.currencyField?.valueChanges.subscribe(val => this.onCurrencyUpdated(val)));
-  	this.pSubscriptions.add(this.amountField?.valueChanges.subscribe(val => this.onAmountUpdated()));
+  	this.pSubscriptions.add(this.amountField?.valueChanges.subscribe(() => this.onAmountUpdated()));
   }
 
   ngOnDestroy(): void {

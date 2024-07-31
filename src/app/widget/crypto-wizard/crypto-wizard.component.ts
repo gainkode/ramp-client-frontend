@@ -109,7 +109,7 @@ export class CryptoWizardComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.pSubscriptions.add(this.currencyConvertField?.valueChanges.subscribe(val => this.onCurrencyFiatUpdated(val)));
 		this.pSubscriptions.add(this.currencyField?.valueChanges.subscribe(val => this.onCurrencyCryptoUpdated(val)));
-		this.pSubscriptions.add(this.directionField?.valueChanges.subscribe(val => this.onDirectionChanged()));
+		this.pSubscriptions.add(this.directionField?.valueChanges.subscribe(() => this.onDirectionChanged()));
 		this.loadCurrencies();
 	}
 

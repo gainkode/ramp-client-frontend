@@ -47,7 +47,7 @@ export class WalletsFilterBarComponent implements OnInit, OnDestroy {
     			this.updateChips(FilterChipType.Currency);
     		}));
     	this.subscriptions.add(
-    		this.zeroBalanceField?.valueChanges.subscribe(val => {
+    		this.zeroBalanceField?.valueChanges.subscribe(() => {
     			this.updateChips(FilterChipType.ZeroBalance);
     			if (!this.internalLoading) {
     				this.onSubmit();

@@ -12,12 +12,12 @@ describe('EmptyValuePipe', () => {
 	});
 
 	it('should return "-" for null value', () => {
-		const value: null = null;
+		const value = null;
 		expect(pipe.transform(value)).toEqual('-');
 	});
 
 	it('should return "-" for undefined value', () => {
-		const value: undefined = undefined;
+		const value = undefined;
 		expect(pipe.transform(value)).toEqual('-');
 	});
 

@@ -31,13 +31,7 @@ export class DashboardMerchantComponent implements OnInit, OnDestroy {
 		private auth: AuthService) {
 		
 		this.dashboardData$ = this.dateRangeSubject.pipe(
-			switchMap(range => 
-			  this.dashboardService.dashboardMerchantData(
-					this.getISOString(range.from),
-					this.getISOString(range.to)
-			  )
-			)
-		  );
+			switchMap(range => this.dashboardService.dashboardMerchantData(this.getISOString(range.from),this.getISOString(range.to))));
 	}
 
 	ngOnInit(): void {
@@ -62,15 +56,16 @@ export class DashboardMerchantComponent implements OnInit, OnDestroy {
 	}
 
 	private getFirstDateOfCurrentMonth(): Date {
-		const currentDate = new Date();
-		return new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0));
-	  }
+		const year = this.currentDate.getFullYear();
+		const month = this.currentDate.getMonth();
+
+		return new Date(Date.UTC(year, month, 1, 0, 0, 0, 0));
+	}
 	  
-	  private getLastDateOfCurrentMonth(): Date {
-		const currentDate = new Date();
-		const year = currentDate.getFullYear();
-		const month = currentDate.getMonth();
+	private getLastDateOfCurrentMonth(): Date {
+		const year = this.currentDate.getFullYear();
+		const month = this.currentDate.getMonth();
 	  
 		return new Date(Date.UTC(year, month + 1, 0, 23, 59, 59, 999));
-	  }
+	}
 }

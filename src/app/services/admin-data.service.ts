@@ -3067,13 +3067,12 @@ export class AdminDataService {
 			accountTypesOnly: filter.accountTypes,
 			fiatCurrency: filter.fiatCurrency
 		};
+
 		return this.watchQuery<{ getDashboardStats: DashboardStats; }, QueryGetDashboardStatsArgs>({
 			query: GET_DASHBOARD_STATS,
 			variables: vars,
 			fetchPolicy: 'network-only'
-		}).pipe(map(result => {
-			return result.data.getDashboardStats;
-		}));
+		}).pipe(map(result => result.data.getDashboardStats));
 	}
 
 	getDashboardMerchantStats(filter: Filter): Observable<DashboardMerchantStats> {
@@ -3094,9 +3093,7 @@ export class AdminDataService {
 			query: GET_DASHBOARD_MERCHANT_STATS,
 			variables: vars,
 			fetchPolicy: 'network-only'
-		}).pipe(map(result => {
-			return result.data.getDashboardMerchantStats;
-		}));
+		}).pipe(map(result => result.data.getDashboardMerchantStats));
 	}
   
 
@@ -3894,7 +3891,7 @@ export class AdminDataService {
 	}
 
 	getLiquidityProviders(): Observable<{ list: Array<LiquidityProviderEntityItem>; count: number; }>{
-		return this.watchQuery<{ getLiquidityProviders: Array<LiquidityProviderEntity> }, null>(
+		return this.watchQuery<{ getLiquidityProviders: Array<LiquidityProviderEntity>; }, null>(
 			{
 				query: GET_LIQUIDITY_PROVIDERS,
 				fetchPolicy: 'network-only'
@@ -4111,14 +4108,6 @@ export class AdminDataService {
 	}
 
 	saveBankAccountSettings(account: WireTransferBankAccount, create: boolean): Observable<any> {
-		const vars = {
-			bankAccountId: account.bankAccountId,
-			name: account.name,
-			description: account.description,
-			au: account.au,
-			uk: account.uk,
-			eu: account.eu
-		};
 		return create
 			? this.apollo.mutate({
 				mutation: ADD_WIRE_TRANSFER_SETTINGS,
@@ -4525,7 +4514,7 @@ export class AdminDataService {
 			variables: {
 				widgetId
 			}
-		}).pipe(tap((res) => {
+		}).pipe(tap(() => {
 			this.snackBar.open(
 				`Widget was deleted`,
 				undefined, { duration: 5000 }
@@ -4539,7 +4528,7 @@ export class AdminDataService {
 			variables: {
 				customerId
 			}
-		}).pipe(tap((res) => {
+		}).pipe(tap(() => {
 			this.snackBar.open(
 				`Customer was disabled`,
 				undefined, { duration: 5000 }
@@ -4553,7 +4542,7 @@ export class AdminDataService {
 			variables: {
 				customerId
 			}
-		}).pipe(tap((res) => {
+		}).pipe(tap(() => {
 			this.snackBar.open(
 				`Customer was restored`,
 				undefined, { duration: 5000 }
@@ -4679,7 +4668,7 @@ export class AdminDataService {
 				text,
 				level
 			}
-		}).pipe(tap((res) => {
+		}).pipe(tap(() => {
 			this.snackBar.open(
 				`Message was sent`,
 				undefined, { duration: 5000 }

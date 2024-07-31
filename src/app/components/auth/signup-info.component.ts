@@ -135,7 +135,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
     			this.requireUserFlatNumber = fields.requireUserFlatNumber as boolean;
     			this.setFields();
     			this.progressChange.emit(false);
-    		}, (error) => {
+    		}, () => {
     			this.error.emit(this.errorHandler.getError('error', 'Unable to specify required data'));
     			this.progressChange.emit(false);
     		})

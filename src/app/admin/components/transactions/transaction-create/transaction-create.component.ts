@@ -138,12 +138,12 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   	this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
 		
   	this.subscriptions.add(
-  		this.form.get('currencyToSpend')?.valueChanges.subscribe(val => {
+  		this.form.get('currencyToSpend')?.valueChanges.subscribe(() => {
   			this.startExchangeRate();
   		})
   	);
   	this.subscriptions.add(
-  		this.form.get('currencyToReceive')?.valueChanges.subscribe(val => {
+  		this.form.get('currencyToReceive')?.valueChanges.subscribe(() => {
   			this.startExchangeRate();
   		})
   	);
@@ -218,7 +218,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   private onFilterPaymentProviders(instrument: PaymentInstrument): void {
   	if (instrument?.length > 0 && !instrument?.includes(PaymentInstrument.WireTransfer)) {
   		this.filteredProviders = getProviderList([instrument], this.providers);
-			console.log(this.filteredProviders)
+		
   		this.showPaymentProvider = this.filteredProviders.length > 0;
   		this.form.get('provider')?.setValue(
 		  this.providers.length > 0
@@ -308,9 +308,11 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
 
   private usersSearch(): void {
   	let searchItems:CommonTargetValue[] = [];
+		
   	if(this.usersPreset && this.usersPreset.length !== 0){
   		searchItems = this.usersPreset;
   	}
+
   	this.usersOptions$ = concat(
   		of(searchItems),
   		this.usersSearchInput$.pipe(

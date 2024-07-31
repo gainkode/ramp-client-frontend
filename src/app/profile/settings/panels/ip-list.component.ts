@@ -6,7 +6,6 @@ import { take } from 'rxjs/operators';
 import { DeleteDialogBox } from 'components/dialogs/delete-box.dialog';
 import { UserDeviceListResult } from 'model/generated-models';
 import { DeviceItem } from 'model/user.model';
-import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ProfileDataService } from 'services/profile.service';
 
@@ -39,7 +38,6 @@ export class ProfileIpListSettingsComponent implements OnInit, OnDestroy {
     private pSubscriptions: Subscription = new Subscription();
 
     constructor(
-    	private auth: AuthService,
     	private errorHandler: ErrorService,
     	private dataService: ProfileDataService,
     	private router: Router,
@@ -110,7 +108,7 @@ export class ProfileIpListSettingsComponent implements OnInit, OnDestroy {
     	this.progressChange.emit(true);
     	const deleteKeyData$ = this.dataService.deleteMyDevice(deviceId);
     	this.pSubscriptions.add(
-    		deleteKeyData$.subscribe(({ data }) => {
+    		deleteKeyData$.subscribe(() => {
     			this.progressChange.emit(false);
     			this.getIpList();
     		}, (error) => {

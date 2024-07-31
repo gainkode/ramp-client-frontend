@@ -1,0 +1,44 @@
+:host {
+	display: block;
+}
+
+// Details
+.event-details {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-gap: 30px;
+
+	padding: 15px 0;
+	&__container {
+		padding: 15px;
+
+		font-size: 14px;
+		font-weight: 400;
+
+		background: #f6f7f9;
+		border-radius: 5px;
+		& p {
+			margin-bottom: 0;
+		}
+	}
+	&__title {
+		font-size: 16px;
+		color: #444;
+	}
+	&__table {
+		& thead {
+			border-bottom: 1px solid #ddd;
+		}
+		& th,
+		td {
+			padding: 5px 10px;
+			&:first-child {
+				border-right: 1px solid #ddd;
+			}
+		}
+	}
+}
+
+.instance-id {
+	color: bluet;
+}

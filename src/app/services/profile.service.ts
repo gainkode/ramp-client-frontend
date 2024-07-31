@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { EmptyObject } from 'apollo-angular/types';
 import { MutationAddMyVaultArgs, MutationUpdateMyVaultArgs, TransactionSource, TransactionType, UserBalanceHistoryPeriod } from '../model/generated-models';
 

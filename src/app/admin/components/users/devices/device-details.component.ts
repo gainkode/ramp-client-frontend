@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
@@ -49,7 +49,7 @@ export class AdminDeviceDetailsComponent implements OnDestroy {
   	this.deleteInProgress = true;
   	const requestData = this.adminService.deleteDevice(this.deviceData?.id ?? '');
   	this.subscriptions.add(
-  		requestData.subscribe(({ data }) => {
+  		requestData.subscribe(() => {
   			this.deleteInProgress = false;
   			this.save.emit();
   		}, (error) => {

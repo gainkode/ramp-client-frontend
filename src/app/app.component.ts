@@ -71,7 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
 					href: 'https://iramp.io/cookies-policy/',
 					policy: 'Cookie Policy'
 				},
-				onStatusChange: function (status: any) {
+				onStatusChange: function () {
 					window.location.reload();
 				}
 			});
@@ -188,21 +188,19 @@ export class AppComponent implements OnInit, OnDestroy {
 		console.log('Start KYC notifications');
 		this.subscriptions.add(
 			this.notification.subscribeToKycNotifications().subscribe(
-				({ data }) => {
-					this.loadAccountData();
-				},
+				() => this.loadAccountData(),
 				(error) => {
 					setTimeout(() => {
 						console.error('[1] KYC notification start error', error);
 						if (error.message === 'Access denied') {
 							this.subscriptions.add(
 								this.auth.refreshToken().pipe(shareReplay(1)).subscribe(
-									({ data }) => {
+									() => {
 										console.log('Token refreshed');
 										setTimeout(() => {
 											this.subscriptions.add(
 												this.notification.subscribeToKycNotifications().subscribe(
-													({ data }) => {
+													() => {
 														this.loadAccountData();
 													},
 													(error) => {
@@ -235,8 +233,6 @@ export class AppComponent implements OnInit, OnDestroy {
 					this.auth.setUser(data.me as User);
 					this.auth.notifyUserUpdated();
 				}
-			}, (error) => {
-
 			})
 		);
 	}

@@ -422,7 +422,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   		this.adminService.getVerificationLink(this.userData?.id ?? '').valueChanges.
   			pipe(finalize(() => this.kycProviderLinkInProgress = false))
   			.subscribe({
-  				next: ({data}) => {
+  				next: ({ data }) => {
 						this.kycProviderLinkInProgress = false;
   					if (data?.getVerificationLink) {
 							void this.router.navigate([]).then(() => window.open(data?.getVerificationLink, '_blank'));

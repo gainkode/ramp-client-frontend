@@ -4,7 +4,7 @@ import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { AssetAddressShort, AssetAddressShortListResult, CurrencyBlockchain, VaultAccount, WalletShort, WalletShortShortListResult } from 'model/generated-models';
+import { AssetAddressShort, VaultAccount, WalletShort, WalletShortShortListResult } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
 import { ProfileItemActionType, ProfileItemContainer, ProfileItemContainerType } from 'model/profile-item.model';
 import { WalletItem } from 'model/wallet.model';
@@ -83,7 +83,7 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     			this.walletNameField?.updateValueAndValidity();
     		}));
     	this.subscriptions.add(
-    		this.existingWalletField?.valueChanges.subscribe(val => {
+    		this.existingWalletField?.valueChanges.subscribe(() => {
     			this.selectedWallet = this.wallets.find(x => x.walletId === this.existingWalletField?.value)?.name ?? '';
     		}));
     }
@@ -116,10 +116,6 @@ export class ProfileWalletCreateComponent implements OnInit, OnDestroy {
     			}
     		})
     	);
-    }
-
-    private getCurrency(asset: AssetAddressShort): CurrencyView | undefined {
-    	return this.cryptoList.find(x => x.symbol === asset.assetId);
     }
 
     ngOnDestroy(): void {

@@ -33,7 +33,7 @@ export class AdminNotificationDetailsComponent implements OnDestroy {
   	this.resendInProgress = true;
   	const requestData$ = this.adminService.resendAdminNotification(this.message?.id ?? '');
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.resendInProgress = false;
   		}, (error) => {
   			this.resendInProgress = false;

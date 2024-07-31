@@ -41,7 +41,7 @@ export class KycVerificationDialogBox implements OnDestroy {
 							window.location.reload();
 						  }, 0);
 					});
-				}, (error) => {
+				}, () => {
 					this.complete = true;
 					this.dialogRef.close();
 				})

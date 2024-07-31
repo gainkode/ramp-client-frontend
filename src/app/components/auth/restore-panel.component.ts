@@ -53,7 +53,7 @@ export class RestorePanelComponent implements OnDestroy {
     	if (this.restoreForm.valid) {
     		this.onProgress(true);
     		this.subscriptions.add(
-    			this.auth.forgotPassword(this.restoreForm.get('email')?.value).subscribe(({ data }) => {
+    			this.auth.forgotPassword(this.restoreForm.get('email')?.value).subscribe(() => {
     				this.onProgress(false);
     				void this.router.navigateByUrl(`/${this.userTypeSection}/auth/success/restore`);
     			}, (error) => {

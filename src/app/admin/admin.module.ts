@@ -45,10 +45,7 @@ import { AdminFiatWalletDetailsComponent } from './components/wallets/fiat/fiat-
 import { AdminFiatWalletsComponent } from './components/wallets/fiat/fiat-wallets.component';
 import { AdminCryptoWalletDetailsComponent } from './components/wallets/crypto/crypto-wallet-details.component';
 import { AdminCryptoWalletsComponent } from './components/wallets/crypto/crypto-wallets.component';
-import { AdminCustomersComponent } from './components/users/customers/customers.component';
 import { AdminMessageDialogComponent } from './components/users/send-message/send-message.component';
-import { AdminCustomerDetailsComponent } from './components/users/customers/customer-details/customer-details.component';
-import { AdminCustomerDocsComponent } from './components/users/customers/customer-docs/customer-docs.component';
 import { AdminSystemUsersComponent } from './components/users/system/users.component';
 import { AdminUserDetailsComponent } from './components/users/system/user-details.component';
 import { AdminRoleSelectComponent } from './misc/role-select/role-select.component';
@@ -80,9 +77,6 @@ import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 import { AdminKycTierDetailsComponent } from './components/kyc/tiers/tier-details.component';
 import { AdminUserActionsComponent } from './components/users/actions/actions.component';
 import { AdminActionDetailsComponent } from './components/users/actions/action-details.component';
-import { CustomerDocsApi } from './components/users/customers/services/customer-docs.api';
-import { CustomerDocsFacadeService } from './components/users/customers/services/customer-docs.service';
-import { CustomerDocsStateService } from './components/users/customers/services/customer-docs.state';
 import { TableModule } from 'components/data-list/table/table.module';
 import { SpinnerModule } from 'shared/spinner/spinner.module';
 import { 
@@ -93,6 +87,7 @@ import {
 	TransactionLifelineComponent,
 	TransactionSimulationComponent,
 	TransactionRefundModalComponent,
+	TransactionDocsComponent,
 } from './components/transactions';
 import { MatStepperModule } from '@angular/material/stepper';
 import { RawJsonModule } from 'shared/raw-json/raw-json.module';
@@ -110,11 +105,18 @@ import {
 	AdminWithdrawalAddressComponent,
 	FaqPageComponent
 } from './components/settings';
+import { 
+	AdminCustomersComponent, 
+	AdminCustomerDetailsComponent, 
+	AdminCustomerDocsComponent 
+} from './components/users/customers';
+
 import { FeeSimiliarPanelComponent } from './components/fees/details/fee-similiar-panel/fee-similiar-panel.component';
 import { CostSimiliarPanelComponent } from './components/costs/schemes/cost-similiar-panel/cost-similiar-panel.component';
 import { SharedModule } from 'shared/shared.module';
-import { FeeRiskCodesComponent } from './components/fees/details/fee-risk-codes/fee-risk-codes.component';
 
+import { SigntatureDocDetailsComponent } from './components/transactions/transaction-docs/signtature-doc-details/signtature-doc-details.component';
+import { FeeRiskCodesComponent } from './components/fees/details/fee-risk-codes/fee-risk-codes.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -186,6 +188,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminTransactionDetailsComponent, 
 		AdminTransactionStatusHistoryComponent, 
 		AdminTransactionCreateComponent,
+		SigntatureDocDetailsComponent,
 		AdminFiatWalletsComponent, 
 		AdminFiatWalletDetailsComponent,
 		AdminCryptoWalletsComponent, 
@@ -230,18 +233,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		AdminApiKeyDetailsComponent, 
 		AdminCurrencyPairsComponent, 
 		AdminCurrencyPairDetailsComponent,
-		
+		TransactionDocsComponent,
 		FeeRiskCodesComponent,
 		FaqPageComponent
 	],
 	providers: [
 		AdminGuard,
 		AdminDataService,
-
-		CustomerDocsApi,
-		CustomerDocsStateService,
-		CustomerDocsFacadeService,
-
 		{
 			provide: MAT_CHIPS_DEFAULT_OPTIONS,
 			useValue: {

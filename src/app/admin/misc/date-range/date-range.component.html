@@ -1,6 +1,6 @@
 <div class="dp-hidden">
     <input class="dp-hidden" name="datepicker" ngbDatepicker #datepicker="ngbDatepicker" [autoClose]="'outside'"
-        (dateSelect)="onDateSelection($event);onDateChanged($event);" [displayMonths]="1" [dayTemplate]="day_item" outsideDays="hidden"
+        (dateSelect)="onDateSelection($event);onDateChanged();" [displayMonths]="1" [dayTemplate]="day_item" outsideDays="hidden"
         [startDate]="fromDate!" tabindex="-1">
     <ng-template #day_item let-date let-focused="focused">
         <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
@@ -20,7 +20,7 @@
     <div class="input-group">
         <input #dpFromDate class="form-control" placeholder="dd/mm/yyyy" name="dpFromDate"
             [value]="formatter.format(fromDate)"
-            (input)="fromDate = validateInput(fromDate, dpFromDate.value);onDateChanged(undefined)">
+            (input)="fromDate = validateInput(fromDate, dpFromDate.value);onDateChanged()">
     </div>
     <span class="main-content-label tx-11 tx-medium tx-gray-600 mx-2 me-2 mt-2">
         -
@@ -28,6 +28,6 @@
     <div class="input-group">
         <input #dpToDate class="form-control" placeholder="dd/mm/yyyy" name="dpToDate"
             [value]="formatter.format(toDate)"
-            (input)="toDate = validateInput(toDate, dpToDate.value);onDateChanged(undefined)">
+            (input)="toDate = validateInput(toDate, dpToDate.value);onDateChanged()">
     </div>
 </div>

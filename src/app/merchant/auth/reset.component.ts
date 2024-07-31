@@ -81,7 +81,7 @@ export class MerchantResetComponent implements OnDestroy {
                 this.inProgress = true;
                 const password = this.passwordForm.get('password1')?.value;
                 this.subscriptions.add(
-                    this.auth.setPassword(this.token, password).subscribe(({ data }) => {
+                    this.auth.setPassword(this.token, password).subscribe(() => {
                         this.inProgress = false;
                         this.router.navigateByUrl('/merchant/auth/success/reset');
                     }, (error) => {

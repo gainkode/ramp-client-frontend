@@ -51,7 +51,7 @@ export class ProfileSecuriySettingsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
     	this.subscriptions.add(
-    		this.twoFaField?.valueChanges.subscribe(val => {
+    		this.twoFaField?.valueChanges.subscribe(() => {
     			if (!this.autoLoading) {
     				if (this.twoFaActive) {
     					// swtich off
@@ -91,7 +91,7 @@ export class ProfileSecuriySettingsComponent implements OnInit, OnDestroy {
     }
 
     private showSuccess(): void {
-    	const dialogRef = this.dialog.open(CommonDialogBox, {
+    	this.dialog.open(CommonDialogBox, {
     		width: '900px',
     		data: {
     			title: '',

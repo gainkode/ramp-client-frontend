@@ -86,7 +86,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
   	this.subscriptions.add(
-  		this.form.get('target')?.valueChanges.subscribe(val => this.updateTarget())
+  		this.form.get('target')?.valueChanges.subscribe(() => this.updateTarget())
   	);
   	this.subscriptions.add(
   		this.form.get('userType')?.valueChanges.subscribe(val => {
@@ -377,7 +377,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		this.removeDialog.closed.subscribe(val => {
+  		this.removeDialog.closed.subscribe(() => {
   			this.deleteSchemeConfirmed(this.settingsId ?? '');
   		})
   	);
@@ -388,7 +388,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.saveKycSettings(scheme, this.createNew);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {
@@ -406,7 +406,7 @@ export class AdminKycSchemeDetailsComponent implements OnInit, OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.deleteKycSettings(id);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {

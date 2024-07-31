@@ -249,7 +249,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   			}
   			this.initData();
   			this.pager.init('order_details', 'Order details');
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			this.initData();
   			this.pager.init('order_details', 'Order details');
@@ -292,22 +292,18 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   	this.summary.verifyWhenPaid = val;
   }
 
-  orderDetailsComplete(email: string): void {
+  orderDetailsComplete(): void {
   	this.widgetService.getSettingsCommon(this.summary, this.widget, false);
   }
   // =======================
 
   // == Common settings ==
-  settingsAuthRequired(email: string): void {
-  	this.onLoginRequired(email);
+  settingsAuthRequired(): void {
+  	this.onLoginRequired();
   }
 
   settingsIdRequired(): void {
   	this.nextStage('order_details', 'Order details', 1);
-  }
-
-  settingsLoginRequired(email: string): void {
-  	this.onLoginRequired(email);
   }
 
   settingsKycState(state: boolean): void {
@@ -334,8 +330,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   }
   // =====================
 
-  private checkLoginResult(data: any): void {
-  }
+  private checkLoginResult(): void { }
 
   // == Payment info ==
   paymentBack(): void {
@@ -401,7 +396,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   // ======================
 
   // == Auth ========
-  onLoginRequired(email: string): void {
+  onLoginRequired(): void {
   	void this.router.navigateByUrl('/');
   }
   // ====================
@@ -445,7 +440,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
 			widgetUserParamsId: '',
 			destination: this.summary.address,
 			verifyWhenPaid: this.summary.transactionType === TransactionType.Buy ? this.summary.verifyWhenPaid : false
-		}
+		};
   	
 		this.createTransactionInternal();
   }

@@ -114,7 +114,7 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   			this.actions = list;
   			this.actionCount = count;
   			this.inProgress = false;
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');

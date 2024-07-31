@@ -165,7 +165,7 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   				if (error.message === 'Access denied') {
   					this.pSubscriptions.add(
   						this.auth.refreshToken().subscribe(
-  							({ data }) => {
+  							() => {
   								console.log('Token refreshed');
   								setTimeout(() => {
   									this.pSubscriptions.add(
@@ -295,7 +295,7 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   			} else {
   				this.pager.init('order_details', 'Order details');
   			}
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			this.initData(undefined);
   			this.pager.init('order_details', 'Order details');
@@ -334,7 +334,7 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   // ================
 
   // == Common settings ==
-  settingsAuthRequired(email: string): void {
+  settingsAuthRequired(): void {
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
 
@@ -437,14 +437,14 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   					this.handleAuthError();
   				} else {
   					this.errorMessage = this.errorHandler.getError(error.message, 'Unable to handle your order');
-  					this.showTransactionError('Transaction handling failed', this.errorMessage);
+  					this.showTransactionError('Transaction handling failed');
   				}
   			}
   		)
   	);
   }
 
-  private showTransactionError(messageTitle: string, messageText: string): void {
+  private showTransactionError(messageTitle: string): void {
   	this.transactionErrorTitle = messageTitle;
   	this.nextStage('error', 'Error', 6);
   }
@@ -462,7 +462,7 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   				}
   				timeout = settingsData?.cryptoWidget?.paymentTimeout ?? this.DEFAULT_TIMEOUT;
   				this.startConfirmedAbandonTimer(timeout);
-  			}, (error) => {
+  			}, () => {
   				this.inProgress = false;
   				this.startConfirmedAbandonTimer(timeout);
   			}
@@ -473,7 +473,7 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   private startConfirmedAbandonTimer(interval: number): void {
   	this.abandonCounter = interval / 1000;
   	this.pSubscriptions.add(
-  		this.abandonTimer.pipe(takeUntil(this.timerSubject$)).subscribe(val => {
+  		this.abandonTimer.pipe(takeUntil(this.timerSubject$)).subscribe(() => {
   			if (this.abandonCounter > 1) {
   				this.abandonCounter--;
   			} else {
@@ -487,13 +487,13 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   	this.timerSubject$.next();
   	this.pSubscriptions.add(
   		this.dataService.abandonCryptoInvoice(this.invoice?.invoiceId ?? '').subscribe(
-  			({ data }) => {
+  			() => {
   				this.inProgress = false;
   				this.paymentSuccess = false;
   				this.paymentComplete = true;
   				this.paymentTitle = 'Time is out';
   				this.nextStage('payment_done', 'Complete', 6);
-  			}, (error) => {
+  			}, () => {
   				this.inProgress = false;
   			}
   		)
@@ -507,8 +507,8 @@ export class CryptoWidgetComponent implements OnInit, OnDestroy {
   			TransactionServiceNotificationType.CryptoPartPaid);
   	this.pSubscriptions.add(
   		notificationRequest$.subscribe(
-  			({ data }) => {
-  			}, (error) => {
+  			() => {}, 
+				(error) => {
   				alert(error);
   			}
   		)

@@ -100,7 +100,7 @@ export class AdminLevelDetailsComponent implements OnDestroy {
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		this.removeDialog.closed.subscribe(val => {
+  		this.removeDialog.closed.subscribe(() => {
   			this.deleteLevelConfirmed(this.settingsId ?? '');
   		})
   	);
@@ -111,7 +111,7 @@ export class AdminLevelDetailsComponent implements OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.saveKycLevelSettings(level, this.createNew);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {
@@ -129,7 +129,7 @@ export class AdminLevelDetailsComponent implements OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.deleteKycLevelSettings(id);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {

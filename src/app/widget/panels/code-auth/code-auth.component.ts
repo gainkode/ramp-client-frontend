@@ -81,11 +81,11 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
 
     ngOnInit(): void {
     	this.pSubscriptions.add(this.dataForm.valueChanges.subscribe(() => this.onFormUpdated()));
-    	this.pSubscriptions.add(this.code1Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 1)));
-    	this.pSubscriptions.add(this.code2Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 2)));
-    	this.pSubscriptions.add(this.code3Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 3)));
-    	this.pSubscriptions.add(this.code4Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 4)));
-    	this.pSubscriptions.add(this.code5Field?.valueChanges.subscribe(val => this.onCodeUpdated(val, 5)));
+    	this.pSubscriptions.add(this.code1Field?.valueChanges.subscribe(() => this.onCodeUpdated(1)));
+    	this.pSubscriptions.add(this.code2Field?.valueChanges.subscribe(() => this.onCodeUpdated(2)));
+    	this.pSubscriptions.add(this.code3Field?.valueChanges.subscribe(() => this.onCodeUpdated(3)));
+    	this.pSubscriptions.add(this.code4Field?.valueChanges.subscribe(() => this.onCodeUpdated(4)));
+    	this.pSubscriptions.add(this.code5Field?.valueChanges.subscribe(() => this.onCodeUpdated(5)));
     }
 
     ngAfterViewInit(): void {
@@ -156,7 +156,7 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     		);
     	}else{
     		this.pSubscriptions.add(
-    			this.auth.confirmCode(code, this.email).subscribe(({ data }) => {
+    			this.auth.confirmCode(code, this.email).subscribe(() => {
     				this.onComplete.emit();
     			}, (error) => {
     				this.done = false;
@@ -176,7 +176,7 @@ export class WidgetCodeAuthComponent implements OnInit, OnDestroy, AfterViewInit
     	this.init = true;
     }
 
-    private onCodeUpdated(val: string, codeIndex: number): void {
+    private onCodeUpdated(codeIndex: number): void {
     	const c1: string = this.code1Field?.value ?? '';
     	const c2: string = this.code2Field?.value ?? '';
     	const c3: string = this.code3Field?.value ?? '';

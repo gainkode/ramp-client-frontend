@@ -21,13 +21,13 @@ export const routes: Routes = [
 	{ 
 		path: 'auth/login', 
 		component: PersonalLoginComponent,
-		data: {authRoute: true},
+		data: { authRoute: true },
 		canActivate: [PersonalGuard]
 	},
 	{ 
 		path: 'auth/register', 
 		component: PersonalRegisterComponent,
-		data: {authRoute: true},
+		data: { authRoute: true },
 		canActivate: [PersonalGuard]
 	},
 	{ path: 'auth/restore', component: PersonalRestoreComponent },
@@ -47,7 +47,7 @@ export const routes: Routes = [
 			{ path: 'transactions', component: ProfileTransactionsComponent },
 			{ path: '**', redirectTo: 'home' }
 		],
-		data: {mainAuthentificatedRoute: true},
+		data: { mainAuthentificatedRoute: true },
 		canActivate: [PersonalGuard]
 	},
 	// Authenticated account profile
