@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -50,7 +49,6 @@ export class ProfileInfoDateboxComponent {
     }
 
     private date: Date | undefined = undefined;
-    private datepipe: DatePipe = new DatePipe('en-US');
 
     constructor(
     	private changeDetector: ChangeDetectorRef,

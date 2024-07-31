@@ -9,7 +9,6 @@ import { ApiSecretDialogBox } from 'components/dialogs/api-secret-box.dialog';
 import { DeleteDialogBox } from 'components/dialogs/delete-box.dialog';
 import { ApiKeyItem } from 'model/apikey.model';
 import { ApiKeyListResult, ApiKeySecret } from 'model/generated-models';
-import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ProfileDataService } from 'services/profile.service';
 
@@ -41,7 +40,6 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
     private pSubscriptions: Subscription = new Subscription();
 
     constructor(
-    	private auth: AuthService,
     	private errorHandler: ErrorService,
     	private dataService: ProfileDataService,
     	private router: Router,
@@ -149,7 +147,7 @@ export class ProfileApiKeysSettingsComponent implements OnInit, OnDestroy {
     	this.progressChange.emit(true);
     	const deleteKeyData$ = this.dataService.deleteMyApiKey(apiKey);
     	this.pSubscriptions.add(
-    		deleteKeyData$.subscribe(({ data }) => {
+    		deleteKeyData$.subscribe(() => {
     			this.progressChange.emit(false);
     			this.getApiKeys();
     		}, (error) => {

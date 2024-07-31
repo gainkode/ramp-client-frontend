@@ -113,7 +113,7 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   			this.alerts = list;
   			this.alertCount = count;
   			this.inProgress = false;
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');

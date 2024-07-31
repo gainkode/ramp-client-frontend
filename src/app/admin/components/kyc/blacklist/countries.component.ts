@@ -54,7 +54,7 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy {
 			windowClass: 'modalCusSty',
 		});
 		this.subscriptions.add(
-			this.createDialog.closed.subscribe(val => {
+			this.createDialog.closed.subscribe(() => {
 				if (this.createDialog) {
 					this.createDialog.close();
 					this.loadCountries();
@@ -86,7 +86,7 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy {
 						}) as CommonTargetValue[];
 					}
 				}
-			}, (error) => {
+			}, () => {
 				this.inProgress = false;
 				if (this.auth.token === '') {
 					void this.router.navigateByUrl('/');
@@ -104,7 +104,7 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy {
 			windowClass: 'modalCusSty',
 		});
 		this.subscriptions.add(
-			this.removeDialog.closed.subscribe(val => {
+			this.removeDialog.closed.subscribe(() => {
 				this.removeCountryConfirmed(this.selectedCountry?.id ?? '');
 			})
 		);
@@ -117,13 +117,13 @@ export class AdminCountryBlackListComponent implements OnInit, OnDestroy {
 			this.inProgress = true;
 			const requestData$ = this.adminService.deleteBlackCountry(c.code2);
 			this.subscriptions.add(
-				requestData$.subscribe(({ data }) => {
+				requestData$.subscribe(() => {
 					this.inProgress = false;
 					if (this.removeDialog) {
 						this.removeDialog.close();
 						this.loadCountries();
 					}
-				}, (error) => {
+				}, () => {
 					this.inProgress = false;
 					if (this.auth.token === '') {
 						void this.router.navigateByUrl('/');

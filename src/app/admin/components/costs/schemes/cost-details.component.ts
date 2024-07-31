@@ -358,7 +358,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		this.removeDialog.closed.subscribe(val => this.deleteSchemeConfirmed(this.settingsId ?? ''))
+  		this.removeDialog.closed.subscribe(() => this.deleteSchemeConfirmed(this.settingsId ?? ''))
   	);
   }
 

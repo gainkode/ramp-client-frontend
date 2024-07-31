@@ -24,7 +24,7 @@ export class MerchantRegisterComponent {
 		this.inProgress = visible;
 	}
 
-	onRegistered(email: string): void {
-		this.router.navigateByUrl('/merchant/auth/success/signup');
+	onRegistered(): void {
+		void this.router.navigateByUrl('/merchant/auth/success/signup');
 	}
 }

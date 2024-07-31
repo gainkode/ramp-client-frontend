@@ -80,7 +80,7 @@ export class AdminCryptoWalletDetailsComponent implements OnInit, OnDestroy {
   		const requestData = this.adminService.updateUserVault(address);
   		if (requestData) {
   			this.subscriptions.add(
-  				requestData.subscribe(({ data }) => {
+  				requestData.subscribe(() => {
   					this.inProgress = false;
   					this.save.emit();
   				}, (error) => {

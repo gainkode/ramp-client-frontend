@@ -63,7 +63,7 @@ export class WidgetSellCompleteComponent implements OnInit, OnDestroy {
 					this.sellectedCurrency = currencyList.find((x) => x.symbol === this.currency);
 					this.onProgress.emit(false);
   			},
-  			(error) => {
+  			() => {
   				this.onProgress.emit(false);
   			})
   	);

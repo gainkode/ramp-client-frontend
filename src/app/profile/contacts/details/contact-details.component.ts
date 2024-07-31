@@ -58,7 +58,7 @@ export class ProfileContactDetailsComponent implements OnDestroy {
     			'',
     			'');
     		this.subscriptions.add(
-    			request$.subscribe(({ data }) => {
+    			request$.subscribe(() => {
     				if (this.contact) {
     					this.contact.displayName = this.displayNameField?.value;
     				}

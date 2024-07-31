@@ -99,7 +99,7 @@ export class ProfileChangePasswordComponent implements OnDestroy {
     		}
     	});
     	this.subscriptions.add(
-    		dialogRef.afterClosed().subscribe(result => {
+    		dialogRef.afterClosed().subscribe(() => {
     			this.auth.logout();
     			void this.router.navigateByUrl('/personal/auth/login');
     		})

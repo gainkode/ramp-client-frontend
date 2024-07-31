@@ -47,9 +47,8 @@ describe('getTierBlocks', () => {
 			kycReviewRejectedType: null,
 			kycProvider: KycProvider.SumSub
 		} as User;
-		const verifiedTierId = '';
 		// Get tiers
-		const result = getTierBlocks(user, verifiedTierId, data.mySettingsKycTiers);
+		const result = getTierBlocks(user, data.mySettingsKycTiers);
 		// Check results
 		const tiers = [
 			{
@@ -116,9 +115,9 @@ describe('getTierBlocks', () => {
 			kycReviewRejectedType: null,
 			kycProvider: KycProvider.Shufti
 		} as User;
-		const verifiedTierId = '';
+
 		// Get tiers
-		const result = getTierBlocks(user, verifiedTierId, data.mySettingsKycTiers);
+		const result = getTierBlocks(user, data.mySettingsKycTiers);
 		// Check results
 		const tiers = [
 			{
@@ -185,9 +184,9 @@ describe('getTierBlocks', () => {
 			kycReviewRejectedType: null,
 			kycProvider: KycProvider.Shufti
 		} as User;
-		const verifiedTierId = '';
+
 		// Get tiers
-		const result = getTierBlocks(user, verifiedTierId, data.mySettingsKycTiers);
+		const result = getTierBlocks(user, data.mySettingsKycTiers);
 		// Check results
 		const tiers = [
 			{
@@ -254,9 +253,9 @@ describe('getTierBlocks', () => {
 			kycReviewRejectedType: null,
 			kycProvider: KycProvider.Shufti
 		} as User;
-		const verifiedTierId = '';
+
 		// Get tiers
-		const result = getTierBlocks(user, verifiedTierId, data.mySettingsKycTiers);
+		const result = getTierBlocks(user, data.mySettingsKycTiers);
 		// Check results
 		const tiers = [
 			{
@@ -323,9 +322,8 @@ describe('getTierBlocks', () => {
 			kycReviewRejectedType: null,
 			kycProvider: KycProvider.Shufti
 		} as User;
-		const verifiedTierId = '';
 		// Get tiers
-		const result = getTierBlocks(user, verifiedTierId, data.mySettingsKycTiers);
+		const result = getTierBlocks(user, data.mySettingsKycTiers);
 		// Check results
 		const tiers = [
 			{

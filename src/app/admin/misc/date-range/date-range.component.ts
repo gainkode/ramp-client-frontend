@@ -73,7 +73,7 @@ export class AdminDateRangeComponent implements OnInit {
   	return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 
-  onDateChanged(data: any): void {
+  onDateChanged(): void {
   	const start = `${this.fromDate?.day}/${this.fromDate?.month}/${this.fromDate?.year}`;
   	const end = `${this.toDate?.day}/${this.toDate?.month}/${this.toDate?.year}`;
   	this.startField?.setValue(getFormattedUtcDate(start));

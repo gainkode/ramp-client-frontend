@@ -168,10 +168,9 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
 
   requiredFieldsComplete(): void {
 		this.createTransactionInternal();
-  	// this.widgetService.getWireTransferSettings(this.summary, this.widgetSettings);
   }
 
-  private onAuthRequired(email: string): void {
+  private onAuthRequired(): void {
   	void this.router.navigateByUrl('/');
   }
 

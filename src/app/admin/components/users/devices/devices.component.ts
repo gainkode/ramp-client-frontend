@@ -64,17 +64,17 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
 	confirmDevice(device: DeviceItem, content: any): void {
 		const requestData$ = this.adminService.confirmDevice(device.id);
 		this.subscriptions.add(
-			requestData$.subscribe(({ result }) => {
+			requestData$.subscribe(() => {
 				const confirmModalRef = this.modalService.open(content, {
 					backdrop: 'static',
 					windowClass: 'modalCusSty',
 				});
 				this.subscriptions.add(
-					confirmModalRef.closed.subscribe(val => {
+					confirmModalRef.closed.subscribe(() => {
 						this.loadDevices();
 					})
 				);
-			}, (error) => {
+			}, () => {
 				if (this.auth.token === '') {
 					void this.router.navigateByUrl('/');
 				}
@@ -90,7 +90,7 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
 				this.devices = list;
 				this.deviceCount = count;
 				this.inProgress = false;
-			}, (error) => {
+			}, () => {
 				this.inProgress = false;
 				if (this.auth.token === '') {
 					void this.router.navigateByUrl('/');
@@ -103,7 +103,7 @@ export class AdminUserDevicesComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.adminService.getUser(this.filterUserId).pipe(take(1)).subscribe(user => {
 				this.user = user;
-			}, (error) => {
+			}, () => {
 				if (this.auth.token === '') {
 					void this.router.navigateByUrl('/');
 				}

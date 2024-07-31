@@ -81,9 +81,9 @@ export class PersonalResetComponent implements OnDestroy {
                 this.inProgress = true;
                 const password = this.passwordForm.get('password1')?.value;
                 this.subscriptions.add(
-                    this.auth.setPassword(this.token, password).subscribe(({ data }) => {
+                    this.auth.setPassword(this.token, password).subscribe(() => {
                         this.inProgress = false;
-                        this.router.navigateByUrl('/personal/auth/success/reset');
+                        void this.router.navigateByUrl('/personal/auth/success/reset');
                     }, (error) => {
                         this.inProgress = false;
                         this.errorMessage = this.errorHandler.getError(error.message, 'Unable to reset password');

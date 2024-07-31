@@ -133,7 +133,7 @@ export class PersonalComponent implements OnInit, OnDestroy {
     	}
     }
 
-    onDeactivatePage(component: any): void {
+    onDeactivatePage(): void {
     	this.dataPanel = false;
     	if (this.showDetailsRef) {
     		this.showDetailsRef.unsubscribe();
@@ -374,12 +374,6 @@ export class PersonalComponent implements OnInit, OnDestroy {
     }
 
     notificationTest(): void {
-    	this.subscriptions.add(
-    		this.notification.sendTestNotification().subscribe(({ data }) => {
-    			// data
-    		}, (error) => {
-    			// error
-    		})
-    	);
+    	this.subscriptions.add(this.notification.sendTestNotification().subscribe());
     }
 }

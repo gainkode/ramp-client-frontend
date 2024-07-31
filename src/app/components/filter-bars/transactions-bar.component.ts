@@ -92,11 +92,11 @@ export class TransactionsFilterBarComponent implements OnInit, OnDestroy {
     			this.updateChips(FilterChipType.Wallet);
     		}));
     	this.subscriptions.add(
-    		this.transactionDateField?.valueChanges.subscribe(val => {
+    		this.transactionDateField?.valueChanges.subscribe(() => {
     			this.updateChips(FilterChipType.Date);
     		}));
     	this.subscriptions.add(
-    		this.senderField?.valueChanges.subscribe(val => {
+    		this.senderField?.valueChanges.subscribe(() => {
     			this.updateChips(FilterChipType.Sender);
     		}));
     }

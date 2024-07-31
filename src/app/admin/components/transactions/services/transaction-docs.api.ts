@@ -1,6 +1,6 @@
 import { HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map, of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ApiFacadeService } from 'services/api-facade.service';
 import { Signature } from '../models/transaction-docs.model';
 import { ISimpleResponse } from 'model/api';

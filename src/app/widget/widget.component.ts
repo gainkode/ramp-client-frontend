@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { AssetAddressShortListResult, KycProvider, LoginResult, PageType, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TextPage, TransactionInput, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
+import { AssetAddressShortListResult, KycProvider, LoginResult, PageType, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionInput, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
 import { CardView, CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -108,7 +108,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	private profileService: ProfileDataService,
   	private errorHandler: ErrorService) { }
 
-  private externalKycSubscriptionFlag = false;
   private companyLevelVerificationFlag = false;
 
   	ngOnInit(): void {
@@ -133,10 +132,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.loadAccountData();
   	this.pager.init('initialization', 'Initialization');
   	this.loadCustomData();
-		
-  	// if(!this.externalKycSubscriptionFlag){
-  	// 	this.startExternalKycProvideListener();
-  	// } 
   }
 
   private initPage(): void {
@@ -175,7 +170,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.externalPaymentNotificationsSubscription.unsubscribe();
   	}
     
-  	this.externalKycSubscriptionFlag = false;
   	this.exhangeRate.stop();
   }
 
@@ -210,7 +204,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
 		
   		if (data.currentUserParams) {
-  			let setCurrencyExchangeRate = false;
   			this.isWidgetUserParams = true;
 				
   			userParams = JSON.parse(data.currentUserParams);
@@ -222,12 +215,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
   				if (userParams.params.currency) {
   					this.widget.currencyFrom = userParams.params.currency;
   					this.summary.currencyFrom = this.widget.currencyFrom;
-  					setCurrencyExchangeRate = true;
   				}
   				if (userParams.params.convertedCurrency) {
   					this.widget.currencyTo = userParams.params.convertedCurrency;
   					this.summary.currencyTo = this.widget.currencyTo;
-  					setCurrencyExchangeRate = true;
   				}
   				if (userParams.params.transactionType) {
   					userTransaction = userParams.params.transactionType;
@@ -353,7 +344,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	
   	if(this.auth.user && isExternalProvider){
   		console.log('Kyc completed notifications subscribed');
-  		this.externalKycSubscriptionFlag = true;
   		this.externalKycProvideNotificationsSubscription = this.notification.subscribeToKycCompleteNotifications()
   			.subscribe(
   				{
@@ -372,7 +362,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   						this.loadAccountData();
   					},
   					error: (error) => {
-  						this.externalKycSubscriptionFlag = false;
   						console.error('KYC complete notification error', error);
   					}
   				});
@@ -392,7 +381,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					this.processingComplete();
   				} else if(subscriptionData.status === 'declined') {
   					finishFlag = true;
-  					this.setError('External Payment failed', 'Payment declined', 'creatExternalTransaction');
+  					this.setError('External Payment failed', 'Payment declined');
   				}
 
   				if(finishFlag){
@@ -404,7 +393,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			error: (error) => {
   				console.error('External Payment notification error', error);
 
-  				this.setError('External Payment', 'Payment declined', 'creatExternalTransaction');
+  				this.setError('External Payment', 'Payment declined');
 
   				this.showWidget = true;
   				this.widgetLink = undefined;
@@ -488,14 +477,14 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	} 
   }
 
-  capchaResult(event): void {
+  capchaResult(): void {
   	this.recaptchaDialog?.close();
   	this.recaptchaDialog = undefined;
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
 
   handleError(message: string): void {
-  	this.setError('Transaction failed', message, 'handleError');
+  	this.setError('Transaction failed', message);
   }
 
   handleReject(): void {
@@ -506,8 +495,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		if (this.paymentProviders.length < 1) {
   			this.setError(
   				'No payment providers',
-  				`No supported payment providers found for "${this.summary.currencyFrom}"`,
-  				'kycComplete');
+  				`No supported payment providers found for "${this.summary.currencyFrom}"`);
   		} else if (this.paymentProviders.length > 1) {
   			this.nextStage('payment', 'Payment info', 5);
   		} else {
@@ -653,7 +641,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			}
   			this.initData(undefined);
   			this.pager.init('order_details', 'Order details');
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			this.initData(undefined);
   			this.pager.init('order_details', 'Order details');
@@ -676,7 +664,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   				}
   			}
         
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			this.initData(undefined);
   			this.pager.init('order_details', 'Order details');
@@ -778,7 +766,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   // ================
 
   // == Common settings ==
-  settingsAuthRequired(email: string): void {
+  settingsAuthRequired(): void {
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
   }
 
@@ -822,8 +810,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		if (this.paymentProviders.length < 1) {
   			this.setError(
   				'Payment providers not found',
-  				`No supported payment providers found for "${this.summary.currencyFrom}"`,
-  				'settingsCommonComplete');
+  				`No supported payment providers found for "${this.summary.currencyFrom}"`);
   		} else if (this.paymentProviders.length > 1) {
   			if (!this.notificationStarted) {
   				this.startNotificationListener();
@@ -996,7 +983,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   		this.auth.setLoginUser(data);
   		if(this.externalKycProvideNotificationsSubscription){
   			this.externalKycProvideNotificationsSubscription.unsubscribe();
-  			this.externalKycSubscriptionFlag = false;
   		}
   		this.startExternalKycProvideListener();
 
@@ -1016,8 +1002,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	} else {
   		this.setError(
   			'Authentication failed',
-  			`Unable to authenticate user with the action "${data.authTokenAction}"`,
-  			'checkLoginResult');
+  			`Unable to authenticate user with the action "${data.authTokenAction}"`);
   	}
   }
 
@@ -1104,7 +1089,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   							if(this.transactionInput.type === TransactionType.Buy) {
   								this.pager.swapStage(tempStageId);
   							}else if(this.transactionInput.type === TransactionType.Sell) {
-  								this.setError('Transaction handling failed', this.errorMessage, 'createSellTransaction order');
+  								this.setError('Transaction handling failed', this.errorMessage);
   							}
   						}
   					}
@@ -1129,7 +1114,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					} as PaymentErrorDetails);
   				} else {
   					setTimeout(() => {
-  						this.setError('Transaction handling failed', msg, 'createBuyTransaction');
+  						this.setError('Transaction handling failed', msg);
   					}, 100);
   				}
   			}
@@ -1143,7 +1128,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	} else if (this.summary.providerView?.instrument === PaymentInstrument.Apm) {
   		this.completeApmTransaction(
   			this.summary.transactionId,
-  			this.summary.providerView.id,
   			PaymentInstrument.Apm);
   	}else if(this.summary.providerView?.instrument === PaymentInstrument.FiatVault){
   		this.completeTextData = completeDataDefault;
@@ -1153,8 +1137,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	} else {
   		this.setError(
   			'Invalid payment instrument',
-  			`Invalid payment instrument ${this.summary.providerView?.instrument}`,
-  			'startPayment');
+  			`Invalid payment instrument ${this.summary.providerView?.instrument}`);
   	}
   }
 
@@ -1185,7 +1168,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   							errorMessage: this.errorMessage
   						} as PaymentErrorDetails);
   					} else {
-  						this.setError('Transaction handling failed', this.errorMessage, 'completeCreditCardTransaction');
+  						this.setError('Transaction handling failed', this.errorMessage);
   					}
   				}
   			}
@@ -1193,14 +1176,14 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	);
   }
 
-  private completeApmTransaction(transactionId: string, provider: string, instrument: PaymentInstrument): void {
+  private completeApmTransaction(transactionId: string, instrument: PaymentInstrument): void {
   	this.inProgress = true;
   	this.pSubscriptions.add(
   		this.dataService.createApmPayment(transactionId, instrument).subscribe(
   			({ data }) => {
   				this.inProgress = false;
   				const preAuthResult = data.createApmPayment as PaymentApmResult;
-  				if(preAuthResult.type == PaymentApmType.External) {
+  				if(preAuthResult.type === PaymentApmType.External) {
   					this.showWidget = false;
   					this.inProgress = false;
   					this.onIFramePay.emit(true);
@@ -1223,7 +1206,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   							errorMessage: this.errorMessage
   						} as PaymentErrorDetails);
   					} else {
-  						this.setError('Transaction handling failed', this.errorMessage, 'completeApmTransaction');
+  						this.setError('Transaction handling failed', this.errorMessage);
   					}
   				}
   			}
@@ -1256,7 +1239,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			selected: this.wireTransferList[0]
   		} as WireTransferUserSelection);
   	} else {
-  		this.setError('Transaction failed', 'No settings found for wire transfer', 'onWireTransferListLoaded');
+  		this.setError('Transaction failed', 'No settings found for wire transfer');
   	}
   }
 
@@ -1269,7 +1252,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.companyLevelVerificationFlag = true;
   }
 
-  private setError(title: string, message: string, tag: string): void {
+  private setError(title: string, message: string): void {
   	this.errorMessage = message;
   	this.changeDetector.detectChanges();
   	if (this.pager.stageId !== 'order_details') {

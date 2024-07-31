@@ -238,7 +238,7 @@ export function customClickFn() {
 	fromEvent(vertical, 'click').subscribe(() => {
 		//add
 		mainContent?.classList.add('app-content');
-		mainContainer.forEach((e,i)=>{
+		mainContainer.forEach((e)=>{
 			e?.classList.add('container-fluid');
 		});
 		mainHeader?.classList.add('side-header');
@@ -247,7 +247,7 @@ export function customClickFn() {
 		body?.classList.remove('horizontal');
 		body?.classList.remove('horizontal-hover');
 		mainContent?.classList.remove('horizontal-content');
-		mainContainer.forEach((e,i)=>{
+		mainContainer.forEach((e)=>{
 			e?.classList.remove('container');
 		});
 		mainHeader?.classList.remove('hor-header');
@@ -263,7 +263,7 @@ export function customClickFn() {
 		//add
 		body?.classList.add('horizontal');
 		mainContent?.classList.add('horizontal-content');
-		mainContainer.forEach((e,i)=>{
+		mainContainer.forEach((e)=>{
 			e?.classList.add('container');
 		});
 		mainHeader?.classList.add('hor-header');
@@ -273,7 +273,7 @@ export function customClickFn() {
 		// remove
 		sideMenu?.classList.remove('flex-wrap');
 		mainContent?.classList.remove('app-content');
-		mainContainer.forEach((e,i)=>{
+		mainContainer.forEach((e)=>{
 			e?.classList.remove('container-fluid');
 		});
 		mainHeader?.classList.remove('side-header');
@@ -281,7 +281,7 @@ export function customClickFn() {
 		body?.classList.remove('sidenav-toggled');
 		body?.classList.remove('horizontal-hover');
 		const li = document.querySelectorAll('.side-menu li');
-		li.forEach((e, i) => {
+		li.forEach((e) => {
 			e.classList.remove('is-expanded');
 		});
 		sidebarFn.checkHoriMenu();
@@ -291,7 +291,7 @@ export function customClickFn() {
 		body?.classList.add('horizontal');
 		body?.classList.add('horizontal-hover');
 		mainContent?.classList.add('horizontal-content');
-		mainContainer.forEach((e,i)=>{
+		mainContainer.forEach((e)=>{
 			e?.classList.add('container');
 		});
 		mainHeader?.classList.add('hor-header');
@@ -302,7 +302,7 @@ export function customClickFn() {
 		// remove
 		sideMenu?.classList.remove('flex-nowrap');
 		mainContent?.classList.remove('app-content');
-		mainContainer.forEach((e,i)=>{
+		mainContainer.forEach((e)=>{
 			e?.classList.remove('container-fluid');
 		});
 		body?.classList.remove('sidebar-mini');
@@ -314,7 +314,7 @@ export function customClickFn() {
 		body?.classList.remove('sideicon-menu');
 
 		const li = document.querySelectorAll('.side-menu li');
-		li.forEach((e, i) => {
+		li.forEach((e) => {
 			e.classList.remove('is-expanded');
 		});
     

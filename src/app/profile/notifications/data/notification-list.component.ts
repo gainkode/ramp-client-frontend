@@ -212,7 +212,7 @@ export class ProfileNotificationListComponent implements OnDestroy, AfterViewIni
     	this.onProgress.emit(true);
     	const notificationsDelete = this.profileService.deleteMyNotifications(ids);
     	this.subscriptions.add(
-    		notificationsDelete.subscribe(({ data }) => {
+    		notificationsDelete.subscribe(() => {
     			this.loadNotifications();
     		}, (error) => {
     			this.onProgress.emit(false);

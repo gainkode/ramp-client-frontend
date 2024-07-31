@@ -13,7 +13,7 @@
         [depositRate]="summary?.exchangeRate?.depositRate" (onError)="handleError($event)"
         (onProgress)="progressChanged($event)" (onDataUpdated)="orderDetailsChanged($event)"
         (onWalletAddressUpdated)="orderWalletChanged($event)"
-        (onVerifyWhenPaidChanged)="orderVerifyWhenPaidChanged($event)" (onComplete)="orderDetailsComplete($event)">
+        (onVerifyWhenPaidChanged)="orderVerifyWhenPaidChanged($event)" (onComplete)="orderDetailsComplete()">
       </app-widget-order-details>
       <!-- Payment -->
       <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders"

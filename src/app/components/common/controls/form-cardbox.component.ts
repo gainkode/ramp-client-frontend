@@ -57,7 +57,7 @@ export class FormCardBoxComponent implements ControlValueAccessor, OnInit, OnDes
 
     ngOnInit(): void {
     	this.subscriptions.add(
-    		this.control?.valueChanges.subscribe(val => {
+    		this.control?.valueChanges.subscribe(() => {
     			this.initialized = true;
     			this.errorMessage = this.getError();
     		})

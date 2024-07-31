@@ -60,7 +60,7 @@ export class SettingsPasswordBoxComponent implements ControlValueAccessor, OnIni
 
     ngOnInit(): void {
     	this.subscriptions.add(
-    		this.control?.valueChanges.subscribe(val => {
+    		this.control?.valueChanges.subscribe(() => {
     			this.initialized = true;
     			this.errorMessage = this.getError();
     		})

@@ -9,7 +9,7 @@ import { AdminDataService } from 'services/admin-data.service';
 import { CommonTargetValue } from 'model/common.model';
 import { CountryFilterList } from 'model/country-code.model';
 import { TransactionSourceFilterList } from 'model/fee-scheme.model';
-import { KycProvider, SettingsKycTargetFilterType, UserMode, UserType } from 'model/generated-models';
+import { SettingsKycTargetFilterType, UserMode, UserType } from 'model/generated-models';
 import { KycTier } from 'model/identification.model';
 import { KycLevelView, KycProviderList, KycTargetFilterList, UserModeList, UserTypeList } from 'model/payment.model';
 import { AuthService } from 'services/auth.service';
@@ -92,7 +92,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
   	this.subscriptions.add(
-  		this.form.get('target')?.valueChanges.subscribe(val => this.updateTarget())
+  		this.form.get('target')?.valueChanges.subscribe(() => this.updateTarget())
   	);
   	this.subscriptions.add(
   		this.form.get('userType')?.valueChanges.subscribe(val => {
@@ -408,7 +408,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
   				windowClass: 'modalCusSty',
   			});
   			this.subscriptions.add(
-  				this.defaultOverwriteConfirmDialog.closed.subscribe(val => {
+  				this.defaultOverwriteConfirmDialog.closed.subscribe(() => {
   					this.saveTier(tier);
   				})
   			);
@@ -424,7 +424,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		this.removeDialog.closed.subscribe(val => {
+  		this.removeDialog.closed.subscribe(() => {
   			this.deleteTierConfirmed(this.settingsId ?? '');
   		})
   	);
@@ -435,7 +435,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.saveKycTierSettings(tier, this.createNew);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {
@@ -453,7 +453,7 @@ export class AdminKycTierDetailsComponent implements OnInit, OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.deleteKycTierSettings(id);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {

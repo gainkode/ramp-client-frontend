@@ -133,7 +133,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   					}
   				});
   				this.loadTransactionsTotal();
-  			}, (error) => {
+  			}, () => {
   				this.onProgress.emit(false);
   			})
   	);
@@ -158,7 +158,7 @@ export class WidgetDepositDetailsComponent implements OnInit, OnDestroy {
   			}
   			this.updateQuote();
   			this.onProgress.emit(false);
-  		}, (error) => {
+  		}, () => {
   			this.onProgress.emit(false);
   		})
   	);

@@ -138,12 +138,12 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   	this.getPaymentProviders();
   	this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
   	this.subscriptions.add(
-  		this.form.get('currencyToSpend')?.valueChanges.subscribe(val => {
+  		this.form.get('currencyToSpend')?.valueChanges.subscribe(() => {
   			this.startExchangeRate();
   		})
   	);
   	this.subscriptions.add(
-  		this.form.get('currencyToReceive')?.valueChanges.subscribe(val => {
+  		this.form.get('currencyToReceive')?.valueChanges.subscribe(() => {
   			this.startExchangeRate();
   		})
   	);

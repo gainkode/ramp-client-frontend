@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Filter } from 'admin/model/filter.model';
 import { RiskAlertCodeList } from 'admin/model/lists.model';
 import { EmptyObject } from 'apollo-angular/types';

@@ -72,7 +72,7 @@ export class AdminCostSchemesComponent implements OnInit, OnDestroy {
 					}
 				}
 				this.inProgress = false;
-			}, (error) => {
+			}, () => {
 				this.inProgress = false;
 				if (this.auth.token === '') {
 					void this.router.navigateByUrl('/');

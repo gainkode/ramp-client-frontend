@@ -38,7 +38,7 @@ export class PersonalRegisterComponent implements OnInit{
 		this.inProgress = visible;
 	}
 
-	onRegistered(email: string): void {
-		this.router.navigateByUrl('/personal/auth/success/signup');
+	onRegistered(): void {
+		void this.router.navigateByUrl('/personal/auth/success/signup');
 	}
 }

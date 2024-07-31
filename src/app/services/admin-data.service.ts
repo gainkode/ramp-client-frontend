@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef, WatchQueryOptions } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { CostScheme } from '../model/cost-scheme.model';
 import { FeeScheme } from '../model/fee-scheme.model';
 import {
@@ -4108,14 +4108,6 @@ export class AdminDataService {
 	}
 
 	saveBankAccountSettings(account: WireTransferBankAccount, create: boolean): Observable<any> {
-		const vars = {
-			bankAccountId: account.bankAccountId,
-			name: account.name,
-			description: account.description,
-			au: account.au,
-			uk: account.uk,
-			eu: account.eu
-		};
 		return create
 			? this.apollo.mutate({
 				mutation: ADD_WIRE_TRANSFER_SETTINGS,
@@ -4522,7 +4514,7 @@ export class AdminDataService {
 			variables: {
 				widgetId
 			}
-		}).pipe(tap((res) => {
+		}).pipe(tap(() => {
 			this.snackBar.open(
 				`Widget was deleted`,
 				undefined, { duration: 5000 }
@@ -4536,7 +4528,7 @@ export class AdminDataService {
 			variables: {
 				customerId
 			}
-		}).pipe(tap((res) => {
+		}).pipe(tap(() => {
 			this.snackBar.open(
 				`Customer was disabled`,
 				undefined, { duration: 5000 }
@@ -4550,7 +4542,7 @@ export class AdminDataService {
 			variables: {
 				customerId
 			}
-		}).pipe(tap((res) => {
+		}).pipe(tap(() => {
 			this.snackBar.open(
 				`Customer was restored`,
 				undefined, { duration: 5000 }
@@ -4676,7 +4668,7 @@ export class AdminDataService {
 				text,
 				level
 			}
-		}).pipe(tap((res) => {
+		}).pipe(tap(() => {
 			this.snackBar.open(
 				`Message was sent`,
 				undefined, { duration: 5000 }

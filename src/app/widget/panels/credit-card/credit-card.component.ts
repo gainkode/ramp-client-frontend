@@ -88,7 +88,7 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     	}
     	this.pSubscriptions.add(this.cardField?.valueChanges.subscribe((val) => this.onCardNumberUpdated(val)));
     	this.pSubscriptions.add(this.expiredField?.valueChanges.subscribe((val) => this.onExpiredUpdated(val)));
-    	this.pSubscriptions.add(this.codeField?.valueChanges.subscribe((val) => this.onCodeUpdated(val)));
+    	this.pSubscriptions.add(this.codeField?.valueChanges.subscribe(() => this.onCodeUpdated()));
     }
 
     ngOnDestroy(): void {
@@ -137,7 +137,7 @@ export class WidgetCreditCardComponent implements OnInit, OnDestroy {
     	this.expiredCard = (this.getCardExpiredDate(val).valid === false);
     }
 
-    private onCodeUpdated(val: string): void {
+    private onCodeUpdated(): void {
     	this.codeInit = true;
     }
 

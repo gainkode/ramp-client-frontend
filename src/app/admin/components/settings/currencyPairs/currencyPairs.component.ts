@@ -95,7 +95,7 @@ export class AdminCurrencyPairsComponent implements OnInit, OnDestroy, AfterView
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		this.createDialog.closed.subscribe(val => {
+  		this.createDialog.closed.subscribe(() => {
   			this.removeCurrencyPairConfirmed(key.currencyPairLiquidityProviderId);
   		})
   	);
@@ -124,7 +124,7 @@ export class AdminCurrencyPairsComponent implements OnInit, OnDestroy, AfterView
   			this.currencyPairs = list;
   			this.keyCount = count;
   			this.inProgress = false;
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');

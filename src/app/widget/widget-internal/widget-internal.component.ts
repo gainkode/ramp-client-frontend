@@ -407,7 +407,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	}
   }
 
-  onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
+	onExchangeRateUpdated(rate: Rate | undefined, countDownTitle: string, countDownValue: string, error: string): void {
   	this.rateErrorMessage = error;
   	if (rate) {
   		this.summary.exchangeRate = rate;
@@ -445,7 +445,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 		this.transactionErrorTitle = undefined;
   }
 
-  capchaResult(event: any): void {
+  capchaResult(): void {
   	this.recaptchaDialog?.close();
   	this.recaptchaDialog = undefined;
   	this.widgetService.authenticate(this.summary.email, this.widget.widgetId);
@@ -546,7 +546,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 						const validTransactionType = ['buy', 'sell'].includes(transactionType);
 
 						if (!validTransactionType) {
-							this.showTransactionError('Wrong widget settings', 'Missing transaction type');
+							this.showTransactionError('Wrong widget settings');
 							return;
 						}
 					}
@@ -569,7 +569,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 				error: () => {
 					this.inProgress = false;
 					this.initData(undefined);
-					this.showTransactionError('Wrong widget settings', 'Cannot load the widget');
+					this.showTransactionError('Wrong widget settings');
 					this.setOrderDetailsStep();
 				}
 		});
@@ -1257,13 +1257,13 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.changeDetector.detectChanges();
 
   	if (this.pager.stageId !== 'order_details') {
-  		this.showTransactionError(title, message);
+  		this.showTransactionError(title);
   	} else if (this.pager.stageId === 'order_details' && this.isSingleOrderDetailsCompleted) {
-  		this.showTransactionError(title, message);
+  		this.showTransactionError(title);
   	}
   }
 
-  private showTransactionError(messageTitle: string, messageText: string): void {
+  private showTransactionError(messageTitle: string): void {
   	this.transactionErrorTitle = messageTitle;
   	this.nextStage('error', 'widget-pager.error', 6);
   }

@@ -38,7 +38,7 @@ export class WidgetCryptoCompleteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     
   	this.pSubscriptions.add(
-  		this.updateTimer.subscribe(val => {
+  		this.updateTimer.subscribe(() => {
   			if (this.data) {
   				if (this.data.invoiceId !== '') {
   					this.reloadTransactionData();
@@ -69,7 +69,6 @@ export class WidgetCryptoCompleteComponent implements OnInit, OnDestroy {
   		this.dataService.calculateInvoice(this.data?.invoiceId ?? '').subscribe(
   			({ data }) => {
   				this.data = new InvoiceView(data.calculateInvoice as CryptoInvoiceCreationResult);
-  			}, (error) => {
   			}
   		)
   	);

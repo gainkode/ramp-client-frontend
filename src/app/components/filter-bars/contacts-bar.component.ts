@@ -53,11 +53,11 @@ export class ContactsFilterBarComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
     	this.subscriptions.add(
-    		this.userNameField?.valueChanges.subscribe(val => {
+    		this.userNameField?.valueChanges.subscribe(() => {
     			this.updateChips(FilterChipType.UserName);
     		}));
     	this.subscriptions.add(
-    		this.emailField?.valueChanges.subscribe(val => {
+    		this.emailField?.valueChanges.subscribe(() => {
     			if (this.emailField?.valid) {
     				this.updateChips(FilterChipType.Email);
     			}
@@ -70,7 +70,7 @@ export class ContactsFilterBarComponent implements OnInit, OnDestroy {
     			this.updateChips(FilterChipType.Currency);
     		}));
     	this.subscriptions.add(
-    		this.zeroBalanceField?.valueChanges.subscribe(val => {
+    		this.zeroBalanceField?.valueChanges.subscribe(() => {
     			this.updateChips(FilterChipType.ZeroBalance);
     			if (!this.internalLoading) {
     				this.onSubmit();

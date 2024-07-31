@@ -105,7 +105,7 @@ export class ProfileContactListComponent implements OnDestroy, AfterViewInit {
     		this.sortedDesc).valueChanges.pipe(take(1));
     	this.loading = true;
     	this.onProgress.emit(true);
-    	const userFiat = this.auth.user?.defaultFiatCurrency ?? 'EUR';
+   
     	this.pContactsSubscription = contactsData$.subscribe(({ data }) => {
     		const contactsItems = data.myContacts as UserContactListResult;
     		if (contactsItems) {

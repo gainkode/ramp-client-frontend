@@ -89,7 +89,7 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		this.createDialog.closed.subscribe(val => {
+  		this.createDialog.closed.subscribe(() => {
   			this.removeApiKeyConfirmed(key.title);
   		})
   	);
@@ -99,7 +99,7 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
   	this.errorMessage = '';
   	const deleteKeyData$ = this.adminService.deleteApiKey(apiKey);
   	this.subscriptions.add(
-  		deleteKeyData$.subscribe(({ data }) => {
+  		deleteKeyData$.subscribe(() => {
   			this.loadKeys();
   		}, (error) => {
   			this.errorMessage = error;
@@ -126,7 +126,7 @@ export class AdminApiKeysComponent implements OnInit, OnDestroy, AfterViewInit {
   			this.apiKeys = list;
   			this.keyCount = count;
   			this.inProgress = false;
-  		}, (error) => {
+  		}, () => {
   			this.inProgress = false;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');

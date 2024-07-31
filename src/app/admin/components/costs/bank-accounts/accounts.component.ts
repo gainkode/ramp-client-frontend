@@ -64,7 +64,7 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
 					}
 				}
 				this.inProgress = false;
-			}, (error) => {
+			}, () => {
 				this.inProgress = false;
 				if (this.auth.token === '') {
 					void this.router.navigateByUrl('/');
@@ -85,7 +85,7 @@ export class AdminBankAccountsComponent implements OnInit, OnDestroy {
 			windowClass: 'modalCusSty',
 		});
 		this.subscriptions.add(
-			this.detailsDialog.closed.subscribe(val => {
+			this.detailsDialog.closed.subscribe(() => {
 				this.loadAccounts();
 			})
 		);

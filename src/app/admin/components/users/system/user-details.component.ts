@@ -228,7 +228,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   		windowClass: 'modalCusSty',
   	});
   	this.subscriptions.add(
-  		dialog.closed.subscribe(data => {
+  		dialog.closed.subscribe(() => {
   			if (this.userData?.deleted ?? false) {
   				this.onRestore(this.userData?.id ?? '');
   			} else {
@@ -242,7 +242,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   	this.saveInProgress = true;
   	const requestData$ = this.adminService.saveCustomer(id, customer, this.currentRoles);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.saveInProgress = false;
   			if (customer.changePasswordRequired === true) {
   				this.modalService.open(content, {
@@ -272,7 +272,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   	this.disableInProgress = true;
   	const requestData$ = this.adminService.deleteCustomer(id);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.disableInProgress = false;
   			this.save.emit();
   		}, (error) => {
@@ -289,7 +289,7 @@ export class AdminUserDetailsComponent implements OnInit, OnDestroy {
   	this.disableInProgress = true;
   	const requestData$ = this.adminService.restoreCustomer(id);
   	this.subscriptions.add(
-  		requestData$.subscribe(({ data }) => {
+  		requestData$.subscribe(() => {
   			this.disableInProgress = false;
   			this.save.emit();
   		}, (error) => {
