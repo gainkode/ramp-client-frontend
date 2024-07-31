@@ -68,7 +68,7 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   	private router: Router
   ) {
   	this.userIdFilter = this.route.snapshot.params['userId'] ?? '';
-  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Affiliates);
+  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Widgets);
   }
 
   ngOnInit(): void {
