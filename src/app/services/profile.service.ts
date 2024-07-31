@@ -328,6 +328,7 @@ const GET_PROFILE_ME = gql`
       flatNumber,
       addressStartDate,
       addressEndDate,
+      affiliateId,
       mode,
       is2faEnabled,
       changePasswordRequired,

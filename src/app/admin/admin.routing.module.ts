@@ -18,7 +18,7 @@ import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 import { AdminUserActionsComponent } from './components/users/actions/actions.component';
 import { UserRoleObjectCode } from 'model/generated-models';
 import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, TransactionLifelineComponent, TransactionSimulationComponent } from './components/transactions';
-import { AdminDashboardWrapperComponent, DashboardAdminComponent, DashboardMerchantComponent } from './components/dashboard';
+import { AdminDashboardWrapperComponent } from './components/dashboard';
 import { AdminApiKeysComponent, AdminCommonSettingsComponent, AdminCurrencyPairsComponent, FaqPageComponent } from './components/settings';
 import { AdminCustomersComponent } from './components/users/customers';
 
@@ -36,24 +36,8 @@ export const routes: Routes = [
 			{
 				path: 'dashboard',
 				component: AdminDashboardWrapperComponent,
-				data: { header: 'Dashboard', defaultRoute: true },
-				canActivate: [AdminGuard],
-				children: [
-					{
-						path: 'admin', 
-						// add proper roleCode 'DashboarAdmin'
-						data: { code: UserRoleObjectCode.Dashboard, main: true },
-						component: DashboardAdminComponent, 
-						canActivate: [AdminGuard]
-					},
-					{ 
-						path: 'merchant', 
-						// add proper roleCode 'DashboarMerchant'
-						data: { code: UserRoleObjectCode.DashboardMerchant, main: true },
-						component: DashboardMerchantComponent, 
-						canActivate: [AdminGuard] 
-					}
-				]
+				data: { header: 'Dashboard' },
+				canActivate: [AdminGuard]
 			},
 			{
 				path: 'common',

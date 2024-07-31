@@ -48,6 +48,7 @@ const LOGIN = gql`
                   kycValid,
                   kycStatus,
                   kycStatusUpdateRequired,
+									affiliateId,
                   kycReviewRejectedType,
                   kycTierId,
                   kycTier {

@@ -499,7 +499,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   		));
   }
 
-	private setAffilate(affilateId: string) {
+	private setAffilate(affilateId: string): void {
 		this.adminService.findUsers(new Filter({
 			users: [affilateId]
 		}))

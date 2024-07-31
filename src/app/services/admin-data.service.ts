@@ -287,7 +287,7 @@ const GET_DASHBOARD_STATS = gql`
 `;
 
 const GET_DASHBOARD_MERCHANT_STATS = gql`
-  query etDashboardMerchantStats(
+  query getDashboardMerchantStats(
     $createdDateInterval: DateTimeInterval
     $completedDateInterval: DateTimeInterval
     $updateDateInterval: DateTimeInterval
@@ -1027,6 +1027,7 @@ const GET_USERS = gql`
         userId
         email
         emailConfirmed
+        affiliateId
         firstName
         lastName
         type
@@ -1138,6 +1139,7 @@ const GET_USERS_EX = gql`
         userId
         email
         emailConfirmed
+        affiliateId
         firstName
         lastName
         gender

@@ -55,6 +55,7 @@ export class AdminGuard {
 
 	private findMainRouteWithAccess(routeItems: Route[]): string {
 		let fullPath = '';
+
 		for(const route of routeItems) {
 			// If this route is main we have to check if user has permission to open this route
 			if (route?.data?.main === true) {

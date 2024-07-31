@@ -95,12 +95,14 @@ export class PersonalComponent implements OnInit, OnDestroy {
     	this.expandedMenu = (expandedVal === 'true');
     	// Administration menu item
     	const adminRole = this.auth.isAuthenticatedUserRole(['MERCHANT', 'MANAGER', 'SUPPORT', 'ADMIN', 'DEMO']);
+
     	if (adminRole) {
     		const adminMenu = this.popupItems.find(x => x.id === ProfilePopupAdministrationMenuItem.id);
     		if (!adminMenu) {
     			this.popupItems.splice(0, 0, ProfilePopupAdministrationMenuItem);
     		}
     	}
+			
     	this.loadCommonSettings();
     	this.loadAvatar(undefined);
     }
@@ -285,15 +287,17 @@ export class PersonalComponent implements OnInit, OnDestroy {
     }
 
     sideMenuClick(item: MenuItem): void {
-    	this.router.navigateByUrl(item.url);
+    	void this.router.navigateByUrl(item.url);
     	this.hamburgerToggle.nativeElement.checked = false;
     }
 
     routeTo(link: string): void {
     	let baseLink = link;
     	const urlBlocks = link.split('/');
+
     	if (urlBlocks.length > 0) {
     		this.selectedMenu = urlBlocks[urlBlocks.length - 1];
+
     		if (urlBlocks.length > 1) {
     			const selectedSection = urlBlocks[urlBlocks.length - 2];
     			if (selectedSection === 'settings') {
