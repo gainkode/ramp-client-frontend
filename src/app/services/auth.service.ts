@@ -1016,9 +1016,9 @@ export class AuthService {
 		let result = 0;
 		const user: User | null = this.getAuthenticatedUser();
 		if (user != null) {
-			const permissionItem = (user.permissions?.find(x => x.objectCode === code));
-			if (permissionItem !== undefined) {
-				result = (permissionItem.fullAccess) ? 2 : 1;
+			const permissionItems = (user.permissions?.filter(x => x.objectCode === code));
+			if (permissionItems?.length) {
+				result = permissionItems.find(object => object.fullAccess) ? 2 : 1;
 			}
 		}
 		return result;
