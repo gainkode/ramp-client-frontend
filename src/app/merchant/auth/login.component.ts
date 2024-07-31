@@ -70,13 +70,20 @@ export class MerchantLoginComponent implements OnDestroy {
 				const settingsCommon: SettingsCommon = settings.data.getSettingsCommon;
 				this.auth.setLocalSettingsCommon(settingsCommon);
 				this.inProgress = false;
-				void this.router.navigateByUrl(this.auth.getUserMainPage());
+
+				const userRole = (userData.user) ? this.auth.isUserRole(userData.user, ['USER']) : false;
+
+				if (!userRole) {
+					void this.router.navigateByUrl('/admin');
+				} else {
+					void this.router.navigateByUrl(this.auth.getUserMainPage());
+				}
 			}, (error) => {
 				this.inProgress = false;
 				if (this.auth.token !== '') {
 					this.errorMessage = this.errorHandler.getError(error.message, 'Unable to load common settings');
 				} else {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);

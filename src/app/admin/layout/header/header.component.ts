@@ -39,7 +39,13 @@ export class AdminHeaderComponent implements OnInit {
 	}
 
 	goToMainPage(): void {
-		void this.router.navigate([this.auth.getUserMainPage()]);
+		const userRole = this.auth.isUserRole(this.auth.user, ['USER']);
+		
+		if (!userRole) {
+			return;
+		} else {
+			void this.router.navigate([this.auth.getUserMainPage()]);
+		}
 	}
 
 	signout(): void {

@@ -131,9 +131,13 @@ export class AdminSidebarComponent implements OnInit {
 	}
 
 	goToMainPage(): void {
-		this.router.navigate([this.auth.getUserMainPage()]).catch((e) => {
-			throw new Error(e);
-		});
+		const userRole = this.auth.isUserRole(this.auth.user, ['USER']);
+		
+		if (!userRole) {
+			return;
+		} else {
+			void this.router.navigate([this.auth.getUserMainPage()]);
+		}
 	}
 
 	sidebarClose(): void {
