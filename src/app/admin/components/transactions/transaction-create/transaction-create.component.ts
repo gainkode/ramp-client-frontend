@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
-import { CostScheme } from 'model/cost-scheme.model';
 import { PaymentInstrument, PaymentProvider, Rate, SettingsCurrencyWithDefaults, TransactionInput, TransactionSource, TransactionType } from 'model/generated-models';
 import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
 import { TransactionItemFull } from 'model/transaction.model';
@@ -78,7 +77,6 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   filteredProviders: PaymentProviderView[] = [];
   providers: PaymentProviderView[] = [];
   showPaymentProvider = false;
-  costSchemes: CostScheme[] = [];
 
   form = this.formBuilder.group({
   	currencyToSpend: [null, { validators: [Validators.required], updateOn: 'change' }],
@@ -136,7 +134,9 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   	this.loadCurrencies();
   	this.usersSearch();
   	this.getPaymentProviders();
+
   	this.exchangeRate.register(this.onExchangeRateUpdated.bind(this));
+		
   	this.subscriptions.add(
   		this.form.get('currencyToSpend')?.valueChanges.subscribe(val => {
   			this.startExchangeRate();
@@ -186,10 +186,8 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   }
 
   private getPaymentProviders(): void {
-  	this.providers = [];
-  	const data$ = this.adminService.getProviders()?.valueChanges;
   	this.subscriptions.add(
-  		data$.subscribe(({ data }) => {
+  		this.adminService.getProviders()?.valueChanges.subscribe(({ data }) => {
   			const providers = data.getPaymentProviders as PaymentProvider[];
   			this.providers = providers?.map((val) => new PaymentProviderView(val));
   			const instrument = this.form.get('instrument')?.value;
@@ -218,8 +216,9 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   }
   
   private onFilterPaymentProviders(instrument: PaymentInstrument): void {
-  	if (instrument && instrument.length > 0 && !instrument.includes(PaymentInstrument.WireTransfer)) {
+  	if (instrument?.length > 0 && !instrument?.includes(PaymentInstrument.WireTransfer)) {
   		this.filteredProviders = getProviderList([instrument], this.providers);
+			console.log(this.filteredProviders)
   		this.showPaymentProvider = this.filteredProviders.length > 0;
   		this.form.get('provider')?.setValue(
 		  this.providers.length > 0
@@ -281,6 +280,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   	if(!this.pSpendAutoUpdated && this.pAmountToSpend !== val){
   		this.setAmountToSpend(val);
   	}
+
   	this.pSpendAutoUpdated = false;
   }
 
@@ -293,7 +293,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   		if(rate && amount){
   			if(this.transactionTypeField?.value === TransactionType.Buy){
   				receiveAmount = amount * rate;
-  			}else if(this.transactionTypeField?.value === TransactionType.Sell){
+  			} else if(this.transactionTypeField?.value === TransactionType.Sell){
   				receiveAmount = amount / rate;
   			}
   		}
@@ -302,6 +302,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   		this.pAmountToReceive = val;
   		this.amountToSpendField?.setValue(receiveAmount);
   	}
+
   	this.pReceiveAutoUpdated = false;
   }
 
@@ -313,30 +314,19 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   	this.usersOptions$ = concat(
   		of(searchItems),
   		this.usersSearchInput$.pipe(
-  			filter(res => {
-  				return res !== null && res.length >= this.minUsersLengthTerm;
-  			}),
+  			filter(res => res !== null && res.length >= this.minUsersLengthTerm),
   			debounceTime(300),
   			distinctUntilChanged(),
-  			tap(() => {
-  				this.isUsersLoading = true;
-  			}),
-  			switchMap(searchString => {
+  			tap(() => this.isUsersLoading = true),
+  			switchMap(search => {
   				this.isUsersLoading = false;
-  				return this.adminService.getUsers(
-  					[],
-  					0,
-  					100,
-  					'email',
-  					false,
-  					new Filter({ search: searchString })
-  				).pipe(map(result => {
-  					return result.list.map(x => {
-  						return {
-  							id: x.id,
-  							title: (x.fullName !== '') ? `${x.fullName} (${x.email})` : x.email
-  						} as CommonTargetValue;
-  					});
+  				return this.adminService.getUsers([], 0, 100, 'email', false, new Filter({ search }))
+						.pipe(map(result => {
+							return result.list.map(x => 
+								<CommonTargetValue>{
+									id: x.id,
+									title: (x.fullName !== '') ? `${x.fullName} (${x.email})` : x.email
+								});
   				}));
   			})
   		));
@@ -351,11 +341,13 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   	const spendFiat = currencyToSpend?.fiat ?? false;
   	const spend = this.form.get('currencyToSpend')?.value;
   	const receive = this.form.get('currencyToReceive')?.value;
+
   	if (spendFiat) {
   		this.exchangeRate.setCurrency(spend, receive, TransactionType.Buy);
   	} else {
   		this.exchangeRate.setCurrency(receive, spend, TransactionType.Sell);
   	}
+
   	this.exchangeRate.update();
   }
 
@@ -389,6 +381,7 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   onSubmit(content: any): void {
   	this.submitted = true;
   	this.setParamsIfRequired();
+
   	if (this.form.valid) {
   		this.createDialog = this.modalService.open(content, {
   			backdrop: 'static',
@@ -400,11 +393,14 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
   private createUserTransaction(): void {
   	const users = this.usersField?.value;
   	const rate = this.rateField?.value;
+
   	if(users?.length !== 0){
   		for(const user of users){
   			const transactionToCreate = this.getTransactionToCreate();
   			this.saveInProgress = true;
+
   			const requestData = this.adminService.createUserTransaction(transactionToCreate, user, parseFloat(rate));
+
   			this.subscriptions.add(requestData.subscribe({
   				next: () => {
   					this.saveInProgress = false;
