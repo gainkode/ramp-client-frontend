@@ -307,9 +307,11 @@ export class AdminTransactionCreateComponent implements OnInit, OnDestroy {
 
   private usersSearch(): void {
   	let searchItems:CommonTargetValue[] = [];
+		
   	if(this.usersPreset && this.usersPreset.length !== 0){
   		searchItems = this.usersPreset;
   	}
+
   	this.usersOptions$ = concat(
   		of(searchItems),
   		this.usersSearchInput$.pipe(

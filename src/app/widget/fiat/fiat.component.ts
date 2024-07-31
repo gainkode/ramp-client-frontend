@@ -239,7 +239,7 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
 			widgetUserParamsId: undefined,
 			destination: undefined,
 			verifyWhenPaid: false
-		}
+		};
   	
 		this.createTransactionInternal();
   }

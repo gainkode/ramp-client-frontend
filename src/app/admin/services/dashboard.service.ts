@@ -306,8 +306,8 @@ export class DashboardService implements OnDestroy {
 							}
 						],
 						rows: [
-							{type: 'Buy', volumeVolume: rawData.paids?.buys?.volume, count: rawData.paids?.buys?.count},
-							{type: 'Sell', volumeVolume: rawData.paids?.sells?.volume, count: rawData.paids?.sells?.count}
+							{ type: 'Buy', volumeVolume: rawData.paids?.buys?.volume, count: rawData.paids?.buys?.count },
+							{ type: 'Sell', volumeVolume: rawData.paids?.sells?.volume, count: rawData.paids?.sells?.count }
 						]
 					};
 		

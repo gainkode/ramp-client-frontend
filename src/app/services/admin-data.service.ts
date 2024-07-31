@@ -3891,7 +3891,7 @@ export class AdminDataService {
 	}
 
 	getLiquidityProviders(): Observable<{ list: Array<LiquidityProviderEntityItem>; count: number; }>{
-		return this.watchQuery<{ getLiquidityProviders: Array<LiquidityProviderEntity> }, null>(
+		return this.watchQuery<{ getLiquidityProviders: Array<LiquidityProviderEntity>; }, null>(
 			{
 				query: GET_LIQUIDITY_PROVIDERS,
 				fetchPolicy: 'network-only'

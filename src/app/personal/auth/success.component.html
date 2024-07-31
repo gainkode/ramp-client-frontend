@@ -6,7 +6,7 @@
                     (click)="router.navigateByUrl('/')">
             </div>
             <div class="__auth-data-container">
-                <div *ngIf="successType=='signup'" class="__auth-disclaimer-area">
+                <div *ngIf="successType==='signup'" class="__auth-disclaimer-area">
                     <h2 class="__auth-title">
                         Registration complete
                     </h2>
@@ -25,7 +25,7 @@
                         </span>
                     </div>
                 </div>
-                <div *ngIf="successType=='restore'" class="__auth-disclaimer-area">
+                <div *ngIf="successType==='restore'" class="__auth-disclaimer-area">
                     <h2 class="__auth-title">
                         Restore Password
                     </h2>
@@ -40,7 +40,7 @@
                         </span>
                     </div>
                 </div>
-                <div *ngIf="successType=='reset'" class="__auth-disclaimer-area">
+                <div *ngIf="successType==='reset'" class="__auth-disclaimer-area">
                     <h2 class="__auth-title">
                         Password Reset Complete
                     </h2>

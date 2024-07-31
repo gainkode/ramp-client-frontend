@@ -346,7 +346,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 
 	onTest(): void {
   	this.submitted = true;
-	console.log(this.form)
+	console.log(this.form);
   	if (this.form.valid) {
   		this.getSimilarSchemes(this.setSchemeData());
   	}

@@ -23,11 +23,11 @@ export class PersonalRegisterComponent implements OnInit{
 	ngOnInit() {
 		this.subscriptions.add(
 			this.auth.getPreSettingsCommon().subscribe({
-				next: ({data}) => {
+				next: ({ data }) => {
 					this.preSettingsCommon = data.getPreSettingsCommon;
 				}
 			})
-		)
+		);
 	}
 
 	onError(error: string): void {

@@ -237,12 +237,12 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				this.form.get('stoppedForServicing')?.setValue(settingsCommon.stoppedForServicing);
 
 				// Auth
-				let {emailCodeNumberLength} = this.additionalSettings.auth;
+				const { emailCodeNumberLength } = this.additionalSettings.auth;
 				
 				this.form.get('emailCodeNumberLength')?.setValue(emailCodeNumberLength ?? 5);
 
 				// Admin
-				let {editTransactionDestination} = this.additionalSettings.admin;
+				const { editTransactionDestination } = this.additionalSettings.admin;
 
 				this.form.get('editTransactionDestination')?.setValue(editTransactionDestination ?? false);
 
@@ -252,7 +252,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 
 				// Core
 				const coreData = this.additionalSettings.core;
-				let {
+				const {
 					custodyProviders: {
 						Fireblocks: fireblocks,
 						Trustology: trustology
@@ -401,7 +401,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 			}
 		}
 
-		let {
+		const {
 			custodyProviders: {
 				Fireblocks: fireblocks,
 				Trustology: trustology

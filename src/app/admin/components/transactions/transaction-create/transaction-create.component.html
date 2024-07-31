@@ -83,7 +83,7 @@
           </div>
         </div>
 
-        <div *ngIf="transactionType != 'Deposit' && transactionType != 'Withdrawal'" class="form-group">
+        <div *ngIf="transactionType !== 'Deposit' && transactionType !== 'Withdrawal'" class="form-group">
           <div class="row">
             <div class="col-sm-12">
               <label class="main-content-label tx-11 tx-medium tx-gray-600">

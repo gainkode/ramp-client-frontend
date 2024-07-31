@@ -445,7 +445,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
 			widgetUserParamsId: '',
 			destination: this.summary.address,
 			verifyWhenPaid: this.summary.transactionType === TransactionType.Buy ? this.summary.verifyWhenPaid : false
-		}
+		};
   	
 		this.createTransactionInternal();
   }
