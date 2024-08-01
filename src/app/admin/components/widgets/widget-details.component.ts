@@ -26,8 +26,6 @@ import { AddressValidatorDirective } from 'shared/directives';
 })
 export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 	@ViewChildren(AddressValidatorDirective) inputElements!: QueryList<AddressValidatorDirective>;
-	// @ViewChildren(AddressValidatorDirective) inputElements!: QueryList<AddressValidatorDirective>;
-
 	widgetDetails!: WidgetItem;
   @Input() permission = 0;
   @Input()
@@ -39,7 +37,6 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   }
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
-  
   displayedColumns: string[] = [
   	'details',
   	'currency',

@@ -14,7 +14,7 @@
               <button type="button" *ngIf="this.adminAdditionalSettings?.tabs?.transactions?.createTransaction === true" (click)="createUserTransactionShow(create_content)" class="btn btn-outline-secondary me-2">
                 Create transaction
               </button>
-              <button type="button" (click)="export(export_content)" class="btn btn-outline-secondary me-2">
+              <button type="button" *ngIf="permission > 1" (click)="export(export_content)" class="btn btn-outline-secondary me-2">
                 Export
               </button>
               <button type="button" (click)="unbenchmark(settle_content)" class="btn btn-danger me-2"

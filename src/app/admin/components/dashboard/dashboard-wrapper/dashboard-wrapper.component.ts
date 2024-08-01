@@ -15,8 +15,6 @@ export class AdminDashboardWrapperComponent implements OnInit {
 		const isUserTypeMerchant = this.auth.user.type === UserType.Merchant;
 		const isUserWithAffilateId = !!this.auth.user.affiliateId;
 
-		console.log(isUserTypeMerchant, isUserWithAffilateId)
-
 		this.isMerchantDashboard = isUserTypeMerchant || isUserWithAffilateId;
 	}
 }

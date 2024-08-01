@@ -6,12 +6,11 @@
     <div class="card">
       <div class="card-body">
         <div class="table-responsive">
-          <div class="table-button-container">
-            <button *ngIf="permission>1" (click)="addWidget(details_content)" type="button"
-              class="btn btn-primary me-2">
+          <div class="table-button-container" *ngIf="permission > 1">
+            <button (click)="addWidget(details_content)" type="button" class="btn btn-primary me-2">
               Add widget
             </button>
-            <button (click)="export(export_content)" class="btn btn-outline-secondary">
+            <button type="button"(click)="export(export_content)" class="btn btn-outline-secondary">
               Export
             </button>
           </div>

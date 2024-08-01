@@ -54,7 +54,6 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   sortedDesc = false;
   filter = new Filter({});
   adminAdditionalSettings: Record<string, any> = {};
-
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
 

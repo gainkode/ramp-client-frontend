@@ -3074,7 +3074,7 @@ export class AdminDataService {
 			query: GET_DASHBOARD_STATS,
 			variables: vars,
 			fetchPolicy: 'network-only'
-		}).pipe(map(result => result.data.getDashboardStats));
+		}).pipe(map(result => result.data.getDashboardStats),);
 	}
 
 	getDashboardMerchantStats(filter: Filter): Observable<DashboardMerchantStats> {
@@ -4897,7 +4897,10 @@ export class AdminDataService {
 							void this.router.navigateByUrl('/').then();
 						}
 
-						return throwError(null);
+            sub.error(error);
+            sub.complete();
+
+            return throwError(() => error);
 					})
 				).subscribe((data) => {
           sub.next(data);
