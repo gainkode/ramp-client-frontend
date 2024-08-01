@@ -9,12 +9,8 @@
       <app-admin-details-item label="Message Title" [value]="message?.title"></app-admin-details-item>
       <app-admin-details-item label="Message Text" [value]="message?.text"></app-admin-details-item>
     </div>
-    <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
-      <h4 class="card-title2 mg-b-20 color_brown">
-        {{errorMessage}}
-      </h4>
-    </div>
-    <div style="display: flex; justify-content: flex-end;">
+
+    <div class="d-flex justify-content-end">
       <button class="btn btn-primary pd-x-30 me-2" type="button" (click)="resend()">
         <span *ngIf="resendInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         Resend

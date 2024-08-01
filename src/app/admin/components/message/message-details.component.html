@@ -12,16 +12,10 @@
       <app-admin-details-item label="Message Id" [value]="message?.id"></app-admin-details-item>
       
       <label class="main-content-label tx-11 tx-medium tx-gray-600 ng-star-inserted"> Params </label>
-      <pre style="background-color: #f0f8ffb5;">
-        {{message?.params}}
-      </pre>
+
+      <app-raw-json [data]="message?.params"></app-raw-json>
       
-      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
-        <h4 class="card-title2 mg-b-20 color_brown">
-          {{errorMessage}}
-        </h4>
-      </div>
-      <div style="display: flex; justify-content: flex-end;">
+      <div class="d-flex justify-content-end">
         <button class="btn btn-primary pd-x-30 me-2" type="button" (click)="resend()">
           <span *ngIf="resendInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Resend

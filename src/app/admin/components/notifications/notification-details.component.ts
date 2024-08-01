@@ -1,47 +1,47 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { AdminDataService } from 'services/admin-data.service';
 import { NotificationItem } from 'model/notification.model';
+import { finalize, tap } from 'rxjs';
+import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 
 @Component({
 	selector: 'app-admin-notification-details',
 	templateUrl: 'notification-details.component.html',
-	styleUrls: ['notification-details.component.scss', '../../assets/scss/_validation.scss']
+	styleUrls: ['notification-details.component.scss', '../../assets/scss/_validation.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AdminNotificationDetailsComponent implements OnDestroy {
-  @Input() permission = 0;
+export class AdminNotificationDetailsComponent {
   @Input() message: NotificationItem | undefined = undefined;
   @Output() close = new EventEmitter();
-
-  private subscriptions: Subscription = new Subscription();
-
   resendInProgress = false;
-  errorMessage = '';
 
   constructor(
+		private _snackBar: MatSnackBar,
   	private router: Router,
-  	private auth: AuthService,
+		private cdr: ChangeDetectorRef,
+    private auth: AuthService,
   	private adminService: AdminDataService) { }
 
-  ngOnDestroy(): void {
-  	this.subscriptions.unsubscribe();
-  }
+	resend(): void {
+    this.resendInProgress = true;
 
-  resend(): void {
-  	this.resendInProgress = true;
-  	const requestData$ = this.adminService.resendAdminNotification(this.message?.id ?? '');
-  	this.subscriptions.add(
-  		requestData$.subscribe(() => {
-  			this.resendInProgress = false;
-  		}, (error) => {
-  			this.resendInProgress = false;
-  			this.errorMessage = error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+		this.adminService.resendAdminNotification(this.message?.id ?? '').pipe(
+      finalize(() => {
+				this.resendInProgress = false;
+				this.cdr.detectChanges();
+			}),
+      tap({
+        next: () => this._snackBar.open('Notification resent successfully', null, { duration: 5000 }),
+        error: (error) => {
+					this._snackBar.open('Failed to resend notification ' +  error, null, { duration: 5000 });
+					
+          if (this.auth.token === '') {
+            void this.router.navigateByUrl('/');
+          }
+        }
+      })
+    ).subscribe();
   }
 }

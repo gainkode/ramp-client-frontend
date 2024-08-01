@@ -21,7 +21,7 @@ export class MessageItem {
 			this.messageStatus = data.messageStatus;
 			this.messageType = data.messageType;
 			this.objectId = data.objectId;
-			this.params = JSON.stringify(JSON.parse(data.params), null, 4);
+			this.params = data.params ? JSON.parse(data.params) : undefined;
 			this.userNotificationId = data.userNotificationId;
 
 			if(data.user){

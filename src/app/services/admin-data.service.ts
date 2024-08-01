@@ -4682,7 +4682,7 @@ export class AdminDataService {
 		return this.mutate({
 			mutation: RESEND_NOTIFICATION,
 			variables: { notificationId }
-		}).pipe(tap(() => this.snackBar.open(`Message was resent`, undefined, { duration: 5000 })));
+		});
 	}
 
 	assignRole(userId: string, roleCodes: string[]): Observable<any> {

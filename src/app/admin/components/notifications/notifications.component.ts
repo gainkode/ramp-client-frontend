@@ -1,19 +1,20 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
-import { finalize, take } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
-import { AdminDataService } from 'services/admin-data.service';
-import { NotificationItem } from 'model/notification.model';
-import { AuthService } from 'services/auth.service';
 import { UserRoleObjectCode } from 'model/generated-models';
+import { NotificationItem } from 'model/notification.model';
+import { of, Subject } from 'rxjs';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { AdminDataService } from 'services/admin-data.service';
+import { AuthService } from 'services/auth.service';
 
 @Component({
 	selector: 'app-admin-notifications',
 	templateUrl: 'notifications.component.html',
-	styleUrls: ['notifications.component.scss']
+	styleUrls: ['notifications.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
@@ -45,9 +46,10 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   filter: Filter | undefined = undefined;
   adminAdditionalSettings: Record<string, any> = {};
   
-  private subscriptions: Subscription = new Subscription();
+  private destroy$ = new Subject<void>();
 
   constructor(
+		private readonly cdr: ChangeDetectorRef,
   	private modalService: NgbModal,
   	private auth: AuthService,
   	private adminService: AdminDataService,
@@ -73,17 +75,16 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngOnDestroy(): void {
-  	this.subscriptions.unsubscribe();
+		this.destroy$.next();
+		this.destroy$.complete();
   }
 
   ngAfterViewInit(): void {
-  	this.subscriptions.add(
-  		this.sort.sortChange.subscribe(() => {
-  			this.sortedDesc = (this.sort.direction === 'desc');
-  			this.sortedField = this.sort.active;
-  			this.loadNotifications();
-  		})
-  	);
+		this.sort.sortChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+			this.sortedDesc = (this.sort.direction === 'desc');
+			this.sortedField = this.sort.active;
+			this.loadNotifications();
+		});
   }
 
   handleFilterApplied(filter: Filter): void {
@@ -104,11 +105,14 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   		windowClass: 'modalCusSty',
   	});
   }
+
   private loadCommonSettings(): void {
   	const settingsCommon = this.auth.getLocalSettingsCommon();
+
   	if(settingsCommon){
   		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		if(this.adminAdditionalSettings?.tabs?.notification?.filterFields){
+  		
+			if(this.adminAdditionalSettings?.tabs?.notification?.filterFields){
   			this.filterFields = this.adminAdditionalSettings.tabs.notification.filterFields;
   		}
   	}
@@ -116,25 +120,29 @@ export class AdminNotificationsComponent implements OnInit, OnDestroy, AfterView
   private loadNotifications(): void {
   	this.inProgress = true;
 
-  	const listData$ = this.adminService.getNotifications(
-  		this.pageIndex,
-  		this.pageSize,
-  		this.sortedField,
-  		this.sortedDesc,
-  		this.filter).pipe(take(1));
-	
-  	this.subscriptions.add(
-  		listData$.pipe(finalize(() => this.inProgress = false))
-  			.subscribe({
-  				next: ({ list, count }) => {
-  					this.messages = list;
-  					this.messageCount = count;
-  				},
-  				error: () => {
-  					if (this.auth.token === '') {
-  						void this.router.navigateByUrl('/');
-  					}
-  				}
-  			}));
-  }
+		this.adminService.getNotifications(
+			this.pageIndex,
+			this.pageSize,
+			this.sortedField,
+			this.sortedDesc,
+			this.filter
+		).pipe(
+			takeUntil(this.destroy$),
+			switchMap(data => {
+				this.messages = data.list;
+				this.messageCount = data.count;
+				return of(data);
+			}),
+			finalize(() => {
+				this.inProgress = false;
+				this.cdr.detectChanges();
+			})
+		).subscribe({
+			error: () => {
+				if (this.auth.token === '') {
+					void this.router.navigateByUrl('/');
+				}
+			}
+		});
+	}
 }

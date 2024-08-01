@@ -128,9 +128,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <app-admin-notification-details [permission]="permission" [message]="selectedMessage"
-                (close)="modal.dismiss('Close')">
-              </app-admin-notification-details>
+              <app-admin-notification-details [message]="selectedMessage" (close)="modal.dismiss('Close')"> </app-admin-notification-details>
             </div>
           </ng-template>
         </div>

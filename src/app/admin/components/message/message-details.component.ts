@@ -1,47 +1,48 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { MessageItem } from 'model/message.model';
+import { finalize, tap } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
-import { MessageItem } from 'model/message.model';
 
 @Component({
 	selector: 'app-admin-message-details',
 	templateUrl: 'message-details.component.html',
-	styleUrls: ['message-details.component.scss', '../../assets/scss/_validation.scss']
+	styleUrls: ['message-details.component.scss', '../../assets/scss/_validation.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AdminMessageDetailsComponent implements OnDestroy {
+export class AdminMessageDetailsComponent {
   @Input() permission = 0;
   @Input() message: MessageItem | undefined = undefined;
   @Output() close = new EventEmitter();
-
-  private subscriptions: Subscription = new Subscription();
-
   resendInProgress = false;
-  errorMessage = '';
 
   constructor(
   	private router: Router,
   	private auth: AuthService,
+		private _snackBar: MatSnackBar,
+		private cdr: ChangeDetectorRef,
   	private adminService: AdminDataService) { }
-
-  ngOnDestroy(): void {
-  	this.subscriptions.unsubscribe();
-  }
 
   resend(): void {
   	this.resendInProgress = true;
-  	const requestData$ = this.adminService.resendAdminNotification(this.message?.id ?? '');
-  	this.subscriptions.add(
-  		requestData$.subscribe(() => {
-  			this.resendInProgress = false;
-  		}, (error) => {
-  			this.resendInProgress = false;
-  			this.errorMessage = error;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
+
+		this.adminService.resendAdminNotification(this.message?.id ?? '').pipe(
+      finalize(() => {
+				this.resendInProgress = false;
+				this.cdr.detectChanges();
+			}),
+      tap({
+        next: () => this._snackBar.open('Notification resent successfully', null, { duration: 5000 }),
+        error: (error) => {
+					this._snackBar.open('Failed to resend notification ' +  error, null, { duration: 5000 });
+					
+          if (this.auth.token === '') {
+            void this.router.navigateByUrl('/');
+          }
+        }
+      })
+    ).subscribe();
   }
 }
