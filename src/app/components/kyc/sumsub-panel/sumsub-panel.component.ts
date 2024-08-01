@@ -83,8 +83,8 @@ export class SumsubPanelComponent implements OnInit, OnDestroy {
     		if (!this.completedWhenVerified) {
     			this.completed.emit();
     		}
-    	}).on('idCheck.applicantStatus', (payload) => {
-    		console.log('idCheck.applicantStatus', this.completedWhenVerified, payload);
+    	}).on('idCheck.onApplicantStatusChanged', (payload) => {
+    		console.log('idCheck.onApplicantStatusChanged', this.completedWhenVerified, payload);
     		const sumsubResult = isSumsubVerificationComplete(payload);
     		if (this.completedWhenVerified && sumsubResult.result) {
     			this.completed.emit();
