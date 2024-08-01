@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Component, Input, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
@@ -64,12 +65,7 @@ export class SumsubPanelComponent implements OnInit, OnDestroy {
     		email: applicantEmail,
     		phone: applicantPhone,
     		i18n: customI18nMessages,
-    		uiConf: {
-    			customCss: `${EnvService.client_host}/assets/sumsub.css`
-    			// URL to css file in case you need change it dynamically from the code
-    			// the similar setting at Customizations tab will rewrite customCss
-    			// you may also use to pass string with plain styles `customCssStr:`
-    		},
+				theme: 'light',
     	}).withOptions({
     		addViewportTag: false,
     		adaptIframeHeight: true
@@ -86,10 +82,11 @@ export class SumsubPanelComponent implements OnInit, OnDestroy {
     	}).on('idCheck.onApplicantStatusChanged', (payload) => {
     		console.log('idCheck.onApplicantStatusChanged', this.completedWhenVerified, payload);
     		const sumsubResult = isSumsubVerificationComplete(payload);
+
     		if (this.completedWhenVerified && sumsubResult.result) {
     			this.completed.emit();
-    		}else{
-    			if(sumsubResult.answer == 'red'){
+    		} else {
+    			if(sumsubResult.answer === 'red'){
     				this.onReject.emit();
     			}
     		}
@@ -101,6 +98,7 @@ export class SumsubPanelComponent implements OnInit, OnDestroy {
     	if (EnvService.test_kyc) {
     		snsWebSdkBuilder = snsWebSdkBuilder.onTestEnv();
     	}
+			
     	const snsWebSdkInstance = snsWebSdkBuilder.build();
 
     	snsWebSdkInstance.launch('#sumsub-websdk-container');
