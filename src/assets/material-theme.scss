@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@import '@angular/material/theming';
+// @import '@angular/material/theming';
 @import "./colors.scss";
 
 @include mat.core();
@@ -20,20 +20,20 @@ $bc-primary-palette: (
  A400: $color_purple_400,
  A700: $color_purple_700,
   contrast: (
-    50: $dark-primary-text,
-    100: $dark-primary-text,
-    200: $dark-primary-text,
-    300: $dark-primary-text,
-    400: $dark-primary-text,
-    500: $light-primary-text,
-    600: $light-primary-text,
-    700: $light-primary-text,
-    800: $light-primary-text,
-    900: $light-primary-text,
-    A100: $dark-primary-text,
-    A200: $dark-primary-text,
-    A400: $dark-primary-text,
-    A700: $light-primary-text,
+    50: #000000, // Replace with actual value
+    100: #000000, // Replace with actual value
+    200: #000000, // Replace with actual value
+    300: #000000, // Replace with actual value
+    400: #000000, // Replace with actual value
+    500: #FFFFFF, // Replace with actual value
+    600: #FFFFFF, // Replace with actual value
+    700: #FFFFFF, // Replace with actual value
+    800: #FFFFFF, // Replace with actual value
+    900: #FFFFFF, // Replace with actual value
+    A100: #000000, // Replace with actual value
+    A200: #000000, // Replace with actual value
+    A400: #000000, // Replace with actual value
+    A700: #FFFFFF, // Replace with actual value
   )
 );
 
@@ -53,20 +53,20 @@ $bc-accent-palette: (
  A400: $color_main_blue_400,
  A700: $color_main_blue_700,
   contrast: (
-    50: $dark-primary-text,
-    100: $dark-primary-text,
-    200: $dark-primary-text,
-    300: $dark-primary-text,
-    400: $dark-primary-text,
-    500: $light-primary-text,
-    600: $light-primary-text,
-    700: $light-primary-text,
-    800: $light-primary-text,
-    900: $light-primary-text,
-    A100: $dark-primary-text,
-    A200: $dark-primary-text,
-    A400: $dark-primary-text,
-    A700: $light-primary-text,
+    50: #000000, // Replace with actual value
+    100: #000000, // Replace with actual value
+    200: #000000, // Replace with actual value
+    300: #000000, // Replace with actual value
+    400: #000000, // Replace with actual value
+    500: #FFFFFF, // Replace with actual value
+    600: #FFFFFF, // Replace with actual value
+    700: #FFFFFF, // Replace with actual value
+    800: #FFFFFF, // Replace with actual value
+    900: #FFFFFF, // Replace with actual value
+    A100: #000000, // Replace with actual value
+    A200: #000000, // Replace with actual value
+    A400: #000000, // Replace with actual value
+    A700: #FFFFFF, // Replace with actual value
   )
 );
 
@@ -86,20 +86,20 @@ $bc-warn-palette: (
  A400: $color_pink_400,
  A700: $color_pink_700,
   contrast: (
-    50: $dark-primary-text,
-    100: $dark-primary-text,
-    200: $dark-primary-text,
-    300: $dark-primary-text,
-    400: $dark-primary-text,
-    500: $light-primary-text,
-    600: $light-primary-text,
-    700: $light-primary-text,
-    800: $light-primary-text,
-    900: $light-primary-text,
-    A100: $dark-primary-text,
-    A200: $dark-primary-text,
-    A400: $dark-primary-text,
-    A700: $light-primary-text,
+    50: #000000, // Replace with actual value
+    100: #000000, // Replace with actual value
+    200: #000000, // Replace with actual value
+    300: #000000, // Replace with actual value
+    400: #000000, // Replace with actual value
+    500: #FFFFFF, // Replace with actual value
+    600: #FFFFFF, // Replace with actual value
+    700: #FFFFFF, // Replace with actual value
+    800: #FFFFFF, // Replace with actual value
+    900: #FFFFFF, // Replace with actual value
+    A100: #000000, // Replace with actual value
+    A200: #000000, // Replace with actual value
+    A400: #000000, // Replace with actual value
+    A700: #FFFFFF, // Replace with actual value
   )
 );
 

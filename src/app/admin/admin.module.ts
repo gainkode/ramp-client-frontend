@@ -29,7 +29,6 @@ import { DirectiveModule } from '../directives/directives.module';
 import { MatRadioModule } from '@angular/material/radio';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ColorPickerModule } from 'ngx-color-picker';
-import { PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { AdminRoutingModule } from './admin.routing.module';
 import { AdminComponent } from './admin.component';
 import { AdminGuard } from './admin.guard';
@@ -120,9 +119,6 @@ import { FeeRiskCodesComponent } from './components/fees/details/fee-risk-codes/
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-	suppressScrollX: true
-};
 
 @NgModule({
 	imports: [
@@ -158,7 +154,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 		MatStepperModule,
 		MatSnackBarModule,
 		ColorPickerModule,
-		PerfectScrollbarModule,
 		ComponentsModule,
 		AdminRoutingModule,
 		MaterialModule,
@@ -245,10 +240,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 			useValue: {
 				separatorKeyCodes: [ENTER, COMMA]
 			}
-		},
-		{
-			provide: PERFECT_SCROLLBAR_CONFIG,
-			useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
 		}
 	]
 })
