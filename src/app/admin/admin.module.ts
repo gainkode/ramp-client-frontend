@@ -34,7 +34,6 @@ import { AdminComponent } from './admin.component';
 import { AdminGuard } from './admin.guard';
 import { AdminHeaderComponent } from './layout/header/header.component';
 import { AdminSidebarComponent } from './layout/sidebar/sidebar.component';
-import { AdminSwitcherComponent } from './layout/switcher/switcher.component';
 import { AdminPageHeaderComponent } from './layout/page-header/page-header.component';
 import { AdminDataService } from '../services/admin-data.service';
 import { AdminFilterComponent } from './misc/filter/filter.component';
@@ -167,7 +166,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 		AdminHeaderComponent,
 		AdminPageHeaderComponent,
 		AdminSidebarComponent,
-		AdminSwitcherComponent,
 		AdminDetailsItemComponent,
 		AdminDashboardCardComponent,
 		AdminDateRangeComponent,

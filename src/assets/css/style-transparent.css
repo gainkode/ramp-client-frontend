@@ -14,7 +14,6 @@ body.transparent-theme {
 }
 
 body.transparent-theme.bg-img1 {
-    background: url(../img/media/bg-img1.jpg) !important;
     background-blend-mode: overlay;
     background-size: cover !important;
     background-position: center !important;
@@ -29,7 +28,6 @@ body.transparent-theme.bg-img1 {
 }
 
 body.transparent-theme.bg-img2 {
-    background: url(../img/media/bg-img2.jpg) !important;
     background-blend-mode: overlay;
     background-size: cover !important;
     background-position: center !important;
@@ -44,7 +42,6 @@ body.transparent-theme.bg-img2 {
 }
 
 body.transparent-theme.bg-img3 {
-    background: url(../img/media/bg-img3.jpg) !important;
     background-blend-mode: overlay;
     background-size: cover !important;
     background-position: center !important;
@@ -59,7 +56,6 @@ body.transparent-theme.bg-img3 {
 }
 
 body.transparent-theme.bg-img4 {
-    background: url(../img/media/bg-img4.jpg) !important;
     background-blend-mode: overlay;
     background-size: cover !important;
     background-position: center !important;
@@ -320,11 +316,6 @@ body.transparent-theme.bg-img4 {
 .transparent-theme .morris-wrapper-demo text,
 .transparent-theme .morris-donut-wrapper-demo text {
     fill: #fff;
-}
-
-.transparent-theme .switcher-wrapper .leftmenu-styles,
-.transparent-theme .switcher-wrapper .header-styles {
-    display: none !important;
 }
 
 .transparent-theme a.text-dark:hover,
@@ -5031,7 +5022,6 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .background-image-blog {
-    background-image: url(../../assets/img/photos/error.jpg) !important;
     background-position: center !important;
     background-size: cover !important;
     background-repeat: no-repeat !important;
