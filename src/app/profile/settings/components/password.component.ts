@@ -3,7 +3,7 @@ import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { CommonDialogBoxComponent } from 'components/dialogs/common-box.dialog';
 import { TwoFaDialogBox } from 'components/dialogs/two-fa-box.dialog';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
@@ -91,7 +91,7 @@ export class ProfileChangePasswordComponent implements OnDestroy {
     }
 
     private showSuccessMessageDialog(): void {
-    	const dialogRef = this.dialog.open(CommonDialogBox, {
+    	const dialogRef = this.dialog.open(CommonDialogBoxComponent, {
     		width: '400px',
     		data: {
     			title: 'Password change',

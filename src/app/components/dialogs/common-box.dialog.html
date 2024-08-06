@@ -1,4 +1,4 @@
-<h1 *ngIf="data.title!==''" class="__dialog-title" mat-dialog-title>{{data.title}}</h1>
+<h1 *ngIf="data.title !== ''" class="__dialog-title tx-center" mat-dialog-title>{{data.title}}</h1>
 <div *ngIf="data.message" class="__dialog-message" mat-dialog-content [innerHTML]="data.message">{{data.message}}</div>
 <div *ngIf="data.paragraphs && data.paragraphs.length > 0" class="__dialog-message" mat-dialog-content>
     <p *ngFor="let item of data.paragraphs" [innerHTML]="item"></p>

@@ -8,10 +8,10 @@ import { EnvService } from 'services/env.service';
 	templateUrl: 'common-box.dialog.html',
 	styleUrls: ['../../../assets/dialog.scss']
 })
-export class CommonDialogBox {
+export class CommonDialogBoxComponent {
 	buttonTitle = '';
 	supportEmail = EnvService.support_email;
-	constructor(public dialogRef: MatDialogRef<CommonDialogBox>,
+	constructor(public dialogRef: MatDialogRef<CommonDialogBoxComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: DialogData) {
 		this.buttonTitle = data.button ?? 'OK';
 		if (this.buttonTitle === '') {

@@ -5,7 +5,7 @@ import { LoginResult, SettingsCommon, UserMode, UserType } from '../../model/gen
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from '../../services/error.service';
 import { Subscription } from 'rxjs';
-import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { CommonDialogBoxComponent } from 'components/dialogs/common-box.dialog';
 import { EnvService } from 'services/env.service';
 
 @Component({
@@ -34,7 +34,7 @@ export class PersonalLoginComponent implements OnDestroy {
 	}
 
 	private showWrongUserTypeRedirectDialog(userType: UserType): void {
-		const dialogRef = this.dialog.open(CommonDialogBox, {
+		const dialogRef = this.dialog.open(CommonDialogBoxComponent, {
 			width: '550px',
 			data: {
 				title: '',//Authentication
@@ -49,7 +49,7 @@ export class PersonalLoginComponent implements OnDestroy {
 	}
 
 	private showWrongUserModeRedirectDialog(): void {
-		this.dialog.open(CommonDialogBox, {
+		this.dialog.open(CommonDialogBoxComponent, {
 			width: '550px',
 			data: {
 				title: '',//Authentication

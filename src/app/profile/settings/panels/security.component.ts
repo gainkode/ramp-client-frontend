@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { CommonDialogBoxComponent } from 'components/dialogs/common-box.dialog';
 import { TwoFaDialogBox } from 'components/dialogs/two-fa-box.dialog';
 import { TwoFaDialogWizard } from 'components/dialogs/two-fa-wizard.dialog';
 import { LoginResult, TwoFactorAuthenticationResult, User } from 'model/generated-models';
@@ -91,7 +91,7 @@ export class ProfileSecuriySettingsComponent implements OnInit, OnDestroy {
     }
 
     private showSuccess(): void {
-    	this.dialog.open(CommonDialogBox, {
+    	this.dialog.open(CommonDialogBoxComponent, {
     		width: '900px',
     		data: {
     			title: '',

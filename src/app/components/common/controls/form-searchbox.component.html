@@ -1,6 +1,6 @@
 <div class="__form-searchbox-border">
-    <input class="__form-search-box" type="text" [formControl]="control" [maxlength]="maxlength"
-        [readonly]="active===false" autocomplete="false" />
+    <input class="__form-search-box" type="text" autocomplete="false" [formControl]="control"
+        [maxlength]="maxlength" [readonly]="active===false" />
     <div class="__form-input-search-icon-container">
         <button class="__tool-button" (click)="onSearch.emit()">
             <mat-icon>search</mat-icon>

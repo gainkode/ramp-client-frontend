@@ -154,7 +154,6 @@ body {
 }
 
 body {
-    // background-color: $color_white;
     background: transparent;
     padding: 0;
     margin: 0;
@@ -903,4 +902,12 @@ img.payment-logo {
 
 .pe-none {
     pointer-events: none !important;
+}
+
+.ngb-dp-weekday {
+    color: rgb(33, 37, 41) !important;
+}
+
+.btn {
+    border-radius: .25rem !important;
 }

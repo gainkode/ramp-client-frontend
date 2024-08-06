@@ -13,8 +13,8 @@ export class SideMenuComponent {
     @Input() expanded = false;
 
     clickItem(item: MenuItem): void {
-    	if (this.onMenuClick) {
-    		this.onMenuClick.emit(item);
-    	}
+        if (this.onMenuClick) {
+            this.onMenuClick.emit(item);
+        }
     }
 }

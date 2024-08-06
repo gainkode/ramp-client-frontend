@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { CommonDialogBoxComponent } from 'components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from 'model/cost-scheme.model';
 import { TransactionType, PaymentInstrument, SettingsCurrencyWithDefaults, TransactionSource, TransactionShort, WireTransferPaymentCategory, TransactionInput } from 'model/generated-models';
 import { WidgetSettings, PaymentCompleteDetails, PaymentErrorDetails, WireTransferPaymentCategoryItem, PaymentWidgetType } from 'model/payment-base.model';
@@ -151,7 +151,7 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
   }
 
   sendWireTransaferMessageResult(): void {
-  	this.dialog.open(CommonDialogBox, {
+  	this.dialog.open(CommonDialogBoxComponent, {
   		width: '450px',
   		data: {
   			title: 'Email Sent',

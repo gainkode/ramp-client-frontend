@@ -242,8 +242,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         recallNumber.updateValueAndValidity();
 
         if (!this.data.recallNumber) {
-  				this.form.controls.recallNumber.patchValue(null);
-  			}	
+          this.form.controls.recallNumber.patchValue(null);
+        }	
 
         if (!this.data.paymentOrder && this.originalOrderIdChanged) {
           this.originalOrderId = null;
@@ -559,7 +559,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     return transactionToUpdate;
   }
 
-  flagText(): String {
+  flagText(): string {
     return this.flag ? 'Unflag' : 'Flag';
   }
 
@@ -813,12 +813,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   navigateToRecallNumber(): void {
-  	const recallNumber = this.form.controls.recallNumber.value;
+    const recallNumber = this.form.controls.recallNumber.value;
 
-  	if (this.data.paymentOrderRecallNumberLink && recallNumber) {
-  		const recallUrl = `${this.data.paymentOrderRecallNumberLink}/${recallNumber}`;
-  		window.open(recallUrl, '_blank');
-  	}
+    if (this.data.paymentOrderRecallNumberLink && recallNumber) {
+      const recallUrl = `${this.data.paymentOrderRecallNumberLink}/${recallNumber}`;
+      window.open(recallUrl, '_blank');
+    }
   }
   
   getInstrumentDetails(data: string): string[] {
@@ -866,7 +866,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
           }
         }
       }
-    } catch (e) {}
+    } catch (e) { /* empty */ }
 
     return result;
   }

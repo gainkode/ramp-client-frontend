@@ -22,27 +22,27 @@ export class FormSearchBoxComponent implements ControlValueAccessor {
     active = true;
 
     get control(): UntypedFormControl {
-    	return (this.formControl || this.controlContainer.control?.get(this.formControlName)) as FormControl;
+        return (this.formControl || this.controlContainer.control?.get(this.formControlName)) as FormControl;
     }
 
     constructor(
-    	@Optional() @Host() @SkipSelf()
-    	private controlContainer: ControlContainer) {
+        @Optional() @Host() @SkipSelf()
+        private controlContainer: ControlContainer) {
     }
 
     registerOnTouched(fn: any): void {
-    	this.formControlDirective.valueAccessor?.registerOnTouched(fn);
+        this.formControlDirective.valueAccessor?.registerOnTouched(fn);
     }
 
     registerOnChange(fn: any): void {
-    	this.formControlDirective.valueAccessor?.registerOnChange(fn);
+        this.formControlDirective.valueAccessor?.registerOnChange(fn);
     }
 
     writeValue(obj: any): void {
-    	this.formControlDirective.valueAccessor?.writeValue(obj);
+        this.formControlDirective.valueAccessor?.writeValue(obj);
     }
-    
+
     setDisabledState(isDisabled: boolean): void {
-    	this.active = !isDisabled;
+        this.active = !isDisabled;
     }
 }

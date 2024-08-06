@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { CommonDialogBoxComponent } from 'components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from 'model/cost-scheme.model';
 import { AssetAddressShortListResult, KycProvider, LoginResult, PaymentApmResult, PaymentApmType, PaymentInstrument, PaymentPreauthResultShort, Rate, TransactionInput, TransactionShort, TransactionSource, TransactionType, User, Widget, WireTransferPaymentCategory } from 'model/generated-models';
 import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategoryItem } from 'model/payment-base.model';
@@ -843,7 +843,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   }
 
   sendWireTransaferMessageResult(): void {
-  	this.dialog.open(CommonDialogBox, {
+  	this.dialog.open(CommonDialogBoxComponent, {
   		width: '450px',
   		data: {
   			title: 'Email Sent',

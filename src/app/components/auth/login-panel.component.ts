@@ -7,7 +7,7 @@ import { LoginResult, User, UserMode } from '../../model/generated-models';
 import { SignupInfoPanelComponent } from './signup-info.component';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { CommonDialogBox } from '../dialogs/common-box.dialog';
+import { CommonDialogBoxComponent } from '../dialogs/common-box.dialog';
 import { NotificationService } from '../../services/notification.service';
 import { ProfileDataService } from '../../services/profile.service';
 import { take } from 'rxjs/operators';
@@ -251,7 +251,7 @@ export class LoginPanelComponent implements OnInit, OnDestroy {
     					this.progressChange.emit(false);
     					const errorMessage = this.errorHandler.getError(error.message, 'Incorrect login or password');
     					if (this.errorHandler.getCurrentError().toLowerCase() === 'auth.password_has_to_be_changed') {
-    						this.dialog.open(CommonDialogBox, {
+    						this.dialog.open(CommonDialogBoxComponent, {
     							width: '400px',
     							data: {
     								title: errorMessage,

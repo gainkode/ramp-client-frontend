@@ -9,7 +9,7 @@ import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
 import { ExchangeRateService } from 'services/rate.service';
 import { environment } from '@environments/environment';
-import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { CommonDialogBoxComponent } from 'components/dialogs/common-box.dialog';
 import { WireTransferUserSelection } from 'model/cost-scheme.model';
 import { PaymentCompleteDetails, PaymentErrorDetails, WidgetSettings, WireTransferPaymentCategoryItem, PaymentWidgetType } from 'model/payment-base.model';
 import { WalletItem } from 'model/wallet.model';
@@ -367,7 +367,7 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   }
 
   sendWireTransaferMessageResult(): void {
-  	this.dialog.open(CommonDialogBox, {
+  	this.dialog.open(CommonDialogBoxComponent, {
   		width: '450px',
   		data: {
   			title: 'Email Sent',

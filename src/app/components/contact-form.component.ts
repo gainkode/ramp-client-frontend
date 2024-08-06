@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { Feedback, FeedbackInput } from '../model/generated-models';
 import { AuthService } from '../services/auth.service';
 import { ErrorService } from '../services/error.service';
-import { CommonDialogBox } from './dialogs/common-box.dialog';
+import { CommonDialogBoxComponent } from './dialogs/common-box.dialog';
 
 @Component({
 	selector: 'app-contact-form',
@@ -51,7 +51,7 @@ export class ContactFormComponent implements OnDestroy {
 	}
 
 	private showSuccessDialog(message: string): void {
-		this.dialog.open(CommonDialogBox, {
+		this.dialog.open(CommonDialogBoxComponent, {
 			width: '450px',
 			data: {
 				title: 'Success',
@@ -61,7 +61,7 @@ export class ContactFormComponent implements OnDestroy {
 	}
 
 	private showFailDialog(message: string): void {
-		this.dialog.open(CommonDialogBox, {
+		this.dialog.open(CommonDialogBoxComponent, {
 			width: '450px',
 			data: {
 				title: 'Error',

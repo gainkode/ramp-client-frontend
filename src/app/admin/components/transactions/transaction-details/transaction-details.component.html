@@ -9,7 +9,7 @@
             {{flagText()}}
           </button>
 
-          <button class="btn btn-outline-secondary pd-x-30 ml-3 mg-t-5" type="button" (click)="refreshTransaction(data?.id)">
+          <button class="btn btn-outline-secondary pd-x-30 mg-l-10 mg-t-5" type="button" (click)="refreshTransaction(data?.id)">
             Refresh Transaction
           </button>
         </div>
@@ -68,7 +68,7 @@
               </div>
               <div class="row">
             
-                <div class="col-lg-9 col-md-12" *ngIf="!isSellTransactionType">
+                <div *ngIf="!isSellTransactionType" class="col-lg-9 col-md-12">
                   <div class="screening-status-wrapper">
                     <app-admin-details-item 
                       *ngIf="isTransactionNotDepositOrWithdrawal && !editableDestination"
@@ -80,8 +80,8 @@
                       <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         End User Address <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                       </label>
-                      <input class="form-control" [ngClass]="{'has-error': !form.controls.address.valid}" type="text"
-                        formControlName="address" required>
+                      <input class="form-control" type="text" formControlName="address"
+                        required [ngClass]="{'has-error': !form.controls.address.valid}">
                       <div *ngIf="(form.controls.address.touched || submitted) && (form.controls.address.errors?.['required'])"
                         class="tx-danger">
                         <small>
@@ -127,7 +127,7 @@
                 </div>
               </div>
 
-              <div class="form-group pe-none" *ngIf="isReceiveTransactionType">
+              <div *ngIf="isReceiveTransactionType" class="form-group pe-none">
                 <label class="main-content-label tx-11 tx-medium tx-gray-600 d-flex justify-content-between align-items-center">
                   Docs Check
                   <div class="transaction-status-dot" [ngClass]="data?.kycStatusColor ?? ''"></div>
@@ -141,12 +141,12 @@
                   <div class="transaction-status-dot" [ngClass]="data?.kycStatusColor ?? ''"></div>
                 </label>
                 <ng-select 
-                  [items]="kycStatuses" 
-                  [clearable]=false 
-                  [clearOnBackspace]=false 
                   bindLabel="name" 
-                  bindValue="id"
-                  formControlName="kycStatus" required>
+                  bindValue="id" 
+                  formControlName="kycStatus" 
+                  required 
+                  [items]="kycStatuses"
+                  [clearable]=false [clearOnBackspace]=false>
                 </ng-select>
               </div>
       
@@ -158,8 +158,8 @@
                   Account Status
                   <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                 </label>
-                <ng-select [items]="accountStatuses" [clearable]=false [clearOnBackspace]=false bindLabel="name"
-                  bindValue="id" formControlName="accountStatus" required>
+                <ng-select bindLabel="name" bindValue="id" formControlName="accountStatus" required
+                  [items]="accountStatuses" [clearable]=false [clearOnBackspace]=false>
                 </ng-select>
               </div>
             </div>
@@ -181,12 +181,12 @@
                   Transaction status
                   <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                 </label>
-                <ng-select [items]="transactionStatuses" bindLabel="name" bindValue="id" formControlName="transactionStatus"
-                  [clearable]=false [clearOnBackspace]=false required>
+                <ng-select bindLabel="name" bindValue="id" formControlName="transactionStatus" required
+                  [items]="transactionStatuses" [clearable]=false [clearOnBackspace]=false>
                 </ng-select>
               </div>
 
-              <div class="row" *ngIf="form.controls.transactionStatus.value === TRANSACTION_STATUS.Chargeback || form.controls.transactionStatus.value === TRANSACTION_STATUS.Refund">  
+              <div *ngIf="form.controls.transactionStatus.value === TRANSACTION_STATUS.Chargeback || form.controls.transactionStatus.value === TRANSACTION_STATUS.Refund" class="row">  
                 <div class="col-lg-6 col-md-12">
                   <div class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
@@ -197,7 +197,7 @@
                   </div>
                 </div>
   
-                <div class="col-lg-6 col-md-12" *ngIf="form.controls.recallNumber.value">
+                <div *ngIf="form.controls.recallNumber.value" class="col-lg-6 col-md-12">
                   <div class="form-group">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
                       Recall registered date
@@ -208,14 +208,14 @@
                 </div>
               </div>
 
-              <div class="form-group" *ngIf="form.controls.transactionStatus.value === TRANSACTION_STATUS.Chargeback || form.controls.transactionStatus.value === TRANSACTION_STATUS.Refund">
+              <div *ngIf="form.controls.transactionStatus.value === TRANSACTION_STATUS.Chargeback || form.controls.transactionStatus.value === TRANSACTION_STATUS.Refund" class="form-group">
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">
                   Recall number
                 </label>
   
                 <div class="d-flex align-items-center">
-                  <input class="form-control mr-2" type="text" formControlName="recallNumber" [ngClass]="{'has-error': !form.controls.recallNumber.valid}">
-                  <button type="button" [disabled]="!data?.paymentOrderRecallNumberLink" (click)="navigateToRecallNumber()" mat-icon-button>
+                  <input class="form-control mg-r-5" type="text" formControlName="recallNumber" [ngClass]="{'has-error': !form.controls.recallNumber.valid}">
+                  <button type="button" mat-icon-button [disabled]="!data?.paymentOrderRecallNumberLink" (click)="navigateToRecallNumber()">
                     <mat-icon>link</mat-icon>
                   </button>
                 </div>
@@ -227,7 +227,7 @@
                 <label class="main-content-label tx-11 tx-medium tx-gray-600">
                   Answer screening
                 </label>
-                <input class="form-control" [ngClass]="data?.screeningAnswerColor ?? ''" type="text" formControlName="screeningAnswer">
+                <input class="form-control" type="text" formControlName="screeningAnswer" [ngClass]="data?.screeningAnswerColor ?? ''">
               </div>
 
               <div class="form-group pe-none">
@@ -258,7 +258,7 @@
             <div class="card card-body pd-20 pd-md-40 border shadow-none">
               <h5 class="card-title mg-b-20 d-flex justify-content-between">
                 Payment Details
-                <div class="payment-details-status" title="Transaction Paid" *ngIf="isTransactionCompleted">
+                <div *ngIf="isTransactionCompleted" class="payment-details-status" title="Transaction Paid">
                   <img src="assets/icons/paid-icon.svg" alt="Paid">
                 </div>
               </h5>
@@ -267,19 +267,19 @@
                   Widget ID
                   <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                 </label>
-                <ng-select [items]="widgetOptions$ | async" 
-                  bindLabel="title" bindValue="id" 
-                  formControlName="widgetId"
-                  [searchFn]="widgetSearchFn"
-                  [clearable]=false [clearOnBackspace]=false required>
-                  <ng-template ng-option-tmp let-item="item">
+                <ng-select bindLabel="title" 
+                  bindValue="id" formControlName="widgetId" 
+                  required
+                  [items]="widgetOptions$ | async"
+                  [searchFn]="widgetSearchFn" [clearable]=false [clearOnBackspace]=false>
+                  <ng-template let-item="item" ng-option-tmp>
                     {{item.title}} <br />
                     <small>{{item.id}}</small>
                   </ng-template>
                 </ng-select>
               </div>
             
-              <div class="row" *ngIf="!isSellTransactionType">
+              <div *ngIf="!isSellTransactionType" class="row">
                 <div class="col-lg-6 col-md-12">
                   <app-admin-details-item label="Payment Method" [value]="data?.instrumentName"></app-admin-details-item>
                 </div>
@@ -310,8 +310,8 @@
                         {{data?.amountToSpend}}
                       </p>
                       <input *ngIf="!isReceiveTransactionType" class="form-control"
-                        [ngClass]="{'has-error': !form.controls.amountToSpend.valid}" type="number"
-                        formControlName="amountToSpend" required>
+                        type="number" formControlName="amountToSpend"
+                        required [ngClass]="{'has-error': !form.controls.amountToSpend.valid}">
                       <div
                         *ngIf="(form.controls.amountToSpend.touched || submitted) && (form.controls.amountToSpend.errors?.['required'])"
                         class="tx-danger">
@@ -326,8 +326,8 @@
                       </div>
                     </div>
                     <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                      <ng-select [items]="currenciesToSpend" [clearable]=false [clearOnBackspace]=false bindLabel="display"
-                        bindValue="symbol" formControlName="currencyToSpend" required>
+                      <ng-select bindLabel="display" bindValue="symbol" formControlName="currencyToSpend" required
+                        [items]="currenciesToSpend" [clearable]=false [clearOnBackspace]=false>
                       </ng-select>
                     </div>
                   </div>
@@ -349,8 +349,8 @@
                       </p>
                     </div>
                     <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                      <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false
-                        bindLabel="display" bindValue="symbol" formControlName="currencyToReceive" required>
+                      <ng-select bindLabel="display" bindValue="symbol" formControlName="currencyToReceive"
+                        required [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false>
                       </ng-select>
                     </div>
                   </div>
@@ -372,8 +372,8 @@
                       </p>
                     </div>
                     <div class="col-sm-5 mg-t-10 mg-sm-t-0">
-                      <ng-select [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false
-                        bindLabel="display" bindValue="symbol" formControlName="currencyToReceive" required>
+                      <ng-select bindLabel="display" bindValue="symbol" formControlName="currencyToReceive"
+                        required [items]="currenciesToReceive" [clearable]=false [clearOnBackspace]=false>
                       </ng-select>
                     </div>
                   </div>
@@ -387,12 +387,12 @@
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
                 Exchange rate
                 <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                <a [routerLink]="null" (click)="updateRate()" class="tx-12-f ml-3">
+                <a class="tx-12-f mg-l-10" [routerLink]="null" (click)="updateRate()">
                   Set current
                 </a>
               </label>
-              <input class="form-control" [ngClass]="{'has-error': !form.controls.rate.valid}" type="number"
-                formControlName="rate" required>
+              <input class="form-control" type="number" formControlName="rate"
+                required [ngClass]="{'has-error': !form.controls.rate.valid}">
               <div *ngIf="(form.controls.rate.touched || submitted) && (form.controls.rate.errors?.['required'])"
                 class="tx-danger">
                 <small>
@@ -409,10 +409,10 @@
             <!-- Fees -->
 
             <div class="row">
-              <div class="col-lg-6 col-md-12" *ngIf="isReceiveTransactionType" >
+              <div *ngIf="isReceiveTransactionType" class="col-lg-6 col-md-12" >
                 <app-admin-details-item  [label]="systemFeeTitle" [value]="data?.fees"></app-admin-details-item>
               </div>
-              <div class="col-lg-6 col-md-12"  *ngIf="data?.feePercent && transactionType===TRANSACTION_TYPE.Buy" >
+              <div *ngIf="data?.feePercent && transactionType===TRANSACTION_TYPE.Buy"  class="col-lg-6 col-md-12" >
                 <div class="form-group">
                   <div class="row">
                     <div class="col-sm-12">
@@ -475,7 +475,7 @@
             
             </div>
           </div>
-          <div class="col-lg-3 col-md-12" *ngIf="data?.exchangeOrderId">
+          <div *ngIf="data?.exchangeOrderId" class="col-lg-3 col-md-12">
             <div class="card card-body pd-20 pd-md-40 border shadow-none">
               <h5 class="card-title mg-b-20">
                 Exchange
@@ -483,7 +483,7 @@
               <app-admin-details-item label="Original Exchange order ID" [value]="data?.exchangeOrderId"></app-admin-details-item>
               <app-admin-details-item label="Exchanged At" [value]="data?.exchanged"></app-admin-details-item>
               
-              <div class="form-group" *ngIf="data?.trades.length">
+              <div *ngIf="data?.trades.length" class="form-group">
                 <div class="row">
                   <div class="col-sm-12">
                     <label class="main-content-label tx-11 tx-medium tx-gray-600">
@@ -506,7 +506,7 @@
         </div>
 
         <div class="row">
-          <div class="col-lg-6 col-md-12" *ngIf="data?.benchmarkTransferOrder">
+          <div *ngIf="data?.benchmarkTransferOrder" class="col-lg-6 col-md-12">
             <div class="card card-body pd-20 pd-md-40 border shadow-none">
               <h5 class="card-title mg-b-20">
                 Benchmark Transfer details
@@ -523,7 +523,7 @@
               <app-admin-details-item label="Benchmark transfer sub-status" [value]="data?.benchmarkSubStatus"></app-admin-details-item>
             </div>
           </div>
-          <div class="col-lg-6 col-md-12" *ngIf="data?.transferOrder">
+          <div *ngIf="data?.transferOrder" class="col-lg-6 col-md-12">
             <div class="card card-body pd-20 pd-md-40 border shadow-none">
               <h5 class="card-title mg-b-20">
                 End-user Transfer details
@@ -538,7 +538,7 @@
               <app-admin-details-item label="End-user transfer blockchain Link" [value]="transferOrderBlockchainLink" [linkUrl]="transferOrderBlockchainLink"></app-admin-details-item>
               <app-admin-details-item label="End-user transfer status" [value]="data?.transferStatus"></app-admin-details-item>
               <app-admin-details-item label="End-user transfer sub-status" [value]="data?.transferSubStatus"></app-admin-details-item>
-              <div class="row" *ngIf="isSellTransactionType">
+              <div *ngIf="isSellTransactionType" class="row">
                 <div class="col-lg-6 col-md-12">
                   <app-admin-details-item label="Payment Method" [value]="data?.instrumentName"></app-admin-details-item>
                 </div>
@@ -552,7 +552,7 @@
 
         <div class="row">
           <div class="col-lg-6 col-md-12">
-            <div class="card card-body pd-20 pd-md-40 border shadow-none" *ngIf="data?.merchantTransferOrder">
+            <div *ngIf="data?.merchantTransferOrder" class="card card-body pd-20 pd-md-40 border shadow-none">
               <h5 class="card-title mg-b-20">
                 Merchant fee transfer details
               </h5>
@@ -574,10 +574,10 @@
                 <textarea class="form-control textarea-resize-none" placeholder="Comment" rows="3"
                   formControlName="comment"></textarea>
               </div>
-              <div class="d-flex justify-content-between" *ngIf="permission > 1">
+              <div *ngIf="permission > 1" class="d-flex justify-content-between">
                 <div class="d-flex">
-                  <button  type="button" 
-                    *ngIf="removable && data?.canBeCancelled" 
+                  <button  *ngIf="removable && data?.canBeCancelled" 
+                    type="button" 
                     class="btn btn-danger pd-x-30 me-2 mg-t-5"
                     (click)="onDelete()">
                     <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
@@ -606,8 +606,8 @@
                     Decline Payment
                   </button>
                 </div>
-                <div class="d-flex justify-content-end" *ngIf="!isReceiveTransactionType" >
-                  <button type="button" [disabled]="!form.valid" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit()">
+                <div *ngIf="!isReceiveTransactionType" class="d-flex justify-content-end" >
+                  <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" [disabled]="!form.valid" (click)="onSubmit()">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Save
@@ -713,7 +713,7 @@
       Original order Id
       <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
     </label>
-    <input class="form-control" type="text" [(ngModel)]="originalOrderId" required>
+    <input class="form-control" type="text" required [(ngModel)]="originalOrderId">
 
     <div class="d-flex justify-content-center align-items-center">
       <button type="button" class="btn btn-primary pd-x-30 mg-t-5" [disabled]="!originalOrderId" (click)="onChangeOriginaOrderIdConfirm()">

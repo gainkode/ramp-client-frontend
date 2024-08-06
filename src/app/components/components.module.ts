@@ -46,13 +46,11 @@ import { DeleteDialogBox } from './dialogs/delete-box.dialog';
 import { WalletsFilterBarComponent } from './filter-bars/wallets-bar.component';
 import { ContactsFilterBarComponent } from './filter-bars/contacts-bar.component';
 import { RiskWarningComponent } from './common/risk-warning.component';
-import { CommonDialogBox } from './dialogs/common-box.dialog';
+import { CommonDialogBoxComponent } from './dialogs/common-box.dialog';
 import { TwoFaDialogBox } from './dialogs/two-fa-box.dialog';
 import { TwoFaDialogWizard } from './dialogs/two-fa-wizard.dialog';
-import { SendNotificationDialogBox } from './dialogs/send-notification-box.dialog';
 import { KycVerificationDialogBox } from './dialogs/kyc-verification.dialog';
 import { ContactFormComponent } from './contact-form.component';
-import { YesNoDialogBox } from './dialogs/yesno-box.dialog';
 import { ApiSecretDialogBox } from './dialogs/api-secret-box.dialog';
 import { SafeUrlPipe } from '../utils/safe-url.pipe';
 import { RecaptchaComponent } from './recaptcha/recaptcha.component';
@@ -149,12 +147,10 @@ const formControlComponents = [
 		FileUploadComponent,
 		RecaptchaComponent,
 		DeleteDialogBox,
-		CommonDialogBox,
+		CommonDialogBoxComponent,
 		TwoFaDialogBox,
 		TwoFaDialogWizard,
-		SendNotificationDialogBox,
 		KycVerificationDialogBox,
-		YesNoDialogBox,
 		ApiSecretDialogBox,
 		LoginPanelComponent,
 		SignUpPanelComponent,
@@ -181,12 +177,10 @@ const formControlComponents = [
 		FileUploadComponent,
 		RecaptchaComponent,
 		DeleteDialogBox,
-		CommonDialogBox,
+		CommonDialogBoxComponent,
 		TwoFaDialogBox,
 		TwoFaDialogWizard,
-		SendNotificationDialogBox,
 		KycVerificationDialogBox,
-		YesNoDialogBox,
 		ApiSecretDialogBox,
 		LoginPanelComponent,
 		SignUpPanelComponent,

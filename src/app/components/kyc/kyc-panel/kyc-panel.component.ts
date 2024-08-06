@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CommonDialogBox } from 'components/dialogs/common-box.dialog';
+import { CommonDialogBoxComponent } from 'components/dialogs/common-box.dialog';
 import { KycProvider } from 'model/generated-models';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'services/auth.service';
@@ -45,7 +45,7 @@ export class KycPanelComponent implements OnInit, OnDestroy {
     }
 
     private showSuccessDialog(): void {
-    	this.dialog.open(CommonDialogBox, {
+    	this.dialog.open(CommonDialogBoxComponent, {
     		width: '550px',
     		data: {
     			title: 'Success',
