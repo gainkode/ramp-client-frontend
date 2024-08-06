@@ -15,12 +15,15 @@
         "createDefaultProgram": true
       },
       "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "plugins": [
         "no-null",
-        "deprecation"
+        "deprecation",
+        "@typescript-eslint"
       ],
       "rules": {
         "@angular-eslint/component-class-suffix": [
@@ -174,13 +177,7 @@
         "plugin:@angular-eslint/template/recommended"
       ],
       "rules": {
-        "@angular-eslint/template/accessibility-alt-text": [
-          "warn"
-        ],
-        "@angular-eslint/template/accessibility-elements-content": [
-          "warn"
-        ],
-        "@angular-eslint/template/accessibility-valid-aria": [
+        "@angular-eslint/template/attributes-order": [
           "warn"
         ],
         "@angular-eslint/template/banana-in-box": [
@@ -218,6 +215,15 @@
         ],
         "@angular-eslint/template/no-negated-async": [
           "error"
+        ],
+        "@angular-eslint/template/alt-text": [
+          "warn"
+        ],
+        "@angular-eslint/template/elements-content": [
+          "warn"
+        ],
+        "@angular-eslint/template/valid-aria": [
+          "warn"
         ]
       }
     }
