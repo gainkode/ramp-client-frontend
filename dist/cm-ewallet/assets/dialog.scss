@@ -1,0 +1,248 @@
+@import "./fonts.scss";
+@import "./colors.scss";
+@import "./consts.scss";
+
+$font_main: var(--font_main);
+
+.__dialog-title {
+    margin: 0px;
+    padding: 0px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 35px;
+
+    color: $color_purple_900_text;
+}
+
+.__dialog-message {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+
+    color: $color_purple_900_text;
+    text-align: center;
+
+    @media (max-width: #{$md3}px) {
+        font-size: 12px;
+        line-height: 22px;
+    }
+}
+
+.__dialog-message-accent {
+    color: $color_main_blue_800;
+}
+
+.__dialog-info {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: $color_purple_900_icons;
+}
+
+.__dialog-text {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: $color_purple_900_text;
+}
+
+.__dialog-space-small {
+    height: 8px;
+    width: 100%;
+}
+
+.__dialog-space {
+    height: 16px;
+    width: 100%;
+}
+
+.__dialog-space-large {
+    height: 24px;
+    width: 100%;
+}
+
+.__dialog-wizard-progress-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.__dialog-wizard-progress-bar {
+    display: grid;
+    grid-template-rows: 24px;
+    grid-template-columns: 130px 24px 48px 24px 48px 24px 48px 24px 130px;
+
+    @media (max-width: #{$md3}px) {
+        grid-template-rows: 16px;
+        grid-template-columns: 32px 16px 16px 16px 16px 16px 16px 16px 32px;
+    }
+}
+
+.__dialog-wizard-progress-line-container {
+    grid-row: 1;
+    grid-column: 1 / 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.__dialog-wizard-progress-line {
+    width: 100%;
+    height: 1px;
+    background-color: $color_purple_200;
+}
+
+.__dialog-wizard-progress-step-one {
+    grid-row: 1;
+    grid-column: 2 / 3;
+}
+
+.__dialog-wizard-progress-step-two {
+    grid-row: 1;
+    grid-column: 4 / 5;
+}
+
+.__dialog-wizard-progress-step-three {
+    grid-row: 1;
+    grid-column: 6 / 7;
+}
+
+.__dialog-wizard-progress-step-four {
+    grid-row: 1;
+    grid-column: 8 / 9;
+}
+
+.__dialog-wizard-progress-step {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: $color_white;
+    border: 1px solid $color_purple_200;
+    box-sizing: border-box;
+    border-radius: 12px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: $color_purple_200;
+}
+
+.__dialog-wizard-progress-step-active {
+    background: $color_white;
+    border: 1px solid $color_main_blue_600;
+    color: $color_main_blue_600;
+}
+
+.__dialog-wizard-progress-step-passed {
+    background: $color_main_blue_800;
+    border: 1px solid $color_main_blue_800;
+    color: $color_white;
+}
+
+.__dialog-wizard-data-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.__dialog-wizard-store-button-block {
+    margin: 40px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    @media (max-width: #{$md3}px) {
+        flex-direction: column;
+    }
+}
+
+.__dialog-wizard-store-button {
+    margin: 0px 20px;
+}
+
+.__dialog-wizard-qr-code-container {
+    width: 676px;
+    display: grid;
+    grid-template-rows: 110px;
+    grid-template-columns: 110px 40px auto;
+
+    @media (max-width: #{$md3}px) {
+        width: 240px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.__dialog-wizard-qr-code {
+    grid-row: 1;
+    grid-column: 1 / 2;
+}
+
+.__dialog-wizard-qr-code-symbols {
+    grid-row: 1;
+    grid-column: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    @media (max-width: #{$md3}px) {
+        width: 240px;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.__dialog-subtitle-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.__dialog-secret-content-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.__dialog-secret-phrase-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.__dialog-block-title {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: $color_purple_900_text;
+
+    @media (max-width: #{$md3}px) {
+        font-size: 10px;
+        line-height: 16px;
+    }
+}

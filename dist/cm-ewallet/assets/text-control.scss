@@ -1,0 +1,672 @@
+@import "./fonts.scss";
+@import "./colors.scss";
+@import "./consts.scss";
+
+$font_main: var(--font_main);
+
+.__form-separator {
+    height: 20px;
+}
+
+.__form-separator-small {
+    height: 8px;
+}
+
+.__form-label {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+.__form-label-disabled {
+    color: $color_purple_200;
+}
+
+.__form-label-small {
+    font-size: 12px;
+    color: $color_purple_900_icons;
+}
+
+.__form-assist {
+    display: flex;
+    margin-left: 16px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    color: $color_purple_900_text;
+}
+
+.__form-assist-disabled {
+    color: $color_purple_200;
+}
+
+.__form-assist-error {
+    color: $color_pink_500;
+}
+
+.__form-assist-small {
+    font-size: 12px;
+}
+
+.__form-assist-accent {
+    margin: 0px 4px;
+    font-weight: 500;
+    color: $color_main_blue_800;
+}
+
+.__form-assist-link {
+    margin: 0px 4px;
+    font-weight: 500;
+    color: $color_main_blue_800;
+    cursor: pointer;
+}
+
+.__widget-checkout {
+    margin: 0px 4px;
+}
+
+.__form-card-type-icon-container {
+    display: flex;
+}
+
+.__form-card-type-icon {
+    grid-row: 1;
+    grid-column: 1 / 2;
+    width: 24px;
+    height: 18px;
+    margin: auto;
+}
+
+.__form-input-error-icon-container {
+    grid-row: 1;
+    grid-column: 2 / 3;
+}
+
+.__form-cardinput-error-icon-container {
+    grid-row: 1;
+    grid-column: 3 / 4;
+}
+
+.__form-input-password-icon-container {
+    grid-row: 1;
+    grid-column: 3 / 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.__form-input-search-icon-container {
+    grid-row: 1;
+    grid-column: 2 / 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.__form-input-error-icon {
+    display: block;
+    margin: 9px auto;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: $color_pink_500;
+}
+
+.__form-input-password-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border: 0px;
+    background-color: $color_white;
+    outline: 0px;
+}
+
+.__form-input-password-icon-block {
+    height: 18px;
+}
+
+.__form-input-password-icon {
+    margin: 2px auto;
+    font-size: 18px;
+    color: $color_purple_900_text;
+}
+
+.__form-text-border {
+    height: 32px;
+    width: 100%;
+    padding: 0px 4px 0px 16px;
+
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: transparent;
+}
+.widget-required-info{
+    width: 90%;
+    margin: 0 auto;
+}
+.__form-textbox-border {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 24px;
+    grid-template-rows: 32px;
+
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+.__form-password-border {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 24px 24px;
+    grid-template-rows: 32px;
+
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+.__form-cardbox-border {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 32px auto 24px;
+    grid-template-rows: 32px;
+
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+.__form-combo-border {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 24px 86px;
+    grid-template-rows: 32px;
+
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+.__form-searchbox-border {
+    width: 240px;
+    display: grid;
+    grid-template-columns: auto 32px;
+    grid-template-rows: 32px;
+
+    border: 1px solid $color_purple_200;
+    box-sizing: border-box;
+    border-radius: 12px;
+    background-color: transparent;
+}
+
+.__form-editbox-border {
+    width: 250px;
+    display: grid;
+    grid-template-columns: auto 21px;
+    grid-template-rows: 21px;
+
+    border: 0px solid $color_purple_300;
+    border-bottom-width: 0.5px;
+    background-color: transparent;
+}
+
+.__form-settings-password-border {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 24px 24px;
+    grid-template-rows: 32px;
+
+    border: 1px solid $color_purple_50;
+    border-style: none none solid none;
+    background-color: transparent;
+}
+
+.__form-settings-password-border-error {
+    border: 1px solid $color_pink_500;
+    border-style: none none solid none;
+}
+
+input.__form-text-box-plain {
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    width: 28px;
+    text-align: center;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__form-text-box-plain:focus {
+    outline: none;
+}
+
+input.__form-text-box-auto-error:focus {
+    outline: none;
+}
+
+input.__form-text-box {
+    grid-row: 1;
+    grid-column: 1 / 2;
+    width: calc(100% - 8px);
+    margin: 0px 16px;
+
+    border: 0px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__form-text-box:focus {
+    outline: none;
+}
+
+input.__form-text-box:disabled {
+    color: $color_purple_200;
+}
+
+input.__form-text-box-error {
+    grid-row: 1;
+    grid-column: 1 / 2;
+    width: calc(100% - 24px);
+    margin: 0px 16px;
+
+    border: 0px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_pink_500;
+}
+
+input.__form-text-box-error:focus {
+    outline: none;
+}
+
+input.__form-card-box {
+    grid-row: 1;
+    grid-column: 1 / 4;
+    width: calc(100% - 24px);
+    margin: 0px 16px;
+
+    border: 0px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__form-card-box:focus {
+    outline: none;
+}
+
+input.__form-card-box:disabled {
+    color: $color_purple_200;
+}
+
+input.__form-card-box-error {
+    grid-row: 1;
+    grid-column: 1 / 4;
+    width: calc(100% - 24px);
+    margin: 0px 16px;
+
+    border: 0px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_pink_500;
+}
+
+input.__form-card-box-error:focus {
+    outline: none;
+}
+
+input.__form-card-box-active-icon {
+    grid-column: 2 / 4;
+    width: 100%;
+    margin: 0px;
+}
+
+input.__form-finance-text-combo {
+    grid-row: 1;
+    grid-column: 1 / 3;
+    width: calc(100% - 24px);
+    margin: 0px 16px;
+
+    border: 0px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__form-finance-text-combo:focus {
+    outline: none;
+}
+
+input.__form-finance-text-combo:disabled {
+    color: $color_purple_200;
+}
+
+input.__form-finance-text-combo-error {
+    grid-row: 1;
+    grid-column: 1 / 3;
+    width: calc(100% - 24px);
+    margin: 0px 16px;
+
+    border: 0px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_pink_500;
+}
+
+input.__form-finance-text-combo-error:focus {
+    outline: none;
+}
+
+input.__text-box-noborder {
+    border: 0px;
+    width: 100%;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__text-box-noborder:focus {
+    outline: none;
+}
+
+input.__text-box-noborder-accent {
+    border: 0px;
+    width: 100%;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_main_blue_800;
+}
+
+input.__text-box-noborder-accent:focus {
+    outline: none;
+}
+
+input.__profile-text-box-noborder {
+    border: 0px;
+    width: 100%;
+    background-color: transparent;
+    margin: 0px 4px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 28px;
+    white-space: normal;
+    color: $color_purple_900_text;
+}
+
+input.__profile-text-box-noborder:focus {
+    outline: none;
+}
+
+input.__form-search-box {
+    grid-row: 1;
+    grid-column: 1 / 2;
+    width: calc(100% - 8px);
+    margin: 0px 8px 0px 8px;
+
+    border: 0px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+input.__form-search-box:focus {
+    outline: none;
+}
+
+input.__form-search-box:disabled {
+    color: $color_purple_200;
+}
+
+input.__form-edit-box {
+    grid-row: 1;
+    grid-column: 1 / 2;
+    width: 100%;
+    margin: 0px 8px 0px 0px;
+
+    border: 0px;
+    background-color: transparent;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: $color_purple_900_text;
+}
+
+input.__form-edit-box:focus {
+    outline: none;
+}
+
+textarea.__form-text-area {
+    border: 1px solid $color_purple_50;
+    box-sizing: border-box;
+    border-radius: 4px;
+    background-color: transparent;
+
+    resize: none;
+    width: 100%;
+    height: 150px;
+    margin: 0px;
+    padding: 0px 16px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 20px;
+    color: $color_purple_900_text;
+}
+
+textarea.__form-text-area:focus {
+    outline: none !important;
+}
+
+textarea.__form-text-area-error {
+    color: $color_pink_500;
+}
+
+.__form-uppercase-input {
+    text-transform: uppercase;
+}
+
+.__form-finance-combo-separator {
+    background-color: $color_purple_50;
+    width: 1px;
+    height: 32px;
+}
+
+.__form-finance-combo-container {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    top: -32px;
+    left: calc(100% - 110px);
+    width: 110px;
+    height: 32px;
+}
+
+.__form-finance-combo-block {
+    grid-row: 1;
+    grid-column: 3 / 4;
+
+    border: 1px solid $color_purple_50;
+    border-style: none none none solid;
+
+    display: flex;
+
+    .align-mat-select {
+        margin-top: 3px;
+        margin-right: 5px;
+    }
+}
+
+.__form-finance-combo-item {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.__form-finance-combo-item-img {
+    margin: 0px 4px 0px 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.__form-combo-item-img {
+    margin: 0px 8px 0px 0px;
+    width: 16px;
+    height: 16px;
+}
+
+.__form-finance-combo-item-text {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 15px;
+    color: $color_purple_900_text;
+}
+
+.__form-combo-item {
+    height: 20px;
+    width: 100%;
+    padding: 0px 0px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 28px;
+    color: $color_purple_900_text;
+}
+
+.__form-combo-item-default {
+    font-style: italic;
+    color: $color_purple_500;
+}
+
+.__form-combo-item-text {
+    height: 20px;
+    padding: 0px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 18px;
+    color: $color_purple_900_text;
+}
+
+.__form-combo-item-text-extra {
+    height: 20px;
+    padding: 0px 0px 0px 12px;
+
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 18px;
+    color: $color_purple_900_icons;
+}
+
+.__form-combo-item-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.__form-control-panel {
+    width: 305px;
+}
+
+.__form-settings-title {
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 35px;
+
+    color: $color_purple_900_text;
+}
+
+.__form-settings-label {
+    padding: 0px;
+    margin: 8px 0px;
+    font-family: $font_main;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+
+    color: $color_purple_900_icons;
+}
