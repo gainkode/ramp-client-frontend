@@ -384,6 +384,22 @@ const GET_COST_SETTINGS = gql`
   }
 `;
 
+const DISABLE_SETTINGS_COST = gql`
+  mutation DisableSettingsCost($settingsId: ID!) {
+    disableSettingsCost(settingsId: $settingsId) {
+      settingsCostId
+    }
+  }
+`;
+
+const ENABLE_SETTINGS_COST = gql`
+  mutation EnableSettingsCost($settingsId: ID!) {
+   enableSettingsCost(settingsId: $settingsId) {
+      settingsCostId
+    }
+  }
+`;
+
 const GET_WIRE_TRANSFER_SETTINGS = gql`
 query GetWireTransferBankAccounts {
   getWireTransferBankAccounts {
@@ -2975,14 +2991,6 @@ const UPDATE_KYC_LEVEL_SETTINGS = gql`
   }
 `;
 
-const DELETE_SETTINGS_FEE = gql`
-  mutation DeleteSettingsFee($settingsId: ID!) {
-    deleteSettingsFee(settingsId: $settingsId) {
-      settingsFeeId
-    }
-  }
-`;
-
 const DISABLE_SETTINGS_FEE = gql`
   mutation DisableSettingsFee($settingsId: ID!) {
     disableSettingsFee(settingsId: $settingsId) {
@@ -2999,13 +3007,6 @@ const ENABLE_SETTINGS_FEE = gql`
   }
 `;
 
-const DELETE_SETTINGS_COST = gql`
-  mutation DeleteSettingsCost($settingsId: ID!) {
-    deleteSettingsCost(settingsId: $settingsId) {
-      settingsCostId
-    }
-  }
-`;
 
 const DELETE_WIRE_TRANSFER_SETTINGS = gql`
   mutation DeleteWireTransferBankAccount($bankAccountId: ID!) {
@@ -4432,15 +4433,6 @@ export class AdminDataService {
 		}));
 	}
 
-	deleteFeeSettings(settingsId: string): Observable<any> {
-		return this.mutate({
-			mutation: DELETE_SETTINGS_FEE,
-			variables: {
-				settingsId
-			}
-		});
-	}
-
 	disableFeeSettings(settingsId: string): Observable<any> {
 		return this.mutate({
 			mutation: DISABLE_SETTINGS_FEE,
@@ -4459,9 +4451,18 @@ export class AdminDataService {
 		});
 	}
 
-	deleteCostSettings(settingsId: string): Observable<any> {
-		return this.apollo.mutate({
-			mutation: DELETE_SETTINGS_COST,
+  disableCostSettings(settingsId: string): Observable<any> {
+		return this.mutate({
+			mutation: DISABLE_SETTINGS_COST,
+			variables: {
+				settingsId
+			}
+		});
+	}
+
+	enableCostSettings(settingsId: string): Observable<any> {
+		return this.mutate({
+			mutation: ENABLE_SETTINGS_COST,
 			variables: {
 				settingsId
 			}

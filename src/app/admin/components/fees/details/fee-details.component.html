@@ -1,4 +1,3 @@
-<!-- eslint-disable @angular-eslint/template/no-inline-styles -->
 <div class="row">
   <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
     <form novalidate [formGroup]="form">
@@ -235,8 +234,7 @@
           {{errorMessage}}
         </h4>
       </div>
-      <div style="display: flex; justify-content: flex-end;">
-        {{currentScheme?.deleted}}
+      <div class="d-flex justify-content-end">
         <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onSubmit()">
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Save
@@ -245,13 +243,9 @@
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           TEST
         </button>
-        <button *ngIf="!createNew" type="button" class="btn btn-secondary pd-x-30 me-2 mg-t-5" (click)="onStateChangeScheme()">
+        <button *ngIf="permission > 1 && !createNew" type="button" class="btn btn-secondary pd-x-30 me-2 mg-t-5" (click)="onStateChangeScheme()">
           <span *ngIf="disableInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           {{deleted ? 'Enable' : 'Disable'}}
-        </button>
-        <button *ngIf="permission > 1 && !createNew && defaultSchemeName === ''" class="btn btn-danger pd-x-30 me-2 mg-t-5"
-          type="button" (click)="deleteScheme(delete_content)">
-          Delete
         </button>
         <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="close.emit()">
           Close
