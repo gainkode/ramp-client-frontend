@@ -1784,10 +1784,10 @@ const CHANGE_SETTINGS_COST_STATUS = gql`
   }
 `;
 
-const CHANGE_SETTINGS_COST_FEE = gql`
+const CHANGE_SETTINGS_FEE_STATUS = gql`
   mutation ChangeStateSettingsFee($settingsId: ID!) {
    changeStateSettingsFee(settingsId: $settingsId) {
-      settingsCostId
+      settingsFeeId
     }
   }
 `;
@@ -4419,7 +4419,7 @@ export class AdminDataService {
 
 	changeFeeSettingsStatus(settingsId: string): Observable<any> {
 		return this.mutate({
-			mutation: CHANGE_SETTINGS_COST_FEE,
+			mutation: CHANGE_SETTINGS_FEE_STATUS,
 			variables: {
 				settingsId
 			}
