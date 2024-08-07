@@ -1,9 +1,0 @@
-@import 'mixins/font-props';
-
-@mixin tag {
-	white-space: pre;
-	padding: 3px;
-	box-sizing: border-box;
-	@include font-props(false, 14, true, 700, #8f96b5);
-	line-height: 18px;
-}

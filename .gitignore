@@ -1,5 +1,7 @@
 /.angular/cache
 /.nx/cache
+/dist
+
 node_modules
 node_modules_12
 node_modules_14

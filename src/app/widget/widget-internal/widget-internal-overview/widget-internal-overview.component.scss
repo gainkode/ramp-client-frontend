@@ -38,9 +38,6 @@
                 &--inactive {
                     opacity: .4;
                     cursor: not-allowed;
-                    .order-details__content-header-button-blink {
-                        display: none !important;
-                    }
                 }
             }
             &-button {
@@ -58,43 +55,6 @@
                 font-size: 14px;
                 letter-spacing: 2px;
                 color: var(--greyscale-700);
-                &-blink {
-                    position: absolute;
-                    right: 2px;
-                    top: 10px;
-                    transform: translate(-50%) translateY(-50%);
-                    width: 10px;
-                    height: 10px;
-                    display: none;
-                    &--active {
-                        display: block;
-                    }
-                    &:before {
-                        content: "";
-                        display: block;
-                        position: relative;
-                        top: -7px;
-                        width: 300%;
-                        height: 300%;
-                        margin-left: -100%;
-                        margin-top: -100%;
-                        border-radius: 100%;
-                        background-color: rgb(196, 33, 38);
-                        animation: innerBlink 1.5s cubic-bezier(.2,.5,.1,1) infinite;
-                    }
-                    &:after {
-                        content: "";
-                        display: block;
-                        position: absolute;
-                        left: 0;
-                        top: -7px;
-                        width: 100%;
-                        height: 100%;
-                        background-color: rgb(196, 33, 38);
-                        border-radius: 100%;
-                        animation: outerBlink 1.5s cubic-bezier(.5,.1,.5,1) -.3s infinite;
-                    }
-                }
                 &--active {
                     cursor: default;
                     background: #00a2f8;
@@ -303,30 +263,6 @@ hr.order-details__divider {
 
 app-form-textbox {
     width: 100%;
-}
-
-@keyframes innerBlink {
-    0% {
-        transform: scale(.3)
-    }
-
-    60%, to {
-        opacity: 0
-    }
-}
-
-@keyframes outerBlink {
-    0% {
-        transform: scale(.7)
-    }
-
-    50% {
-        transform: scale(1)
-    }
-
-    to {
-        transform: scale(.7)
-    }
 }
 
 .moon {
