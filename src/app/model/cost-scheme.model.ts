@@ -11,6 +11,7 @@ import {
 export class CostScheme {
 	id!: string;
 	isDefault = false;
+	deleted = false;
 	description!: string;
 	name!: string;
 	bankAccountIds: string[] = [];
@@ -31,6 +32,8 @@ export class CostScheme {
 			this.description = data.description as string;
 			this.bankAccountIds = data.bankAccounts?.map(a => a.bankAccountId) ?? [];
 			this.terms = new CostShemeTerms(data.terms ?? '');
+			this.deleted = data?.deleted;
+
 			data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
 			data.targetPaymentProviders?.forEach(x => this.provider.push(x));
 			data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));
@@ -107,6 +110,16 @@ export class CostScheme {
 			p = true;
 		});
 		return s;
+	}
+
+	get costSchemasListDataColumnStyle(): string[] {
+		return [
+			`cost-schemas-list-column-${this.getColorStyles()}`
+		];
+	}
+
+	private getColorStyles(): string {
+		return this.deleted ? 'grey' : 'white';
 	}
 }
 

@@ -377,6 +377,7 @@ const GET_COST_SETTINGS = gql`
         targetInstruments
         targetTransactionTypes
         targetPaymentProviders
+        deleted
         widgetIds
       }
     }
@@ -2383,6 +2384,7 @@ mutation SimulateTransaction(
   $paymentProvider: String,
   $rate: Float,
   $userId: String
+  $widgetUserParamsId: String
 ) {
   simulateTransaction(
     transaction: {
@@ -2393,6 +2395,7 @@ mutation SimulateTransaction(
       amountToSpend: $amountToSpend
       instrument: $instrument
       paymentProvider: $paymentProvider
+      widgetUserParamsId: $widgetUserParamsId
     }
     rate: $rate
     userId: $userId

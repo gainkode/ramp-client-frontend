@@ -51,12 +51,14 @@ export class FeeScheme {
 			this.currenciesTo = data.targetCurrenciesTo as Array<string> ?? [];
 			this.rateToEur = data.rateToEur as number;
 			this.deleted = data?.deleted;
+
 			data.targetInstruments?.forEach(x => this.instrument.push(x as PaymentInstrument));
 			data.targetPaymentProviders?.forEach(x => this.provider.push(x));
 			data.targetTransactionTypes?.forEach(x => this.trxType.push(x as TransactionType));
 			data.targetUserTypes?.forEach(x => this.userType.push(x as UserType));
 			data.targetUserModes?.forEach(x => this.userMode.push(x as UserMode));
 			this.target = data.targetFilterType as SettingsFeeTargetFilterType | null;
+			
 			if (this.target === SettingsFeeTargetFilterType.Country) {
 				data.targetFilterValues?.forEach(x => {
 					const c = getCountryByCode3(x);

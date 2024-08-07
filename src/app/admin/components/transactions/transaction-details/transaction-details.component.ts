@@ -131,10 +131,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   accountStatuses = UserStatusList;
   kycStatuses = TransactionKycStatusList;
   transactionStatuses: TransactionStatusView[] = [];
-  removable = false;
   isFastPaid = false;
   transactionId = '';
-  scriningData = {};
   transactionType: TransactionType = TransactionType.System;
   currenciesToSpend: CurrencyView[] = [];
   currenciesToReceive: CurrencyView[] = [];
@@ -149,8 +147,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   isTransactionCompleted = false;
   kycStatus = '';
   accountStatus = '';
-  transferOrderBlockchainLink = '';
-  benchmarkTransferOrderBlockchainLink = '';
   amountToSpendTitle = 'Amount To Buy';
   currencyToSpendTitle = 'Currency To Buy';
   systemFeeTitle = 'Fee, EUR';
@@ -393,10 +389,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.isSellTransactionType = this.transactionType === this.TRANSACTION_TYPE.Sell;
     this.isReceiveTransactionType = this.transactionType === this.TRANSACTION_TYPE.Receive;
 
-    this.transferOrderBlockchainLink = val?.transferOrderBlockchainLink ?? '';
-    this.benchmarkTransferOrderBlockchainLink = val?.benchmarkTransferOrderBlockchainLink ?? '';
-    this.removable = true;
-
     if (this.data) {
       this.flag = this.data.flag === true;
 
@@ -437,10 +429,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         const newDate = new Date();
         const currentDate = `${newDate.getDate()}-${newDate.getMonth() + 1}-${newDate.getFullYear()}`;
         this.form.controls.recallRegistered.setValue(currentDate);
-      }
-
-      if (this.data?.screeningData?.paymentChecks && this.data?.screeningData?.paymentChecks.length > 0){
-        this.scriningData = this.data?.screeningData?.paymentChecks[0];
       }
 
       this.transactionStatus = this.data.status;

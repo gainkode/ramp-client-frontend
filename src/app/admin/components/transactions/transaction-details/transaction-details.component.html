@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/no-call-expression -->
 <mat-tab-group mat-stretch-tabs="false" [selectedIndex]="selectedTabIndex">
   <mat-tab label="Transaction info">
     <ng-template matTabContent>
@@ -518,7 +519,7 @@
                 </label>
                 <input class="form-control" type="text" formControlName="benchmarkTransferOrderHash">
               </div>
-              <app-admin-details-item label="Benchmark transfer blockchain Link" [value]="benchmarkTransferOrderBlockchainLink" [linkUrl]="benchmarkTransferOrderBlockchainLink"></app-admin-details-item>
+              <app-admin-details-item label="Benchmark transfer blockchain Link" [value]="data?.benchmarkTransferOrderBlockchainLink" [linkUrl]="data?.benchmarkTransferOrderBlockchainLink"></app-admin-details-item>
               <app-admin-details-item label="Benchmark transfer status" [value]="data?.benchmarkStatus"></app-admin-details-item>
               <app-admin-details-item label="Benchmark transfer sub-status" [value]="data?.benchmarkSubStatus"></app-admin-details-item>
             </div>
@@ -535,7 +536,7 @@
                 </label>
                 <input class="form-control" type="text" formControlName="transferOrderHash">
               </div>
-              <app-admin-details-item label="End-user transfer blockchain Link" [value]="transferOrderBlockchainLink" [linkUrl]="transferOrderBlockchainLink"></app-admin-details-item>
+              <app-admin-details-item label="End-user transfer blockchain Link" [value]="data?.transferOrderBlockchainLink" [linkUrl]="data?.transferOrderBlockchainLink"></app-admin-details-item>
               <app-admin-details-item label="End-user transfer status" [value]="data?.transferStatus"></app-admin-details-item>
               <app-admin-details-item label="End-user transfer sub-status" [value]="data?.transferSubStatus"></app-admin-details-item>
               <div *ngIf="isSellTransactionType" class="row">
@@ -576,9 +577,11 @@
               </div>
               <div *ngIf="permission > 1" class="d-flex justify-content-between">
                 <div class="d-flex">
-                  <button  *ngIf="removable && data?.canBeCancelled" 
+                  <button 
+                    *ngIf="data?.canBeCancelled" 
                     type="button" 
-                    class="btn btn-danger pd-x-30 me-2 mg-t-5"
+                    class="btn btn-danger pd-x-30 me-2 mg-t-5" 
+                    [disabled]="cancelInProgress || saveInProgress" 
                     (click)="onDelete()">
                     <span *ngIf="cancelInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
@@ -586,28 +589,22 @@
                   </button>
                   <button *ngIf="!isReceiveTransactionType && !notPaidStatuses.includes(transactionStatus)"
                     class="btn btn-success pd-x-30 me-2 mg-t-5" type="button"
-                    (click)="onPaid()">
-                    <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-                      aria-hidden="true"></span>
+                    [disabled]="saveInProgress || cancelInProgress" (click)="onPaid()">
                     Paid
                   </button>
                   <button *ngIf="exchangeStatuses.includes(transactionStatus)"
                     class="btn btn-info pd-x-30 me-2 mg-t-5" type="button"
-                    (click)="onExchange()">
-                    <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-                      aria-hidden="true"></span>
+                    [disabled]="saveInProgress || cancelInProgress" (click)="onExchange()">
                     Exchange
                   </button>
                   <button *ngIf="!isReceiveTransactionType && data?.canBeReviewed"
                     class="btn btn-dark pd-x-30 me-2 mg-t-5" type="button"
-                    (click)="onDeclined()">
-                    <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
-                      aria-hidden="true"></span>
+                    [disabled]="saveInProgress || cancelInProgress" (click)="onDeclined()">
                     Decline Payment
                   </button>
                 </div>
                 <div *ngIf="!isReceiveTransactionType" class="d-flex justify-content-end" >
-                  <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" [disabled]="!form.valid" (click)="onSubmit()">
+                  <button type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" [disabled]="!form.valid || saveInProgress || cancelInProgress" (click)="onSubmit()">
                     <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status"
                       aria-hidden="true"></span>
                     Save
@@ -635,7 +632,7 @@
 
   <mat-tab *ngIf="data?.screeningAnswer && data?.screeningData?.paymentChecks?.length > 0" label="Transaction screening info">
     <ng-template matTabContent>
-     <app-raw-json [data]="scriningData"></app-raw-json>
+     <app-raw-json [data]="data?.screeningData?.paymentChecks[0]"></app-raw-json>
      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
       <h4 class="card-title2 mg-b-20 color_brown">
         {{errorMessage}}

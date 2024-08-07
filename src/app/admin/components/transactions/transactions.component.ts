@@ -22,188 +22,188 @@ import { TransactionService } from 'admin/services/transaction.service';
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(MatSort) sort!: MatSort;
+	@ViewChild(MatSort) sort!: MatSort;
 
-  filterFields = [
-  	'accountType',
-  	'accountMode',
-  	'country',
-  	'tier',
-  	'transactionKycStatus',
-  	'users',
-  	'widgetName',
-  	'search',
-  	'from',
-  	'source',
-  	'createdDate',
-  	'completedDate',
-  	'paymentInstrument',
-  	'transactionIds',
-  	'transactionType',
-  	'transactionStatus',
-  	'walletAddress',
-  	'fiatCurrency',
-  	'verifyWhenPaid',
-  	'transactionFlag',
-  	'preauthFlag',
-		'updatedDate',
-		'reversalProcessed',
-		'recallRegistered',
-		'hasRecallNumber',
-		'recallNumber'
-  ];
-  displayedColumns: string[] = [
-  	'details', 'code', 'created', 'accountName', 'email', 'accountStatus', 'type', 'widgetName', 'from', 'to',
-  	'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
-  	'address', 'instrument', 'paymentProvider', 'status', 'userType', 'source', 'kycStatus', 'id'
-  ];
-  isScreeningInfo = false;
-  inProgress = false;
-  permission = 0;
-  unbenchmarkDialog?: NgbModalRef;
-  selectedTransaction?: TransactionItemFull;
-  selectedForUnbenchmark = false;
-  transactionCount = 0;
-  transactions: TransactionItemFull[] = [];
-  userStatuses: TransactionStatusDescriptorMap[] = [];
-  currencyOptions: CurrencyView[] = [];
-  pageSize = 50;
-  pageIndex = 0;
-  sortedField = 'created';
-  sortedDesc = true;
-  filter = new Filter({});
-  adminAdditionalSettings: Record<string, any> = {};
-  fiatCurrencies: Array<CurrencyView> = [];
+	filterFields = [
+		'accountType',
+		'accountMode',
+		'country',
+		'tier',
+		'transactionKycStatus',
+		'users',
+		'widgetName',
+		'search',
+		'from',
+		'source',
+		'createdDate',
+		'completedDate',
+		'paymentInstrument',
+		'transactionIds',
+		'transactionType',
+		'transactionStatus',
+		'walletAddress',
+		'fiatCurrency',
+		'verifyWhenPaid',
+		'transactionFlag',
+		'preauthFlag',
+			'updatedDate',
+			'reversalProcessed',
+			'recallRegistered',
+			'hasRecallNumber',
+			'recallNumber'
+	];
+	displayedColumns: string[] = [
+		'details', 'code', 'created', 'accountName', 'email', 'accountStatus', 'type', 'widgetName', 'from', 'to',
+		'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
+		'address', 'instrument', 'paymentProvider', 'status', 'userType', 'source', 'kycStatus', 'id'
+	];
+	isScreeningInfo = false;
+	inProgress = false;
+	permission = 0;
+	unbenchmarkDialog?: NgbModalRef;
+	selectedTransaction?: TransactionItemFull;
+	selectedForUnbenchmark = false;
+	transactionCount = 0;
+	transactions: TransactionItemFull[] = [];
+	userStatuses: TransactionStatusDescriptorMap[] = [];
+	currencyOptions: CurrencyView[] = [];
+	pageSize = 50;
+	pageIndex = 0;
+	sortedField = 'created';
+	sortedDesc = true;
+	filter = new Filter({});
+	adminAdditionalSettings: Record<string, any> = {};
+	fiatCurrencies: Array<CurrencyView> = [];
 
-  private subscriptions: Subscription = new Subscription();
-  private detailsDialog: NgbModalRef | undefined = undefined;
-  constructor(
+	private subscriptions: Subscription = new Subscription();
+	private detailsDialog: NgbModalRef | undefined = undefined;
+	constructor(
 		public transactionService: TransactionService,
-  	private modalService: NgbModal,
-  	private auth: AuthService,
+		private modalService: NgbModal,
+		private auth: AuthService,
 		private cdr: ChangeDetectorRef,
-  	private commonDataService: CommonDataService,
-  	private adminService: AdminDataService,
-  	private profileService: ProfileDataService,
-  	public activeRoute: ActivatedRoute,
-  	private router: Router
-  ) {
-  	const filterUserId = activeRoute.snapshot.params['userid'];
+		private commonDataService: CommonDataService,
+		private adminService: AdminDataService,
+		private profileService: ProfileDataService,
+		public activeRoute: ActivatedRoute,
+		private router: Router
+	) {
+		const filterUserId = activeRoute.snapshot.params['userid'];
 
-  	if (filterUserId) {
-  		this.filter.users = [filterUserId as string];
-  	}
+		if (filterUserId) {
+			this.filter.users = [filterUserId as string];
+		}
 
-  	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Transactions);
-  }
+		this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Transactions);
+	}
 
-  ngOnInit(): void {
-  	this.loadCommonSettings();
-  	this.loadList();
-  }
+	ngOnInit(): void {
+		this.loadCommonSettings();
+		this.loadList();
+	}
 
-  ngOnDestroy(): void {
-  	this.subscriptions.unsubscribe();
-  }
+	ngOnDestroy(): void {
+		this.subscriptions.unsubscribe();
+	}
 
-  ngAfterViewInit(): void {
-  	this.subscriptions.add(
-  		this.sort.sortChange.pipe(finalize(() => {
-				this.cdr.markForCheck();
-			})).subscribe(() => {
-  			this.sortedDesc = (this.sort.direction === 'desc');
-  			this.sortedField = this.sort.active;
-  			this.loadList();
-  		})
-  	);
-  }
+	ngAfterViewInit(): void {
+		this.subscriptions.add(
+			this.sort.sortChange.pipe(finalize(() => {
+					this.cdr.markForCheck();
+				})).subscribe(() => {
+				this.sortedDesc = (this.sort.direction === 'desc');
+				this.sortedField = this.sort.active;
+				this.loadList();
+			})
+		);
+	}
 
-  onTransactionSelected(item: TransactionItemFull): void {
-  	item.selected = !item.selected;
-  	this.selectedForUnbenchmark = this.transactions.some(x =>
-  		x.selected === true && x.type !== TransactionType.Receive);
-  }
+	onTransactionSelected(item: TransactionItemFull): void {
+		item.selected = !item.selected;
+		this.selectedForUnbenchmark = this.transactions.some(x =>
+			x.selected === true && x.type !== TransactionType.Receive);
+	}
 
-  onSaveTransaction(): void {
-  	this.selectedTransaction = undefined;
-  	if (this.detailsDialog) {
-  		this.detailsDialog.close();
-  		this.loadList();
-  	}
-  }
+	onSaveTransaction(): void {
+		this.selectedTransaction = undefined;
+		if (this.detailsDialog) {
+			this.detailsDialog.close();
+			this.loadList();
+		}
+	}
 
-  onCloseDetails(): void {
-  	if (this.detailsDialog) {
-  		this.detailsDialog.dismiss();
-  	}
-  }
+	onCloseDetails(): void {
+		if (this.detailsDialog) {
+			this.detailsDialog.dismiss();
+		}
+	}
 
-  handleFilterApplied(filter: Filter): void {
-  	this.filter = filter;
-		this.pageIndex = 0;
-  	this.loadList();
-  }
+	handleFilterApplied(filter: Filter): void {
+		this.filter = filter;
+			this.pageIndex = 0;
+		this.loadList();
+	}
 
-  handlePage(index: number): void {
-  	this.pageIndex = index - 1;
-  	this.loadList();
-  }
+	handlePage(index: number): void {
+		this.pageIndex = index - 1;
+		this.loadList();
+	}
 
-  toggleDetails(transaction: TransactionItemFull): void {
-  	if (this.isSelectedTransaction(transaction.id)) {
-  		this.selectedTransaction = undefined;
-  	} else {
-  		this.selectedTransaction = transaction;
-  	}
-  }
+	toggleDetails(transaction: TransactionItemFull): void {
+		if (this.isSelectedTransaction(transaction.id)) {
+			this.selectedTransaction = undefined;
+		} else {
+			this.selectedTransaction = transaction;
+		}
+	}
 
-  showDetails(transaction: TransactionItemFull, content: any, isScreening: boolean = false): void {
-  	this.selectedTransaction = transaction;
-  	this.isScreeningInfo = isScreening;
-	
-  	this.detailsDialog = this.modalService.open(content, {
-  		backdrop: 'static',
-  		windowClass: 'modalCusSty-transacion',
-  	});
-  }
+	showDetails(transaction: TransactionItemFull, content: any, isScreening: boolean = false): void {
+		this.selectedTransaction = transaction;
+		this.isScreeningInfo = isScreening;
+		
+		this.detailsDialog = this.modalService.open(content, {
+			backdrop: 'static',
+			windowClass: 'modalCusSty-transacion',
+		});
+	}
 
-  createUserTransactionShow(content: any): void {
-  	this.detailsDialog = this.modalService.open(content, {
-  		backdrop: 'static',
-  		windowClass: 'modalCusSty',
-  	});
-  }
+	createUserTransactionShow(content: any): void {
+		this.detailsDialog = this.modalService.open(content, {
+			backdrop: 'static',
+			windowClass: 'modalCusSty',
+		});
+	}
 
-  selectAll(): void {
-  	this.transactions.forEach(x => x.selected = true);
-  	this.selectedForUnbenchmark = (this.transactions.length > 0);
-  }
+	selectAll(): void {
+		this.transactions.forEach(x => x.selected = true);
+		this.selectedForUnbenchmark = (this.transactions.length > 0);
+	}
 
-  private loadCommonSettings(): void {
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
+	private loadCommonSettings(): void {
+		const settingsCommon = this.auth.getLocalSettingsCommon();
 
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+		if(settingsCommon){
+			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
 
-  		if(this.adminAdditionalSettings?.tabs?.transactions?.filterFields){
-  			this.filterFields = this.adminAdditionalSettings.tabs.transactions.filterFields;
-  		}
-  	}
-  }
+			if(this.adminAdditionalSettings?.tabs?.transactions?.filterFields){
+				this.filterFields = this.adminAdditionalSettings.tabs.transactions.filterFields;
+			}
+		}
+	}
 
-  private isSelectedTransaction(transactionId: string): boolean {
-  	return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
-  }
+	private isSelectedTransaction(transactionId: string): boolean {
+		return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
+	}
 
-  private loadList(): void {
-  	if (this.userStatuses.length === 0) {
-  		this.loadTransactionStatuses();
-  	} else {
-  		this.loadTransactions();
-  	}
-  }
+	private loadList(): void {
+		if (this.userStatuses.length === 0) {
+			this.loadTransactionStatuses();
+		} else {
+			this.loadTransactions();
+		}
+	}
 
-  private loadTransactions(): void {
+	private loadTransactions(): void {
 		this.inProgress = true;
 		this.selectedForUnbenchmark = false;
 	
@@ -255,50 +255,50 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 			);
 	}
 
-  private loadCurrencies(): void {
-  	this.inProgress = true;
-  	this.currencyOptions = [];
-		
-  	this.subscriptions.add(
-  		this.commonDataService.getSettingsCurrency()?.valueChanges
-			.pipe(take(1), finalize(() => {
+	private loadCurrencies(): void {
+		this.inProgress = true;
+		this.currencyOptions = [];
+			
+		this.subscriptions.add(
+			this.commonDataService.getSettingsCurrency()?.valueChanges
+				.pipe(take(1), finalize(() => {
+					this.inProgress = false;
+					this.cdr.markForCheck();
+				})).subscribe(({ data }) => {
+				const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+
+				if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+					this.currencyOptions = currencySettings.settingsCurrency.list
+						?.map((val) => new CurrencyView(val)) as CurrencyView[];
+					this.fiatCurrencies = this.currencyOptions.filter(item => item.fiat === true);
+				} else {
+					this.currencyOptions = [];
+				}
+				this.loadTransactions();
+			}, () => {
 				this.inProgress = false;
-				this.cdr.markForCheck();
-			})).subscribe(({ data }) => {
-  			const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+				if (this.auth.token === '') {
+					void this.router.navigateByUrl('/');
+				}
+			})
+		);
+	}
 
-  			if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-  				this.currencyOptions = currencySettings.settingsCurrency.list
-  					?.map((val) => new CurrencyView(val)) as CurrencyView[];
-  				this.fiatCurrencies = this.currencyOptions.filter(item => item.fiat === true);
-  			} else {
-  				this.currencyOptions = [];
-  			}
-  			this.loadTransactions();
-  		}, () => {
-  			this.inProgress = false;
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
-  }
+	showWallets(transactionId: string): void {
+		const transaction = this.transactions.find(x => x.id === transactionId);
 
-  showWallets(transactionId: string): void {
-  	const transaction = this.transactions.find(x => x.id === transactionId);
+		if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
+			void this.router.navigateByUrl(`/admin/fiat-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+		} 
+	}
 
-  	if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
-  		void this.router.navigateByUrl(`/admin/fiat-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
-  	} 
-  }
+	refresh(): void {
+		this.loadList();
+	}
 
-  refresh(): void {
-  	this.loadList();
-  }
-
-  export(content: any): void {
-  	this.subscriptions.add(
-  		this.adminService.exportTransactionsToCsv(
+	export(content: any): void {
+		this.subscriptions.add(
+			this.adminService.exportTransactionsToCsv(
 				this.transactions.filter(x => x.selected === true).map(val => val.id),
 				this.sortedField,
 				this.sortedDesc,
@@ -306,48 +306,55 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 			).pipe(finalize(() => {
 				this.inProgress = false;
 				this.cdr.markForCheck();
-			})).subscribe(() => {
-  			this.modalService.open(content, {
-  				backdrop: 'static',
-  				windowClass: 'modalCusSty',
-  			});
-  		}, () => {
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
-  }
+			})).subscribe({
+				next: () => {
+					this.modalService.open(content, {
+						backdrop: 'static',
+						windowClass: 'modalCusSty',
+					});
+				},
+				error: () => {
+					if (this.auth.token === '') {
+						void this.router.navigateByUrl('/');
+					}
+				}
+			})
+		);
+	}
 
-  unbenchmark(content: any): void {
-  	this.unbenchmarkDialog = this.modalService.open(content, {
-  		backdrop: 'static',
-  		windowClass: 'modalCusSty',
-  	});
+	unbenchmark(content: any): void {
+		this.unbenchmarkDialog = this.modalService.open(content, {
+			backdrop: 'static',
+			windowClass: 'modalCusSty',
+		});
 
-  	this.subscriptions.add(
-  		this.unbenchmarkDialog.closed.subscribe(result => {
-  			if (result === 'Confirm') {
-  				this.executeUnbenchmark();
-  			}
-  		})
-  	);
-  }
+		this.subscriptions.add(
+			this.unbenchmarkDialog.closed.subscribe(result => {
+				if (result === 'Confirm') {
+					this.executeUnbenchmark();
+				}
+			})
+		);
+	}
 
-  private executeUnbenchmark(): void {
-  	this.subscriptions.add(
-  		this.adminService.unbenchmarkTransaction(
+
+	private executeUnbenchmark(): void {
+		this.subscriptions.add(
+			this.adminService.unbenchmarkTransaction(
 				this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id)
 			).pipe(finalize(() => {
 				this.inProgress = false;
 				this.cdr.markForCheck();
-			})).subscribe(() => {
-  			this.transactions.forEach(x => x.selected = false);
-  		}, () => {
-  			if (this.auth.token === '') {
-  				void this.router.navigateByUrl('/');
-  			}
-  		})
-  	);
-  }
+			})).subscribe({
+				next: () => {
+					this.transactions.forEach(x => x.selected = false);
+				},
+				error: () => {
+					if (this.auth.token === '') {
+						void this.router.navigateByUrl('/');
+					}
+				}
+			})
+		);
+	}
 }

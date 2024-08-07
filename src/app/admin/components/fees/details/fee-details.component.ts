@@ -43,7 +43,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
   errorMessage = '';
   defaultSchemeName = '';
   currencyOptions: CurrencyView[] = [];
-	riskFees: RiskFeeCode[] = [];
+  riskFees: RiskFeeCode[] = [];
   userTypeOptions = UserTypeList;
   userModes = UserModeList;
   transactionTypes = TransactionTypeList;
@@ -153,7 +153,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 
   	if (scheme) {
   		this.defaultSchemeName = scheme.isDefault ? scheme.name : '';
-			this.widgetIds = scheme.widgetIds;
+		this.widgetIds = scheme.widgetIds;
   		this.form.get('id')?.setValue(scheme.id);
   		this.form.get('name')?.setValue(scheme.name);
   		this.form.get('description')?.setValue(scheme.description);

@@ -21,7 +21,7 @@
             <mat-table [dataSource]="schemes">
 
               <ng-container matColumnDef="details">
-                <th *matHeaderCellDef  mat-header-cell class="mat-column-fee-table mat-column-fee-table-details">
+                <th *matHeaderCellDef mat-header-cell class="mat-column-fee-table mat-column-fee-table-details">
                 </th>
                 <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
                   <button type="button" mat-icon-button class="row-button" 
@@ -102,7 +102,7 @@
                   User types
                 </th>
                 <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
-                  <span class="multiple-cell" *ngFor="let type of element.userType">{{type}} 
+                  <span *ngFor="let type of element.userType" class="multiple-cell">{{type}} 
                     <span class="multiple-cell-seperator">|</span> 
                   </span>
                 </td>
@@ -113,7 +113,7 @@
                   User modes
                 </th>
                 <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
-                  <span class="multiple-cell" *ngFor="let mode of element.userMode">{{mode}} 
+                  <span *ngFor="let mode of element.userMode" class="multiple-cell">{{mode}} 
                     <span class="multiple-cell-seperator">|</span> 
                   </span>
                 </td>
@@ -133,7 +133,7 @@
                   Payment provider / cost scheme
                 </th>
                 <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
-                  <span class="multiple-cell" *ngFor="let provider of convertToArray(element.providerList)">{{provider}} 
+                  <span *ngFor="let provider of convertToArray(element.providerList)" class="multiple-cell">{{provider}} 
                     <span class="multiple-cell-seperator">|</span> 
                   </span>
                 </td>
@@ -144,7 +144,7 @@
                   Currencies from
                 </th>
                 <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
-                  <span class="multiple-cell" *ngFor="let currency of element.currenciesFrom">{{currency}} 
+                  <span *ngFor="let currency of element.currenciesFrom" class="multiple-cell">{{currency}} 
                     <span class="multiple-cell-seperator">|</span> 
                   </span>
                 </td>
@@ -155,7 +155,7 @@
                   Currencies to
                 </th>
                 <td *matCellDef="let element" mat-cell [ngClass]="element.feeSchemasListDataColumnStyle">
-                  <span class="multiple-cell" *ngFor="let currency of element.currenciesTo">{{currency}} 
+                  <span *ngFor="let currency of element.currenciesTo" class="multiple-cell">{{currency}} 
                     <span class="multiple-cell-seperator">|</span> 
                   </span>
                 </td>
