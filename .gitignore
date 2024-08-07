@@ -1,11 +1,40 @@
-/.angular/cache
-/.nx/cache
+# compiled output
 /dist
+/tmp
+/out-tsc
 
+# dependencies
 node_modules
 node_modules_12
 node_modules_14
 
 node_modules_*
-environment.global.ts
+
+# IDEs and editors
+/.idea/ .idea
 .idea
+src/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+src/.editorconfig
+
+# IDE - VSCode
+.vscode/*
+.vs/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Misc
+/.angular/cache
+/.nx/cache
+environment.global.ts
+
+# System Files
+.DS_Store
+Thumbs.db

@@ -1,3 +1,18 @@
 {
-    "npm-scripts.showStartNotification": false
-}
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "[sass]": {
+      "editor.tabSize": 2
+    },
+    "[css]": {
+      "editor.tabSize": 2
+    },
+    "[html]": {
+        "editor.tabSize": 4
+    },
+    "[javascript]": {
+        "editor.tabSize": 4
+    },
+    "[typescript]": {
+        "editor.tabSize": 4
+    }
+  }
