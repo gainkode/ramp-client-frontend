@@ -384,21 +384,6 @@ const GET_COST_SETTINGS = gql`
   }
 `;
 
-const DISABLE_SETTINGS_COST = gql`
-  mutation DisableSettingsCost($settingsId: ID!) {
-    disableSettingsCost(settingsId: $settingsId) {
-      settingsCostId
-    }
-  }
-`;
-
-const ENABLE_SETTINGS_COST = gql`
-  mutation EnableSettingsCost($settingsId: ID!) {
-   enableSettingsCost(settingsId: $settingsId) {
-      settingsCostId
-    }
-  }
-`;
 
 const GET_WIRE_TRANSFER_SETTINGS = gql`
 query GetWireTransferBankAccounts {
@@ -1791,6 +1776,22 @@ const ADD_SETTINGS_COST = gql`
   }
 `;
 
+const CHANGE_SETTINGS_COST_STATUS = gql`
+  mutation ChangeStateSettingsCost($settingsId: ID!) {
+   changeStateSettingsCost(settingsId: $settingsId) {
+      settingsCostId
+    }
+  }
+`;
+
+const CHANGE_SETTINGS_COST_FEE = gql`
+  mutation ChangeStateSettingsFee($settingsId: ID!) {
+   changeStateSettingsFee(settingsId: $settingsId) {
+      settingsCostId
+    }
+  }
+`;
+
 const SETTINGS_COST_SIMILARS = gql`
   fragment CostObjectDetails on SettingsCostSimilarObject {
     title
@@ -2990,23 +2991,6 @@ const UPDATE_KYC_LEVEL_SETTINGS = gql`
     }
   }
 `;
-
-const DISABLE_SETTINGS_FEE = gql`
-  mutation DisableSettingsFee($settingsId: ID!) {
-    disableSettingsFee(settingsId: $settingsId) {
-      settingsFeeId
-    }
-  }
-`;
-
-const ENABLE_SETTINGS_FEE = gql`
-  mutation EnableSettingsFee($settingsId: ID!) {
-   enableSettingsFee(settingsId: $settingsId) {
-      settingsFeeId
-    }
-  }
-`;
-
 
 const DELETE_WIRE_TRANSFER_SETTINGS = gql`
   mutation DeleteWireTransferBankAccount($bankAccountId: ID!) {
@@ -4433,36 +4417,18 @@ export class AdminDataService {
 		}));
 	}
 
-	disableFeeSettings(settingsId: string): Observable<any> {
+	changeFeeSettingsStatus(settingsId: string): Observable<any> {
 		return this.mutate({
-			mutation: DISABLE_SETTINGS_FEE,
+			mutation: CHANGE_SETTINGS_COST_FEE,
 			variables: {
 				settingsId
 			}
 		});
 	}
 
-	enableFeeSettings(settingsId: string): Observable<any> {
+  changeCostSettingsStatus(settingsId: string): Observable<any> {
 		return this.mutate({
-			mutation: ENABLE_SETTINGS_FEE,
-			variables: {
-				settingsId
-			}
-		});
-	}
-
-  disableCostSettings(settingsId: string): Observable<any> {
-		return this.mutate({
-			mutation: DISABLE_SETTINGS_COST,
-			variables: {
-				settingsId
-			}
-		});
-	}
-
-	enableCostSettings(settingsId: string): Observable<any> {
-		return this.mutate({
-			mutation: ENABLE_SETTINGS_COST,
+			mutation: CHANGE_SETTINGS_COST_STATUS,
 			variables: {
 				settingsId
 			}

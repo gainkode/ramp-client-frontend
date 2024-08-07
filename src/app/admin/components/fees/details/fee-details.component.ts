@@ -506,17 +506,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 	onStateChangeScheme(): void {
 		this.disableInProgress = true;
 
-		if (this.deleted) {
-			this.enableScheme();
-		} else {
-			this.disableScheme();
-		}
-	}
-
-	disableScheme(): void {
-		this.disableInProgress = true;
-
-		this.adminService.disableFeeSettings(this.settingsId)
+		this.adminService.changeFeeSettingsStatus(this.settingsId)
 			.pipe(
 				finalize(() => this.disableInProgress = false),
 				takeUntil(this.destroy$))
@@ -524,28 +514,11 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 				next: () => this.save.emit(),
 				error: (errorMessage) => {
 					this.errorMessage = errorMessage;
+
 					if (this.auth.token === '') {
 						void this.router.navigateByUrl('/');
 					}
 				},
-			});
-	}
-
-	enableScheme(): void {
-		this.disableInProgress = true;
-
-		this.adminService.enableFeeSettings(this.settingsId)
-			.pipe(
-				finalize(() => this.saveInProgress = false),
-				takeUntil(this.destroy$))
-			.subscribe({
-				next: () => this.save.emit(),
-				error: (errorMessage) => {
-					this.errorMessage = errorMessage;
-					if (this.auth.token === '') {
-						void this.router.navigateByUrl('/');
-					}
-				}
 			});
 	}
 
