@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { GenericEvent } from 'types';
 
 @Component({
 	selector: 'app-file-upload',
@@ -13,19 +13,17 @@ export class FileUploadComponent {
   @Output() fileSelected = new EventEmitter();
 
   fileName = 'Choose a file';
-  uploadProgress: number;
-  uploadSub: Subscription;
-
+  
   constructor() {}
 
-  onFileSelected(event): void {
+  onFileSelected(event: GenericEvent<HTMLInputElement>): void {
   	const files: FileList = event.target.files;
 
   	if (files) {
   		const formData = new FormData();
   		const filesName = [];
 
-  		for (var i = 0; i < files.length; i++) {
+  		for (let i = 0; i < files.length; i++) {
   			formData.append('files', files[i]);
   			filesName.push(files.item(i).name);
   		}

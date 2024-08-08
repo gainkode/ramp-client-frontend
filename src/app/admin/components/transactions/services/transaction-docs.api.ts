@@ -73,29 +73,9 @@ export class TransactionDocsApi {
 		return this.apiFacade.post<Signature[]>(url, params).pipe(map(response => response['data']));
 	}
 
-	addSignature(formData: FormData): Observable<HttpEvent<Object>> {
+	addSignature(formData: FormData): Observable<HttpEvent<object>> {
 		const url = 'docs/v1/dod/signature/add';
 		// v1/dod/signature/add
-
-		// export type DodSignatureFileUploadObject = {
-		// 	documentId?: string; id: 'c8d38ac7-0256-4587-b35b-55f9d63a8d12', (signatureDocument[0])
-		// 	signatureStatus?: SignatureStatus; status 
-		// 	transactionId?: string; transactionId;
-		// 	filesInfo: FileInfoObject[]; 
-		// };
-
-		// export type FileInfoObject = {
-		// 	fileName: string;
-		// 	fileType: FileType;
-		// 	documentId?: string;
-		// };
-		
-		// export type DodSignatureFileUploadObject = {
-		// 	signatureId?: string;
-		// 	signatureStatus?: SignatureStatus;
-		// 	transactionId?: string;
-		// 	filesInfo: FileInfoObject[];
-		// };
 
 		return this.apiFacade.postFormData(url, formData);
 	}

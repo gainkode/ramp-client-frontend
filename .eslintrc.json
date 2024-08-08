@@ -97,6 +97,7 @@
           }
         ],
         "no-extra-semi": "off",
+        "no-mixed-spaces-and-tabs": "off",
         "@typescript-eslint/no-extra-semi": "error",
         "@typescript-eslint/no-inferrable-types": [
           "error",

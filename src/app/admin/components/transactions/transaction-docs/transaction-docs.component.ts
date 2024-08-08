@@ -28,12 +28,11 @@ import { DatePipe } from '@angular/common';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionDocsComponent implements OnInit, OnDestroy {
-	@Input() userId: string;
+	@Input() transactionId: string;
 	public readonly config: TableColumnConfig<SignatureDocument>[] = SignaturesConfig;
 	public readonly tableDataSource = new MatTableDataSource<SignatureDocument>([]);
 	public readonly isLoading$: Observable<boolean> = this.service.getState$.pipe(map(x => x?.isLoading));
 	public readonly isLoaded$: Observable<boolean> = this.service.getState$.pipe(map(x => x?.isLoaded));
-
 	private readonly destroy$ = new Subject<void>();
 
 	signatureStatuses: string[] = Object.values(SignatureStatus).map((value) => String(value));
@@ -59,51 +58,11 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 		private serviceApi: TransactionDocsApi,
 		public dialog: MatDialog,
 		private service: TransactionDocsFacadeService
-	) {
-		// this.form.controls.group.valueChanges
-		// 	.pipe(takeUntil(this.destroy$))
-		// 	.subscribe(() => {
-		// 		const typeControl = this.form.controls.type;
-
-		// 		if (this.isDocumentTypeGrouped) {
-		// 			typeControl.setValidators(Validators.required);
-		// 		} else {
-		// 			typeControl.clearValidators();
-		// 		}
-
-		// 		typeControl.updateValueAndValidity();
-		// 	});
-
-		// this.form.controls.type.valueChanges
-		// 	.pipe(takeUntil(this.destroy$))
-		// 	.subscribe((type) => {
-		// 		const side = this.form.controls.side;
-
-		// 		if (type === DocumentTypeValue.Id || type === DocumentTypeValue.DrivingLicense) {
-		// 			side.setValidators(Validators.required);
-		// 		} else {
-		// 			side.clearValidators();
-		// 		}
-
-		// 		side.updateValueAndValidity();
-		// 	});
-	}
+	) {}
 
 	get isFileUploaded(): boolean {
 		return this.formData?.has('files');
 	}
-
-	// get isDocumentSide(): boolean {
-	// 	const type = this.form.controls.type.value;
-	// 	return [DocumentTypeValue.Id, DocumentTypeValue.DrivingLicense].includes(type);
-	// }
-
-	// get isDocumentTypeGrouped(): boolean {
-	// 	const group = this.form.controls.group.value;
-	// 	const validDocumentTypes = [DocumentType.ID, DocumentType.ProofOfAddress, DocumentType.DoD];
-
-	// 	return validDocumentTypes.includes(group);
-	// }
 
 	public ngOnInit(): void {
 		this.tableDataSource.filterPredicate = customFilterPredicate;
@@ -119,9 +78,9 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 					const datepipe = new DatePipe('en-US');
 					
 					this.form.patchValue({
-							status: this.selectedSignature.status,
-							executedAt: datepipe.transform(this.selectedSignature.executedAt, 'dd MMM YYYY') as string,
-							createdAt:  datepipe.transform(this.selectedSignature.createdAt, 'dd MMM YYYY HH:mm:ss') as string,
+						status: this.selectedSignature.status,
+						executedAt: datepipe.transform(this.selectedSignature.executedAt, 'dd MMM YYYY') as string,
+						createdAt:  datepipe.transform(this.selectedSignature.createdAt, 'dd MMM YYYY HH:mm:ss') as string,
 					});
 
 					this.tableDataSource.data = this.selectedSignature.signatureDocument;
@@ -131,15 +90,12 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy(): void {
 		this.destroy$.next();
+		this.destroy$.complete();
 		this.isEditDocument = false;
 	}
 
 	onAddDocument(): void {
 		this.isEditDocument = true;
-	}
-
-	onCancelEditDocument(): void {
-		this.isEditDocument = false;
 	}
 
 	onSave(): void {
@@ -179,14 +135,24 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 	private mapFormToEntity(): void {
 		const formValue = this.form.value;
 
-		// this.formData.append('name', formValue.name);
-		// this.formData.append('description', formValue.description);
-		// this.formData.append('type', formValue.type);
-		// this.formData.append('side', formValue.side ?? DocumentSide.Front);
-		// this.formData.append('userId', this.userId);
+		this.formData.append('transactionId', this.transactionId);
+		this.formData.append('signatureStatus', formValue.status);
+
+
+		for (let pair of (this.formData as any).entries()) {
+			console.log(pair[0] + ': ' + pair[1]);
+		}
+
+		// filesInfo: FileInfoObject[]; 
+		// export type FileInfoObject = {
+		// 	fileName: string;
+		// 	fileType: FileType;
+		// 	documentId?: string;
+		// };
 
 		this.uploadProgress = 1;
 
+		return
 		const upload$ = this.serviceApi.addSignature(this.formData)
 			.pipe(takeUntil(this.destroy$), finalize(() => this.reset()));
 
@@ -204,7 +170,7 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 	}
 
 	private getAllSignatures(skipCache: boolean = false): void {
-		this.service.loadAll(this.userId, skipCache).pipe(takeUntil(this.destroy$)).subscribe();
+		this.service.loadAll(this.transactionId, skipCache).pipe(takeUntil(this.destroy$)).subscribe();
 	}
 
 	private reset(): void {

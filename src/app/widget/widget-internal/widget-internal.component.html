@@ -1,5 +1,5 @@
 <div *ngIf="!recentTransactions && showWidget" class="widget__wrapper" [class.widget__wrapper--single]="isSinglePage">
-    <div class="m-0 widget__container-1" [ngSwitch]="pager.stageId" *ngIf="!isSingleOrderDetailsCompleted && !transactionErrorTitle">
+    <div *ngIf="!isSingleOrderDetailsCompleted && !transactionErrorTitle" class="m-0 widget__container-1" [ngSwitch]="pager.stageId">
       <div *ngIf="widget.embedded && inProgress" class="__widget-embedded-progress-container">
         <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
       </div>
@@ -52,7 +52,7 @@
             <h3 class="__widget-summary-title">{{'widget-internal.order-summary_title' | transloco}}</h3>
             <app-widget-summary class="__widget-summary-data" [summary]="summary"></app-widget-summary>
             <div *ngIf="showTransactionsLink" class="__widget-summary-total">
-              <a [routerLink]="null" href="#" (click)="showTransactions()">
+              <a href="#" [routerLink]="null" (click)="showTransactions()">
                 {{'widget-internal.order-summary_subtitle' | transloco}}
               </a>
             </div>
@@ -123,11 +123,11 @@
             [bankAccountId]="bankAccountId" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
             (onBack)="stageBack()" (onComplete)="wireTransferPaymentComplete($event)"></app-widget-wire-transfer>
 
-          <app-widget-wire-transfer-info-required #signupInfo *ngSwitchCase="'wire_transfer_info_required'" buttonTitle="SAVE" (error)="handleError($event)"
-            (progressChange)="progressChanged($event)" (done)="requiredFieldsComplete()" [requiredFields] = "requiredFields"></app-widget-wire-transfer-info-required>
+          <app-widget-wire-transfer-info-required *ngSwitchCase="'wire_transfer_info_required'" #signupInfo buttonTitle="SAVE" [requiredFields] = "requiredFields"
+            (error)="handleError($event)" (progressChange)="progressChanged($event)" (done)="requiredFieldsComplete()"></app-widget-wire-transfer-info-required>
           
-          <company-level-verification #signupInfo *ngSwitchCase="'company_level_verification'"  [levelName]="overLimitLevel" buttonTitle="SEND" (error)="handleError($event)"
-            (progressChange)="progressChanged($event)" (done)="resetWizard()" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"></company-level-verification>
+          <company-level-verification *ngSwitchCase="'company_level_verification'" #signupInfo  buttonTitle="SEND" [levelName]="overLimitLevel" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"
+            (error)="handleError($event)" (progressChange)="progressChanged($event)" (done)="resetWizard()"></company-level-verification>
 
           <app-widget-wire-transfer-result *ngSwitchCase="'wire_transfer_result'" [referenceId]="summary.orderId"
             [bankData]="selectedWireTransfer" (onComplete)="processingComplete()"
@@ -135,7 +135,7 @@
           </app-widget-wire-transfer-result>
 
           <!-- KYC -->
-          <app-widget-kyc class='widget-kyc-size' *ngSwitchCase="'verification'" 
+          <app-widget-kyc *ngSwitchCase="'verification'" class='widget-kyc-size' 
             [summary]="summary" 
             [levelName]="overLimitLevel"
             [completedWhenVerified]="widget.kycFirst"
@@ -183,5 +183,5 @@
 </div> 
 
 <div *ngIf="widgetLink">
-  <iframe [src]="widgetLink | safeurl" frameborder="0" allow="camera" class="widget-iframe"></iframe>
+  <iframe frameborder="0" allow="camera" class="widget-iframe" [src]="widgetLink | safeurl"></iframe>
 </div>

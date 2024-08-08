@@ -425,37 +425,35 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   private loadRates(): void {
   	const rateCurrencies = this.pCurrencies.filter(x => x.fiat && x.symbol !== 'EUR').map((val) => val.symbol);
-  	const rateData = this.paymentService.getOneToManyRates('EUR', rateCurrencies, false);
 
   	this.pSubscriptions.add(
-  		rateData.valueChanges.subscribe(
+        this.paymentService.getOneToManyRates('EUR', rateCurrencies, false).valueChanges.subscribe(
   			({ data }) => {
-  				const rates = data.getOneToManyRates as Rate[];
+            const rates = data.getOneToManyRates as Rate[];
 
-  				this.pCurrencies.forEach(c => {
-  					if (c.symbol === 'EUR') {
-  						c.rateFactor = 1;
-  					} else {
-  						const rate = rates?.find(x => x.currencyTo === c.symbol);
-  						if (rate) {
-						  	c.rateFactor = rate.depositRate;
-  						}
-  					}
-  				});
-  			}, (error) => {
-  				this.onProgress.emit(false);
-  				this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
-  			})
+            this.pCurrencies.forEach(c => {
+                if (c.symbol === 'EUR') {
+                    c.rateFactor = 1;
+                } else {
+                    const rate = rates?.find(x => x.currencyTo === c.symbol);
+
+                    if (rate) {
+                        c.rateFactor = rate.depositRate;
+                    }
+                }
+            });
+        }, (error) => {
+            this.onProgress.emit(false);
+            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
+        })
   	);
   }
 
   private loadTransactionsTotal(): void {
   	this.transactionsTotalEur = 0;
-  	const totalData = this.commonService.getMyTransactionsTotal();
 
   	this.pSubscriptions.add(
-  		totalData.valueChanges.subscribe(({ data }) => {
-
+        this.commonService.getMyTransactionsTotal().valueChanges.subscribe(({ data }) => {
   			if (data) {
   				const totalState = data.myState as UserState;
   				this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
@@ -646,56 +644,56 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		Validators.min(minAmount),
   	];
 
-		const calculateDisplayAmount = (amount: number, rate: number): number =>
-			!this.currentCurrencySpend?.fiat && rate
-				? parseFloat((amount * rate).toFixed(2))
-				: amount;
+    const calculateDisplayAmount = (amount: number, rate: number): number =>
+        !this.currentCurrencySpend?.fiat && rate
+            ? parseFloat((amount * rate).toFixed(2))
+            : amount;
   
-		if (this.currentTransaction === TransactionType.Sell) {
-			if (this.currentCurrencySpend?.maxAmount === 0 || this.maxSellAmount < this.currentCurrencySpend?.maxAmount) {
-				maxAmount = this.maxSellAmount;
-				maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
-				currencyDisplay = this.currentCurrencyReceive?.display;
+    if (this.currentTransaction === TransactionType.Sell) {
+        if (this.currentCurrencySpend?.maxAmount === 0 || this.maxSellAmount < this.currentCurrencySpend?.maxAmount) {
+            maxAmount = this.maxSellAmount;
+            maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
+            currencyDisplay = this.currentCurrencyReceive?.display;
 
-				const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
+            const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
 
-				this.amountSpendErrorMessages['max'] = `Amount you'r request exceeds available balance: ${currencyDisplay} ${upodatedMaxAmountDisplay}`;
+            this.amountSpendErrorMessages['max'] = `Amount you'r request exceeds available balance: ${currencyDisplay} ${upodatedMaxAmountDisplay}`;
 
-			} else {
-				maxAmount = this.currentCurrencySpend?.maxAmount;
-				maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
-				currencyDisplay = this.currentCurrencyReceive?.display;
+        } else {
+            maxAmount = this.currentCurrencySpend?.maxAmount;
+            maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
+            currencyDisplay = this.currentCurrencyReceive?.display;
 
-				const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
+            const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
 
-				this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${upodatedMaxAmountDisplay} ${currencyDisplay}` });
-			}
+            this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${upodatedMaxAmountDisplay} ${currencyDisplay}` });
+        }
 
-			validators = [
-				...validators,
-				Validators.max(maxAmount)
-			];
-		} else {
-			if(!maxAmount || maxAmount === 0){
-				if (maxValid !== undefined) {
-					if (maxValid > 0) {
-						this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` });
-					} else {
-						this.amountSpendErrorMessages['max'] = 'widget-internal-overview.spend-max-empty';
-					}
-					validators = [
-						...validators,
-						Validators.max(maxValid)
-					];
-				}
-			} else {
-			this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
-				validators = [
-					...validators,
-					Validators.max(maxAmount)
-				];
-			}
-		}
+        validators = [
+            ...validators,
+            Validators.max(maxAmount)
+        ];
+    } else {
+        if(!maxAmount || maxAmount === 0){
+            if (maxValid !== undefined) {
+                if (maxValid > 0) {
+                    this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` });
+                } else {
+                    this.amountSpendErrorMessages['max'] = 'widget-internal-overview.spend-max-empty';
+                }
+                validators = [
+                    ...validators,
+                    Validators.max(maxValid)
+                ];
+            }
+        } else {
+        this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
+            validators = [
+                ...validators,
+                Validators.max(maxAmount)
+            ];
+        }
+    }
 
   	if(!this.initValidators){
   		this.amountSpendField?.setValidators(validators);
@@ -706,13 +704,13 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   private setReceiveValidators(): void {
   	this.amountReceiveErrorMessages['min'] =  `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`;
   	
-		if(!this.initValidators){
-  		this.amountReceiveField?.setValidators([
-  			Validators.required,
-  			Validators.pattern(NUMBER_PATTERN),
-  		]);
+    if(!this.initValidators){
+        this.amountReceiveField?.setValidators([
+            Validators.required,
+            Validators.pattern(NUMBER_PATTERN),
+        ]);
 
-  		this.amountReceiveField?.updateValueAndValidity();
+        this.amountReceiveField?.updateValueAndValidity();
   	}
   }
 
@@ -744,6 +742,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			}
   			if (this.settings.embedded && !this.settings.transfer) {
   				const emptyList = (this.filteredWallets.length === 0);
+
   				if (emptyList) {
   					this.walletField?.setValue(this.summary.address ?? '');
   					this.errorMessageData = 'Unable to find wallets for selected currency';
@@ -785,6 +784,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   private onCurrenciesUpdated(currency: string, typeCurrency: 'Spend' | 'Receive'): void {
   	if (!this.pTransactionChanged) {
+
   		if(typeCurrency === 'Spend'){
   			this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
 
@@ -801,7 +801,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   			}
   		}
 
-  		this.sendData();
+        this.sendData();
   	}
   }
 
@@ -820,6 +820,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	if (val && !this.pSpendAutoUpdated) {
   		if (this.initValidators) {
   			this.initValidators = false;
+
   			if (this.currentCurrencySpend) {
   				this.setSpendValidators();
   			}
@@ -886,7 +887,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.amountReceiveField?.setValue(undefined);
 
   	this.sendData();
-		this.getMaxSellAmount();
+    this.getMaxSellAmount();
   }
 
   private onWalletSelectorUpdated(val: string): void {
@@ -906,6 +907,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		this.setSpendValidators(this.selectedWallet.total);
   	}
   	const data: CheckoutSummary = new CheckoutSummary();
+    
   	if (this.selectedWallet) {
   		data.address = this.selectedWallet?.address ?? '';
   		data.vaultId = this.selectedWallet?.id ?? '';
@@ -913,6 +915,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   		data.address = val;
   		data.vaultId = '';
   	}
+
   	this.onWalletAddressUpdated.emit(data);
   }
 
@@ -920,12 +923,15 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.validData = false;
   	let spend: number | undefined = undefined;
   	let receive: number | undefined = undefined;
+
   	if (this.amountSpendField?.value && this.amountSpendField?.valid) {
   		spend = parseFloat(this.amountSpendField?.value);
   	}
+
   	if (this.amountReceiveField?.value && this.amountReceiveField?.valid) {
   		receive = parseFloat(this.amountReceiveField?.value);
   	}
+
   	this.updateAmounts(spend, receive);
   }
 

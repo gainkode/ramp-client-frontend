@@ -166,9 +166,7 @@ export class ErrorService {
 				}
 				break;
 		}
-		// } else {
-		//     result = sessionError;
-		// }
+
 		return result;
 	}
 
@@ -179,7 +177,9 @@ export class ErrorService {
 	getCurrentError(): string {
 		const sessionRateCode = sessionStorage.getItem('currentRateErrorCode');
 		const sessionCode = sessionStorage.getItem('currentErrorCode');
+
 		let result = (sessionCode) ? sessionCode ?? '' : '';
+
 		if (result === '') {
 			result = (sessionRateCode) ? sessionRateCode ?? '' : '';
 		}
@@ -189,7 +189,9 @@ export class ErrorService {
 	getCurrentErrorMessage(): string {
 		const sessionRateCode = sessionStorage.getItem('currentRateError');
 		const sessionCode = sessionStorage.getItem('currentError');
+		
 		let result = (sessionCode) ? sessionCode ?? '' : '';
+
 		if (result === '') {
 			result = (sessionRateCode) ? sessionRateCode ?? '' : '';
 		}

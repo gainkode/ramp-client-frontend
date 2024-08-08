@@ -2,18 +2,18 @@
     <mat-form-field>
         <mat-toolbar>
             <div class="file-input-wrapper">
-                <input matInput [(ngModel)]="fileName" readonly name="fileName" />
+                <input matInput readonly name="fileName" [(ngModel)]="fileName" />
                 <button class="btn btn-primary" type="button"> Browse File</button>
             </div>  
         </mat-toolbar>
           <input
-            type="file"
-            [multiple]="multiple"
             #fileInput
+            type="file"
             id="uploadFile"
-            (change)="onFileSelected($event)"
             name="uploadFile"
+            [multiple]="multiple"
             [accept]="requiredFileType"
+            (change)="onFileSelected($event)"
           />
     </mat-form-field>
 </div>

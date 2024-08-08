@@ -3,7 +3,7 @@
     <mat-card-title>Signature</mat-card-title>
   </mat-card-header>
 
-  <div [formGroup]="form" class="inputs-wrap" >
+  <div class="inputs-wrap" [formGroup]="form">
     <mat-form-field appearance="outline" class="size-wider">
       <mat-label>Status</mat-label>
       <mat-select appendTo="body" formControlName="status">
@@ -24,6 +24,15 @@
         <input matInput type="text" formControlName="executedAt" [readonly]="true"/>
       </mat-form-field>
     </fieldset>
+    
+    <app-file-upload *ngIf="isSignatureAdd" [multiple]="true" (fileSelected)="onFileSelected($event)"></app-file-upload>
+
+    <div class="create_docs-buttons">    
+      <button class="btn btn-primary wd-100" type="button" [disabled]="!form.valid || !isFileUploaded || uploadProgress" (click)="onSave()">
+        {{ !uploadProgress ? 'Save' : ''}}
+        <span *ngIf="uploadProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </button>
+    </div>
 
   </div>
 </div>
@@ -38,11 +47,11 @@
   <app-table
     [dataSource]="tableDataSource" 
     [withDetails]="true"
-    (expandDetail)="showDetail($event)"
-    [columns]="config">
+    [columns]="config"
+    (expandDetail)="showDetail($event)">
     <ng-container matColumnDef="...">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let row">
+      <th *matHeaderCellDef mat-header-cell>Actions</th>
+      <td *matCellDef="let row" mat-cell>
         <div class="flex">
           <button
             type="button"
@@ -62,7 +71,7 @@
     </ng-container>
 
     <ng-container matColumnDef="expandedDetail">
-      <td mat-cell *matCellDef="let element" [attr.colspan]="config.length">
+      <td *matCellDef="let element" mat-cell [attr.colspan]="config.length">
         <div class="cell-detail" [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'">
           <app-signtature-doc-details [signatureDocument]="element"></app-signtature-doc-details>
         </div>

@@ -68,9 +68,11 @@
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Monoova !== false"
                     [dashboardData]="dashboardData" 
-                    title="Balances in Monoova Wallet" 
+                    title="Balances in Bank Wallet" 
                     source="monoovaBalances">
                 </app-admin-dashboard-card>
+                <!-- Manoova was changed to Bank, get back later -->
+
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Liquidity !== false"
                     [dashboardData]="dashboardData" 
