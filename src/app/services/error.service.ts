@@ -144,6 +144,9 @@ export class ErrorService {
 			case 'core.transaction_handling_error':
 				result = 'Transaction handling error';
 				break;
+			case 'core.wrong_transaction_parameters_1':
+				result = 'core.wrong_transaction_parameters_1';
+				break;
 			case 'core.transaction_amount_too_low':
 				result = 'Transaction amount too low';
 				break;

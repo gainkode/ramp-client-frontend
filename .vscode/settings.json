@@ -7,12 +7,12 @@
       "editor.tabSize": 2
     },
     "[html]": {
-        "editor.tabSize": 4
+        "editor.tabSize": 2
     },
     "[javascript]": {
-        "editor.tabSize": 4
+        "editor.tabSize": 2
     },
     "[typescript]": {
-        "editor.tabSize": 4
+        "editor.tabSize": 2
     }
   }

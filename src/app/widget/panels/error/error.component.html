@@ -1,6 +1,10 @@
 <div class="__widget-data-box">
     <h1 class="__widget-title-error">
-        {{title | transloco}}
+        @if (title === 'core.wrong_transaction_parameters_1') {
+            Destination address has been already used
+        } @else {
+            {{title | transloco}}
+        }
     </h1>
     <div class="__widget-error-title-block">
         <div class="__widget-error-title-image">
@@ -10,14 +14,14 @@
     <div class="__widget-disclaimer-area">
         <div class="__widget-disclaimer-container text-center">
             <span class="__widget-disclaimer-line">
-                <p>
-                    {{'widget-error.msg-1' | transloco}}
-                </p>
-                <p>
-                    {{'widget-error.msg-2' | transloco}}
-                </p> 
-                <p> {{'widget-error.msg-3' | transloco}}
-                </p>
+                @if (title === 'core.wrong_transaction_parameters_1') {
+                    <p>Reusing the same address for cryptocurrency purchase transactions is prohibited on the platform for security reasons.</p>
+                    <p>Please try again using a different address.</p>
+                } @else {
+                    <p>{{'widget-error.msg-1' | transloco}}</p>
+                    <p>{{'widget-error.msg-2' | transloco}}</p> 
+                    <p>{{'widget-error.msg-3' | transloco}}</p>
+                }
             </span>
         </div>
     </div>

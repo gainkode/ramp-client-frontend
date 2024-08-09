@@ -430,7 +430,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   				this.pager.init('', '');
   				this.nextStage('order_details', 'widget-pager.order_details', 1);
   			}
-
   		} else {
   			this.loadUserParams();
   		}
@@ -441,6 +440,10 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.isSingleOrderDetailsCompleted = false;
   		}
   	}
+
+		if (this.transactionErrorTitle === 'core.wrong_transaction_parameters_1') {
+			this.summary.address = ''; // clear address, fore user write another
+		}
 
 		this.transactionErrorTitle = undefined;
   }
@@ -534,45 +537,45 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.errorMessage = '';
   	this.inProgress = true;
 		
-		this.dataService.getWidget(this.userParamsId).valueChanges
-			.pipe(take(1), takeUntil(this.destroy$))
-			.subscribe({
-				next: ({ data }) => {
-					this.inProgress = false;
-					this.initData(data.getWidget as Widget);
+	this.dataService.getWidget(this.userParamsId).valueChanges
+		.pipe(take(1), takeUntil(this.destroy$))
+		.subscribe({
+			next: ({ data }) => {
+				this.inProgress = false;
+				this.initData(data.getWidget as Widget);
 
-					if (this.widget.transaction) {
-						const transactionType = this.widget.transaction.toLowerCase();
-						const validTransactionType = ['buy', 'sell'].includes(transactionType);
+				if (this.widget.transaction) {
+					const transactionType = this.widget.transaction.toLowerCase();
+					const validTransactionType = ['buy', 'sell'].includes(transactionType);
 
-						if (!validTransactionType) {
-							this.showTransactionError('Wrong widget settings');
-							return;
-						}
+					if (!validTransactionType) {
+						this.showTransactionError('Wrong widget settings');
+						return;
 					}
-
-					if (this.widget.orderDefault) {
-						if (this.auth.user?.email !== this.widget.email) {
-							this.summary.email = '';
-						}
-						this.orderDetailsComplete(this.widget.email);
-					} else {
-						const isOrderDetails = this.quickCheckout || this.summary.agreementChecked;
-						this.pager.init(
-							isOrderDetails ? 'order_details' : 'intro_disclaimer',
-							isOrderDetails ?  'widget-pager.order_details' : 'widget-pager.disclaimer'
-						);
-					}
-
-					this.initLoading = false;
-				}, 
-				error: () => {
-					this.inProgress = false;
-					this.initData(undefined);
-					this.showTransactionError('Wrong widget settings');
-					this.setOrderDetailsStep();
 				}
-		});
+
+				if (this.widget.orderDefault) {
+					if (this.auth.user?.email !== this.widget.email) {
+						this.summary.email = '';
+					}
+					this.orderDetailsComplete(this.widget.email);
+				} else {
+					const isOrderDetails = this.quickCheckout || this.summary.agreementChecked;
+					this.pager.init(
+						isOrderDetails ? 'order_details' : 'intro_disclaimer',
+						isOrderDetails ?  'widget-pager.order_details' : 'widget-pager.disclaimer'
+					);
+				}
+
+				this.initLoading = false;
+			}, 
+			error: () => {
+				this.inProgress = false;
+				this.initData(undefined);
+				this.showTransactionError('Wrong widget settings');
+				this.setOrderDetailsStep();
+			}
+	});
   }
 
   loadUserWallets(): void {
@@ -1012,45 +1015,52 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   private createTransactionInternal(): void {
   	this.errorMessage = '';
   	this.inProgress = true;
+	
   	const tempStageId = this.pager.swapStage('initialization');
   	this.initMessage = 'global.widget_processing';
 
 		this.dataService.createTransaction(this.transactionInput)
-		.pipe(takeUntil(this.destroy$))
-			.subscribe(({ data }) => {
-				if (!this.notificationStarted) {
-					this.startNotificationListener();
-				}
-				const order = data.createTransaction as TransactionShort;
-				this.inProgress = false;
-				if(order.requiredFields && order.requiredFields.length !== 0) {
-					this.userInfoRequired(order.requiredFields);
-					return;
-				}
-				if (order.code) {
-					this.transactionWithCodeHandler(order);
-				} else {
-					this.transactionWithoutCodeHandler(order, tempStageId);
-				}
-			}, (error) => {
-				this.inProgress = false;
-
-				if (tempStageId === 'verification') {
-					this.pager.goBack();
-				}
-				
-				if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
-					this.handleAuthError();
-				} else {
-					const msg = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
-					this.errorMessage = msg;
-					if (this.widget.embedded) {
-						this.onError.emit({ errorMessage: msg } as PaymentErrorDetails);
-					} else {
-						this.setError('Transaction handling failed', msg);
+			.pipe(takeUntil(this.destroy$))
+				.subscribe(({ data }) => {
+					if (!this.notificationStarted) {
+						this.startNotificationListener();
 					}
-				}
-			});
+					const order = data.createTransaction as TransactionShort;
+					this.inProgress = false;
+					
+					if(order.requiredFields && order.requiredFields.length !== 0) {
+						this.userInfoRequired(order.requiredFields);
+						return;
+					}
+					if (order.code) {
+						this.transactionWithCodeHandler(order);
+					} else {
+						this.transactionWithoutCodeHandler(order, tempStageId);
+					}
+				}, (error) => {
+					this.inProgress = false;
+
+					if (tempStageId === 'verification') {
+						this.pager.goBack();
+					}
+					
+					if (this.errorHandler.getCurrentError() === 'auth.token_invalid' || error.message === 'Access denied') {
+						this.handleAuthError();
+					} else {
+						const msg = this.errorHandler.getError(error.message, 'Unable to register a new transaction');
+						this.errorMessage = msg;
+						
+						if (this.widget.embedded) {
+							this.onError.emit({ errorMessage: msg } as PaymentErrorDetails);
+						} else {
+							if (msg === 'core.wrong_transaction_parameters_1') {
+								this.setError(msg, msg);
+							} else {
+								this.setError('Transaction handling failed', msg);
+							}
+						}
+					}
+				});
   }
 	
   private transactionWithCodeHandler(order: TransactionShort): void {
