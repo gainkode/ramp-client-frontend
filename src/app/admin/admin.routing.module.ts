@@ -194,15 +194,9 @@ export const routes: Routes = [
 			},
 			{
 				path: 'tiers',
-				
 				component: AdminKycTiersComponent,
 				data: { header: 'KYC Tiers' }
 			},
-			// {
-			//   path: 'kyc-schemes',
-			//   component: AdminKycSchemesComponent,
-			//   data: { header: 'KYC Schemes' }
-			// },
 			{
 				path: 'black-list',
 				data: { header: 'Black list', code: UserRoleObjectCode.CountryBlackList },

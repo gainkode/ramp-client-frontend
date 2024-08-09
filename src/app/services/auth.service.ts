@@ -513,20 +513,6 @@ query {
 }
 `;
 
-const GET_MY_SETTINGS_KYC = gql`
-query {
-    mySettingsKyc {
-        levels {
-            settingsKycLevelId,
-            name,
-            data,
-            description,
-            order
-        }
-    }
-}
-`;
-
 const GET_SIGNUP_REQUIRED_FIELDS = gql`
 query {
     mySettingsKyc {
@@ -1028,13 +1014,6 @@ export class AuthService {
 	getSettingsCommon(): QueryRef<any, EmptyObject> {
 		return this.apollo.watchQuery<any>({
 			query: GET_SETTINGS_COMMON,
-			fetchPolicy: 'network-only'
-		});
-	}
-
-	getMyKycSettings(): QueryRef<any, EmptyObject> {
-		return this.apollo.watchQuery<any>({
-			query: GET_MY_SETTINGS_KYC,
 			fetchPolicy: 'network-only'
 		});
 	}

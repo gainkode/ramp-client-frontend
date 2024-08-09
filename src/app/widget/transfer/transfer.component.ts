@@ -402,19 +402,6 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   // ====================
 
   // == KYC =============
-  kycBack(): void {
-  	this.stageBack();
-  }
-
-  kycComplete(): void {
-  	if (this.paymentProviders.length < 1) {
-  		this.errorMessage = `No supported payment providers found for "${this.summary.currencyFrom}"`;
-  	} else if (this.paymentProviders.length > 1) {
-  		this.nextStage('payment', 'Payment info', 5);
-  	} else {
-  		this.selectProvider(this.paymentProviders[0]);
-  	}
-  }
 
 	requiredFieldsComplete(): void {
 		this.createTransactionInternal();

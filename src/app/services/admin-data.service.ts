@@ -457,43 +457,6 @@ query GetSettingsKycTiers {
   }
 `;
 
-const GET_KYC_SETTINGS = gql`
-  query GetSettingsKyc {
-    getSettingsKyc(
-      filter: ""
-      orderBy: [
-        { orderBy: "default", desc: true }
-        { orderBy: "name", desc: false }
-      ]
-    ) {
-      count
-      list {
-        default
-        settingsKycId
-        name
-        description
-        targetKycProviders
-        targetUserType
-        targetUserModes
-        targetFilterType
-        targetFilterValues
-        requireUserFullName
-        requireUserPhone
-        requireUserBirthday
-        requireUserAddress
-        requireUserFlatNumber
-        levels {
-          settingsKycLevelId
-          name
-          data
-          description
-          order
-        }
-      }
-    }
-  }
-`;
-
 const GET_KYC_LEVELS = gql`
   query GetSettingsKycLevels($filter: String) {
     getSettingsKycLevels(
@@ -1877,44 +1840,6 @@ mutation AddWireTransferBankAccount(
 }
 `;
 
-const ADD_SETTINGS_KYC = gql`
-  mutation AddSettingsKyc(
-    $name: String!
-    $description: String
-    $targetKycProviders: [KycProvider!]
-    $targetUserType: UserType!
-    $targetUserModes: [UserMode!]
-    $targetFilterType: SettingsKycTargetFilterType!
-    $targetFilterValues: [String!]
-    $levelIds: [String!]
-    $requireUserFullName: Boolean
-    $requireUserPhone: Boolean
-    $requireUserBirthday: Boolean
-    $requireUserAddress: Boolean
-    $requireUserFlatNumber: Boolean
-  ) {
-    addSettingsKyc(
-      settings: {
-        name: $name
-        description: $description
-        targetKycProviders: $targetKycProviders
-        targetUserType: $targetUserType
-        targetUserModes: $targetUserModes
-        targetFilterType: $targetFilterType
-        targetFilterValues: $targetFilterValues
-        requireUserFullName: $requireUserFullName
-        requireUserPhone: $requireUserPhone
-        requireUserBirthday: $requireUserBirthday
-        requireUserAddress: $requireUserAddress
-        requireUserFlatNumber: $requireUserFlatNumber
-        levelIds: $levelIds
-      }
-    ) {
-      settingsKycId
-    }
-  }
-`;
-
 const ADD_SETTINGS_KYC_TIER = gql`
   mutation AddSettingsKycTier(
     $name: String!
@@ -2885,46 +2810,6 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
   }
 `;
 
-const UPDATE_SETTINGS_KYC = gql`
-  mutation UpdateSettingsKyc(
-    $settingsId: ID!
-    $name: String!
-    $description: String
-    $targetKycProviders: [KycProvider!]
-    $targetUserType: UserType!
-    $targetUserModes: [UserMode!]
-    $targetFilterType: SettingsKycTargetFilterType!
-    $targetFilterValues: [String!]
-    $requireUserFullName: Boolean
-    $requireUserPhone: Boolean
-    $requireUserBirthday: Boolean
-    $requireUserAddress: Boolean
-    $requireUserFlatNumber: Boolean
-    $levelIds: [String!]
-  ) {
-    updateSettingsKyc(
-      settingsId: $settingsId
-      settings: {
-        name: $name
-        description: $description
-        targetKycProviders: $targetKycProviders
-        targetUserType: $targetUserType
-        targetUserModes: $targetUserModes
-        targetFilterType: $targetFilterType
-        targetFilterValues: $targetFilterValues
-        requireUserFullName: $requireUserFullName
-        requireUserPhone: $requireUserPhone
-        requireUserBirthday: $requireUserBirthday
-        requireUserAddress: $requireUserAddress
-        requireUserFlatNumber: $requireUserFlatNumber
-        levelIds: $levelIds
-      }
-    ) {
-      settingsKycId
-    }
-  }
-`;
-
 const UPDATE_SETTINGS_KYC_TIER = gql`
   mutation UpdateSettingsKycTier(
     $settingsId: ID!
@@ -3001,13 +2886,6 @@ const DELETE_WIRE_TRANSFER_SETTINGS = gql`
   }
 `;
 
-const DELETE_SETTINGS_KYC = gql`
-  mutation DeleteSettingsKyc($settingsId: ID!) {
-    deleteSettingsKyc(settingsId: $settingsId) {
-      settingsKycId
-    }
-  }
-`;
 
 const DELETE_SETTINGS_KYC_TIER = gql`
   mutation DeleteSettingsKycTier($settingsId: ID!) {
@@ -3164,28 +3042,6 @@ export class AdminDataService {
 				}
 			})
 		);
-	}
-
-	getKycSettings(): Observable<{ list: Array<KycScheme>; count: number; }> {
-		return this.watchQuery<{ getSettingsKyc: SettingsKycListResult; }, QueryGetSettingsKycArgs>({
-			query: GET_KYC_SETTINGS,
-			fetchPolicy: 'network-only'
-		})
-			.pipe(
-				map(result => {
-					if (result.data?.getSettingsKyc?.list && result.data?.getSettingsKyc?.count) {
-						return {
-							list: result.data.getSettingsKyc.list.map(item => new KycScheme(item)),
-							count: result.data.getSettingsKyc.count
-						};
-					} else {
-						return {
-							list: [],
-							count: 0
-						};
-					}
-				})
-			);
 	}
 
 	getKycLevels(userType: UserType | null): Observable<{ list: Array<KycLevel>; count: number; }> {
@@ -4125,47 +3981,6 @@ export class AdminDataService {
 			});
 	}
 
-	saveKycSettings(settings: KycScheme, create: boolean): Observable<any> {
-		return create
-			? this.apollo.mutate({
-				mutation: ADD_SETTINGS_KYC,
-				variables: {
-					name: settings.name,
-					description: settings.description,
-					targetFilterType: settings.target,
-					targetFilterValues: settings.targetValues,
-					targetKycProviders: settings.kycProviders,
-					targetUserType: settings.userType,
-					targetUserModes: settings.userModes,
-					requireUserFullName: settings.requireUserFullName,
-					requireUserPhone: settings.requireUserPhone,
-					requireUserBirthday: settings.requireUserBirthday,
-					requireUserAddress: settings.requireUserAddress,
-					requireUserFlatNumber: settings.requireUserFlatNumber,
-					levelIds: [settings.levelId]
-				}
-			})
-			: this.apollo.mutate({
-				mutation: UPDATE_SETTINGS_KYC,
-				variables: {
-					settingsId: settings.id,
-					name: settings.name,
-					description: settings.description,
-					targetFilterType: settings.target,
-					targetFilterValues: settings.targetValues,
-					targetKycProviders: settings.kycProviders,
-					targetUserType: settings.userType,
-					targetUserModes: settings.userModes,
-					requireUserFullName: settings.requireUserFullName,
-					requireUserPhone: settings.requireUserPhone,
-					requireUserBirthday: settings.requireUserBirthday,
-					requireUserAddress: settings.requireUserAddress,
-					requireUserFlatNumber: settings.requireUserFlatNumber,
-					levelIds: [settings.levelId]
-				}
-			});
-	}
-
 	saveKycTierSettings(settings: KycTier, create: boolean): Observable<any> {
 		return create
 			? this.apollo.mutate({
@@ -4441,15 +4256,6 @@ export class AdminDataService {
 			mutation: DELETE_WIRE_TRANSFER_SETTINGS,
 			variables: {
 				bankAccountId: accountId
-			}
-		});
-	}
-
-	deleteKycSettings(settingsId: string): Observable<any> {
-		return this.apollo.mutate({
-			mutation: DELETE_SETTINGS_KYC,
-			variables: {
-				settingsId
 			}
 		});
 	}

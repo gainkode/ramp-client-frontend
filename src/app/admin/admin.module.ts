@@ -61,8 +61,6 @@ import { AdminLevelsComponent } from './components/kyc/levels/levels.component';
 import { AdminLevelDetailsComponent } from './components/kyc/levels/level-details.component';
 import { AdminBankAccountDetailsComponent } from './components/costs/bank-accounts/account-details.component';
 import { AdminBankAccountsComponent } from './components/costs/bank-accounts/accounts.component';
-import { AdminKycSchemesComponent } from './components/kyc/schemes/schemes.component';
-import { AdminKycSchemeDetailsComponent } from './components/kyc/schemes/kyc-details.component';
 import { AdminCostSchemesComponent } from './components/costs/schemes/schemes.component';
 import { AdminCostSchemeDetailsComponent } from './components/costs/schemes/cost-details.component';
 import { AdminFeeSchemesComponent } from './components/fees/fees.component';
@@ -212,8 +210,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 		AdminLevelDetailsComponent,
 		AdminKycTiersComponent, 
 		AdminKycTierDetailsComponent,
-		AdminKycSchemesComponent, 
-		AdminKycSchemeDetailsComponent,
 		AdminCountryBlackListComponent, 
 		AdminCountryBlackListDetailsComponent,
 		AdminCostSchemesComponent, 
