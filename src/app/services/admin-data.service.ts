@@ -800,6 +800,7 @@ const GET_TRANSACTIONS = gql`
         destVaultId
         executed
         feeDetails
+		costDetails
         feeFiat
         feeMinFiat
         feePercent
