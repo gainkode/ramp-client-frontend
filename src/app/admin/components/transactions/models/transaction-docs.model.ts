@@ -59,8 +59,8 @@ export interface UploadSignatureParams {
 
 export interface FileInfoObject{
 	documentId?: string;
-  fileName: string;
-  fileType: SignatureDocumnetFileType;
+	fileName: string;
+	fileType: SignatureDocumnetFileType;
 }
 
 // export interface GetSignatureResult {

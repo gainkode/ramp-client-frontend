@@ -13,6 +13,8 @@ import {
 	PaymentInstrument,
 	PaymentOrder,
 	RiskLevel,
+	SettingsCost,
+	SettingsFee,
 	Transaction,
 	TransactionKycStatus,
 	TransactionSh,
@@ -148,6 +150,8 @@ export class TransactionItemFull {
 	recallRegistered: Date | undefined = undefined;
 	recallNumber: string | undefined;
 	paymentOrderRecallNumberLink: string | undefined;
+	feeDetails: SettingsFee;
+	costDetails: SettingsCost;
 
 	constructor(data: Transaction | TransactionShort | null) {
 		if (data !== null) {
@@ -222,6 +226,8 @@ export class TransactionItemFull {
 			}
 
 			this.instrumentDetailsRaw = transactionData?.instrumentDetails;
+			this.feeDetails = JSON.parse(transactionData?.feeDetails ?? '{}');
+			this.costDetails = JSON.parse(transactionData?.costDetails ?? '{}');
 			this.widgetUserParams = transactionData.widgetUserParams;
 			this.comment = transactionData.comment ?? '';
 

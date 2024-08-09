@@ -19,13 +19,13 @@ import { DatePipe } from '@angular/common';
   selector: 'app-admin-transaction-docs',
   templateUrl: './transaction-docs.component.html',
   styleUrls: ['./transaction-docs.component.scss'],
-	animations: tableAnimation,
+  animations: tableAnimation,
   providers: [
     TransactionDocsApi,
     TransactionDocsStateService,
     TransactionDocsFacadeService,
   ],
-	changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionDocsComponent implements OnInit, OnDestroy {
 	@Input() transactionId: string;
@@ -140,7 +140,11 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 
 
 		for (let pair of (this.formData as any).entries()) {
-			console.log(pair[0] + ': ' + pair[1]);
+			if (pair[1] instanceof File) {
+				console.log(pair[0] + ': ' + pair[1].name); // Logs the file name
+			} else {
+				console.log(pair[0] + ': ' + pair[1]); // Logs other form data
+			}
 		}
 
 		// filesInfo: FileInfoObject[]; 
@@ -152,7 +156,7 @@ export class TransactionDocsComponent implements OnInit, OnDestroy {
 
 		this.uploadProgress = 1;
 
-		return
+		// return
 		const upload$ = this.serviceApi.addSignature(this.formData)
 			.pipe(takeUntil(this.destroy$), finalize(() => this.reset()));
 

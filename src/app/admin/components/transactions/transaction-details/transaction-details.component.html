@@ -288,6 +288,7 @@
                   <app-admin-details-item label="Payment Provider" [value]="data?.paymentProvider"></app-admin-details-item>
                 </div>
               </div>
+
               <div class="row">
                 <div class="col-lg-8 col-md-12">
                   <app-admin-details-item label="Original Payment Order Id" [value]="data?.originalPaymentOrderId"></app-admin-details-item>
@@ -460,6 +461,15 @@
             </div>
 
             <app-admin-details-item label="Blockchain fee" [value]="data?.transferFee"></app-admin-details-item>
+            
+            <div class="row">
+              <div class="col-lg-3 col-md-12">
+                <app-admin-details-item label="Fee scheme" [value]="data?.feeDetails.name"></app-admin-details-item>
+              </div>
+              <div class="col-lg-9 col-md-12">
+                <app-admin-details-item label="Cost scheme" [value]="data?.costDetails.name"></app-admin-details-item>
+              </div>
+            </div>
             
             <div class="row">
               <div class="col-lg-3 col-md-12">
