@@ -190,10 +190,12 @@ export const routes: Routes = [
 			{
 				path: 'levels',
 				component: AdminLevelsComponent,
+				canActivate: [AdminGuard],
 				data: { header: 'Levels' }
 			},
 			{
 				path: 'tiers',
+				canActivate: [AdminGuard],
 				component: AdminKycTiersComponent,
 				data: { header: 'KYC Tiers' }
 			},

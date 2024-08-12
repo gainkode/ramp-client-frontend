@@ -235,7 +235,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
     		this.flatNumberControl?.setValidators([]);
     	}
     	if (this.requireUserBirthday && user) {
-    		const birthday = user.birthday as Date;
+    		const birthday = new Date(user.birthday);
     		if (birthday && birthday !== null) {
     			const d = `${birthday.getDate()}/${birthday.getMonth() + 1}/${birthday.getFullYear()}`;
     			this.birthdayControl?.setValue(d);
