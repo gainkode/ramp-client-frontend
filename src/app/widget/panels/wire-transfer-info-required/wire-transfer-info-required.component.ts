@@ -92,7 +92,6 @@ export class WidgetWireTransferInfoRequiredComponent implements OnInit, OnDestro
     }
 
     ngOnInit(): void {
-    	// const fieldsData = this.auth.getSignupRequiredFields().valueChanges.pipe(take(1));
     	for(const field of this.requiredFields){
     		switch(field){
     			case 'lastName':

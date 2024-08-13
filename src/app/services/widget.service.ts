@@ -98,7 +98,7 @@ export class WidgetService {
 
 	authenticate(login: string, widgetId: string): void {
 		// Consider that the user is one-time wallet user rather than internal one
-		// this.authenticateInternal(login, widgetId);
+
 		const recaptcha = localStorage.getItem('recaptchaId');
 		if (recaptcha || !this.onQuickcheckout) {
 			this.authenticateInternal(login, widgetId);

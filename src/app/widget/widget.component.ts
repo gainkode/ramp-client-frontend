@@ -881,12 +881,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	);
   }
 
-  // ====================
 
   // == Payment ===========
   requiredFieldsComplete(): void {
   	this.createTransactionInternal();
-  	// this.widgetService.getWireTransferSettings(this.summary, this.widget);
   }
 
   processingComplete(): void {

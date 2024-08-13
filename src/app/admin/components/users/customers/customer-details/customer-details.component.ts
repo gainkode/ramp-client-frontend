@@ -221,7 +221,6 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
 
 			if(data.affiliateId) {
 				this.setAffilate(data.affiliateId);
-  			// this.dataForm.get('affiliate')?.setValue(data.affiliateId);
   		}
 
   		if (data.userType?.id === UserType.Merchant) {

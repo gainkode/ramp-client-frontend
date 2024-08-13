@@ -41,9 +41,14 @@
                   <label class="main-content-label tx-11 tx-medium tx-gray-600">
                     Administrators email addresses
                   </label>
-                  <ng-select [items]="emails" [addTag]="addTagPromise" [multiple]="true" bindLabel="name"
-                    [loading]="emailLoading" formControlName="adminEmails">
-                    <ng-template ng-tag-tmp let-search="searchTerm">
+                  <ng-select 
+                    bindLabel="name" 
+                    formControlName="adminEmails" 
+                    [items]="emails" 
+                    [addTag]="addTagPromise"
+                    [multiple]="true" 
+                    [loading]="emailLoading">
+                    <ng-template let-search="searchTerm" ng-tag-tmp>
                       <b>Add address</b>: {{search}}
                     </ng-template>
                   </ng-select>
@@ -98,9 +103,14 @@
                         Email conformation code maximal length
                         <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                       </label>
-                      <input class="form-control"
-                        [ngClass]="{'has-error': !form.controls.emailCodeNumberLength.valid}" type="text"
-                        formControlName="emailCodeNumberLength" maxlength="7" placeholder="5" required>
+                      <input 
+                        class="form-control"
+                        type="text" 
+                        formControlName="emailCodeNumberLength"
+                        maxlength="7" 
+                        placeholder="5"
+                        required 
+                        [ngClass]="{'has-error': !form.controls.emailCodeNumberLength.valid}">
                       <div
                         *ngIf="(form.controls.emailCodeNumberLength.touched || submitted) && (form.controls.emailCodeNumberLength.errors?.['required'])"
                         class="tx-danger">
@@ -326,8 +336,11 @@
                         <label class="main-content-label tx-11 tx-medium tx-gray-600">
                           Withdrawal To End User Source Vault Account Id
                         </label>
-                        <input class="form-control" type="text"
-                          formControlName="fireblocksWithdrawalToEndUserSourceVaultAccountId" />
+                        <app-admin-withdrawal-address [cryptoList]="cryptoList" 
+                          [values]="form.controls.fireblocksWithdrawalToEndUserSourceVaultAccountId?.value"
+                          (save)="addFireblocksWithdrawalToEndUserSourceVaultAccountId($event)"
+                          (delete)="removeWithdrawalToEndUserSourceVaultAccountId($event)">
+                        </app-admin-withdrawal-address>
                       </div>
 
                       <div class="form-group">
@@ -446,9 +459,13 @@
                           Cached Vault Account Lifetime, in ms
                           <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                         </label>
-                        <input class="form-control"
-                          [ngClass]="{'has-error': !form.controls.trustologyCachedVaultAccountLifetime.valid}"
-                          type="text" formControlName="trustologyCachedVaultAccountLifetime" maxlength="7" required>
+                        <input 
+                          class="form-control"
+                          type="text"
+                          formControlName="trustologyCachedVaultAccountLifetime" 
+                          maxlength="7" 
+                          required 
+                          [ngClass]="{'has-error': !form.controls.trustologyCachedVaultAccountLifetime.valid}">
                         <div
                           *ngIf="(form.controls.trustologyCachedVaultAccountLifetime.touched || submitted) && (form.controls.trustologyCachedVaultAccountLifetime.errors?.['required'])"
                           class="tx-danger">
@@ -577,9 +594,13 @@
                         Benchmark Tracking Interval, ms
                         <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                       </label>
-                      <input class="form-control"
-                        [ngClass]="{'has-error': !form.controls.liquidityBenchmarkTrackingInterval.valid}" type="text"
-                        formControlName="liquidityBenchmarkTrackingInterval" maxlength="7" required>
+                      <input 
+                        class="form-control"
+                        type="text" 
+                        formControlName="liquidityBenchmarkTrackingInterval"
+                        maxlength="7" 
+                        required 
+                        [ngClass]="{'has-error': !form.controls.liquidityBenchmarkTrackingInterval.valid}">
                       <div
                         *ngIf="(form.controls.liquidityBenchmarkTrackingInterval.touched || submitted) && (form.controls.liquidityBenchmarkTrackingInterval.errors?.['required'])"
                         class="tx-danger">
@@ -601,9 +622,13 @@
                         Crypto Rate Lifetime, ms
                         <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                       </label>
-                      <input class="form-control"
-                        [ngClass]="{'has-error': !form.controls.liquidityCryptoRateLifetime.valid}" type="text"
-                        formControlName="liquidityCryptoRateLifetime" maxlength="7" required>
+                      <input 
+                        class="form-control"
+                        type="text" 
+                        formControlName="liquidityCryptoRateLifetime"
+                        maxlength="7" 
+                        required 
+                        [ngClass]="{'has-error': !form.controls.liquidityCryptoRateLifetime.valid}">
                       <div
                         *ngIf="(form.controls.liquidityCryptoRateLifetime.touched || submitted) && (form.controls.liquidityCryptoRateLifetime.errors?.['required'])"
                         class="tx-danger">
@@ -625,9 +650,13 @@
                         Exchange Info Lifetime, ms
                         <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                       </label>
-                      <input class="form-control"
-                        [ngClass]="{'has-error': !form.controls.liquidityExchangeInfoLifetime.valid}" type="text"
-                        formControlName="liquidityExchangeInfoLifetime" maxlength="7" required>
+                      <input 
+                        class="form-control"
+                        type="text" 
+                        formControlName="liquidityExchangeInfoLifetime"
+                        maxlength="7" 
+                        required 
+                        [ngClass]="{'has-error': !form.controls.liquidityExchangeInfoLifetime.valid}">
                       <div
                         *ngIf="(form.controls.liquidityExchangeInfoLifetime.touched || submitted) && (form.controls.liquidityExchangeInfoLifetime.errors?.['required'])"
                         class="tx-danger">
@@ -649,10 +678,13 @@
                         Exchange Orders Tracking Time Delta, in days
                         <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                       </label>
-                      <input class="form-control"
-                        [ngClass]="{'has-error': !form.controls.liquidityExchangeOrdersTrackingTimedeltaDays.valid}"
-                        type="text" formControlName="liquidityExchangeOrdersTrackingTimedeltaDays" maxlength="7"
-                        required>
+                      <input 
+                        class="form-control"
+                        type="text"
+                        formControlName="liquidityExchangeOrdersTrackingTimedeltaDays" 
+                        maxlength="7" 
+                        required
+                        [ngClass]="{'has-error': !form.controls.liquidityExchangeOrdersTrackingTimedeltaDays.valid}">
                       <div
                         *ngIf="(form.controls.liquidityExchangeOrdersTrackingTimedeltaDays.touched || submitted) && (form.controls.liquidityExchangeOrdersTrackingTimedeltaDays.errors?.['required'])"
                         class="tx-danger">
@@ -674,9 +706,13 @@
                         Exchange Tracking Interval, ms
                         <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                       </label>
-                      <input class="form-control"
-                        [ngClass]="{'has-error': !form.controls.liquidityExchangeTrackingInterval.valid}" type="text"
-                        formControlName="liquidityExchangeTrackingInterval" maxlength="7" required>
+                      <input 
+                        class="form-control"
+                        type="text" 
+                        formControlName="liquidityExchangeTrackingInterval"
+                        maxlength="7" 
+                        required 
+                        [ngClass]="{'has-error': !form.controls.liquidityExchangeTrackingInterval.valid}">
                       <div
                         *ngIf="(form.controls.liquidityExchangeTrackingInterval.touched || submitted) && (form.controls.liquidityExchangeTrackingInterval.errors?.['required'])"
                         class="tx-danger">
@@ -698,9 +734,13 @@
                         Settings Currency Lifetime, ms
                         <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                       </label>
-                      <input class="form-control"
-                        [ngClass]="{'has-error': !form.controls.liquiditySettingsCurrencyLifetime.valid}" type="text"
-                        formControlName="liquiditySettingsCurrencyLifetime" maxlength="7" required>
+                      <input 
+                        class="form-control"
+                        type="text" 
+                        formControlName="liquiditySettingsCurrencyLifetime"
+                        maxlength="7" 
+                        required 
+                        [ngClass]="{'has-error': !form.controls.liquiditySettingsCurrencyLifetime.valid}">
                       <div
                         *ngIf="(form.controls.liquiditySettingsCurrencyLifetime.touched || submitted) && (form.controls.liquiditySettingsCurrencyLifetime.errors?.['required'])"
                         class="tx-danger">
@@ -1005,7 +1045,7 @@
                           <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                         </label>
                         <input class="form-control" type="text" formControlName="refundTransactionId" required>
-                        <button type="button" *ngIf="permission > 1" [disabled]="paymentProviderRefundInProgress" class="btn btn-primary pd-x-30 me-2 mg-t-5" (click)="onPaymentProviderRefund('Monoova', payment_provider_payout)">
+                        <button *ngIf="permission > 1" type="button" class="btn btn-primary pd-x-30 me-2 mg-t-5" [disabled]="paymentProviderRefundInProgress" (click)="onPaymentProviderRefund('Monoova', payment_provider_payout)">
                           <span *ngIf="paymentProviderRefundInProgress" class="spinner-border spinner-border-sm" role="status"
                             aria-hidden="true"></span>
                           Refund
@@ -1215,79 +1255,6 @@
                         [clearOnBackspace]=true>
                       </ng-select>
                     </div>
-
-                    <!-- <div class="form-group">
-                      <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                        Payment Code Number Length
-                        <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                      </label>
-                      <input class="form-control"
-                        [ngClass]="{'has-error': !form.controls.transactionsPaymentCodeNumberLength.valid}"
-                        type="text" formControlName="transactionsPaymentCodeNumberLength" maxlength="7" required>
-                      <div
-                        *ngIf="(form.controls.transactionsPaymentCodeNumberLength.touched || submitted) && (form.controls.transactionsPaymentCodeNumberLength.errors?.['required'])"
-                        class="tx-danger">
-                        <small>
-                          Please specify length value
-                        </small>
-                      </div>
-                      <div
-                        *ngIf="(form.controls.transactionsPaymentCodeNumberLength.touched || submitted) && (form.controls.transactionsPaymentCodeNumberLength.errors?.['pattern'])"
-                        class="tx-danger">
-                        <small>
-                          Invalid number value
-                        </small>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                        Transaction Code Number Length
-                        <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                      </label>
-                      <input class="form-control"
-                        [ngClass]="{'has-error': !form.controls.transactionsTransactionCodeNumberLength.valid}"
-                        type="text" formControlName="transactionsTransactionCodeNumberLength" maxlength="7" required>
-                      <div
-                        *ngIf="(form.controls.transactionsTransactionCodeNumberLength.touched || submitted) && (form.controls.transactionsTransactionCodeNumberLength.errors?.['required'])"
-                        class="tx-danger">
-                        <small>
-                          Please specify length value
-                        </small>
-                      </div>
-                      <div
-                        *ngIf="(form.controls.transactionsTransactionCodeNumberLength.touched || submitted) && (form.controls.transactionsTransactionCodeNumberLength.errors?.['pattern'])"
-                        class="tx-danger">
-                        <small>
-                          Invalid number value
-                        </small>
-                      </div>
-                    </div>
-
-                    <div class="form-group">
-                      <label class="main-content-label tx-11 tx-medium tx-gray-600">
-                        QuickCheckout Transaction Confirmation Lifetime, ms
-                        <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
-                      </label>
-                      <input class="form-control"
-                        [ngClass]="{'has-error': !form.controls.transactionsQuickCheckoutTransactionConfirmationLifetime.valid}"
-                        type="text" formControlName="transactionsQuickCheckoutTransactionConfirmationLifetime"
-                        maxlength="7" required>
-                      <div
-                        *ngIf="(form.controls.transactionsQuickCheckoutTransactionConfirmationLifetime.touched || submitted) && (form.controls.transactionsQuickCheckoutTransactionConfirmationLifetime.errors?.['required'])"
-                        class="tx-danger">
-                        <small>
-                          Please specify lifetime value
-                        </small>
-                      </div>
-                      <div
-                        *ngIf="(form.controls.transactionsQuickCheckoutTransactionConfirmationLifetime.touched || submitted) && (form.controls.transactionsQuickCheckoutTransactionConfirmationLifetime.errors?.['pattern'])"
-                        class="tx-danger">
-                        <small>
-                          Invalid number value
-                        </small>
-                      </div>
-                    </div> -->
                   </mat-expansion-panel>
                 </mat-accordion>
               </div>

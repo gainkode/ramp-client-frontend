@@ -38,12 +38,11 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 	paymentProviderPayoutInProgress = false;
 	paymentProviderRefundInProgress = false;
 	emails: string[] = [];
-	refundAmount = 0;
-	refundTransactionId = '';
 	emailLoading = false;
 	adminAdditionalSettings: Record<string, any> = {};
 	defaultCustodyWithdrawalKeys: { [key: string]: string; } = {};
 	defaultLiquidityWithdrawalKeys: { [key: string]: string; } = {};
+	defaultEndUserSourceVaultAddressesKeys: { [key: string]: string; } = {};
 	additionalSettings: Record<string, any> = {};
 	cryptoList: CurrencyView[] = [];
 	riskFrames: FrameBlock[] = [
@@ -85,7 +84,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		fireblocksTrackWithdrawalsOneByOne: [false],
 		fireblocksWithdrawalFromCustodyProviderDestinationAddress: [this.defaultCustodyWithdrawalKeys],
 		fireblocksWithdrawalFromLiquidityProviderDestinationAddress: [this.defaultLiquidityWithdrawalKeys],
-		fireblocksWithdrawalToEndUserSourceVaultAccountId: [''],
+		fireblocksWithdrawalToEndUserSourceVaultAccountId: [this.defaultEndUserSourceVaultAddressesKeys],
 		fireblocksWithdrawalToEndUserSpeed: ['', { validators: [Validators.required], updateOn: 'change' }],
 		// Custody providers - Trustology
 		trustologyCachedDepositAddressLifetime: [0, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
@@ -182,6 +181,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 
 	private loadCommonSettings(): void{
 		const settingsCommon = this.auth.getLocalSettingsCommon();
+
 		if (settingsCommon) {
 			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
 			this.kycProviderOptions = this.kycProviderOptions.filter(item => this.adminAdditionalSettings.kycProviders[item.id]);
@@ -189,6 +189,20 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 			this.custodyProviderOptions = this.custodyProviderOptions.filter(item => this.adminAdditionalSettings.custodyProvider[item.id]);
 		}
 	}
+
+private convertVaultIdFormat(input: { [key: string]: any; }, toNested: boolean): { [key: string]: any; } {
+	const output: { [key: string]: any; } = {};
+	for (const key in input) {
+		if (Object.prototype.hasOwnProperty.call(input, key)) {
+			if (toNested) {
+				output[key] = { vaultId: input[key] };
+			} else {
+				output[key] = input[key].vaultId;
+			}
+		}
+	}
+	return output;
+}
 
 	private loadCurrencies(): void {
 		this.inProgress = true;
@@ -281,6 +295,8 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				// Fireblocks
 				let custodyAddresses = fireblocks.withdrawalFromCustodyProviderDestinationAddress;
 				let liquidityAddresses = fireblocks.withdrawalFromLiquidityProviderDestinationAddress;
+				let endUserSourceVaultAddresses = fireblocks.withdrawalToEndUserSourceVaultAccountId;
+
 				if (custodyAddresses) {
 					if (typeof custodyAddresses === 'string') {
 						custodyAddresses = this.defaultCustodyWithdrawalKeys;
@@ -288,12 +304,21 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				} else {
 					custodyAddresses = this.defaultCustodyWithdrawalKeys;
 				}
+
 				if (liquidityAddresses) {
 					if (typeof liquidityAddresses === 'string') {
 						liquidityAddresses = this.defaultLiquidityWithdrawalKeys;
 					}
 				} else {
 					liquidityAddresses = this.defaultLiquidityWithdrawalKeys;
+				}
+
+				if (endUserSourceVaultAddresses) {
+					if (typeof endUserSourceVaultAddresses === 'string') {
+						endUserSourceVaultAddresses = this.defaultLiquidityWithdrawalKeys;
+					}
+				} else {
+					endUserSourceVaultAddresses = this.defaultLiquidityWithdrawalKeys;
 				}
 
 				this.form.get('fireblocksCachedDepositAddressLifetime')?.setValue(fireblocks.cachedDepositAddressLifetime ?? 60000);
@@ -305,7 +330,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				this.form.get('fireblocksTrackWithdrawalsOneByOne')?.setValue(fireblocks.trackWithdrawalsOneByOne ?? false);
 				this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.setValue(custodyAddresses);
 				this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.setValue(liquidityAddresses);
-				this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.setValue(fireblocks.withdrawalToEndUserSourceVaultAccountId.vaultId ?? '22');
+				this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.setValue(this.convertVaultIdFormat(endUserSourceVaultAddresses, false));
 				this.form.get('fireblocksWithdrawalToEndUserSpeed')?.setValue(fireblocks.withdrawalToEndUserSpeed ?? 'MEDIUM');
 				
 				// Trustology
@@ -379,7 +404,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 				this.inProgress = false;
 				this.errorMessage = error;
 				if (this.auth.token === '') {
-					this.router.navigateByUrl('/');
+					void this.router.navigateByUrl('/');
 				}
 			})
 		);
@@ -388,6 +413,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 	private getDataObject(): SettingsCommon {
 		const emailList = this.form.get('adminEmails')?.value as string[];
 		const frames: FrameBlock[] = [];
+
 		for (let index = 0; index < 5; index++) {
 			const fieldX = `frameX${index + 1}`;
 			const fieldY = `frameY${index + 1}`;
@@ -451,7 +477,6 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		openpayd.benchmarkAmount = parseInt(this.form.get('openpaydWithdrawalBenchmark')?.value ?? '10000');
 		monoova.benchmarkAmount = parseInt(this.form.get('monoovaWithdrawalBenchmark')?.value ?? '10000');
 		flashFx.benchmarkAmount = parseInt(this.form.get('flashFxWithdrawalBenchmark')?.value ?? '10000');
-		// this.additionalSettings.core.paymentProviders.PrimeTrust.benchmarkAmount = parseInt(this.form.get('monoovaWithdrawalBenchmark')?.value ?? '10000');
 		// -------------------------------------------------------------------------------------------
 		
 		// CustodyProviders
@@ -467,7 +492,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		fireblocks.trackWithdrawalsOneByOne = this.form.get('fireblocksTrackWithdrawalsOneByOne')?.value ?? false;
 		fireblocks.withdrawalFromCustodyProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.value ?? this.defaultCustodyWithdrawalKeys;
 		fireblocks.withdrawalFromLiquidityProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.value ?? this.defaultLiquidityWithdrawalKeys;
-		fireblocks.withdrawalToEndUserSourceVaultAccountId.vaultId = this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.value ?? '2';
+		fireblocks.withdrawalToEndUserSourceVaultAccountId = this.convertVaultIdFormat(this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.value, true) ?? this.defaultEndUserSourceVaultAddressesKeys;
 		fireblocks.withdrawalToEndUserSpeed = this.form.get('fireblocksWithdrawalToEndUserSpeed')?.value ?? 'MEDIUM';
 
 		// Trustology
@@ -529,11 +554,13 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		} as SettingsCommon;
 	}
 
-	addTagPromise(tagValue: any) {
+	addTagPromise(tagValue: any): Promise<void> {
 		return new Promise((resolve, reject) => {
 			this.emailLoading = true;
 			const exp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			
 			this.emailLoading = true;
+			
 			if (exp.test(tagValue)) {
 				resolve(tagValue);
 			} else {
@@ -556,6 +583,13 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	addFireblocksWithdrawalToEndUserSourceVaultAccountId(val: { key: string; value: string; }): void {
+		const data = this.form.controls.fireblocksWithdrawalToEndUserSourceVaultAccountId?.value;
+		if (data) {
+			data[val.key] = val.value;
+		}
+	}
+
 	removeFireblocksCustodyProviderDestinationAddress(key: string): void {
 		const data = this.form.controls.fireblocksWithdrawalFromCustodyProviderDestinationAddress?.value;
 		if (data) {
@@ -570,20 +604,31 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	removeWithdrawalToEndUserSourceVaultAccountId(key: string): void {
+		const data = this.form.controls.fireblocksWithdrawalToEndUserSourceVaultAccountId?.value;
+		if (data) {
+			delete data[key];
+		}
+	}
+
 	paymentProviderPayout(provider: string, type:PaymentProviderPayoutType, content: any): void{
 		this.paymentProviderPayoutInProgress = true;
+		
 		this.subscriptions.add(
 			this.adminService.createPaymentProviderPayout(provider, type).subscribe(({ data }) => {
-				if(data.createPaymentProviderPayout){
+
+				if (data.createPaymentProviderPayout) {
 					this.modalService.open(content, {
 						backdrop: 'static',
 						windowClass: 'modalCusSty',
 					});
 				}
+
 				this.paymentProviderPayoutInProgress = false;
 			}, (error) => {
 				this.paymentProviderPayoutInProgress = false;
 				this.errorMessage = error;
+
 				if (this.auth.token === '') {
 					void this.router.navigateByUrl('/');
 				}
@@ -615,20 +660,23 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 	}
 
 	paymentProviderRefund(provider: string, content: any): void{
-
 		this.paymentProviderRefundInProgress = true;
+
 		this.subscriptions.add(
 			this.adminService.createPaymentProviderRefund(provider, this.form.get('refundAmount')?.value, this.form.get('refundTransactionId')?.value).subscribe(({ data }) => {
-				if(data.createPaymentProviderPayout){
+				
+				if (data.createPaymentProviderPayout) {
 					this.modalService.open(content, {
 						backdrop: 'static',
 						windowClass: 'modalCusSty',
 					});
 				}
+
 				this.paymentProviderRefundInProgress = false;
 			}, (error) => {
 				this.paymentProviderRefundInProgress = false;
 				this.errorMessage = error;
+
 				if (this.auth.token === '') {
 					void this.router.navigateByUrl('/');
 				}
@@ -639,8 +687,10 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 	onSubmit(content: any): void {
 		this.submitted = true;
 		const data = this.getDataObject();
+
 		this.saveInProgress = true;
 		this.errorMessage = '';
+		
 		this.subscriptions.add(
 			this.adminService.updateSettingsCommon(data).subscribe(() => {
 				this.saveInProgress = false;

@@ -19,12 +19,11 @@
             <div *ngIf="menuItem.headTitle">
               {{menuItem.headTitle}}
             </div>
-            <a class="side-menu__item" [routerLink]="!menuItem.type ? null : [menuItem.path]"
-              *ngIf="menuItem.type === 'link' " routerLinkActive="active" (click)="toggleNavActive(menuItem)">
+            <a *ngIf="menuItem.type === 'link' " class="side-menu__item"
+              routerLinkActive="active" [routerLink]="!menuItem.type ? null : [menuItem.path]" (click)="toggleNavActive(menuItem)">
               <span class="shape1"></span>
               <span class="shape2"></span>
               <span class="side-menu__icon">
-                <!-- <i class="fe fe-{{menuItem.icon}} "></i> -->
                 <span style="font-size: 18px;" class="material-icons">
                   {{menuItem.icon}}
                 </span>
@@ -38,7 +37,6 @@
               <span class="shape1"></span>
               <span class="shape2"></span>
               <span class="side-menu__icon">
-                <!-- <i class="fe fe-{{menuItem.icon}} "></i> -->
                 <span style="font-size: 18px;" class="material-icons">
                   {{menuItem.icon}}
                 </span>
@@ -108,7 +106,6 @@
               <span class="shape1"></span>
               <span class="shape2"></span>
               <span class="side-menu__icon">
-                <!-- <i class="fe fe-{{menuItem.icon}} "></i> -->
                 <span style="font-size: 18px;" class="material-icons">
                   compare_arrows
                 </span>

@@ -40,8 +40,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
 
 		const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
   	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
-  	// const instrumentDetails = JSON.stringify(bank);
-
+ 
   	const transactionInput: TransactionInput = {
   		type: this.summary.transactionType,
   		source: this.source,
@@ -50,7 +49,6 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   		currencyToReceive: (this.summary.currencyTo !== '') ? this.summary.currencyTo : undefined,
   		amountToSpend: this.summary.amountFrom ?? 0,
   		instrument: this.summary.providerView.instrument,
-  		// instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
   		paymentProvider: this.summary.providerView.id ?? undefined,
   		widgetUserParamsId: (this.userParamsId !== '') ? this.userParamsId : undefined,
   		destination: destination,

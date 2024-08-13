@@ -17,7 +17,6 @@ import { ProfileDataService } from 'services/profile.service';
 	templateUrl: './contact-list.component.html',
 	styleUrls: [
 		'../../../../assets/menu.scss',
-		
 		'../../../../assets/profile.scss',
 		'./contact-list.component.scss'
 	]
@@ -111,9 +110,6 @@ export class ProfileContactListComponent implements OnDestroy, AfterViewInit {
     		if (contactsItems) {
     			this.contactCount = contactsItems?.count as number;
     			if (this.contactCount > 0) {
-    				// this.contacts = contactsItems?.list?.filter(x => {
-    				//     return (this.filter.zeroBalance) ? true : x.total ?? 0 > 0;
-    				// }).map((val) => new ContactItem(val)) as ContactItem[];
     				this.contacts = contactsItems?.list?.map((val) => new ContactItem(val)) as ContactItem[];
     				this.contactCount = this.contacts.length;
     			}
