@@ -190,20 +190,6 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		}
 	}
 
-private convertVaultIdFormat(input: { [key: string]: any; }, toNested: boolean): { [key: string]: any; } {
-	const output: { [key: string]: any; } = {};
-	for (const key in input) {
-		if (Object.prototype.hasOwnProperty.call(input, key)) {
-			if (toNested) {
-				output[key] = { vaultId: input[key] };
-			} else {
-				output[key] = input[key].vaultId;
-			}
-		}
-	}
-	return output;
-}
-
 	private loadCurrencies(): void {
 		this.inProgress = true;
 		this.errorMessage = '';
@@ -320,7 +306,7 @@ private convertVaultIdFormat(input: { [key: string]: any; }, toNested: boolean):
 				} else {
 					endUserSourceVaultAddresses = this.defaultLiquidityWithdrawalKeys;
 				}
-
+				
 				this.form.get('fireblocksCachedDepositAddressLifetime')?.setValue(fireblocks.cachedDepositAddressLifetime ?? 60000);
 				this.form.get('fireblocksCachedExternalWalletLifetime')?.setValue(fireblocks.cachedExternalWalletLifetime ?? 60000);
 				this.form.get('fireblocksCachedInternalWalletLifetime')?.setValue(fireblocks.cachedExternalWalletLifetime ?? 60000);
@@ -330,7 +316,7 @@ private convertVaultIdFormat(input: { [key: string]: any; }, toNested: boolean):
 				this.form.get('fireblocksTrackWithdrawalsOneByOne')?.setValue(fireblocks.trackWithdrawalsOneByOne ?? false);
 				this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.setValue(custodyAddresses);
 				this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.setValue(liquidityAddresses);
-				this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.setValue(this.convertVaultIdFormat(endUserSourceVaultAddresses, false));
+				this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.setValue(endUserSourceVaultAddresses);
 				this.form.get('fireblocksWithdrawalToEndUserSpeed')?.setValue(fireblocks.withdrawalToEndUserSpeed ?? 'MEDIUM');
 				
 				// Trustology
@@ -492,7 +478,7 @@ private convertVaultIdFormat(input: { [key: string]: any; }, toNested: boolean):
 		fireblocks.trackWithdrawalsOneByOne = this.form.get('fireblocksTrackWithdrawalsOneByOne')?.value ?? false;
 		fireblocks.withdrawalFromCustodyProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromCustodyProviderDestinationAddress')?.value ?? this.defaultCustodyWithdrawalKeys;
 		fireblocks.withdrawalFromLiquidityProviderDestinationAddress = this.form.get('fireblocksWithdrawalFromLiquidityProviderDestinationAddress')?.value ?? this.defaultLiquidityWithdrawalKeys;
-		fireblocks.withdrawalToEndUserSourceVaultAccountId = this.convertVaultIdFormat(this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.value, true) ?? this.defaultEndUserSourceVaultAddressesKeys;
+		fireblocks.withdrawalToEndUserSourceVaultAccountId = this.form.get('fireblocksWithdrawalToEndUserSourceVaultAccountId')?.value ?? this.defaultEndUserSourceVaultAddressesKeys;
 		fireblocks.withdrawalToEndUserSpeed = this.form.get('fireblocksWithdrawalToEndUserSpeed')?.value ?? 'MEDIUM';
 
 		// Trustology
