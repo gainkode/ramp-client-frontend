@@ -17,6 +17,7 @@ import {
 	SettingsFee,
 	Transaction,
 	TransactionKycStatus,
+	TransactionScreeningAnswer,
 	TransactionSh,
 	TransactionShort,
 	TransactionSource,
@@ -79,8 +80,8 @@ export class TransactionItemFull {
 	paymentOrder: PaymentOrder | undefined;
 	paymentOrderId = '';
 	transferOrderHash = '';
-	screeningAnswer!: ScreeningAnswer;
-	screeningAnswers = ScreeningAnswer;
+	screeningAnswer!: TransactionScreeningAnswer;
+	screeningAnswers = TransactionScreeningAnswer;
 	screeningAnswerColor = '';
 	screeningRiskscore = 0;
 	risk: RiskLevel;
@@ -247,7 +248,7 @@ export class TransactionItemFull {
 				this.transferSubStatus = this.transferOrder.subStatus ?? '';
 			}
 
-			this.screeningAnswer = <ScreeningAnswer>data.screeningAnswer ?? undefined;
+			this.screeningAnswer = <TransactionScreeningAnswer>data.screeningAnswer ?? undefined;
 			this.screeningAnswerColor = this.getScreeningAnswerColor(this.screeningAnswer);
 
 			this.risk = data?.risk;
@@ -330,6 +331,7 @@ export class TransactionItemFull {
 				data.liquidityOrder?.statusReason : '' ;
 
 			this.exchangeState =  data.liquidityOrder?.state ?? '';
+			const benchmarkTransferOrderSubStatus = transactionData.benchmarkTransferOrder?.subStatus ? ` (${transactionData.benchmarkTransferOrder.subStatus})` : '';
 
 			switch (this.status) {
 				case TransactionStatus.AddressDeclined:
@@ -367,9 +369,7 @@ export class TransactionItemFull {
 					}
 					break;
 				case TransactionStatus.BenchmarkTransferDeclined:
-					const benchmarkTransferOrderStatus = transactionData.benchmarkTransferOrder?.status ?? '';
-					const benchmarkTransferOrderSubStatus = transactionData.benchmarkTransferOrder?.subStatus ? ` (${transactionData.benchmarkTransferOrder.subStatus})` : '';
-					this.declineReason = `${benchmarkTransferOrderStatus} ${benchmarkTransferOrderSubStatus}`;
+					this.declineReason = `${transactionData.benchmarkTransferOrder?.status ?? ''} ${benchmarkTransferOrderSubStatus}`;
 					break;
 				case TransactionStatus.ExchangeDeclined:
 					this.declineReason = data.liquidityOrder?.statusReason ?? '';
@@ -450,16 +450,16 @@ export class TransactionItemFull {
 		return '';
 	}
 
-	getScreeningAnswerColor(screeningAnswer: ScreeningAnswer | undefined): string {
-		if (screeningAnswer === this.screeningAnswers.GREEN) {
+	getScreeningAnswerColor(screeningAnswer: TransactionScreeningAnswer | undefined): string {
+		if (screeningAnswer === this.screeningAnswers.Green) {
 			return 'input-success';
 		}
 
-		if (screeningAnswer === this.screeningAnswers.RED) {
+		if (screeningAnswer === this.screeningAnswers.Red) {
 			return 'input-error';
 		}
 
-		if (screeningAnswer === this.screeningAnswers.ERROR || screeningAnswer === this.screeningAnswers.YELLOW) {
+		if (screeningAnswer === this.screeningAnswers.Failed || screeningAnswer === this.screeningAnswers.Yellow) {
 			return 'input-warning';
 		}
 

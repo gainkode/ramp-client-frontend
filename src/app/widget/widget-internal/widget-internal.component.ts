@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
@@ -84,6 +84,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
 	private readonly destroy$ = new Subject<void>();
   constructor(
+		private viewContainerRef: ViewContainerRef,
   	private modalService: NgbModal,
   	private changeDetector: ChangeDetectorRef,
   	public router: Router,
@@ -108,7 +109,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.checkLoginResult.bind(this),
   		this.onCodeLoginRequired.bind(this),
   		this.settingsKycState.bind(this),
-  		this.settingsCommonComplete.bind(this),
+  		this.onPaymentProvidersLoaded.bind(this),
   		this.onWireTransferListLoaded.bind(this),
   		this.userInfoRequired.bind(this),
   		this.companyLevelVerification.bind(this),
@@ -284,20 +285,22 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
   }
 
-  private startNotificationListener(): void {
-  	this.notificationStarted = true;
-  	this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications()
-  		.subscribe({
-  			next: ({ data }) => this.handleTransactionSubscription(data),
-  			error: (error) => {
-  				this.notificationStarted = false;
-  				// there was an error subscribing to notifications
-  				if (!environment.production) {
-  					console.error('Notifications error', error);
-  				}
-  			}
-  		}
-  	);
+  startNotificationListener(): void {
+		if (!this.notificationStarted) {
+			this.notificationStarted = true;
+			this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications()
+				.subscribe({
+					next: ({ data }) => this.handleTransactionSubscription(data),
+					error: (error) => {
+						this.notificationStarted = false;
+						// there was an error subscribing to notifications
+						if (!environment.production) {
+							console.error('Notifications error', error);
+						}
+					}
+				}
+			);
+		}
   }
 
   private startExternalKycProvideListener(): void {
@@ -462,15 +465,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.loadAccountData();
 
   	if (this.widget.kycFirst && this.widget.allowToPayIfKycFailed) {
-  		if (this.paymentProviders.length < 1) {
-  			this.setError(
-  				'No payment providers',
-  				`No supported payment providers found for "${this.summary.currencyFrom}"`);
-  		} else if (this.paymentProviders.length > 1) {
-  			this.nextStage('payment', 'widget-pager.credit_card', 5);
-  		} else {
-  			this.selectProvider(this.paymentProviders[0]);
-  		}
+			this.nextStage('payment', 'widget-pager.credit_card', 5);
   	}
   }
   
@@ -759,9 +754,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.requestKyc = state;
   }
 
-  private settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
-  	this.paymentProviders = providers.map(val => val);
-
+  private onPaymentProvidersLoaded(): void {
   	const nextStage = 4;
 
   	if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
@@ -779,40 +772,55 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.nextStage('verification', 'widget-pager.company_level_verification', nextStage);
   		}
   	} else {
-  		if (this.paymentProviders.length < 1) {
-  			this.setError(
-  				'Payment providers not found',
-  				`No supported payment providers found for "${this.summary.currencyFrom}"`);
-  		} else if (this.paymentProviders.length > 1) {
-				
-  			if (!this.notificationStarted) {
-  				this.startNotificationListener();
-  			}
-
-  			this.nextStage('payment', 'widget-pager.credit_card', nextStage);
-  		} else {
-  			this.selectProvider(this.paymentProviders[0]);
-  		}
-  	}
+			this.nextStage('payment', 'widget-pager.credit_card', nextStage);
+		}
   }
 
+	checkComponentExists(providerName: string): boolean {
+		try {
+			const component: any = `app-widget-payment-${providerName}`;
+
+			const factory = this.viewContainerRef.createComponent(component);
+			factory.destroy();
+			return true;
+		} catch (e) {
+			return false;
+		}
+	}
+
   // == Payment info ==
-  selectProvider(provider: PaymentProviderInstrumentView): void {
-  	if(this.summary.transactionType === TransactionType.Buy){
+  selectProvider(data: { selectedProvider: PaymentProviderInstrumentView; providers?: PaymentProviderInstrumentView[]; }): void {
+		this.paymentProviders = data.providers;
+		const provider = data.selectedProvider;
+
+  	if (this.summary.transactionType === TransactionType.Buy) {
   		this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
+		
+			console.log(this.checkComponentExists(provider.componentName))
+
+			if (this.checkComponentExists(provider.componentName)) {
+				this.nextStage(`payment_${provider.componentName}`, 'widget-pager.wire_transfer_result', 5);
+			} else {
+				this.createTransaction(provider.id, provider.instrument, '');
+			}
+
+			// if (provider.instrument === PaymentInstrument.WireTransfer || provider.instrument === PaymentInstrument.OpenBanking) {
+			// 	const componentName = `payment_${provider.name.toLocaleLowerCase()}`;
+			// 	if (this.checkComponentExists(componentName)) {
+			// 		this.nextStage(componentName, 'widget-pager.wire_transfer_result', 5);
+			// 	} else {
+			// 		this.createTransaction(provider.id, provider.instrument, '');
+			// 	}
+  		// } else {
+  		// 	this.createTransaction(provider.id, provider.instrument, '');
+  		// }
 			
-  		if (provider.instrument === PaymentInstrument.WireTransfer) {
-  			this.startPayment();
-  		} else if (provider.instrument === PaymentInstrument.OpenBanking) {
-  			this.nextStage(`payment_${provider.name}`, 'widget-pager.wire_transfer_result', 5);
-  		} else {
-  			this.createTransaction(provider.id, provider.instrument, '');
-  		}
   	} else {
 			this.profileService.maxSellAmount(this.summary.currencyFrom)
 				.pipe(take(1), takeUntil(this.destroy$))
 				.subscribe(maxSellAmount => {
 					if (this.summary.amountFrom > maxSellAmount ) {
+						
 						// Back to first page in order to validate maxSellAmount to SELL transaction type
 						this.nextStage('order_details', 'widget-pager.order_details', 1);
 					} else {
@@ -1022,9 +1030,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 		this.dataService.createTransaction(this.transactionInput)
 			.pipe(takeUntil(this.destroy$))
 				.subscribe(({ data }) => {
-					if (!this.notificationStarted) {
-						this.startNotificationListener();
-					}
+					this.startNotificationListener();
+
 					const order = data.createTransaction as TransactionShort;
 					this.inProgress = false;
 					
@@ -1079,7 +1086,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
   			if(order.instrumentDetails) {
   				const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
-  				this.selectedWireTransfer.data = instrumentDetails.accountType.data;
+					this.selectedWireTransfer.data = instrumentDetails;
   			}
 			
   			this.nextStage('wire_transfer_result', 'widget-pager.wire_transfer_result', 5);
@@ -1192,9 +1199,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.destroy$))
 			.subscribe({
 				next: ({ data }) => {
-					if (!this.notificationStarted) {
-						this.startNotificationListener();
-					}
+					this.startNotificationListener();
+
 					const preAuthResult = data.preauth as PaymentPreauthResultShort;
 					const order = preAuthResult.order;
 

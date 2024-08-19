@@ -1,20 +1,20 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown; }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown; }, K extends keyof T> = { [_ in K]?: never };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string | number; output: string; };
-  String: { input: string; output: string; };
-  Boolean: { input: boolean; output: boolean; };
-  Int: { input: number; output: number; };
-  Float: { input: number; output: number; };
-  Byte: { input: any; output: any; };
-  DateTime: { input: any; output: any; };
-  Void: { input: any; output: any; };
+  ID: { input: string | number; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  Byte: { input: any; output: any; }
+  DateTime: { input: any; output: any; }
+  Void: { input: any; output: any; }
 };
 
 export enum AccountStatus {
@@ -96,7 +96,9 @@ export enum AppropriateType {
   FeeScheme = 'feeScheme',
   KycScheme = 'kycScheme',
   KycTier = 'kycTier',
-  PaymentProvider = 'paymentProvider'
+  PaymentMethod = 'paymentMethod',
+  PaymentProvider = 'paymentProvider',
+  WireTransferBankAccount = 'wireTransferBankAccount'
 }
 
 export type AssetAddress = {
@@ -315,6 +317,7 @@ export enum CallbackType {
   ExternalMonoovaPayoutCallback = 'ExternalMonoovaPayoutCallback',
   ExternalAu10tixCallback = 'externalAu10tixCallback',
   ExternalCoriunderCallback = 'externalCoriunderCallback',
+  ExternalCrystalCallback = 'externalCrystalCallback',
   ExternalDocumentsCallback = 'externalDocumentsCallback',
   ExternalFibonatixCallback = 'externalFibonatixCallback',
   ExternalFireblocksCallback = 'externalFireblocksCallback',
@@ -1141,7 +1144,6 @@ export type Mutation = {
   addMyWidgetUserParams?: Maybe<WidgetUserParams>;
   addSettingsCost: SettingsCost;
   addSettingsFee: SettingsFee;
-  addSettingsKyc: SettingsKyc;
   addSettingsKycLevel: SettingsKycLevel;
   addSettingsKycTier: Scalars['Boolean']['output'];
   /** This endpoint can be used to add a user's wallet. */
@@ -1158,6 +1160,8 @@ export type Mutation = {
   captureFull: PaymentOrder;
   changeMyKycTier?: Maybe<User>;
   changePassword: Scalars['Boolean']['output'];
+  changeStateSettingsCost: SettingsCost;
+  changeStateSettingsFee: SettingsFee;
   changeUserKycTier?: Maybe<User>;
   companyLevelVerification?: Maybe<User>;
   confirmDevice: Scalars['Boolean']['output'];
@@ -1209,8 +1213,6 @@ export type Mutation = {
   /** This endpoint can be used to delete a widget for the current user. */
   deleteMyWidget?: Maybe<Widget>;
   deleteSettingsCost: SettingsCost;
-  deleteSettingsFee: SettingsFee;
-  deleteSettingsKyc: SettingsKyc;
   deleteSettingsKycLevel: SettingsKycLevel;
   deleteSettingsKycTier: SettingsKycTier;
   deleteUser?: Maybe<User>;
@@ -1222,9 +1224,7 @@ export type Mutation = {
   deleteWidget?: Maybe<Widget>;
   deleteWireTransferBankAccount: WireTransferBankAccount;
   disable2fa: LoginResult;
-  disableSettingsFee: SettingsFee;
   enable2fa: LoginResult;
-  enableSettingsFee: SettingsFee;
   /** This endpoint can be used to execute a transaction */
   executeTransaction?: Maybe<TransactionShort>;
   exportTransactionsToCsv?: Maybe<Scalars['Boolean']['output']>;
@@ -1277,7 +1277,6 @@ export type Mutation = {
   updateSettingsCommon: SettingsCommon;
   updateSettingsCost: SettingsCost;
   updateSettingsFee: SettingsFee;
-  updateSettingsKyc: SettingsKyc;
   updateSettingsKycLevel: SettingsKycLevel;
   updateSettingsKycTier: Scalars['Boolean']['output'];
   /** This endpoint can be used to update a transaction */
@@ -1370,11 +1369,6 @@ export type MutationAddSettingsFeeArgs = {
 };
 
 
-export type MutationAddSettingsKycArgs = {
-  settings: SettingsKycInput;
-};
-
-
 export type MutationAddSettingsKycLevelArgs = {
   settingsLevel: SettingsKycLevelInput;
 };
@@ -1439,6 +1433,16 @@ export type MutationChangePasswordArgs = {
   code2fa?: InputMaybe<Scalars['String']['input']>;
   newPassword: Scalars['String']['input'];
   oldPassword: Scalars['String']['input'];
+};
+
+
+export type MutationChangeStateSettingsCostArgs = {
+  settingsId: Scalars['ID']['input'];
+};
+
+
+export type MutationChangeStateSettingsFeeArgs = {
+  settingsId: Scalars['ID']['input'];
 };
 
 
@@ -1640,16 +1644,6 @@ export type MutationDeleteSettingsCostArgs = {
 };
 
 
-export type MutationDeleteSettingsFeeArgs = {
-  settingsId: Scalars['ID']['input'];
-};
-
-
-export type MutationDeleteSettingsKycArgs = {
-  settingsId: Scalars['ID']['input'];
-};
-
-
 export type MutationDeleteSettingsKycLevelArgs = {
   settingsId: Scalars['ID']['input'];
 };
@@ -1697,19 +1691,9 @@ export type MutationDisable2faArgs = {
 };
 
 
-export type MutationDisableSettingsFeeArgs = {
-  settingsId: Scalars['ID']['input'];
-};
-
-
 export type MutationEnable2faArgs = {
   code: Scalars['String']['input'];
   password: Scalars['String']['input'];
-};
-
-
-export type MutationEnableSettingsFeeArgs = {
-  settingsId: Scalars['ID']['input'];
 };
 
 
@@ -2026,12 +2010,6 @@ export type MutationUpdateSettingsFeeArgs = {
 };
 
 
-export type MutationUpdateSettingsKycArgs = {
-  settings: SettingsKycInput;
-  settingsId: Scalars['ID']['input'];
-};
-
-
 export type MutationUpdateSettingsKycLevelArgs = {
   settingsLevel: SettingsKycLevelInput;
   settingsLevelId: Scalars['ID']['input'];
@@ -2217,6 +2195,18 @@ export enum PaymentInstrument {
   WireTransfer = 'WireTransfer'
 }
 
+export type PaymentMethod = {
+  __typename?: 'PaymentMethod';
+  disabled?: Maybe<Scalars['DateTime']['output']>;
+  displayName?: Maybe<Scalars['String']['output']>;
+  logo?: Maybe<Scalars['String']['output']>;
+  name: PaymentInstrument;
+  paymentMethodId?: Maybe<Scalars['ID']['output']>;
+  source?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  transactionTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  userTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
 export type PaymentOperation = {
   __typename?: 'PaymentOperation';
   callbackDetails?: Maybe<Scalars['String']['output']>;
@@ -2360,6 +2350,7 @@ export type PaymentProvider = {
   disabled?: Maybe<Scalars['DateTime']['output']>;
   displayName?: Maybe<Scalars['String']['output']>;
   external?: Maybe<Scalars['Boolean']['output']>;
+  fiatProviderId?: Maybe<Scalars['String']['output']>;
   instruments?: Maybe<Array<Scalars['String']['output']>>;
   logo?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
@@ -2437,16 +2428,18 @@ export type Query = {
   generateWebApiToken: Scalars['String']['output'];
   /** Get API keys */
   getApiKeys?: Maybe<ApiKeyListResult>;
+  /** Get payment methods for relevant options */
+  getAppropriatePaymentMethods?: Maybe<Array<PaymentMethod>>;
   /** Get payment providers for relevant options */
-  getAppropriatePaymentProviders?: Maybe<Array<PaymentProviderByInstrument>>;
+  getAppropriatePaymentProviders?: Maybe<Array<PaymentProvider>>;
   /** Get cost settings for the relevant parameters */
   getAppropriateSettingsCostFull?: Maybe<SettingsCost>;
   /** Get fee settings for the relevant parameters */
   getAppropriateSettingsFee?: Maybe<SettingsFee>;
-  /** Get KYC settings for relevant options */
-  getAppropriateSettingsKyc?: Maybe<SettingsKyc>;
   /** Get KYC levels settings for relevant options */
   getAppropriateSettingsKycTiers?: Maybe<SettingsKycTierShortExListResult>;
+  /** Get wire transfer bank accounts for current transaction */
+  getAppropriateWireTransferBankAccounts?: Maybe<Array<Maybe<WireTransferBankAccount>>>;
   /** This endpoint can be used to get transaction for chatbot with their description. */
   getChatbotTransactions?: Maybe<TransactionListResult>;
   /** This endpoint can be used to get transaction for chatbot with their description. */
@@ -2511,8 +2504,6 @@ export type Query = {
   getSettingsCurrency?: Maybe<SettingsCurrencyWithDefaults>;
   /** Get fee settings */
   getSettingsFee?: Maybe<SettingsFeeListResult>;
-  /** Get KYC settings */
-  getSettingsKyc?: Maybe<SettingsKycListResult>;
   getSettingsKycLevels?: Maybe<SettingsKycLevelListResult>;
   /** Get KYC levels settings */
   getSettingsKycTiers?: Maybe<SettingsKycTierListResult>;
@@ -2601,14 +2592,8 @@ export type Query = {
   myReceiveWallets?: Maybe<AssetAddressShortListResult>;
   /** Get cost settings for the current user */
   mySettingsCost?: Maybe<SettingsCostShort>;
-  /** Get fee settings for the current user(SettingsFeeShort) */
-  mySettingsFee?: Maybe<SettingsFeeShort>;
-  /** Get fee settings for the current user */
-  mySettingsFeeFull?: Maybe<SettingsFee>;
   /** Get KYC settings for the current user(SettingsKycTierShort) */
-  mySettingsKyc?: Maybe<SettingsKycShort>;
-  /** Get KYC settings for the current user */
-  mySettingsKycFull?: Maybe<SettingsKyc>;
+  mySettingsKyc?: Maybe<SettingsKycTierShort>;
   /** Get KYC levels settings for the current user(SettingsKycTierShort) */
   mySettingsKycTier?: Maybe<SettingsKycTierShort>;
   /** Get KYC levels settings for the current user */
@@ -2670,9 +2655,17 @@ export type QueryGetApiKeysArgs = {
 };
 
 
+export type QueryGetAppropriatePaymentMethodsArgs = {
+  source?: InputMaybe<TransactionSource>;
+  transactionType?: InputMaybe<TransactionType>;
+  widgetId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryGetAppropriatePaymentProvidersArgs = {
   amount?: InputMaybe<Scalars['Float']['input']>;
   fiatCurrency?: InputMaybe<Scalars['String']['input']>;
+  paymentMethodId?: InputMaybe<Scalars['String']['input']>;
   source?: InputMaybe<TransactionSource>;
   transactionType?: InputMaybe<TransactionType>;
   widgetId?: InputMaybe<Scalars['String']['input']>;
@@ -2702,20 +2695,19 @@ export type QueryGetAppropriateSettingsFeeArgs = {
 };
 
 
-export type QueryGetAppropriateSettingsKycArgs = {
-  filterType?: InputMaybe<SettingsKycTargetFilterType>;
-  filterValue?: InputMaybe<Scalars['String']['input']>;
-  targetKycProvider: KycProvider;
-  targetUserMode: UserMode;
-  targetUserType: UserType;
-};
-
-
 export type QueryGetAppropriateSettingsKycTiersArgs = {
   amount?: InputMaybe<Scalars['Float']['input']>;
   currency?: InputMaybe<Scalars['String']['input']>;
   source?: InputMaybe<TransactionSource>;
   targetKycProvider: KycProvider;
+  widgetId?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryGetAppropriateWireTransferBankAccountsArgs = {
+  paymentProvider?: InputMaybe<Scalars['String']['input']>;
+  source?: InputMaybe<TransactionSource>;
+  transactionType: TransactionType;
   widgetId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -2909,14 +2901,6 @@ export type QueryGetSettingsCurrencyArgs = {
 
 
 export type QueryGetSettingsFeeArgs = {
-  filter?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  orderBy?: InputMaybe<Array<OrderBy>>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueryGetSettingsKycArgs = {
   filter?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   orderBy?: InputMaybe<Array<OrderBy>>;
@@ -3288,28 +3272,6 @@ export type QueryMySettingsCostArgs = {
 };
 
 
-export type QueryMySettingsFeeArgs = {
-  currencyFrom?: InputMaybe<Scalars['String']['input']>;
-  currencyTo?: InputMaybe<Scalars['String']['input']>;
-  instrument: PaymentInstrument;
-  paymentProvider?: InputMaybe<Scalars['String']['input']>;
-  transactionSource: TransactionSource;
-  transactionType: TransactionType;
-  widgetId?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryMySettingsFeeFullArgs = {
-  currencyFrom?: InputMaybe<Scalars['String']['input']>;
-  currencyTo?: InputMaybe<Scalars['String']['input']>;
-  instrument: PaymentInstrument;
-  paymentProvider?: InputMaybe<Scalars['String']['input']>;
-  transactionSource: TransactionSource;
-  transactionType: TransactionType;
-  widgetId?: InputMaybe<Scalars['String']['input']>;
-};
-
-
 export type QueryMySettingsKycTiersArgs = {
   source?: InputMaybe<TransactionSource>;
   widgetId?: InputMaybe<Scalars['String']['input']>;
@@ -3443,6 +3405,7 @@ export type RiskAlert = {
 };
 
 export enum RiskAlertCodes {
+  ClearjunctionMismatch = 'CLEARJUNCTION_MISMATCH',
   DepositAbove_10K = 'DEPOSIT_ABOVE_10K',
   DepositAbove_50K = 'DEPOSIT_ABOVE_50K',
   DepositAboveXAmountInYTimeframe = 'DEPOSIT_ABOVE_X_AMOUNT_IN_Y_TIMEFRAME',
@@ -3506,6 +3469,7 @@ export type SettingsCommon = {
   proxyLiquidityProviderApiSecret?: Maybe<Scalars['String']['output']>;
   proxyLiquidityProviderTransactionChangedCallback?: Maybe<Scalars['String']['output']>;
   proxyLiquidityProviderUrl?: Maybe<Scalars['String']['output']>;
+  screeningProvider?: Maybe<Scalars['String']['output']>;
   settingsCommonId?: Maybe<Scalars['String']['output']>;
   stoppedForServicing?: Maybe<Scalars['Boolean']['output']>;
   textPages?: Maybe<Array<Maybe<TextPage>>>;
@@ -3525,7 +3489,6 @@ export type SettingsCommonInput = {
 
 export type SettingsCost = {
   __typename?: 'SettingsCost';
-  bankAccounts?: Maybe<Array<WireTransferBankAccount>>;
   created: Scalars['DateTime']['output'];
   createdBy?: Maybe<Scalars['String']['output']>;
   default?: Maybe<Scalars['Boolean']['output']>;
@@ -3565,7 +3528,6 @@ export type SettingsCostListResult = {
 
 export type SettingsCostShort = {
   __typename?: 'SettingsCostShort';
-  bankAccounts?: Maybe<Array<WireTransferBankAccountShort>>;
   settingsCostId: Scalars['ID']['output'];
   terms?: Maybe<Scalars['String']['output']>;
 };
@@ -3729,46 +3691,6 @@ export enum SettingsFeeTargetFilterType {
   None = 'None'
 }
 
-export type SettingsKyc = {
-  __typename?: 'SettingsKyc';
-  created: Scalars['DateTime']['output'];
-  createdBy?: Maybe<Scalars['String']['output']>;
-  default?: Maybe<Scalars['Boolean']['output']>;
-  deleted?: Maybe<Scalars['DateTime']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  levels?: Maybe<Array<SettingsKycLevel>>;
-  name: Scalars['String']['output'];
-  requireUserAddress?: Maybe<Scalars['Boolean']['output']>;
-  requireUserBirthday?: Maybe<Scalars['Boolean']['output']>;
-  requireUserFlatNumber?: Maybe<Scalars['Boolean']['output']>;
-  requireUserFullName?: Maybe<Scalars['Boolean']['output']>;
-  requireUserPhone?: Maybe<Scalars['Boolean']['output']>;
-  settingsKycId: Scalars['ID']['output'];
-  targetFilterType?: Maybe<SettingsKycTargetFilterType>;
-  targetFilterValues?: Maybe<Array<Scalars['String']['output']>>;
-  targetKycProviders?: Maybe<Array<KycProvider>>;
-  targetUserModes?: Maybe<Array<UserMode>>;
-  targetUserType: UserType;
-};
-
-export type SettingsKycInput = {
-  default?: InputMaybe<Scalars['Boolean']['input']>;
-  deleted?: InputMaybe<Scalars['DateTime']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  levelIds?: InputMaybe<Array<Scalars['String']['input']>>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  requireUserAddress?: InputMaybe<Scalars['Boolean']['input']>;
-  requireUserBirthday?: InputMaybe<Scalars['Boolean']['input']>;
-  requireUserFlatNumber?: InputMaybe<Scalars['Boolean']['input']>;
-  requireUserFullName?: InputMaybe<Scalars['Boolean']['input']>;
-  requireUserPhone?: InputMaybe<Scalars['Boolean']['input']>;
-  targetFilterType?: InputMaybe<SettingsKycTargetFilterType>;
-  targetFilterValues?: InputMaybe<Array<Scalars['String']['input']>>;
-  targetKycProviders?: InputMaybe<Array<KycProvider>>;
-  targetUserModes?: InputMaybe<Array<UserMode>>;
-  targetUserType: UserType;
-};
-
 export type SettingsKycLevel = {
   __typename?: 'SettingsKycLevel';
   created?: Maybe<Scalars['DateTime']['output']>;
@@ -3816,22 +3738,6 @@ export type SettingsKycLevelShufti = {
   data?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   settingsKycLevelShuftiId: Scalars['ID']['output'];
-};
-
-export type SettingsKycListResult = {
-  __typename?: 'SettingsKycListResult';
-  count?: Maybe<Scalars['Int']['output']>;
-  list?: Maybe<Array<SettingsKyc>>;
-};
-
-export type SettingsKycShort = {
-  __typename?: 'SettingsKycShort';
-  levels?: Maybe<Array<SettingsKycLevelShort>>;
-  requireUserAddress?: Maybe<Scalars['Boolean']['output']>;
-  requireUserBirthday?: Maybe<Scalars['Boolean']['output']>;
-  requireUserFlatNumber?: Maybe<Scalars['Boolean']['output']>;
-  requireUserFullName?: Maybe<Scalars['Boolean']['output']>;
-  requireUserPhone?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export enum SettingsKycTargetFilterType {
@@ -4084,8 +3990,9 @@ export type Transaction = {
   reversalProcessed?: Maybe<Scalars['DateTime']['output']>;
   risk: RiskLevel;
   riskCodes?: Maybe<Array<Scalars['String']['output']>>;
-  screeningAnswer?: Maybe<Scalars['String']['output']>;
+  screeningAnswer?: Maybe<TransactionScreeningAnswer>;
   screeningData?: Maybe<Scalars['String']['output']>;
+  screeningOriginalId?: Maybe<Scalars['String']['output']>;
   screeningRiskscore?: Maybe<Scalars['Float']['output']>;
   screeningStatus?: Maybe<Scalars['String']['output']>;
   senderName?: Maybe<Scalars['String']['output']>;
@@ -4236,6 +4143,13 @@ export type TransactionSh = {
   email?: Maybe<Scalars['String']['output']>;
 };
 
+export enum TransactionScreeningAnswer {
+  Failed = 'FAILED',
+  Green = 'GREEN',
+  Red = 'RED',
+  Yellow = 'YELLOW'
+}
+
 export enum TransactionServiceNotificationType {
   CryptoFullPaid = 'CryptoFullPaid',
   CryptoPartPaid = 'CryptoPartPaid',
@@ -4304,7 +4218,7 @@ export type TransactionShort = {
   reversalProcessed?: Maybe<Scalars['DateTime']['output']>;
   risk: RiskLevel;
   riskCodes?: Maybe<Array<Scalars['String']['output']>>;
-  screeningAnswer?: Maybe<Scalars['String']['output']>;
+  screeningAnswer?: Maybe<TransactionScreeningAnswer>;
   screeningData?: Maybe<Scalars['String']['output']>;
   screeningRiskscore?: Maybe<Scalars['Float']['output']>;
   screeningStatus?: Maybe<Scalars['String']['output']>;
@@ -4777,6 +4691,13 @@ export enum UserActionType {
   CancelTransaction = 'cancelTransaction',
   ChangeRiskAlertSettings = 'changeRiskAlertSettings',
   ChangeUserKycTier = 'changeUserKycTier',
+  ClearJunctionApproved = 'clearJunctionApproved',
+  ClearJunctionAutoReject = 'clearJunctionAutoReject',
+  ClearJunctionCallback = 'clearJunctionCallback',
+  ClearJunctionCreateAccount = 'clearJunctionCreateAccount',
+  ClearJunctionDeclined = 'clearJunctionDeclined',
+  ClearJunctionGetAccount = 'clearJunctionGetAccount',
+  ClearJunctionPayout = 'clearJunctionPayout',
   CoriunderCallback = 'coriunderCallback',
   CreateApiKey = 'createApiKey',
   CreateCryptoInvoice = 'createCryptoInvoice',
@@ -4788,7 +4709,9 @@ export enum UserActionType {
   DeleteKycTierSettings = 'deleteKycTierSettings',
   DeleteUser = 'deleteUser',
   DeleteWireTransferBankAccount = 'deleteWireTransferBankAccount',
+  DisableCostSettings = 'disableCostSettings',
   DisableFeeSettings = 'disableFeeSettings',
+  EnableCostSettings = 'enableCostSettings',
   EnableFeeSettings = 'enableFeeSettings',
   Exchange = 'exchange',
   FlashfxApproved = 'flashfxApproved',
@@ -5674,7 +5597,11 @@ export type WireTransferBankAccount = {
   name?: Maybe<Scalars['String']['output']>;
   objectsDetails?: Maybe<Array<Maybe<BankDetailsObject>>>;
   paymentProviders?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  source?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  targetTransactionTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   uk?: Maybe<Scalars['String']['output']>;
+  userTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  widgetIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
 export type WireTransferBankAccountInput = {
@@ -5702,7 +5629,11 @@ export type WireTransferBankAccountShort = {
   name?: Maybe<Scalars['String']['output']>;
   objectsDetails?: Maybe<Array<Maybe<BankDetailsObject>>>;
   paymentProviders?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  source?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  targetTransactionTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   uk?: Maybe<Scalars['String']['output']>;
+  userTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  widgetIds?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
 };
 
 export enum WireTransferPaymentCategory {

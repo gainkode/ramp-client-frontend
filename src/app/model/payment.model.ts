@@ -5,7 +5,7 @@ import {
 	PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
 	SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
 	UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, 
-	CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, 
+	CustodyProvider, TransactionKycStatus, RiskLevel, AccountStatus, KycStatus, 
 	AdminTransactionStatus, UserTransactionStatus, WireTransferPaymentCategory, CryptoInvoiceCreationResult, 
 	UserActionType, UserActionResult, CurrencyBlockchain
 } from './generated-models';
@@ -19,31 +19,35 @@ export class PaymentInstrumentView {
 export class PaymentProviderInstrumentView {
 	id = '';
 	name = '';
+	componentName = '';
 	image = '';
 	instrument: PaymentInstrument = PaymentInstrument.CreditCard;
 	external = false;
 
-	constructor(data: PaymentProviderByInstrument) {
-		this.id = data.provider?.name ?? '';
-		this.name = data.provider?.name ?? '';
-		this.instrument = data.instrument ?? PaymentInstrument.CreditCard;
-		if(data.provider.external || data.provider.virtual){
-			this.external = data.provider.external;
+	constructor(data: PaymentProvider, paymentMethodName: PaymentInstrument) {
+		this.id = data?.paymentProviderId ?? '';
+		this.name = data?.name ?? '';
+    this.componentName = data?.name?.toLocaleLowerCase() ?? '';
+		this.instrument = paymentMethodName;
+
+		if(data.external || data.virtual){
+			this.external = data.external;
 		}
+		
 		if (this.instrument === PaymentInstrument.Apm) {
-			this.name = data.provider?.displayName ?? 'APM';
-			this.image = data.provider?.logo ? `${EnvService.image_host}/apm/${data.provider.logo}` : './assets/svg-providers/apm.svg';
+			this.name = data?.displayName ?? 'APM';
+			this.image = data?.logo ? `${EnvService.image_host}/apm/${data.logo}` : './assets/svg-providers/apm.svg';
 		} else if (this.instrument === PaymentInstrument.CreditCard) {
 			this.name = 'CARD PAYMENT';
 			this.image = './assets/svg-providers/credit-card.svg';
 		} else if (this.instrument === PaymentInstrument.WireTransfer) {
-			this.name = data.provider?.displayName ?? 'WIRE TRANSFER';
+			this.name = data?.displayName ?? 'WIRE TRANSFER';
 			this.image = './assets/svg-providers/wire-transfer.svg';
 		} else if (this.instrument === PaymentInstrument.FiatVault) {
 			this.name = 'FIAT VAULT';
 			this.image = './assets/svg-providers/fiat-vault.png';
 		} else if (this.instrument === PaymentInstrument.OpenBanking) {
-			this.name = data.provider?.displayName;
+			this.name = data?.displayName;
 			this.image = `./assets/svg-providers/${this.name}.svg`;
 		}
 	}
@@ -56,7 +60,7 @@ export class PaymentProviderView {
 	virtual = false;
 
 	constructor(data: PaymentProvider) {
-		this.id = data.name ?? '';
+		this.id = data.paymentProviderId ?? '';
 		this.name = data.displayName ?? data.name ?? '';
 		this.instruments = data.instruments?.map(val => val) ?? [];
 		this.virtual = data.virtual;

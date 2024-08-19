@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql, QueryRef } from 'apollo-angular';
 import { EmptyObject } from 'apollo-angular/types';
 import { map, Observable } from 'rxjs';
-import { KycProvider, OpenBankingDetails, PaymentBankInput, PaymentInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
+import { KycProvider, OpenBankingDetails, PaymentBankInput, PaymentInstrument, PaymentMethod, PaymentProvider, PaymentProviderByInstrument, TransactionInput, TransactionSource, TransactionType } from '../model/generated-models';
 import { CardView } from '../model/payment.model';
 
 const GET_RATES = gql`
@@ -47,6 +47,7 @@ query GetAppropriatePaymentProviders(
   $source: TransactionSource
   $amount: Float
   $transactionType: TransactionType
+  $paymentMethodId: String
 ) {
   getAppropriatePaymentProviders(
     fiatCurrency: $fiatCurrency
@@ -54,18 +55,34 @@ query GetAppropriatePaymentProviders(
     source: $source
     amount: $amount
     transactionType: $transactionType
+    paymentMethodId: $paymentMethodId
   ) {
-    instrument
-    provider {
-      paymentProviderId
+    paymentProviderId
+    name
+    displayName
+    currencies
+    countriesCode2
+    instruments
+    default
+    external
+  }
+}
+`;
+
+const GET_METHODS = gql`
+query GetAppropriatePaymentMethods(
+  $widgetId: String
+  $source: TransactionSource
+  $transactionType: TransactionType
+) {
+  getAppropriatePaymentMethods(
+    widgetId: $widgetId
+    source: $source
+    transactionType: $transactionType
+  ) {
+      paymentMethodId
       name
       displayName
-      currencies
-      countriesCode2
-      instruments
-      default
-      external
-    }
   }
 }
 `;
@@ -656,18 +673,41 @@ export class PaymentDataService {
 		});
 	}
   
-	getProviders(fiatCurrency: string, widgetId: string | undefined, source: TransactionSource, transactionType: TransactionType, amount?: Number): QueryRef<any, EmptyObject> {
-    return this.apollo.watchQuery<any>({
+  getPaymentMethods(
+    widgetId: string | undefined, 
+    source: TransactionSource, 
+    transactionType: TransactionType
+  ): Observable<PaymentMethod[]> {
+		return this.apollo.watchQuery<{ getAppropriatePaymentMethods: PaymentMethod[]; }>({
+      query: GET_METHODS,
+      variables: {
+        widgetId,
+        source,
+        transactionType
+      },
+      fetchPolicy: 'network-only'
+    }).valueChanges.pipe(map(result => result.data.getAppropriatePaymentMethods));
+	}
+
+	getProviders(
+    fiatCurrency: string, 
+    widgetId: string | undefined, 
+    source: TransactionSource, 
+    transactionType: TransactionType,
+    paymentMethodId: string,
+    amount?: number): Observable<PaymentProvider[]> {
+    return this.apollo.watchQuery<{ getAppropriatePaymentProviders: PaymentProvider[]; }>({
 			query: GET_PROVIDERS,
 			variables: {
 				fiatCurrency,
 				widgetId,
+        paymentMethodId,
 				source,
 				amount: parseFloat(<any>amount),
 				transactionType
 			},
 			fetchPolicy: 'network-only'
-		});
+    }).valueChanges.pipe(map(result => result.data.getAppropriatePaymentProviders));
 	}
 
 	mySettingsCost(transactionType: TransactionType, instrument: PaymentInstrument, paymentProvider: string, widgetId: string): QueryRef<any, EmptyObject> {

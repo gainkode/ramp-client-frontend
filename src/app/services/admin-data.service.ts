@@ -17,7 +17,6 @@ import {
 	QueryGetFiatVaultsArgs,
 	QueryGetNotificationsArgs, QueryGetRiskAlertsArgs,
 	QueryGetSettingsFeeArgs,
-	QueryGetSettingsKycArgs,
 	QueryGetSettingsKycLevelsArgs,
 	QueryGetSettingsKycTiersArgs,
 	QueryGetTransactionsArgs,
@@ -30,7 +29,6 @@ import {
 	QueryGetWidgetsArgs, RiskAlertResultList,
 	SettingsCommon,
 	SettingsFeeListResult, SettingsKycLevelListResult,
-	SettingsKycListResult,
 	SettingsKycTier,
 	SettingsKycTierListResult,
 	TransactionListResult,
@@ -65,7 +63,7 @@ import {
   UserFilterInput,
   RiskAlertType
 } from '../model/generated-models';
-import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
+import { KycLevel, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TransactionItemFull, TransactionStatusHistoryItem } from '../model/transaction.model';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
@@ -1712,7 +1710,6 @@ const ADD_SETTINGS_COST = gql`
   mutation AddSettingsCost(
     $name: String!
     $description: String
-    $bankAccountIds: [String!]
     $targetFilterType: SettingsCostTargetFilterType!
     $targetFilterValues: [String!]
     $targetInstruments: [PaymentInstrument!]
@@ -1725,7 +1722,6 @@ const ADD_SETTINGS_COST = gql`
       settings: {
         name: $name
         description: $description
-        bankAccountIds: $bankAccountIds
         targetFilterType: $targetFilterType
         targetFilterValues: $targetFilterValues
         targetInstruments: $targetInstruments
@@ -1771,7 +1767,6 @@ const SETTINGS_COST_SIMILARS = gql`
   mutation SettingsCostSimilars(
     $name: String!
     $description: String
-    $bankAccountIds: [String!]
     $targetFilterType: SettingsCostTargetFilterType!
     $targetFilterValues: [String!]
     $targetInstruments: [PaymentInstrument!]
@@ -1784,7 +1779,6 @@ const SETTINGS_COST_SIMILARS = gql`
       settings: {
         name: $name
         description: $description
-        bankAccountIds: $bankAccountIds
         targetFilterType: $targetFilterType
         targetFilterValues: $targetFilterValues
         targetInstruments: $targetInstruments
@@ -2755,7 +2749,6 @@ const UPDATE_SETTINGS_COST = gql`
     $settingsId: ID!
     $name: String!
     $description: String
-    $bankAccountIds: [String!]
     $targetFilterType: SettingsCostTargetFilterType!
     $targetFilterValues: [String!]
     $targetInstruments: [PaymentInstrument!]
@@ -2769,7 +2762,6 @@ const UPDATE_SETTINGS_COST = gql`
       settings: {
         name: $name
         description: $description
-        bankAccountIds: $bankAccountIds
         targetFilterType: $targetFilterType
         targetFilterValues: $targetFilterValues
         targetInstruments: $targetInstruments
@@ -3897,7 +3889,6 @@ export class AdminDataService {
 			variables: {
 				name: settings.name,
         description: settings.description,
-        bankAccountIds: settings.bankAccountIds,
         targetFilterType: settings.target,
         targetFilterValues: settings.targetValues,
         targetInstruments: settings.instrument,
@@ -3916,7 +3907,6 @@ export class AdminDataService {
 				variables: {
 					name: settings.name,
 					description: settings.description,
-					bankAccountIds: settings.bankAccountIds,
 					targetFilterType: settings.target,
 					targetFilterValues: settings.targetValues,
 					targetInstruments: settings.instrument,
@@ -3932,7 +3922,6 @@ export class AdminDataService {
 					settingsId: settings.id,
 					name: settings.name,
 					description: settings.description,
-					bankAccountIds: settings.bankAccountIds,
 					targetFilterType: settings.target,
 					targetFilterValues: settings.targetValues,
 					targetInstruments: settings.instrument,

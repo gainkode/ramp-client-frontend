@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { NgbDateAdapter, NgbDateParserFormatter, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
-import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput, TransactionUpdatePaymentOrderChanges, UserRoleObjectCode } from 'model/generated-models';
+import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionScreeningAnswer, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput, TransactionUpdatePaymentOrderChanges, UserRoleObjectCode } from 'model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, TransactionTypeList, UserStatusList } from 'model/payment.model';
 import { ScreeningAnswer, TransactionItemFull } from 'model/transaction.model';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
@@ -87,7 +87,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     widgetId: this.fb.control<string>(undefined),
     transferOrderHash: this.fb.control<string>(undefined),
     transactionType: this.fb.control<TransactionType>(undefined, Validators.required),
-    screeningAnswer: this.fb.control<ScreeningAnswer>(undefined),
+    screeningAnswer: this.fb.control<TransactionScreeningAnswer>(undefined),
     screeningRiskscore: this.fb.control<number>(undefined),
     screeningStatus: this.fb.control<string>(undefined),
     benchmarkTransferOrderHash: this.fb.control<string>(undefined),

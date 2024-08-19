@@ -14,7 +14,6 @@ export class CostScheme {
 	deleted = false;
 	description!: string;
 	name!: string;
-	bankAccountIds: string[] = [];
 	target: SettingsCostTargetFilterType | null = null;
 	targetValues: Array<string> = [];
 	trxType: Array<TransactionType> = [];
@@ -30,7 +29,6 @@ export class CostScheme {
 			this.id = data.settingsCostId;
 			this.isDefault = data.default as boolean;
 			this.description = data.description as string;
-			this.bankAccountIds = data.bankAccounts?.map(a => a.bankAccountId) ?? [];
 			this.terms = new CostShemeTerms(data.terms ?? '');
 			this.deleted = data?.deleted;
 

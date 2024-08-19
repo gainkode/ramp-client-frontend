@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core
 import { AuthService } from '../../services/auth.service';
 import { ErrorService } from '../../services/error.service';
 import { Validators, UntypedFormBuilder, AbstractControl } from '@angular/forms';
-import { LoginResult, PostAddress, SettingsKyc, UserType } from '../../model/generated-models';
+import { LoginResult, PostAddress, UserType } from '../../model/generated-models';
 import { Subscription } from 'rxjs';
 import { getCountryByCode3 } from '../../model/country-code.model';
 import { take } from 'rxjs/operators';
@@ -127,7 +127,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
     	this.progressChange.emit(true);
     	this.subscriptions.add(
     		fieldsData.subscribe(({ data }) => {
-    			const fields: SettingsKyc = data.mySettingsKyc;
+    			const fields = data.mySettingsKyc;
     			this.requireUserFullName = fields.requireUserFullName as boolean;
     			this.requireUserPhone = fields.requireUserPhone as boolean;
     			this.requireUserBirthday = fields.requireUserBirthday as boolean;
@@ -145,6 +145,7 @@ export class SignupInfoPanelComponent implements OnDestroy {
     private setFields(): void {
     	const user = this.auth.user;
     	this.isMerchant = (user?.type === UserType.Merchant);
+			
     	if (this.requireUserFullName && user) {
     		this.firstNameControl?.setValue(user.firstName);
     		this.lastNameControl?.setValue(user.lastName);
