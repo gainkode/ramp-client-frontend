@@ -1,4 +1,4 @@
-<div class="widget-list__container" *ngIf="!yapilyRedirectObject">
+<div *ngIf="!yapilyRedirectObject" class="widget-list__container">
   <div class="widget-list__header">
     <div class="widget-list__header-search">
         <mat-form-field appearance="outline">
@@ -19,17 +19,17 @@
   <div class="widget-list__item">
       <div *ngFor="let item of paymentBanks$ | async">
         <button type="button" class="widget-list__item-row" (click)="selectBankItem(item)">
-            <div class="widget-list__item-column">
-              <div>
-                <img alt="Bank" [src]="item.icon | safeurl : true">
-              </div>
-              <div class="widget-list__item-column-item">
-                <div class="widget-list__item-column-label">
-                  <span>{{item.name}}</span>
-                </div>
-                <mat-icon>keyboard_arrow_right</mat-icon>
-              </div>
+          <div class="widget-list__item-column">
+            <div>
+              <img alt="Bank" [src]="item.icon | safeurl : true">
             </div>
+            <div class="widget-list__item-column-item">
+              <div class="widget-list__item-column-label">
+                <span>{{item.name}}</span>
+              </div>
+              <mat-icon>keyboard_arrow_right</mat-icon>
+            </div>
+          </div>
         </button>
     </div>     
   </div>
@@ -41,7 +41,7 @@
   </div>
 </div> 
 
-<div class="__dialog-wizard-data-container tx-center" *ngIf="yapilyRedirectObject">
+<div *ngIf="yapilyRedirectObject" class="__dialog-wizard-data-container tx-center">
   <div class="__dialog-message">
      {{'widget-payment-bank.scan_qr-1' | transloco}}
      {{yapilyRedirectObject.bankName}} 
