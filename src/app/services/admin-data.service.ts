@@ -368,7 +368,6 @@ const GET_COST_SETTINGS = gql`
         name
         default
         description
-        bankAccounts { bankAccountId, name }
         terms
         targetFilterType
         targetFilterValues
@@ -1801,9 +1800,6 @@ const SETTINGS_COST_SIMILARS = gql`
         ...CostObjectDetails
       }
       widgetIds {
-        ...CostObjectDetails
-      }
-      bankAccounts {
         ...CostObjectDetails
       }
     }
