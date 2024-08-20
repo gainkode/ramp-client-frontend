@@ -2,7 +2,7 @@
     <div *ngIf="!methodSelected" class="__widget-provider-list-container">
         <button *ngFor="let method of methods" type="button" class="__widget-provider-item-button"
             (click)="onPaymentMethodSelected(method)">
-            <!-- <img class="__widget-provider-item-image" alt="provider" [src]="item.image"> -->
+            <img class="__widget-provider-item-image" alt="provider" [src]="methodImage(method)">
             <h2 class="__widget-provider-item-title">
                 {{method.name}}
             </h2>
@@ -20,7 +20,7 @@
     </div>
 
     <div class="__widget-buttons-area">
-        <button class="__outlined-button" type="button" (click)="onBack.emit()">
+        <button class="__outlined-button" type="button" (click)="onBackToDetails()">
             {{'global.widget_btn-back' | transloco}}
         </button>
     </div>

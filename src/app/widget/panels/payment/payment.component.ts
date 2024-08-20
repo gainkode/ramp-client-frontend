@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { PaymentMethod, PaymentProvider, TransactionSource, TransactionType } from 'model/generated-models';
+import { PaymentInstrument, PaymentMethod, PaymentProvider, TransactionSource, TransactionType } from 'model/generated-models';
 import { WidgetSettings } from 'model/payment-base.model';
 import { CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
 import { finalize, Subject, take, takeUntil } from 'rxjs';
+import { EnvService } from 'services/env.service';
 import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
 
@@ -33,7 +34,8 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
     private readonly errorHandler: ErrorService,
     private readonly cdr: ChangeDetectorRef
   ) {
-   }
+  }
+
 
   ngOnInit(): void {
     this.loadPaymentMethods(this.summary, this.widget);
@@ -43,6 +45,23 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
 		this._destroy$.next();
 		this._destroy$.complete();
 	}
+
+  methodImage(method: PaymentMethod): string {
+    switch (method.name) {
+      case PaymentInstrument.Apm:
+        return method?.logo ? `${EnvService.image_host}/apm/${method.logo}` : './assets/svg-providers/apm.svg';
+      case PaymentInstrument.CreditCard:
+        return `./assets/svg-providers/credit-card.svg`;
+      case PaymentInstrument.WireTransfer:
+        return `./assets/svg-providers/wire-transfer.svg`;
+      case PaymentInstrument.FiatVault:
+        return `./assets/svg-providers/fiat-vault.png`;
+      case PaymentInstrument.OpenBanking:
+        return `./assets/svg-providers/${method.displayName}.svg`;
+      default:
+        return './assets/svg-providers/default.svg';
+    }
+  }
 
   onPaymentMethodSelected(method: PaymentMethod): void {
     this.loadPaymentProviders(this.summary, this.widget, method);
@@ -54,6 +73,14 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
       selectedProvider: item,
       providers: this.paymentProviders
     });
+  }
+
+  onBackToDetails(): void {
+    if ( this.methodSelected ) {
+      this.methodSelected = false;
+    } else {
+      this.onBack.emit();
+    }
   }
 
   private loadPaymentMethods(summary: CheckoutSummary, widget: WidgetSettings): void {

@@ -273,6 +273,8 @@ mutation CreateTransaction(
   $destination: String,
   $verifyWhenPaid: Boolean,
   $treatAsGrossAmount: Boolean
+  $wireTransferBankAccountId: String
+  $wireTransferPaymentCategory: String
 ) {
   createTransaction(transaction: {
     type: $transactionType
@@ -289,6 +291,8 @@ mutation CreateTransaction(
     destination: $destination
     verifyWhenPaid: $verifyWhenPaid
     treatAsGrossAmount: $treatAsGrossAmount
+    wireTransferBankAccountId: $wireTransferBankAccountId
+    wireTransferPaymentCategory: $wireTransferPaymentCategory
   }) {
     transactionId,
     code,
