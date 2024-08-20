@@ -1,14 +1,14 @@
 <div class="row">
   <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
-    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+    <form novalidate [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
         <div *ngIf="defaultSchemeName===''" class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Scheme name
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <input class="form-control" [ngClass]="{'has-error': !form.controls.name.valid}" type="text"
-            formControlName="name" required>
+          <input class="form-control" type="text" formControlName="name"
+            required [ngClass]="{'has-error': !form.controls.name.valid}">
           <div *ngIf="(form.controls.name.touched || submitted) && (form.controls.name.errors?.['required'])"
             class="tx-danger">
             <small>
@@ -37,8 +37,8 @@
               Target
               <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
-            <ng-select [items]="targets" [clearable]=false [clearOnBackspace]=false bindLabel="name" bindValue="id"
-              formControlName="target" required>
+            <ng-select bindLabel="name" bindValue="id" formControlName="target" required [items]="targets"
+              [clearable]=false [clearOnBackspace]=false>
             </ng-select>
             <div *ngIf="(form.controls.target.touched || submitted) && (form.controls.target.errors?.['required'])"
               class="tx-danger">
@@ -53,10 +53,10 @@
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               {{targetsTitle}}
             </label>
-            <ng-select [minTermLength]="minTargetsLengthTerm" notFoundText="No {{targetEntity[1]}} found"
-              [loading]="isTargetsLoading" [multiple]="true" formControlName="targetValues"
-              [typeToSearchText]="targetSearchText" bindLabel="title"
-              placeholder="Start typing to search a {{targetEntity[0]}}" [typeahead]="targetsSearchInput$" required>
+            <ng-select formControlName="targetValues" bindLabel="title"
+              required [minTermLength]="minTargetsLengthTerm" notFoundText="No {{targetEntity[1]}} found"
+              [loading]="isTargetsLoading" [multiple]="true"
+              [typeToSearchText]="targetSearchText" placeholder="Start typing to search a {{targetEntity[0]}}" [typeahead]="targetsSearchInput$">
               <ng-option *ngFor="let item of targetsOptions$ | async" [value]="item">
                 <app-dropdown-item [itemValue]="item.title" [imageClass]="item.imgClass" [imageSource]="item.imgSource">
                 </app-dropdown-item>
@@ -79,12 +79,12 @@
             </label>
             <ng-select formControlName="widgetIds"
               bindLabel="title"
-              [minTermLength]="minTargetsLengthTerm"
-              notFoundText="No widgets found" 
-              [loading]="isWidgetsLoading" 
-              [multiple]="true"
+              notFoundText="No widgets found"
               typeToSearchText="type widget name" 
               placeholder="Start typing to search a widget" 
+              [minTermLength]="minTargetsLengthTerm"
+              [loading]="isWidgetsLoading" 
+              [multiple]="true" 
               [typeahead]="widgetsSearchInput$" 
               [items]="widgetsOptions$ | async">
             </ng-select>
@@ -95,8 +95,8 @@
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Transaction types
             </label>
-            <ng-select [items]="transactionTypes" bindLabel="name" bindValue="id" [multiple]="true"
-              formControlName="trxType" placeholder="Select one or more types" required>
+            <ng-select bindLabel="name" bindValue="id" formControlName="trxType" placeholder="Select one or more types"
+              required [items]="transactionTypes" [multiple]="true">
             </ng-select>
             <div *ngIf="(form.controls.trxType.touched || submitted) && (form.controls.trxType.errors?.['required'])"
               class="tx-danger">
@@ -111,8 +111,8 @@
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Payment Methods
             </label>
-            <ng-select [items]="instruments" bindLabel="name" bindValue="id" [multiple]="true"
-              formControlName="instrument" placeholder="Select one or more methods" required>
+            <ng-select bindLabel="name" bindValue="id" formControlName="instrument" placeholder="Select one or more methods"
+              required [items]="instruments" [multiple]="true">
             </ng-select>
             <div
               *ngIf="(form.controls.instrument.touched || submitted) && (form.controls.instrument.errors?.['required'])"
@@ -128,8 +128,8 @@
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Payment providers
             </label>
-            <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id" [multiple]="true"
-              formControlName="provider" placeholder="Select one or more providers">
+            <ng-select bindLabel="name" bindValue="id" formControlName="provider" placeholder="Select one or more providers"
+              [items]="filteredProviders" [multiple]="true">
             </ng-select>
             <div *ngIf="(form.controls.provider.touched || submitted) && (form.controls.provider.errors?.['required'])"
               class="tx-danger">
@@ -151,8 +151,8 @@
             MDR, %
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <input class="form-control" [ngClass]="{'has-error': !form.controls.mdr.valid}" type="text"
-            formControlName="mdr" maxlength="7" placeholder="2%" required>
+          <input class="form-control" type="text" formControlName="mdr"
+            maxlength="7" placeholder="2%" required [ngClass]="{'has-error': !form.controls.mdr.valid}">
           <div *ngIf="(form.controls.mdr.touched || submitted) && (form.controls.mdr.errors?.['required'])"
             class="tx-danger">
             <small>
@@ -172,8 +172,8 @@
             Per transaction cost
             <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
           </label>
-          <input class="form-control" [ngClass]="{'has-error': !form.controls.transactionCost.valid}" type="text"
-            formControlName="transactionCost" maxlength="10" placeholder="1" required>
+          <input class="form-control" type="text" formControlName="transactionCost"
+            maxlength="10" placeholder="1" required [ngClass]="{'has-error': !form.controls.transactionCost.valid}">
           <div
             *ngIf="(form.controls.transactionCost.touched || submitted) && (form.controls.transactionCost.errors?.['required'])"
             class="tx-danger">
@@ -225,14 +225,14 @@
     </button>
   </div>
   <div class="modal-body">
-    <h4 style="text-align: center;">
+    <h4 class="tx-center">
       You are going to delete selected cost scheme. Confirm operation.
     </h4>
-    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+    <div class="d-flex align-items-center justify-content-center">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
         Confirm
       </button>
     </div>

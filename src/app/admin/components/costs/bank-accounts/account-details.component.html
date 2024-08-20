@@ -26,26 +26,85 @@
 
         <div class="form-group">
           <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Transaction type
+          </label>
+          <ng-select 
+            bindLabel="name" 
+            bindValue="id" 
+            formControlName="targetTransactionTypes" 
+            placeholder="Select one or more types"
+            [items]="transactionTypes" 
+            [multiple]="true">
+          </ng-select>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Widget ID
+          </label>
+          <ng-select formControlName="widgetIds"
+            bindLabel="title"
+            notFoundText="No widgets found"
+            typeToSearchText="type widget name" 
+            placeholder="Start typing to search a widget" 
+            [multiple]="true"
+            [closeOnSelect]="false"
+            [items]="widgetsOptions$ | async">
+          </ng-select>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            Source
+          </label>
+          <ng-select 
+            bindLabel="name" 
+            bindValue="id" 
+            formControlName="source" 
+            placeholder="Select one or more providers"
+            [multiple]="true"
+            [items]="transactionSources" [closeOnSelect]="false">
+          </ng-select>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
             Payment providers
           </label>
-          <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id" [multiple]="true"
-            formControlName="paymentProviders" placeholder="Select one or more providers">
+          <ng-select 
+            bindLabel="name" 
+            bindValue="id" 
+            formControlName="paymentProviders" 
+            placeholder="Select one or more providers"
+            [items]="providers" 
+            [multiple]="true" 
+            [closeOnSelect]="false">
           </ng-select>
-          <div *ngIf="(form.controls.paymentProviders.touched || submitted) && (form.controls.paymentProviders.errors?.['required'])"
-            class="tx-danger">
-            <small>
-              Select at least one payment provider
-            </small>
-          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="main-content-label tx-11 tx-medium tx-gray-600">
+            User types
+          </label>
+          <ng-select 
+            bindLabel="name" 
+            bindValue="id" 
+            formControlName="userTypes" 
+            placeholder="Select one or more user types"
+            [items]="userTypeOptions"
+            [clearOnBackspace]=true 
+            [multiple]="true" 
+            [closeOnSelect]="false">
+          </ng-select>
         </div>
       </div>
+
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20 tx-11"
-          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+        <h5 class="card-title mg-b-20 tx-11 d-flex align-items-center">
           <input type="checkbox" formControlName="auSelected" class="me-2">
           {{auCategory?.title}}
         </h5>
-        <div *ngIf="form.get('auSelected')?.value===true">
+        <div *ngIf="form.get('auSelected')?.value">
           <div class="form-group">
             <label class="main-content-label tx-11 tx-medium tx-gray-600">
               Account Name
@@ -68,9 +127,9 @@
           </div>
         </div>
       </div>
+
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20 tx-11"
-          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+        <h5 class="card-title mg-b-20 tx-11 d-flex align-items-center">
           <input type="checkbox" formControlName="euSelected" class="me-2">
           {{euCategory?.title}}
         </h5>
@@ -119,8 +178,7 @@
         </div>
       </div>
       <div class="card card-body pd-20 pd-md-40 border shadow-none">
-        <h5 class="card-title mg-b-20 tx-11"
-          style="display: flex;flex-direction: row;justify-content: flex-start;align-items: center;">
+        <h5 class="card-title mg-b-20 tx-11 d-flex align-items-center">
           <input type="checkbox" formControlName="ukSelected" class="me-2">
           {{ukCategory?.title}}
         </h5>
@@ -153,8 +211,8 @@
           {{errorMessage}}
         </h4>
       </div>
-      <div style="display: flex; justify-content: flex-end;">
-        <button class="btn btn-primary pd-x-30 me-2 mg-t-5">
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary pd-x-30 me-2 mg-t-5">
           <span *ngIf="saveInProgress" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Save
         </button>
@@ -180,14 +238,14 @@
     </button>
   </div>
   <div class="modal-body">
-    <h4 style="text-align: center;">
+    <h4 class="tx-center">
       You are going to delete selected bank account. Confirm operation.
     </h4>
-    <div style="display: flex;flex-direction: row;justify-content: center;align-items: center;">
+    <div class="d-flex align-items-center">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>
-      <button class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="modal.close('Confirm')">
         Confirm
       </button>
     </div>

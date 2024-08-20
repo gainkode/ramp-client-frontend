@@ -164,7 +164,11 @@ export class WireTransferBankAccountItem {
 	au: WireTransferBankAccountAu | undefined = undefined;
 	uk: WireTransferBankAccountUk | undefined = undefined;
 	eu: WireTransferBankAccountEu | undefined = undefined;
-	paymentProviders: String[] = [];
+	paymentProviders: string[] = [];
+	source: string[] = [];
+	targetTransactionTypes: string[] = [];
+	widgetIds: string[] = [];
+	userTypes: string[] = [];
 
 	get auAvailable(): boolean {
 		return (this.au !== undefined);
@@ -204,9 +208,12 @@ export class WireTransferBankAccountItem {
 			if (data.eu) {
 				this.eu = JSON.parse(data.eu) ?? undefined;
 			}
-			if(data.paymentProviders){
-				this.paymentProviders = data.paymentProviders;
-			}
+
+			this.paymentProviders = data.paymentProviders || [];
+			this.source = data.source || [];
+			this.targetTransactionTypes = data.targetTransactionTypes || [];
+			this.widgetIds = data.widgetIds || [];
+			this.userTypes = data.userTypes || [];
 		} else {
 			this.id = '';
 			this.name = '';

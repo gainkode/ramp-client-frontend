@@ -5623,7 +5623,11 @@ export type WireTransferBankAccountInput = {
   eu?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   paymentProviders?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  source?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  targetTransactionTypes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   uk?: InputMaybe<Scalars['String']['input']>;
+  userTypes?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  widgetIds?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type WireTransferBankAccountListResult = {

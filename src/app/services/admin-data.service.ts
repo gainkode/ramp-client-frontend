@@ -394,6 +394,10 @@ query GetWireTransferBankAccounts {
       uk
       eu
       paymentProviders
+      source
+      targetTransactionTypes
+      widgetIds
+      userTypes
     }
   }
 }
@@ -1443,6 +1447,7 @@ query GetProviders {
     countriesCode2
     instruments
     virtual
+    bankAccountsRequired
   }
 }
 `;
@@ -1814,6 +1819,10 @@ mutation AddWireTransferBankAccount(
   $uk: String
   $eu: String,
   $paymentProviders: [String]
+  $source: [String]
+  $targetTransactionTypes: [String]
+  $widgetIds: [String]
+  $userTypes: [String]
 ) {
   addWireTransferBankAccount(
     bankAccount: {
@@ -1823,6 +1832,10 @@ mutation AddWireTransferBankAccount(
       uk: $uk
       eu: $eu
       paymentProviders: $paymentProviders
+      source: $source
+      targetTransactionTypes: $targetTransactionTypes
+      widgetIds: $widgetIds
+      userTypes: $userTypes
     }
   ) {
     bankAccountId
@@ -2781,6 +2794,10 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
     $uk: String
     $eu: String
     $paymentProviders: [String]
+    $source: [String]
+    $targetTransactionTypes: [String]
+    $widgetIds: [String]
+    $userTypes: [String]
   ) {
     updateWireTransferBankAccount(
       bankAccountId: $bankAccountId
@@ -2791,6 +2808,10 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
         uk: $uk
         eu: $eu
         paymentProviders: $paymentProviders
+        source: $source
+        targetTransactionTypes: $targetTransactionTypes
+        widgetIds: $widgetIds
+        userTypes: $userTypes
       }
     ) {
       bankAccountId
@@ -3949,7 +3970,11 @@ export class AdminDataService {
 					au: account.au,
 					uk: account.uk,
 					eu: account.eu,
-					paymentProviders: account.paymentProviders
+					paymentProviders: account.paymentProviders,
+          source: account.source,
+          targetTransactionTypes: account.targetTransactionTypes,
+          widgetIds: account.widgetIds,
+          userTypes: account.userTypes,
 				}
 			})
 			: this.apollo.mutate({
@@ -3961,7 +3986,11 @@ export class AdminDataService {
 					au: account.au,
 					uk: account.uk,
 					eu: account.eu,
-					paymentProviders: account.paymentProviders
+					paymentProviders: account.paymentProviders,
+          source: account.source,
+          targetTransactionTypes: account.targetTransactionTypes,
+          widgetIds: account.widgetIds,
+          userTypes: account.userTypes,
 				}
 			});
 	}

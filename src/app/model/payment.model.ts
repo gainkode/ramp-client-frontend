@@ -63,9 +63,10 @@ export class PaymentProviderView {
 	name = '';
 	instruments: string[] = [];
 	virtual = false;
-
+	bankAccountsRequired = false;
 	constructor(data: PaymentProvider) {
 		this.id = data.paymentProviderId ?? '';
+		this.bankAccountsRequired = data.bankAccountsRequired;
 		this.name = data.displayName ?? data.name ?? '';
 		this.instruments = data.instruments?.map(val => val) ?? [];
 		this.virtual = data.virtual;

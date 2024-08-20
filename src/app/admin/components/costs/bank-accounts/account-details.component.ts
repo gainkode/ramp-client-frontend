@@ -2,13 +2,20 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
 import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountItem, WireTransferBankAccountUk } from 'model/cost-scheme.model';
-import { PaymentInstrument, PaymentProvider, WireTransferBankAccount, WireTransferPaymentCategory } from 'model/generated-models';
-import { PaymentProviderView, WireTransferPaymentCategoryList } from 'model/payment.model';
+import { PaymentInstrument, PaymentProvider, TransactionType, WireTransferBankAccount, WireTransferPaymentCategory } from 'model/generated-models';
+import { PaymentProviderView, TransactionSourceList, TransactionTypeList, UserTypeList, WireTransferPaymentCategoryList } from 'model/payment.model';
 import { AuthService } from 'services/auth.service';
 import { getProviderList } from 'utils/utils';
+import { Filter } from 'admin/model/filter.model';
+import { CommonTargetValue } from 'model/common.model';
+
+const requiredTransactionTypes = [
+	TransactionType.Buy,
+	TransactionType.Sell,
+];
 
 @Component({
 	selector: 'app-admin-bank-account-details',
@@ -35,10 +42,12 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   createNew = false;
   saveInProgress = false;
   deleteInProgress = false;
-	filteredProviders: PaymentProviderView[] = [];
 	providers: PaymentProviderView[] = [];
   public errorMessage = '';
-  private bankCategories = WireTransferPaymentCategoryList;
+  bankCategories = WireTransferPaymentCategoryList;
+	transactionSources = TransactionSourceList;
+	userTypeOptions = UserTypeList;
+	transactionTypes = TransactionTypeList.filter((item) => requiredTransactionTypes.includes(item.id));
   public auCategory: any;
   public ukCategory: any;
   public euCategory: any;
@@ -62,7 +71,17 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   	euIban: [undefined],
   	euSwiftBic: [undefined],
 		paymentProviders: [[]],
+		source: [],
+		targetTransactionTypes: [],
+		widgetIds: [],
+		userTypes: [],
   });
+
+	widgetsOptions$ = this.adminService.getWidgets(0, 200, 'name', false, <Filter>{}).pipe(
+		map(result => result.list.map(widget => ({
+			id: widget.id,
+			title: widget.name
+		} as CommonTargetValue))));
 
   constructor(
   	private formBuilder: UntypedFormBuilder,
@@ -110,9 +129,12 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   			this.form.get('euSwiftBic')?.setValue(account.eu?.swiftBic);
   		}
 
-			if(account.paymentProviders){
-				this.form.get('paymentProviders')?.setValue(account.paymentProviders);
-			}
+			this.form.get('paymentProviders')?.setValue(account.paymentProviders);
+			this.form.get('widgetIds')?.setValue(account.widgetIds);
+			this.form.get('source')?.setValue(account.source);
+			this.form.get('targetTransactionTypes')?.setValue(account.targetTransactionTypes);
+			this.form.get('userTypes')?.setValue(account.userTypes);
+
   	} else {
   		this.form.get('name')?.setValue('');
   		this.form.get('description')?.setValue('');
@@ -120,6 +142,10 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   		this.form.get('ukSelected')?.setValue(false);
   		this.form.get('euSelected')?.setValue(false);
 			this.form.get('paymentProviders')?.setValue([]);
+			this.form.get('widgetIds')?.setValue([]);
+			this.form.get('source')?.setValue([]);
+			this.form.get('targetTransactionTypes')?.setValue([]);
+			this.form.get('userTypes')?.setValue([]);
   		this.form.get('auAccountName')?.setValue(undefined);
   		this.form.get('auAccountNumber')?.setValue(undefined);
   		this.form.get('auBsb')?.setValue(undefined);
@@ -189,6 +215,10 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   	}
 
 		data.paymentProviders = this.form.get('paymentProviders')?.value;
+		data.source = this.form.get('source')?.value;
+		data.targetTransactionTypes = this.form.get('targetTransactionTypes')?.value;
+		data.widgetIds = this.form.get('widgetIds')?.value;
+		data.userTypes = this.form.get('userTypes')?.value;
   	return data;
   }
 
@@ -204,6 +234,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
   	});
+
   	this.subscriptions.add(
   		this.removeDialog.closed.subscribe(() => {
   			this.deleteAccountConfirmed(this.settingsId ?? '');
@@ -213,17 +244,12 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
 
 	private getPaymentProviders(): void {
   	this.providers = [];
-  	const data$ = this.adminService.getProviders()?.valueChanges;
+
   	this.subscriptions.add(
-  		data$.subscribe(({ data }) => {
+  		this.adminService.getProviders()?.valueChanges.subscribe(({ data }) => {
   			const providers = data.getPaymentProviders as PaymentProvider[];
-  			this.providers = providers?.map((val) => new PaymentProviderView(val));
-				this.filteredProviders = getProviderList([PaymentInstrument.WireTransfer], this.providers, (provider) => {
-					if(provider.virtual){
-						return true;
-					}
-					return false;
-				});
+				
+  			this.providers = providers?.map((val) => new PaymentProviderView(val)).filter((val) => val.instruments?.some(i => i.includes('WireTransfer')) && val.bankAccountsRequired);
   		})
   	);
   }
@@ -231,14 +257,15 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   private saveAccount(account: WireTransferBankAccount): void {
   	this.errorMessage = '';
   	this.saveInProgress = true;
-  	const requestData$ = this.adminService.saveBankAccountSettings(account, this.createNew);
+
   	this.subscriptions.add(
-  		requestData$.subscribe(() => {
+  		this.adminService.saveBankAccountSettings(account, this.createNew).subscribe(() => {
   			this.saveInProgress = false;
   			this.save.emit();
   		}, (error) => {
   			this.saveInProgress = false;
   			this.errorMessage = error;
+
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
   			}
@@ -248,14 +275,14 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
 
   deleteAccountConfirmed(id: string): void {
   	this.errorMessage = '';
-  	this.saveInProgress = true;
-  	const requestData$ = this.adminService.deleteBankAccountSettings(id);
+  	this.deleteInProgress = true;
+
   	this.subscriptions.add(
-  		requestData$.subscribe(() => {
-  			this.saveInProgress = false;
+  		this.adminService.deleteBankAccountSettings(id).subscribe(() => {
+  			this.deleteInProgress = false;
   			this.save.emit();
   		}, (error) => {
-  			this.saveInProgress = false;
+  			this.deleteInProgress = false;
   			this.errorMessage = error;
   			if (this.auth.token === '') {
   				void this.router.navigateByUrl('/');
