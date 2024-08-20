@@ -134,16 +134,6 @@ query MySettingsCost(
     widgetId: $widgetId
   ) {
     terms
-    bankAccounts {
-      bankAccountId
-      au
-      uk
-      eu
-      objectsDetails{
-        id
-        title
-      }
-    }
   }
 }
 `;
