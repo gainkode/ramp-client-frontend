@@ -25,7 +25,8 @@ export class PaymentProviderInstrumentView {
 	instrument: PaymentInstrument = PaymentInstrument.CreditCard;
 	external = false;
 	bankAccount: WireTransferBankAccount;
-	isSingleBankAccount = true;
+	isSingleBankAccount = false;
+	selectedBankAccount = '';
 	constructor(data: PaymentProvider, paymentMethodName: PaymentInstrument) {
 		this.id = data?.paymentProviderId ?? '';
 		this.name = data?.name ?? '';
@@ -33,8 +34,14 @@ export class PaymentProviderInstrumentView {
 		this.instrument = paymentMethodName;
 		this.bankAccount = data?.wrBankAccount;
 
-		// if (this.bankAccount.au === ' ')
+		if (data?.wrBankAccount) {
+			this.isSingleBankAccount = this.singleBankAccount(data?.wrBankAccount);
 
+			if (this.isSingleBankAccount) {
+				this.selectedBankAccount = this.selectBankAccount(data?.wrBankAccount);
+			}
+		}
+	
 		if(data.external || data.virtual){
 			this.external = data.external;
 		}
@@ -55,6 +62,29 @@ export class PaymentProviderInstrumentView {
 			this.name = data?.displayName;
 			this.image = `./assets/svg-providers/${this.name}.svg`;
 		}
+	}
+
+	singleBankAccount(data: WireTransferBankAccount): boolean {
+		const { au, uk, eu } = data;
+		const accounts = [au, uk, eu];
+		
+		// Filter out null values and check if only one account is non-null
+		const nonNullAccounts = accounts.filter(account => account);
+		
+		return nonNullAccounts.length === 1;
+	}
+
+	selectBankAccount(data: WireTransferBankAccount): string {
+		const accounts = [
+			{ key: 'au', value: data?.au },
+			{ key: 'uk', value: data?.uk },
+			{ key: 'eu', value: data?.eu }
+	];
+		
+		// Filter out null values and check if only one account is non-null
+		const account = accounts.filter(account => account);
+		
+		return account[0].key;
 	}
 }
 

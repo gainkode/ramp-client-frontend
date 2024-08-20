@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { TransactionSource, PaymentBank } from 'model/generated-models';
+import { PaymentBank, WireTransferBankAccount } from 'model/generated-models';
 import { CheckoutSummary } from 'model/payment.model';
 import { Subscription } from 'rxjs';
-import { NotificationService } from 'services/notification.service';
 import { PaymentDataService } from 'services/payment.service';
 import { WidgetPaymentPagerService } from 'services/widget-payment-pager.service';
 import { YapilyRedirectModel } from '../yapily/panels/banks-page/bank.component';
@@ -15,9 +14,7 @@ import { YapilyRedirectModel } from '../yapily/panels/banks-page/bank.component'
 })
 export class WidgetPaymentWrBankAccountComponent implements OnInit, OnDestroy {
   @Input() summary: CheckoutSummary | undefined = undefined;
-  @Input() source: TransactionSource = TransactionSource.QuickCheckout;
-  @Input() userParamsId = '';
-  @Input() errorMessage = '';
+  @Input() bankAccount: WireTransferBankAccount | undefined = undefined;
   @Output() onBack = new EventEmitter();
   yapilyRedirectObject!: YapilyRedirectModel;
   isLoading = false;
@@ -30,7 +27,6 @@ export class WidgetPaymentWrBankAccountComponent implements OnInit, OnDestroy {
   private pPaymentStatusSchangedSubscription: Subscription | undefined = undefined;
   constructor(
   	private cdr: ChangeDetectorRef,
-  	private notification: NotificationService,
   	public paymentService: PaymentDataService,
   	public pager: WidgetPaymentPagerService
   ) {

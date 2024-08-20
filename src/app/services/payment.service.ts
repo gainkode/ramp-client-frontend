@@ -90,6 +90,7 @@ query GetAppropriatePaymentMethods(
       paymentMethodId
       name
       displayName
+      logo
   }
 }
 `;

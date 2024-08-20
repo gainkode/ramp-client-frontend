@@ -28,6 +28,7 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
   methodSelected = false;
   paymentProviders: PaymentProviderInstrumentView[] = [];
   methods: PaymentMethod[] = [];
+  method!: PaymentMethod;
   private readonly _destroy$ = new Subject<void>();
   constructor(
     private readonly paymentService: PaymentDataService,
@@ -57,14 +58,16 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
       case PaymentInstrument.FiatVault:
         return `./assets/svg-providers/fiat-vault.png`;
       case PaymentInstrument.OpenBanking:
-        return `./assets/svg-providers/${method.displayName}.svg`;
+        return `./assets/svg-providers/wire-transfer.svg`;
       default:
         return './assets/svg-providers/default.svg';
     }
   }
 
   onPaymentMethodSelected(method: PaymentMethod): void {
-    this.loadPaymentProviders(this.summary, this.widget, method);
+    this.method = method;
+    this.loadPaymentProviders(this.summary, this.widget, this.method);
+
     this.methodSelected = true;
   }
 
@@ -73,11 +76,16 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
       selectedProvider: item,
       providers: this.paymentProviders
     });
+
+    this.isLoading = false;
   }
 
   onBackToDetails(): void {
     if ( this.methodSelected ) {
+      this.method = undefined;
       this.methodSelected = false;
+
+      this.loadPaymentMethods(this.summary, this.widget);
     } else {
       this.onBack.emit();
     }

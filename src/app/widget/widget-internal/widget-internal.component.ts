@@ -786,10 +786,17 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			
 			const currentCase = `payment_${this.selectedProvider.componentName}`;
 			const knownCases: string[] = ['payment_yapily', 'payment_wrbankaccount'];
-
+			debugger
 			if (knownCases.includes(currentCase)) {
 				if (this.selectedProvider.isSingleBankAccount) {
-					this.createTransaction(this.selectedProvider.id, this.selectedProvider.instrument, '', this.selectedProvider.bankAccount.bankAccountId, 'eu');
+
+					this.createTransaction(
+						this.selectedProvider.id, 
+						this.selectedProvider.instrument, 
+						'', 
+						this.selectedProvider.bankAccount.bankAccountId, 
+						this.selectedProvider.selectedBankAccount);
+						
 				} else {
 					this.nextStage(`payment_${this.selectedProvider.componentName}`, 'widget-pager.wire_transfer_result', 5);
 				}
