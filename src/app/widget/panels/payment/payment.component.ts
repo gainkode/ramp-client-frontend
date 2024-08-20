@@ -106,7 +106,13 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
       takeUntil(this._destroy$),
       take(1))
     .subscribe({
-      next: data => this.methods = data,
+      next: data => {
+        this.methods = data;
+
+        if (this.methods?.length === 1) {
+          this.onPaymentMethodSelected(this.methods[0]);
+        }
+      },
       error: (error) => {
         this.onError.emit(this.errorHandler.getError(error.message,'Unable to load payment methods'));
       }
