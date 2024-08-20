@@ -11,10 +11,10 @@
     window.__env_data.client_host = 'http://localhost:4000';
     // API server address
     // window.__env_data.api_server = 'http://localhost:4001';
-    window.__env_data.api_server = 'https://cf36-46-172-248-169.ngrok-free.app';
+    window.__env_data.api_server = 'https://bf65-46-172-248-169.ngrok-free.app';
     // API WebSocket address
     // window.__env_data.ws_server = 'ws://localhost:4001';
-    window.__env_data.ws_server = 'wss://cf36-46-172-248-169.ngrok-free.app';
+    window.__env_data.ws_server = 'wss://bf65-46-172-248-169.ngrok-free.app';
     // Image hosting address
     window.__env_data.image_host = './assets';
     window.__env_data.widget_secret = '15b78abfe32712f21f0f6eb43d1b5732691bec08';

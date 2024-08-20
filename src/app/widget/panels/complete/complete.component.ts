@@ -7,6 +7,7 @@ import { take, takeUntil } from 'rxjs';
 import { CommonDataService } from 'services/common-data.service';
 import { EnvService } from 'services/env.service';
 import { UnsubscriberBase } from 'services/unsubscriber.base';
+import { convertStringToArray } from 'utils/utils';
 
 @Component({
 	selector: 'app-widget-complete',
@@ -57,7 +58,7 @@ export class WidgetCompleteComponent extends UnsubscriberBase implements OnInit 
               (page) => page.pageType === PageType.Complete
             )?.pageText;
             
-            completeTextData = this.convertStringToArray(completeTextRaw);
+            completeTextData = convertStringToArray(completeTextRaw);
             this.textData = new CustomTextList(completeTextData);
             this.inProgress = false;
           }
@@ -66,10 +67,5 @@ export class WidgetCompleteComponent extends UnsubscriberBase implements OnInit 
           this.inProgress = false;
         },
       });
-  }
-
-  private convertStringToArray(input: string): string[] {
-    const lines = input.split('\n').map((line) => line.trim());
-    return lines;
   }
 }

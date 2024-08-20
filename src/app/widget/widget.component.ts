@@ -22,6 +22,7 @@ import { EnvService } from '../services/env.service';
 import { ProfileDataService } from '../services/profile.service';
 import { WidgetPagerService } from '../services/widget-pager.service';
 import { WidgetService } from '../services/widget.service';
+import { convertStringToArray } from 'utils/utils';
 
 @Component({
 	selector: 'app-widget',
@@ -560,8 +561,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
 						const completeTextRaw = pagesData.find(page => page.pageType === PageType.Complete)?.pageText;
 						const disclaimerTextRaw = pagesData.find(page => page.pageType === PageType.Disclaimer)?.pageText;
 
-						this.disclaimerTextData = this.convertStringToArray(disclaimerTextRaw);
-						this.completeTextData = this.convertStringToArray(completeTextRaw);
+						this.disclaimerTextData = convertStringToArray(disclaimerTextRaw);
+						this.completeTextData = convertStringToArray(completeTextRaw);
 					}
   					this.initPage();
   				},
@@ -573,17 +574,13 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	);
   }
 
-  private convertStringToArray(input: string): string[] {
-    const lines = input.split('\n').map(line => line.trim());
-    return lines;
-  }
-
   private loadUserParams(): void {
   	this.errorMessage = '';
-  	const widgetData = this.dataService.getWidget(this.userParamsId).valueChanges.pipe(take(1));
+
   	this.inProgress = true;
+		
   	this.pSubscriptions.add(
-  		widgetData.subscribe({
+  		this.dataService.getWidget(this.userParamsId).valueChanges.pipe(take(1)).subscribe({
   			next: ({ data }) => {
   				this.inProgress = false;
   				this.initData(data.getWidget as Widget);
@@ -1007,6 +1004,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   private createTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string): void {
   	const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
   	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
+
   	this.transactionInput = {
   		type: this.summary.transactionType,
   		source: this.widget.source,
@@ -1029,7 +1027,9 @@ export class WidgetComponent implements OnInit, OnDestroy {
   	this.errorMessage = '';
   	this.inProgress = true;
   	const tempStageId = this.pager.swapStage('initialization');
+
   	this.initMessage = 'Processing...';
+
   	this.pSubscriptions.add(
   		this.dataService.createTransaction(this.transactionInput).subscribe(({ data }) => {
   			if (!this.notificationStarted) {
@@ -1037,7 +1037,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   			}
   			const order = data.createTransaction as TransactionShort;
   			this.inProgress = false;
-  			if(order.requiredFields && order.requiredFields.length != 0) {
+  			if(order.requiredFields && order.requiredFields.length !== 0) {
   				this.userInfoRequired(order.requiredFields);
   				return;
   			}
@@ -1050,7 +1050,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   				this.summary.transactionDate = new Date().toLocaleString();
   				this.summary.transactionId = order.transactionId as string;
 					
-  				if(this.transactionInput.type == TransactionType.Buy){
+  				if(this.transactionInput.type === TransactionType.Buy){
   					this.summary.instrument = this.transactionInput.instrument;
   					this.summary.providerView = this.paymentProviders.find(x => x.id === this.transactionInput.paymentProvider);
   					if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
@@ -1213,7 +1213,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
   }
 
   private loadAccountData(): void {
-  	console.log('loadAccountData');
   	const meQuery$ = this.profileService.getProfileData().valueChanges.pipe(take(1));
   	this.pSubscriptions.add(
   		meQuery$.subscribe(({ data }) => {

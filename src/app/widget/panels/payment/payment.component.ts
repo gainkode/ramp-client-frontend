@@ -24,6 +24,7 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
     providers: PaymentProviderInstrumentView[]; 
   }>();
   isLoading = false;
+  methodSelected = false;
   paymentProviders: PaymentProviderInstrumentView[] = [];
   methods: PaymentMethod[] = [];
   private readonly _destroy$ = new Subject<void>();
@@ -45,6 +46,7 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
 
   onPaymentMethodSelected(method: PaymentMethod): void {
     this.loadPaymentProviders(this.summary, this.widget, method);
+    this.methodSelected = true;
   }
 
   onProviderSeleted(item: PaymentProviderInstrumentView): void{
@@ -86,6 +88,8 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
 			fiatCurrency = summary.currencyTo;
 		}
 
+    this.isLoading = true;
+
 		const providersData$ = this.paymentService.getProviders(
 			fiatCurrency, 
       widget.widgetId || undefined, 
@@ -95,13 +99,10 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
       amount
 		).pipe(
       finalize(() => {
-        this.isLoading = false, 
         this.cdr.detectChanges();
       }),
       takeUntil(this._destroy$), 
       take(1));
-
-    this.isLoading = true;
 
     providersData$.subscribe({
       next: paymentProviders => {
@@ -110,17 +111,19 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
           paymentProviders,
           method
         );
-        
+
         if (this.paymentProviders.length === 1) {
           this.onProviderSeleted(this.paymentProviders[0]);
-        } else if ( this.paymentProviders.length === 0) {
+        } else if (this.paymentProviders.length === 0) {
           this.onError.emit(`No supported payment providers found for "${this.summary.currencyFrom}`);
         } else if (this.paymentProviders.length > 1) {
           this.onNotificationStart.emit();
+          this.isLoading = false;
         }
       },
       error: (error) => {
         this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load payment instruments'));
+        this.isLoading = false;
       }
     });
 	}

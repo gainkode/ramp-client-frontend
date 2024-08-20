@@ -1,5 +1,5 @@
 <div class="__widget-data-box">
-    <div class="__widget-provider-list-container">
+    <div *ngIf="!methodSelected" class="__widget-provider-list-container">
         <button *ngFor="let method of methods" type="button" class="__widget-provider-item-button"
             (click)="onPaymentMethodSelected(method)">
             <!-- <img class="__widget-provider-item-image" alt="provider" [src]="item.image"> -->
@@ -9,7 +9,7 @@
         </button>
     </div>
 
-    <div class="__widget-provider-list-container">
+    <div *ngIf="paymentProviders?.length > 1 && methodSelected" class="__widget-provider-list-container">
         <button *ngFor="let item of paymentProviders" type="button" class="__widget-provider-item-button"
             (click)="onProviderSeleted(item)">
             <img class="__widget-provider-item-image" alt="provider" [src]="item.image">

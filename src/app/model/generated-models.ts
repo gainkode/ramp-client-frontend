@@ -316,6 +316,7 @@ export enum CallbackType {
   ExternalAuthGuard = 'ExternalAuthGuard',
   ExternalMonoovaPayoutCallback = 'ExternalMonoovaPayoutCallback',
   ExternalAu10tixCallback = 'externalAu10tixCallback',
+  ExternalClearJunctionCallback = 'externalClearJunctionCallback',
   ExternalCoriunderCallback = 'externalCoriunderCallback',
   ExternalCrystalCallback = 'externalCrystalCallback',
   ExternalDocumentsCallback = 'externalDocumentsCallback',
@@ -2344,6 +2345,7 @@ export type PaymentPreauthResultShort = {
 export type PaymentProvider = {
   __typename?: 'PaymentProvider';
   allowAutoExchange?: Maybe<Scalars['Boolean']['output']>;
+  bankAccountsRequired?: Maybe<Scalars['Boolean']['output']>;
   countriesCode2?: Maybe<Array<Scalars['String']['output']>>;
   currencies?: Maybe<Array<Scalars['String']['output']>>;
   default?: Maybe<Scalars['Boolean']['output']>;
@@ -2358,6 +2360,7 @@ export type PaymentProvider = {
   transactionTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   userTypes?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   virtual?: Maybe<Scalars['Boolean']['output']>;
+  wrBankAccount?: Maybe<WireTransferBankAccount>;
 };
 
 export type PaymentProviderByInstrument = {
@@ -3978,6 +3981,7 @@ export type Transaction = {
   paymentOrderId?: Maybe<Scalars['String']['output']>;
   paymentOrderRecallNumberLink?: Maybe<Scalars['String']['output']>;
   paymentProvider?: Maybe<Scalars['String']['output']>;
+  paymentProviderId?: Maybe<Scalars['String']['output']>;
   rate?: Maybe<Scalars['Float']['output']>;
   rateFiatToEur?: Maybe<Scalars['Float']['output']>;
   recallNumber?: Maybe<Scalars['String']['output']>;
@@ -4028,6 +4032,8 @@ export type Transaction = {
   widgetId?: Maybe<Scalars['String']['output']>;
   widgetUserParams?: Maybe<WidgetUserParams>;
   widgetUserParamsId?: Maybe<Scalars['String']['output']>;
+  wireTransferBankAccountId?: Maybe<Scalars['String']['output']>;
+  wireTransferPaymentCategory?: Maybe<Scalars['String']['output']>;
 };
 
 export enum TransactionConfirmationMode {
@@ -4059,6 +4065,8 @@ export type TransactionInput = {
   type: TransactionType;
   verifyWhenPaid?: InputMaybe<Scalars['Boolean']['input']>;
   widgetUserParamsId?: InputMaybe<Scalars['String']['input']>;
+  wireTransferBankAccountId?: InputMaybe<Scalars['String']['input']>;
+  wireTransferPaymentCategory?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum TransactionKycStatus {
@@ -4135,6 +4143,8 @@ export type TransactionMerchantInput = {
   treatAsGrossAmount?: InputMaybe<Scalars['Boolean']['input']>;
   type: TransactionType;
   widgetUserParamsId?: InputMaybe<Scalars['String']['input']>;
+  wireTransferBankAccountId?: InputMaybe<Scalars['String']['input']>;
+  wireTransferPaymentCategory?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TransactionSh = {
@@ -4244,6 +4254,8 @@ export type TransactionShort = {
   widgetId?: Maybe<Scalars['String']['output']>;
   widgetUserParams?: Maybe<WidgetUserParams>;
   widgetUserParamsId?: Maybe<Scalars['String']['output']>;
+  wireTransferBankAccountId?: Maybe<Scalars['String']['output']>;
+  wireTransferPaymentCategory?: Maybe<Scalars['String']['output']>;
 };
 
 export type TransactionShortListResult = {

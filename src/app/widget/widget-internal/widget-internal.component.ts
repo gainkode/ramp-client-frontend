@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
@@ -52,6 +52,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   showWidget = true;
   widgetLink = '';
   userWallets: WalletItem[] = [];
+	selectedProvider: PaymentProviderInstrumentView;
   paymentProviders: PaymentProviderInstrumentView[] = [];
   bankAccountId = '';
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
@@ -84,7 +85,6 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
 	private readonly destroy$ = new Subject<void>();
   constructor(
-		private viewContainerRef: ViewContainerRef,
   	private modalService: NgbModal,
   	private changeDetector: ChangeDetectorRef,
   	public router: Router,
@@ -445,7 +445,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	}
 
 		if (this.transactionErrorTitle === 'core.wrong_transaction_parameters_1') {
-			this.summary.address = ''; // clear address, fore user write another
+			this.summary.address = ''; // clear address, force user write another
 		}
 
 		this.transactionErrorTitle = undefined;
@@ -570,7 +570,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 				this.showTransactionError('Wrong widget settings');
 				this.setOrderDetailsStep();
 			}
-	});
+		});
   }
 
   loadUserWallets(): void {
@@ -776,45 +776,26 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 		}
   }
 
-	checkComponentExists(providerName: string): boolean {
-		try {
-			const component: any = `app-widget-payment-${providerName}`;
-
-			const factory = this.viewContainerRef.createComponent(component);
-			factory.destroy();
-			return true;
-		} catch (e) {
-			return false;
-		}
-	}
-
   // == Payment info ==
   selectProvider(data: { selectedProvider: PaymentProviderInstrumentView; providers?: PaymentProviderInstrumentView[]; }): void {
 		this.paymentProviders = data.providers;
-		const provider = data.selectedProvider;
+		this.selectedProvider = data.selectedProvider;
 
   	if (this.summary.transactionType === TransactionType.Buy) {
-  		this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
-		
-			console.log(this.checkComponentExists(provider.componentName))
-
-			if (this.checkComponentExists(provider.componentName)) {
-				this.nextStage(`payment_${provider.componentName}`, 'widget-pager.wire_transfer_result', 5);
-			} else {
-				this.createTransaction(provider.id, provider.instrument, '');
-			}
-
-			// if (provider.instrument === PaymentInstrument.WireTransfer || provider.instrument === PaymentInstrument.OpenBanking) {
-			// 	const componentName = `payment_${provider.name.toLocaleLowerCase()}`;
-			// 	if (this.checkComponentExists(componentName)) {
-			// 		this.nextStage(componentName, 'widget-pager.wire_transfer_result', 5);
-			// 	} else {
-			// 		this.createTransaction(provider.id, provider.instrument, '');
-			// 	}
-  		// } else {
-  		// 	this.createTransaction(provider.id, provider.instrument, '');
-  		// }
+  		this.summary.providerView = this.paymentProviders.find(x => x.id === this.selectedProvider.id);
 			
+			const currentCase = `payment_${this.selectedProvider.componentName}`;
+			const knownCases: string[] = ['payment_yapily', 'payment_wrbankaccount'];
+
+			if (knownCases.includes(currentCase)) {
+				if (this.selectedProvider.isSingleBankAccount) {
+					this.createTransaction(this.selectedProvider.id, this.selectedProvider.instrument, '', this.selectedProvider.bankAccount.bankAccountId, 'eu');
+				} else {
+					this.nextStage(`payment_${this.selectedProvider.componentName}`, 'widget-pager.wire_transfer_result', 5);
+				}
+			} else {
+				this.createTransaction(this.selectedProvider.id, this.selectedProvider.instrument, '');
+			}
   	} else {
 			this.profileService.maxSellAmount(this.summary.currencyFrom)
 				.pipe(take(1), takeUntil(this.destroy$))
@@ -824,10 +805,10 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 						// Back to first page in order to validate maxSellAmount to SELL transaction type
 						this.nextStage('order_details', 'widget-pager.order_details', 1);
 					} else {
-						if (provider.instrument === PaymentInstrument.WireTransfer) {
+						if (this.selectedProvider.instrument === PaymentInstrument.WireTransfer) {
 							this.nextStage('sell_details', 'widget-pager.bank-details', 2);
 						} else {
-							this.createTransaction(provider.id, provider.instrument, '');
+							this.createTransaction(this.selectedProvider.id, this.selectedProvider.instrument, '');
 						}
 					}
 				});
@@ -998,7 +979,13 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private createTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string): void {
+  private createTransaction(
+			providerId: string,
+			instrument: PaymentInstrument, 
+			instrumentDetails: string,
+			wireTransferBankAccountId?: string,
+			wireTransferPaymentCategory?: string,
+			): void {
   	const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
   	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
 
@@ -1010,6 +997,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		currencyToReceive: (this.summary.currencyTo !== '') ? this.summary.currencyTo : undefined,
   		amountToSpend: this.summary.amountFrom ?? 0,
   		instrument,
+			wireTransferBankAccountId: wireTransferBankAccountId ?? undefined,
+			wireTransferPaymentCategory: wireTransferPaymentCategory ?? undefined,
   		instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
   		paymentProvider: (providerId !== '') ? providerId : undefined,
   		widgetUserParamsId: (this.userParamsId !== '') ? this.userParamsId : undefined,
@@ -1240,6 +1229,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			});
   }
 
+	// REMOVE THIS METHOD WHEN YOU ARE DONE WITH THE WIRE TRANSFER
   private onWireTransferListLoaded(wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string): void {
   	this.bankAccountId = bankAccountId;
   	this.wireTransferList = wireTransferList;

@@ -65,6 +65,13 @@ query GetAppropriatePaymentProviders(
     instruments
     default
     external
+    wrBankAccount {
+      au
+      uk
+      eu
+      name
+      bankAccountId
+    }
   }
 }
 `;

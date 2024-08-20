@@ -7,7 +7,8 @@ import {
 	UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, 
 	CustodyProvider, TransactionKycStatus, RiskLevel, AccountStatus, KycStatus, 
 	AdminTransactionStatus, UserTransactionStatus, WireTransferPaymentCategory, CryptoInvoiceCreationResult, 
-	UserActionType, UserActionResult, CurrencyBlockchain
+	UserActionType, UserActionResult, CurrencyBlockchain,
+	WireTransferBankAccount
 } from './generated-models';
 import { WireTransferPaymentCategoryItem } from './payment-base.model';
 
@@ -23,12 +24,16 @@ export class PaymentProviderInstrumentView {
 	image = '';
 	instrument: PaymentInstrument = PaymentInstrument.CreditCard;
 	external = false;
-
+	bankAccount: WireTransferBankAccount;
+	isSingleBankAccount = true;
 	constructor(data: PaymentProvider, paymentMethodName: PaymentInstrument) {
 		this.id = data?.paymentProviderId ?? '';
 		this.name = data?.name ?? '';
     this.componentName = data?.name?.toLocaleLowerCase() ?? '';
 		this.instrument = paymentMethodName;
+		this.bankAccount = data?.wrBankAccount;
+
+		// if (this.bankAccount.au === ' ')
 
 		if(data.external || data.virtual){
 			this.external = data.external;
@@ -206,6 +211,7 @@ export class CurrencyView {
 		} else {
 			this.display = this.code;
 		}
+		
 		this.name = data.name ?? '';
 		this.precision = data.precision;
 		this.minAmount = data.minAmount;
@@ -299,11 +305,6 @@ export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryI
 	{ id: WireTransferPaymentCategory.Au, bankAccountId: '', title: 'Australian Bank', data: '' },
 	{ id: WireTransferPaymentCategory.Uk, bankAccountId: '', title: 'UK Bank', data: '' },
 	{ id: WireTransferPaymentCategory.Eu, bankAccountId: '', title: 'SEPA / SWIFT', data: '' }
-];
-
-export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = [
-	{ id: PaymentInstrument.CreditCard, name: 'Credit card' },
-	{ id: PaymentInstrument.Apm, name: 'APM' }
 ];
 
 export const TransactionTypeList: Array<TransactionTypeView> = [
@@ -691,13 +692,9 @@ export class CheckoutSummary {
 	}
 
 	setPaymentInfo(instrument: PaymentInstrument, info: string): void {
-		if (info) {
-			if (instrument === PaymentInstrument.CreditCard) {
-				this.card = new CardView();
-				if (info) {
-					this.card.setPaymentInfo(info);
-				}
-			}
+		if (info && instrument === PaymentInstrument.CreditCard) {
+			this.card = new CardView();
+			this.card.setPaymentInfo(info);
 		}
 	}
 }

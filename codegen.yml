@@ -1,5 +1,5 @@
 overwrite: true
-schema: https://app-pre.iramp.io/gql/api
+schema: https://bf65-46-172-248-169.ngrok-free.app/gql/api
 documents: null
 generates:
   ./src/app/model/generated-models.ts:
