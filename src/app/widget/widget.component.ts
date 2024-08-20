@@ -66,9 +66,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
   	id: WireTransferPaymentCategory.Au,
-  	bankAccountId: '',
   	title: '',
-  	data: ''
+  	data: {}
   };
   requestKyc = false;
   overLimitLevel = '';
@@ -729,7 +728,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   // =======================
 
   // == Sell ===============
-  sellComplete(instrumentDetails: string): void {
+  sellComplete(instrumentDetails: object): void {
   	const settings = {
   		accountType: instrumentDetails
   	};

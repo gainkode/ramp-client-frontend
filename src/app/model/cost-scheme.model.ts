@@ -247,8 +247,7 @@ export class WireTransferUserSelection {
 	id = '';
 	selected: WireTransferPaymentCategoryItem = {
 		id: WireTransferPaymentCategory.Au,
-		bankAccountId: '',
 		title: '',
-		data: ''
+		data: {}
 	};
 }

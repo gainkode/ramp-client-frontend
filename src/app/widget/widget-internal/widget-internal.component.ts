@@ -58,9 +58,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
   	id: WireTransferPaymentCategory.Au,
-  	bankAccountId: '',
   	title: '',
-  	data: ''
+  	data: {}
   };
   requestKyc = false;
   overLimitLevel = '';
@@ -699,9 +698,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   }
 
   // == Sell ===============
-  sellComplete(accountType: string): void {
-  	const settingsData = JSON.stringify({ accountType });
-  	this.createTransaction(this.summary.providerView?.id ?? '', PaymentInstrument.WireTransfer, settingsData);
+  sellComplete(accountType: object): void {
+  	const settingsData = JSON.stringify(accountType);
+  	this.createTransaction(this.selectedProvider.id ?? '', PaymentInstrument.WireTransfer, settingsData);
   }
 
   // == Disclaimer =========
@@ -786,7 +785,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			
 			const currentCase = `payment_${this.selectedProvider.componentName}`;
 			const knownCases: string[] = ['payment_yapily', 'payment_wrbankaccount'];
-			debugger
+
 			if (knownCases.includes(currentCase)) {
 				if (this.selectedProvider.isSingleBankAccount) {
 

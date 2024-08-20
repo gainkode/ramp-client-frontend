@@ -43,9 +43,8 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
 	transactionInput: TransactionInput | undefined = undefined;
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
   	id: WireTransferPaymentCategory.Au,
-  	bankAccountId: '',
   	title: '',
-  	data: ''
+  	data: {}
   };
 
   private pSubscriptions: Subscription = new Subscription();
@@ -124,11 +123,8 @@ export class FiatWidgetComponent implements OnInit, OnDestroy {
   	this.createTransaction(PaymentInstrument.WireTransfer, settingsData);
   }
 
-  sellComplete(instrumentDetails: string): void {
-  	const settings = {
-  		accountType: instrumentDetails
-  	};
-  	const settingsData = JSON.stringify(settings);
+  sellComplete(instrumentDetails: object): void {
+  	const settingsData = JSON.stringify(instrumentDetails);
   	this.createTransaction(undefined, settingsData);
   }
 
