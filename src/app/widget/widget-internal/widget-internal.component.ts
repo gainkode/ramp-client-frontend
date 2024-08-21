@@ -496,15 +496,18 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   stageBack(): void {
   	this.inProgress = false;
-		this.pager.goBack();
-		
-  	if (this.pager.stageId === 'order_details') {
+
+		if (this.paymentProviders.length === 1) {
+			this.resetWizard();
+		} else if (this.pager.stageId === 'order_details') {
   		this.isOrderDetailsComplete = false;
 
   		if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
   			this.isSingleOrderDetailsCompleted = false;
   		}
-  	}
+  	} else {
+			this.pager.goBack();
+		}
   }
 
   private nextStage(id: string, name: string, stepId: number): void {
@@ -774,6 +777,15 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			this.nextStage('payment', 'widget-pager.credit_card', nextStage);
 		}
   }
+
+	onBankAccountSelect(bankAccount: WireTransferPaymentCategory): void {
+		this.createTransaction(
+			this.selectedProvider.id, 
+			this.selectedProvider.instrument, 
+			'', 
+			this.selectedProvider.bankAccount.bankAccountId, 
+			bankAccount);
+	}
 
   // == Payment info ==
   selectProvider(data: { selectedProvider: PaymentProviderInstrumentView; providers?: PaymentProviderInstrumentView[]; }): void {

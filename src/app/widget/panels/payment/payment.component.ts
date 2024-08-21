@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { PaymentInstrument, PaymentMethod, PaymentProvider, TransactionSource, TransactionType } from 'model/generated-models';
 import { WidgetSettings } from 'model/payment-base.model';
 import { CheckoutSummary, PaymentProviderInstrumentView } from 'model/payment.model';
-import { finalize, Subject, take, takeUntil } from 'rxjs';
+import { delay, finalize, Subject, take, takeUntil } from 'rxjs';
 import { EnvService } from 'services/env.service';
 import { ErrorService } from 'services/error.service';
 import { PaymentDataService } from 'services/payment.service';
@@ -77,11 +77,10 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
       providers: this.paymentProviders
     });
 
-    this.isLoading = false;
   }
 
   onBackToDetails(): void {
-    if ( this.methodSelected ) {
+    if (this.methodSelected) {
       this.method = undefined;
       this.methodSelected = false;
 
@@ -99,8 +98,8 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
       this.getSource(widget), 
       summary.transactionType, 
     ).pipe(
+      delay(1000),
       finalize(() => {
-        this.isLoading = false, 
         this.cdr.detectChanges();
       }),
       takeUntil(this._destroy$),
@@ -108,12 +107,15 @@ export class WidgetPaymentComponent implements OnInit, OnDestroy {
     .subscribe({
       next: data => {
         this.methods = data;
-
         if (this.methods?.length === 1) {
           this.onPaymentMethodSelected(this.methods[0]);
+        } else {
+          this.isLoading = false;
         }
+
       },
       error: (error) => {
+        this.isLoading = false;
         this.onError.emit(this.errorHandler.getError(error.message,'Unable to load payment methods'));
       }
     });

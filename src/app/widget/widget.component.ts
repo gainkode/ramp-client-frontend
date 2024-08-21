@@ -1055,7 +1055,7 @@ export class WidgetComponent implements OnInit, OnDestroy {
   					if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
   						if(order.instrumentDetails) {
   							const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
-  							this.selectedWireTransfer.data = instrumentDetails.accountType.data;
+  							this.selectedWireTransfer.data = instrumentDetails.data;
   						}
 							
   						this.nextStage('wire_transfer_result', 'Payment', 5);

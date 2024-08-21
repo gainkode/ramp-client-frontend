@@ -105,11 +105,9 @@
           </app-widget-payment-yapily>
           <app-widget-payment-wrbankaccount
             *ngSwitchCase="'payment_wrbankaccount'" 
-            [summary]="summary" 
             [bankAccount]="selectedProvider.bankAccount"
             (onBack)="stageBack()"
-            (onProgress)="progressChanged($event)" 
-            (onComplete)="onLoginRequired($event)">
+            (selectProviderBankAccount)="onBankAccountSelect($event)">
           </app-widget-payment-wrbankaccount>
           <!-- Login Authentication -->
           <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widget]="widget"

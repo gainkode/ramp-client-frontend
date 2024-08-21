@@ -1,7 +1,19 @@
-<div class="__widget-data-box" [ngSwitch]="pager.stageId">
-  IM WIRETRANSFER
+<div class="__widget-data-box">
+  <div class="__form-label">
+      {{'widget-sell-details.title' | transloco}}
+  </div>
+  <mat-radio-group class="__widget-radio-group" [(ngModel)]="selectedBank">
+      <mat-radio-button *ngFor="let cat of bankCategories" class="__widget-radio-button" [value]="cat.id">
+          {{cat.title}}
+      </mat-radio-button>
+  </mat-radio-group>
+  <div class="__form-separator"></div>
+  <div class="__widget-buttons-area">
+    <button class="__outlined-button" type="button" (click)="onBack.emit()">
+        {{'global.widget_btn-back' | transloco}}
+    </button>
+    <button class="__main-button __button-wide-separator" type="button" [disabled]="!selectedBank"
+        (click)="onSubmit()">
+        {{'global.widget_btn-next' | transloco}}
+    </button>
 </div>
-
-<ng-container *ngIf="isLoading">
-    <app-spinner></app-spinner>
-</ng-container>
