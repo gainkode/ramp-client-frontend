@@ -2355,6 +2355,10 @@ mutation SimulateTransaction(
       name
       settingsFeeId
     }
+
+    bankAccount {
+      name
+    }
   }
 }
 `;

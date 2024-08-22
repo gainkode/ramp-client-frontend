@@ -4266,6 +4266,7 @@ export type TransactionShortListResult = {
 
 export type TransactionSimulatorResult = {
   __typename?: 'TransactionSimulatorResult';
+  bankAccount?: Maybe<WireTransferBankAccount>;
   costSchema?: Maybe<SettingsCost>;
   feeSchema?: Maybe<SettingsFee>;
 };

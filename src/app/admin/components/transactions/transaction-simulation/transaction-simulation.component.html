@@ -22,7 +22,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" *ngIf="form.controls.source.value !== 'Wallet'">
+      <mat-form-field *ngIf="form.controls.source.value !== 'Wallet'" appearance="outline">
         <mat-label>Widget ID</mat-label>
         <mat-select formControlName="widgetUserParamsId">
           <mat-option *ngFor="let widget of widgetOptions$ | async" [value]="widget.id">
@@ -34,9 +34,9 @@
       <mat-form-field appearance="outline">
         <mat-label>Customer search </mat-label>
         <input matInput
-                [matAutocomplete]="auto"
                 formControlName="users"
-                placeholder="Start typing to search users">
+                placeholder="Start typing to search users"
+                [matAutocomplete]="auto">
                 
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayUserTitleFn">
           <mat-option *ngFor="let user of usersOptions$ | async" [value]="user">
@@ -49,7 +49,7 @@
         <mat-form-field appearance="outline" class="size-wider">
           <mat-label>{{amountToSpendTitle}}</mat-label>
           <input matInput type="text" formControlName="amountToSpend" required/>
-          <mat-error class="field-error" *ngIf="amountToSpendField.invalid">{{getAmountToSpendMessage()}}</mat-error>
+          <mat-error *ngIf="amountToSpendField.invalid" class="field-error">{{getAmountToSpendMessage()}}</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="size-smaller">
@@ -62,11 +62,11 @@
         </mat-form-field>
       </div>
 
-      <div class="mt-2" *ngIf="transactionType !== 'Deposit' && transactionType !== 'Withdrawal'">
+      <div *ngIf="transactionType !== 'Deposit' && transactionType !== 'Withdrawal'" class="mt-2">
         <mat-form-field appearance="outline" class="size-wider">
           <mat-label>Amount To Receive</mat-label>
           <input matInput type="text" formControlName="amountToReceive" required/>
-          <mat-error class="field-error" *ngIf="amountToReceiveField.invalid">{{getAmountToRecievedMessage()}}</mat-error>
+          <mat-error *ngIf="amountToReceiveField.invalid" class="field-error">{{getAmountToRecievedMessage()}}</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="size-smaller">
@@ -82,7 +82,7 @@
         <mat-form-field appearance="outline" class="size-two-third">
           <mat-label>Exchange rate</mat-label>
           <input matInput type="text" formControlName="rate"/>
-          <mat-error class="field-error" *ngIf="rateField.invalid">{{getRateMessage()}}</mat-error>
+          <mat-error *ngIf="rateField.invalid" class="field-error">{{getRateMessage()}}</mat-error>
         </mat-form-field>
 
         <button 
@@ -122,12 +122,17 @@
     
       <mat-form-field *ngIf="data?.costSchema?.name" appearance="outline">
         <mat-label>Used Cost Scheme</mat-label>
-        <input matInput type="text" [value]="data.costSchema.name" readonly/>
+        <input matInput type="text" readonly [value]="data.costSchema.name"/>
       </mat-form-field>
   
       <mat-form-field *ngIf="data?.feeSchema?.name" appearance="outline">
         <mat-label>Used Fee Scheme</mat-label>
-        <input matInput type="text" [value]="data.feeSchema.name" readonly/>
+        <input matInput type="text" readonly [value]="data.feeSchema.name"/>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="data?.bankAccount?.name" appearance="outline">
+        <mat-label>Used Bank Account</mat-label>
+        <input matInput type="text" readonly [value]="data.bankAccount.name"/>
       </mat-form-field>
   
       <mat-divider class="mb-2"></mat-divider>
@@ -136,9 +141,9 @@
 
   <mat-card-actions align="end">
     <button
-      [disabled]="!form.valid"
       type="button"
-      class="btn btn-primary me-sm-4 mb-sm-4" (click)="onSubmit()">
+      class="btn btn-primary me-sm-4 mb-sm-4"
+      [disabled]="!form.valid" (click)="onSubmit()">
       Simulate
     </button>
   </mat-card-actions>
