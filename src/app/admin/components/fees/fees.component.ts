@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { forkJoin, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { CostScheme } from 'model/cost-scheme.model';
 import { FeeScheme } from 'model/fee-scheme.model';
@@ -37,7 +37,7 @@ export class AdminFeeSchemesComponent implements OnInit, OnDestroy {
 	schemes: FeeScheme[] = [];
 	costs: CostScheme[] = [];
 
-	private subscriptions: Subscription = new Subscription();
+	private readonly destroy$ = new Subject<void>();
 	private detailsDialog: NgbModalRef | undefined = undefined;
 
 	constructor(
@@ -52,56 +52,56 @@ export class AdminFeeSchemesComponent implements OnInit, OnDestroy {
 		this.loadSchemes();
 	}
 
-	ngOnDestroy(): void {
-		this.subscriptions.unsubscribe();
-	}
+  ngOnDestroy(): void {
+		this.destroy$.next();
+		this.destroy$.complete();
+  }
 
 	private loadSchemes(): void {
-		this.loadCostSchemes();
-	}
+		const costSchemes$ = this.adminService.getCostSettings().valueChanges.pipe(take(1));
+		const feeSchemes$ = this.adminService.getFeeSettings().pipe(take(1));
 
-	private loadCostSchemes(): void {
-		this.schemes = [];
 		this.inProgress = true;
-		const listData$ = this.adminService.getCostSettings().valueChanges.pipe(take(1));
-		this.subscriptions.add(
-			listData$.subscribe(({ data }) => {
-				this.inProgress = false;
-				const settings = data.getSettingsCost as SettingsCostListResult;
+
+		forkJoin([costSchemes$, feeSchemes$])
+		.pipe(takeUntil(this.destroy$))
+		.subscribe({
+			next: (res) => {
+				const costSettings = res[0].data.getSettingsCost as SettingsCostListResult;
+
 				let itemCount = 0;
-				if (settings !== null) {
-					itemCount = settings?.count ?? 0;
+
+				if (costSettings !== null) {
+					itemCount = costSettings?.count ?? 0;
 					if (itemCount > 0) {
-						this.costs = settings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
-						this.loadFeeSchemes();
+						this.costs = costSettings?.list?.map((val) => new CostScheme(val)) as CostScheme[];
 					}
 				}
-			})
-		);
-	}
 
-	private loadFeeSchemes(): void {
-		this.schemes = [];
-		this.inProgress = true;
-		const listData$ = this.adminService.getFeeSettings().pipe(take(1));
-		this.subscriptions.add(
-			listData$.subscribe(({ list }) => {
-				this.inProgress = false;
-				this.schemes = list;
-				list.forEach(val => {
+				this.schemes = res[1].list;
+
+				res[1].list.forEach(val => {
 					if (val.instrument.length > 0 && val.provider.length > 0) {
 						const instrumentData = val.instrument[0];
 						const providerData = val.provider[0];
+
 						if (instrumentData === PaymentInstrument.WireTransfer) {
 							const cost = this.costs.find(x => x.id === providerData);
+
 							if (cost) {
 								val.setCostSchemeName(cost.name);
 							}
 						}
 					}
 				});
-			})
-		);
+
+				this.inProgress = false;
+			},
+			error: (error) => {
+				this.errorMessage = error;
+				this.inProgress = false;
+			},
+		});
 	}
 
 	showDetails(scheme: FeeScheme | undefined, content: any): void {
@@ -112,9 +112,8 @@ export class AdminFeeSchemesComponent implements OnInit, OnDestroy {
 			backdrop: 'static',
 			windowClass: 'modalCusSty',
 		});
-		this.subscriptions.add(
-			this.detailsDialog.closed.subscribe(() => this.loadSchemes())
-		);
+
+		this.detailsDialog.closed.pipe(takeUntil(this.destroy$)).subscribe(() => this.loadSchemes());
 	}
 
 	convertToArray(scheme: string): string[]{
