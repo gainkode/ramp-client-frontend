@@ -87,10 +87,10 @@
       (onRegister)="onRegister($event)" (onTransactionComplete)="transactionConfiramtionComplete($event)">
     </app-widget-code-auth>
     <!-- Payment -->
-    <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders" [summary]="summary"
+    <!-- <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders" [summary]="summary"
       [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="stageBack()"
       (onSelect)="selectProvider($event)">
-    </app-widget-payment>
+    </app-widget-payment> -->
     <!-- Credit card -->
     <app-widget-credit-card *ngSwitchCase="'credit_card'"
       [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="stageBack()"

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { KycProvider, LoginResult, PaymentInstrument, PaymentProviderByInstrument, SettingsCostShort, SettingsKycTierShortExListResult, TransactionSource, TransactionType, User, WireTransferBankAccountShort } from '../model/generated-models';
+import { KycProvider, LoginResult, PaymentInstrument, SettingsCostShort, SettingsKycTierShortExListResult, TransactionSource, User, WireTransferBankAccountShort } from '../model/generated-models';
 import { WidgetSettings, WireTransferPaymentCategoryItem } from '../model/payment-base.model';
-import { CheckoutSummary, PaymentProviderInstrumentView } from '../model/payment.model';
+import { CheckoutSummary } from '../model/payment.model';
 import { AuthService } from './auth.service';
 import { ErrorService } from './error.service';
 import { PaymentDataService } from './payment.service';
@@ -20,6 +20,7 @@ export class WidgetService {
 	private onConfirmEmailRequired: Function | undefined = undefined;  // (email: string)
 	private onKycStatusUpdate: Function | undefined = undefined;  // (status: boolean)
 	private onPaymentProvidersLoaded: Function | undefined = undefined;  // (status: boolean)
+	private onPaymentMethodsLoaded: Function | undefined = undefined;  // (status: boolean)
 	private onRecaptchaCallback: Function | undefined = undefined;  // (status: boolean)
 	private onWireTranferListLoaded: Function | undefined = undefined;  // (wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string)
 	private userInfoRequired: Function | undefined = undefined;
@@ -68,9 +69,8 @@ export class WidgetService {
 		if (this.auth.token === '') {
 			this.handleExpiredSession(summary.email);
 		} else {
-			const dataGetter$ = this.auth.getSettingsCommon().valueChanges.pipe(take(1));
 			this.pSubscriptions.add(
-				dataGetter$.subscribe(({ data }) => {
+				this.auth.getSettingsCommon().valueChanges.pipe(take(1)).subscribe(({ data }) => {
 					if (this.auth.user) {
 						this.auth.setLocalSettingsCommon(data.getSettingsCommon);
 						this.getTiers(summary, widget);
@@ -97,9 +97,8 @@ export class WidgetService {
 	}
 
 	authenticate(login: string, widgetId: string): void {
-		// Consider that the user is one-time wallet user rather than internal one
-
 		const recaptcha = localStorage.getItem('recaptchaId');
+
 		if (recaptcha || !this.onQuickcheckout) {
 			this.authenticateInternal(login, widgetId);
 		} else {
@@ -125,9 +124,11 @@ export class WidgetService {
 					true,
 					(widgetId !== '') ? widgetId : undefined);
 			authenticateData$.pipe(take(1));
+
 			if (this.onProgressChanged) {
 				this.onProgressChanged(true);
 			}
+			
 			this.pSubscriptions.add(
 				authenticateData$.subscribe(({ data }) => {
 					const dataLogin = data?.login ?? data?.loginWidget;
@@ -175,54 +176,52 @@ export class WidgetService {
 
 	getWireTransferSettings(summary: CheckoutSummary, widget: WidgetSettings): void {
 		if (this.onProgressChanged) {
-			this.onProgressChanged(true);
+			// this.onProgressChanged(true);
+			// this.onProgressChanged(false);
 		}
 
-		const settingsData$ = this.paymentService.mySettingsCost(
-			summary.transactionType,
-			PaymentInstrument.WireTransfer,
-			'',
-			widget.widgetId
-		).valueChanges.pipe(take(1));
-		this.pSubscriptions.add(
-			settingsData$.subscribe(({ data }) => {
-				if (this.onProgressChanged) {
-					this.onProgressChanged(false);
-				}
-				const wireTransferList: WireTransferPaymentCategoryItem[] = [];
-				let accountData: WireTransferBankAccountShort | undefined = undefined;
-				const costs = data.mySettingsCost as SettingsCostShort;
+		// this.pSubscriptions.add(
+		// 	this.paymentService.mySettingsCost(
+		// 		summary.transactionType,
+		// 		PaymentInstrument.WireTransfer,
+		// 		'',
+		// 		widget.widgetId
+		// 	).valueChanges.pipe(take(1)).subscribe(({ data }) => {
+		// 		if (this.onProgressChanged) {
+		// 			this.onProgressChanged(false);
+		// 		}
 
-				if (costs) {
-					if (costs.bankAccounts && (costs.bankAccounts?.length ?? 0 > 0)) {
-						accountData = costs.bankAccounts[0];
-	
-						if (accountData.objectsDetails?.length !== 0) {
-							for(const object of accountData.objectsDetails){
-								wireTransferList.push({
-									title: object.title,
-									id: object.id,
-									data: JSON.stringify(object),
-									bankAccountId: accountData.bankAccountId
-								});
-							}
-						}
-					}
-					if (this.onWireTranferListLoaded) {
-						this.onWireTranferListLoaded(wireTransferList, accountData?.bankAccountId);
-					}
-				} else {
-					if (this.onWireTranferListLoaded) {
-						this.onWireTranferListLoaded(wireTransferList, '');
-					}
-				}
-			}, (error) => {
-				if (this.onProgressChanged) {
-					this.onProgressChanged(false);
-				}
-				this.handleError(error, summary.email, 'Unable to get wire transfer settings');
-			})
-		);
+		// 		const wireTransferList: WireTransferPaymentCategoryItem[] = [];
+		// 		const accountData: WireTransferBankAccountShort | undefined = undefined;
+		// 		const costs = data.mySettingsCost as SettingsCostShort;
+
+		// 		if (costs) {
+		// 			if (accountData.objectsDetails?.length !== 0) {
+		// 				for(const object of accountData.objectsDetails){
+		// 					wireTransferList.push({
+		// 						title: object.title,
+		// 						id: object.id,
+		// 						data: JSON.stringify(object),
+		// 						bankAccountId: accountData.bankAccountId
+		// 					});
+		// 				}
+		// 			}
+
+		// 			if (this.onWireTranferListLoaded) {
+		// 				this.onWireTranferListLoaded(wireTransferList, accountData?.bankAccountId);
+		// 			}
+		// 		} else {
+		// 			if (this.onWireTranferListLoaded) {
+		// 				this.onWireTranferListLoaded(wireTransferList, '');
+		// 			}
+		// 		}
+		// 	}, (error) => {
+		// 		if (this.onProgressChanged) {
+		// 			this.onProgressChanged(false);
+		// 		}
+		// 		this.handleError(error, summary.email, 'Unable to get wire transfer settings');
+		// 	})
+		// );
 	}
 
 	sendWireTransferMessage(email: string, id: string, callback: Function): void {
@@ -282,18 +281,19 @@ export class WidgetService {
 	}
 
 	private getKycStatus(summary: CheckoutSummary, widget: WidgetSettings, tierData: KycTierResultData): void {
-        
-		const kycStatusData$ = this.auth.getMyKycData().valueChanges.pipe(take(1));
 		if (this.onProgressChanged) {
 			this.onProgressChanged(true);
 		}
+
 		this.pSubscriptions.add(
-			kycStatusData$.subscribe(({ data }) => {
+			this.auth.getMyKycData().valueChanges.pipe(take(1)).subscribe(({ data }) => {
 				const userKyc = data.me as User;
 				const kycData = isKycRequired(userKyc, tierData);
+			
 				if (this.onProgressChanged) {
 					this.onProgressChanged(false);
 				}
+
 				if (kycData[0] === null) {
 					if (this.onError) {
 						this.onError('Unable proceed your payment, because your identity is rejected');
@@ -306,7 +306,7 @@ export class WidgetService {
 						this.onKycStatusUpdate(kycData[0] === true, kycData[1]);
 					}
 
-					this.loadPaymentProviders(summary, widget);
+					this.onPaymentProvidersLoaded();
 				}
 			}, (error) => {
 				if (this.onProgressChanged) {
@@ -315,57 +315,6 @@ export class WidgetService {
 				this.handleError(error, summary.email, 'Unable to load your identification status');
 			})
 		);
-	}
-
-	private loadPaymentProviders(summary: CheckoutSummary, widget: WidgetSettings): void {
-		let fiatCurrency = '';
-		const amount: number = summary.amountFrom ?? 0;
-		if (summary.transactionType === TransactionType.Buy) {
-			fiatCurrency = summary.currencyFrom;
-		} else if (summary.transactionType === TransactionType.Sell) {
-			fiatCurrency = summary.currencyTo;
-		}
-		const widgetId = widget.widgetId;
-		const providersData$ = this.paymentService.getProviders(
-			fiatCurrency, (widgetId !== '') ? widgetId : undefined, this.getSource(widget), summary.transactionType, amount
-		).valueChanges.pipe(take(1));
-
-		if (this.onProgressChanged) {
-			this.onProgressChanged(true);
-		}
-
-		this.pSubscriptions.add(
-			providersData$.subscribe(({ data }) => {
-				if (this.onProgressChanged) {
-					this.onProgressChanged(false);
-				}
-
-				this.onPaymentProvidersLoaded(this.getPaymentProviderList(
-					summary,
-					data.getAppropriatePaymentProviders as PaymentProviderByInstrument[]
-				));
-
-			}, (error) => {
-				if (this.onProgressChanged) {
-					this.onProgressChanged(false);
-				}
-				this.handleError(error, summary.email, 'Unable to load payment instruments');
-			})
-		);
-	}
-
-	private getPaymentProviderList(summary: CheckoutSummary, list: PaymentProviderByInstrument[]): PaymentProviderInstrumentView[] {
-		let currency = '';
-		if (summary.transactionType === TransactionType.Buy) {
-			currency = summary.currencyFrom ?? '';
-		} else if (summary.transactionType === TransactionType.Sell) {
-			currency = summary.currencyTo ?? '';
-		}
-		const dataList = list
-			.filter(x => x.provider?.currencies?.includes(currency, 0) || x.provider?.currencies?.length === 0 || x.instrument === PaymentInstrument.WireTransfer)
-			.map(val => new PaymentProviderInstrumentView(val));
-
-		return dataList;
 	}
 
 	private handleError(error: any, email: string, defaultMessage: string): void {
@@ -388,13 +337,5 @@ export class WidgetService {
 				this.onIdentificationRequired();
 			}
 		}
-	}
-
-	private getSource(widget: WidgetSettings): TransactionSource {
-		let source = TransactionSource.Wallet;
-		if (widget.embedded === false) {
-			source = widget.widgetId === '' ? TransactionSource.QuickCheckout : TransactionSource.Widget;
-		}
-		return source;
 	}
 }

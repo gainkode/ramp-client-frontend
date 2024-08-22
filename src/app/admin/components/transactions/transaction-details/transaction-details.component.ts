@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { NgbDateAdapter, NgbDateParserFormatter, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
-import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput, TransactionUpdatePaymentOrderChanges, UserRoleObjectCode } from 'model/generated-models';
+import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionScreeningAnswer, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput, TransactionUpdatePaymentOrderChanges, UserRoleObjectCode } from 'model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, TransactionTypeList, UserStatusList } from 'model/payment.model';
 import { ScreeningAnswer, TransactionItemFull } from 'model/transaction.model';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
@@ -87,7 +87,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     widgetId: this.fb.control<string>(undefined),
     transferOrderHash: this.fb.control<string>(undefined),
     transactionType: this.fb.control<TransactionType>(undefined, Validators.required),
-    screeningAnswer: this.fb.control<ScreeningAnswer>(undefined),
+    screeningAnswer: this.fb.control<TransactionScreeningAnswer>(undefined),
     screeningRiskscore: this.fb.control<number>(undefined),
     screeningStatus: this.fb.control<string>(undefined),
     benchmarkTransferOrderHash: this.fb.control<string>(undefined),
@@ -811,47 +811,43 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   
   getInstrumentDetails(data: string): string[] {
     const result: string[] = [];
-    
+
     try {
       const details = JSON.parse(data);
 
       if (details) {
-        const accountData = typeof details.accountType === 'string' ? JSON.parse(details.accountType) : details.accountType;
+        const paymentData = details.data;
 
-        if (accountData) {
-          const paymentData = JSON.parse(accountData.data);
+        if (paymentData) {
+          if (details.id === 'AU') {
+            result.push('Australian bank');
+          } else if (details.id === 'UK') {
+            result.push('United Kingdom bank');
+          } else if (details.id === 'EU') {
+            result.push('European bank');
+          } 
 
-          if (paymentData) {
-            if (accountData.id === 'AU') {
-              result.push('Australian bank');
-            } else if (accountData.id === 'UK') {
-              result.push('United Kingdom bank');
-            } else if (accountData.id === 'EU') {
-              result.push('European bank');
-            } 
+          const addInstrumentDetail = (label: string, ...values): void => {
+            const value = values.find(v => v !== undefined && v !== null);
+            if (value) {
+              result.push(`${label}: ${value}`);
+            }
+          };
 
-            const addInstrumentDetail = (label: string, ...values): void => {
-              const value = values.find(v => v !== undefined && v !== null);
-              if (value) {
-                result.push(`${label}: ${value}`);
-              }
-            };
-
-            addInstrumentDetail('Account name', paymentData.bankAccountName, paymentData.accountName);
-            addInstrumentDetail('Account number', paymentData.bankAccountNumber, paymentData.accountNumber);
-            addInstrumentDetail('Bank name', paymentData.bankName);
-            addInstrumentDetail('Bank address', paymentData.bankAddress);
-            addInstrumentDetail('Beneficiary name', paymentData.beneficiaryName);
-            addInstrumentDetail('Beneficiary address', paymentData.beneficiaryAddress);
-            addInstrumentDetail('Holder', paymentData.bankAccountHolderName);
-            addInstrumentDetail('BSB', paymentData.bsb);
-            addInstrumentDetail('Sort code', paymentData.sortCode);
-            addInstrumentDetail('IBAN', paymentData.iban);
-            addInstrumentDetail('SWIFT / BIC', paymentData.swiftBic);
-            addInstrumentDetail('Routing Number', paymentData.routingNumber);
-            addInstrumentDetail('Reference', paymentData.reference);
-            addInstrumentDetail('Credit to', paymentData.creditTo);
-          }
+          addInstrumentDetail('Account name', paymentData.bankAccountName, paymentData.accountName);
+          addInstrumentDetail('Account number', paymentData.bankAccountNumber, paymentData.accountNumber);
+          addInstrumentDetail('Bank name', paymentData.bankName);
+          addInstrumentDetail('Bank address', paymentData.bankAddress);
+          addInstrumentDetail('Beneficiary name', paymentData.beneficiaryName);
+          addInstrumentDetail('Beneficiary address', paymentData.beneficiaryAddress);
+          addInstrumentDetail('Holder', paymentData.bankAccountHolderName);
+          addInstrumentDetail('BSB', paymentData.bsb);
+          addInstrumentDetail('Sort code', paymentData.sortCode);
+          addInstrumentDetail('IBAN', paymentData.iban);
+          addInstrumentDetail('SWIFT / BIC', paymentData.swiftBic);
+          addInstrumentDetail('Routing Number', paymentData.routingNumber);
+          addInstrumentDetail('Reference', paymentData.reference);
+          addInstrumentDetail('Credit to', paymentData.creditTo);
         }
       }
     } catch (e) { /* empty */ }

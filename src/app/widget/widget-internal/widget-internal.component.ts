@@ -52,14 +52,14 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   showWidget = true;
   widgetLink = '';
   userWallets: WalletItem[] = [];
+	selectedProvider: PaymentProviderInstrumentView;
   paymentProviders: PaymentProviderInstrumentView[] = [];
   bankAccountId = '';
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
   	id: WireTransferPaymentCategory.Au,
-  	bankAccountId: '',
   	title: '',
-  	data: ''
+  	data: {}
   };
   requestKyc = false;
   overLimitLevel = '';
@@ -108,7 +108,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.checkLoginResult.bind(this),
   		this.onCodeLoginRequired.bind(this),
   		this.settingsKycState.bind(this),
-  		this.settingsCommonComplete.bind(this),
+  		this.onPaymentProvidersLoaded.bind(this),
   		this.onWireTransferListLoaded.bind(this),
   		this.userInfoRequired.bind(this),
   		this.companyLevelVerification.bind(this),
@@ -284,20 +284,22 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.exhangeRate.register(this.onExchangeRateUpdated.bind(this));
   }
 
-  private startNotificationListener(): void {
-  	this.notificationStarted = true;
-  	this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications()
-  		.subscribe({
-  			next: ({ data }) => this.handleTransactionSubscription(data),
-  			error: (error) => {
-  				this.notificationStarted = false;
-  				// there was an error subscribing to notifications
-  				if (!environment.production) {
-  					console.error('Notifications error', error);
-  				}
-  			}
-  		}
-  	);
+  startNotificationListener(): void {
+		if (!this.notificationStarted) {
+			this.notificationStarted = true;
+			this.pNotificationsSubscription = this.notification.subscribeToTransactionNotifications()
+				.subscribe({
+					next: ({ data }) => this.handleTransactionSubscription(data),
+					error: (error) => {
+						this.notificationStarted = false;
+						// there was an error subscribing to notifications
+						if (!environment.production) {
+							console.error('Notifications error', error);
+						}
+					}
+				}
+			);
+		}
   }
 
   private startExternalKycProvideListener(): void {
@@ -442,7 +444,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	}
 
 		if (this.transactionErrorTitle === 'core.wrong_transaction_parameters_1') {
-			this.summary.address = ''; // clear address, fore user write another
+			this.summary.address = ''; // clear address, force user write another
 		}
 
 		this.transactionErrorTitle = undefined;
@@ -462,15 +464,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.loadAccountData();
 
   	if (this.widget.kycFirst && this.widget.allowToPayIfKycFailed) {
-  		if (this.paymentProviders.length < 1) {
-  			this.setError(
-  				'No payment providers',
-  				`No supported payment providers found for "${this.summary.currencyFrom}"`);
-  		} else if (this.paymentProviders.length > 1) {
-  			this.nextStage('payment', 'widget-pager.credit_card', 5);
-  		} else {
-  			this.selectProvider(this.paymentProviders[0]);
-  		}
+			this.nextStage('payment', 'widget-pager.credit_card', 5);
   	}
   }
   
@@ -502,15 +496,18 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   stageBack(): void {
   	this.inProgress = false;
-		this.pager.goBack();
-		
-  	if (this.pager.stageId === 'order_details') {
+
+		if (this.paymentProviders.length === 1) {
+			this.resetWizard();
+		} else if (this.pager.stageId === 'order_details') {
   		this.isOrderDetailsComplete = false;
 
   		if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
   			this.isSingleOrderDetailsCompleted = false;
   		}
-  	}
+  	} else {
+			this.pager.goBack();
+		}
   }
 
   private nextStage(id: string, name: string, stepId: number): void {
@@ -575,7 +572,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 				this.showTransactionError('Wrong widget settings');
 				this.setOrderDetailsStep();
 			}
-	});
+		});
   }
 
   loadUserWallets(): void {
@@ -704,9 +701,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   }
 
   // == Sell ===============
-  sellComplete(accountType: string): void {
-  	const settingsData = JSON.stringify({ accountType });
-  	this.createTransaction(this.summary.providerView?.id ?? '', PaymentInstrument.WireTransfer, settingsData);
+  sellComplete(accountType: object): void {
+  	const settingsData = JSON.stringify(accountType);
+  	this.createTransaction(this.selectedProvider.id ?? '', PaymentInstrument.WireTransfer, settingsData);
   }
 
   // == Disclaimer =========
@@ -759,9 +756,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.requestKyc = state;
   }
 
-  private settingsCommonComplete(providers: PaymentProviderInstrumentView[]): void {
-  	this.paymentProviders = providers.map(val => val);
-
+  private onPaymentProvidersLoaded(): void {
   	const nextStage = 4;
 
   	if (this.widget.kycFirst && this.requestKyc && !this.widget.embedded) {
@@ -779,47 +774,59 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   			this.nextStage('verification', 'widget-pager.company_level_verification', nextStage);
   		}
   	} else {
-  		if (this.paymentProviders.length < 1) {
-  			this.setError(
-  				'Payment providers not found',
-  				`No supported payment providers found for "${this.summary.currencyFrom}"`);
-  		} else if (this.paymentProviders.length > 1) {
-				
-  			if (!this.notificationStarted) {
-  				this.startNotificationListener();
-  			}
-
-  			this.nextStage('payment', 'widget-pager.credit_card', nextStage);
-  		} else {
-  			this.selectProvider(this.paymentProviders[0]);
-  		}
-  	}
+			this.nextStage('payment', 'widget-pager.credit_card', nextStage);
+		}
   }
 
+	onBankAccountSelect(bankAccount: WireTransferPaymentCategory): void {
+		this.createTransaction(
+			this.selectedProvider.id, 
+			this.selectedProvider.instrument, 
+			'', 
+			this.selectedProvider.bankAccount.bankAccountId, 
+			bankAccount);
+	}
+
   // == Payment info ==
-  selectProvider(provider: PaymentProviderInstrumentView): void {
-  	if(this.summary.transactionType === TransactionType.Buy){
-  		this.summary.providerView = this.paymentProviders.find(x => x.id === provider.id);
+  selectProvider(data: { selectedProvider: PaymentProviderInstrumentView; providers?: PaymentProviderInstrumentView[]; }): void {
+		this.paymentProviders = data.providers;
+		this.selectedProvider = data.selectedProvider;
+
+  	if (this.summary.transactionType === TransactionType.Buy) {
+  		this.summary.providerView = this.paymentProviders.find(x => x.id === this.selectedProvider.id);
 			
-  		if (provider.instrument === PaymentInstrument.WireTransfer) {
-  			this.startPayment();
-  		} else if (provider.instrument === PaymentInstrument.OpenBanking) {
-  			this.nextStage(`payment_${provider.name}`, 'widget-pager.wire_transfer_result', 5);
-  		} else {
-  			this.createTransaction(provider.id, provider.instrument, '');
-  		}
+			const currentCase = `payment_${this.selectedProvider.componentName}`;
+			const knownCases: string[] = ['payment_yapily', 'payment_wrbankaccount'];
+
+			if (knownCases.includes(currentCase)) {
+				if (this.selectedProvider.isSingleBankAccount) {
+
+					this.createTransaction(
+						this.selectedProvider.id, 
+						this.selectedProvider.instrument, 
+						'', 
+						this.selectedProvider.bankAccount.bankAccountId, 
+						this.selectedProvider.selectedBankAccount);
+						
+				} else {
+					this.nextStage(`payment_${this.selectedProvider.componentName}`, 'widget-pager.wire_transfer_result', 5);
+				}
+			} else {
+				this.createTransaction(this.selectedProvider.id, this.selectedProvider.instrument, '');
+			}
   	} else {
 			this.profileService.maxSellAmount(this.summary.currencyFrom)
 				.pipe(take(1), takeUntil(this.destroy$))
 				.subscribe(maxSellAmount => {
 					if (this.summary.amountFrom > maxSellAmount ) {
+						
 						// Back to first page in order to validate maxSellAmount to SELL transaction type
 						this.nextStage('order_details', 'widget-pager.order_details', 1);
 					} else {
-						if (provider.instrument === PaymentInstrument.WireTransfer) {
+						if (this.selectedProvider.instrument === PaymentInstrument.WireTransfer) {
 							this.nextStage('sell_details', 'widget-pager.bank-details', 2);
 						} else {
-							this.createTransaction(provider.id, provider.instrument, '');
+							this.createTransaction(this.selectedProvider.id, this.selectedProvider.instrument, '');
 						}
 					}
 				});
@@ -990,7 +997,13 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private createTransaction(providerId: string, instrument: PaymentInstrument, instrumentDetails: string): void {
+  private createTransaction(
+			providerId: string,
+			instrument: PaymentInstrument, 
+			instrumentDetails: string,
+			wireTransferBankAccountId?: string,
+			wireTransferPaymentCategory?: string,
+			): void {
   	const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
   	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
 
@@ -1002,6 +1015,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		currencyToReceive: (this.summary.currencyTo !== '') ? this.summary.currencyTo : undefined,
   		amountToSpend: this.summary.amountFrom ?? 0,
   		instrument,
+			wireTransferBankAccountId: wireTransferBankAccountId ?? undefined,
+			wireTransferPaymentCategory: wireTransferPaymentCategory ?? undefined,
   		instrumentDetails: (instrumentDetails !== '') ? instrumentDetails : undefined,
   		paymentProvider: (providerId !== '') ? providerId : undefined,
   		widgetUserParamsId: (this.userParamsId !== '') ? this.userParamsId : undefined,
@@ -1022,9 +1037,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 		this.dataService.createTransaction(this.transactionInput)
 			.pipe(takeUntil(this.destroy$))
 				.subscribe(({ data }) => {
-					if (!this.notificationStarted) {
-						this.startNotificationListener();
-					}
+					this.startNotificationListener();
+
 					const order = data.createTransaction as TransactionShort;
 					this.inProgress = false;
 					
@@ -1079,7 +1093,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
   			if(order.instrumentDetails) {
   				const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
-  				this.selectedWireTransfer.data = instrumentDetails.accountType.data;
+					this.selectedWireTransfer.data = instrumentDetails;
   			}
 			
   			this.nextStage('wire_transfer_result', 'widget-pager.wire_transfer_result', 5);
@@ -1192,9 +1206,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.destroy$))
 			.subscribe({
 				next: ({ data }) => {
-					if (!this.notificationStarted) {
-						this.startNotificationListener();
-					}
+					this.startNotificationListener();
+
 					const preAuthResult = data.preauth as PaymentPreauthResultShort;
 					const order = preAuthResult.order;
 
@@ -1234,6 +1247,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			});
   }
 
+	// REMOVE THIS METHOD WHEN YOU ARE DONE WITH THE WIRE TRANSFER
   private onWireTransferListLoaded(wireTransferList: WireTransferPaymentCategoryItem[], bankAccountId: string): void {
   	this.bankAccountId = bankAccountId;
   	this.wireTransferList = wireTransferList;

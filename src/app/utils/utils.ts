@@ -186,8 +186,10 @@ export function isSumsubVerificationComplete(payload: any): { result: boolean; a
 	const status: string = payload?.reviewStatus ?? '';
 	if (status.toLowerCase() === 'completed') {
 		const reviewResult = payload?.reviewResult;
+		
 		if (reviewResult) {
 			const answer = reviewResult.reviewAnswer as string;
+
 			if (answer) {
 				if (answer.toLowerCase() === 'green') {
 					return { result: true, answer: answer.toLowerCase() };
@@ -229,4 +231,8 @@ export function getMinSec(seconds: number): string {
 	const minVal = mins.toString();
 	const secVal = secs.toString();
 	return `${(minVal.length === 1) ? '0' : ''}${minVal}:${(secVal.length === 1) ? '0' : ''}${secVal}`;
+}
+
+export function convertStringToArray(input: string): string[] {
+	return input.split('\n').map(line => line.trim());
 }

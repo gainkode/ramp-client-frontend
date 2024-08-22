@@ -17,7 +17,7 @@ export class WidgetSellDetailsComponent implements OnInit{
 		@Input() widget: WidgetSettings | undefined = undefined;
 		@Output() handleError = new EventEmitter<string>();
     @Output() onBack = new EventEmitter();
-    @Output() onComplete = new EventEmitter<string>();
+    @Output() onComplete = new EventEmitter<Record<string, any>>();
 
     done = false;
     bankCategories: WireTransferPaymentCategoryItem[] = [];
@@ -76,6 +76,7 @@ export class WidgetSellDetailsComponent implements OnInit{
     		this.getSource(this.widget),
     		PaymentInstrument.WireTransfer
     	).valueChanges.pipe(take(1));
+
     	settingsData$.subscribe(({ data }) => {
     		const settingsResult = data.myBankCategories as BankCategory[];
 				
@@ -99,10 +100,11 @@ export class WidgetSellDetailsComponent implements OnInit{
     					data = new WireTransferBankAccountUk();
     					break;
     			}
+
     			return <WireTransferPaymentCategoryItem>{
     				id: item.id,
     				title: item.title,
-    				data: JSON.stringify(data)
+    				data: data
     			};
     		});
 
@@ -113,17 +115,19 @@ export class WidgetSellDetailsComponent implements OnInit{
 		
     private setFormData(): void {
     	const auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Au);
+
     	if (auCategory) {
-    		const auData = JSON.parse(auCategory.data);
+    		const auData = auCategory.data;
     		if (auData) {
     			this.auDataForm.get('accountName')?.setValue(auData.accountName);
     			this.auDataForm.get('accountNumber')?.setValue(auData.accountNumber);
     			this.auDataForm.get('bsb')?.setValue(auData.bsb);
     		}
     	}
+
     	const euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Eu);
     	if (euCategory) {
-    		const euData = JSON.parse(euCategory.data);
+    		const euData = euCategory.data;
     		if (euData) {
     			this.euDataForm.get('bankAddress')?.setValue(euData.bankAddress);
     			this.euDataForm.get('bankName')?.setValue(euData.bankName);
@@ -135,7 +139,7 @@ export class WidgetSellDetailsComponent implements OnInit{
     	}
     	const ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Uk);
     	if (ukCategory) {
-    		const ukData = JSON.parse(ukCategory.data);
+    		const ukData = ukCategory.data;
     		if (ukData) {
     			this.ukDataForm.get('accountName')?.setValue(ukData.accountName);
     			this.ukDataForm.get('accountNumber')?.setValue(ukData.accountNumber);
@@ -145,16 +149,17 @@ export class WidgetSellDetailsComponent implements OnInit{
     }
 
     onSubmit(): void {
-    	let paymentData = '';
+    	let paymentData: WireTransferBankAccountAu | WireTransferBankAccountEu | WireTransferBankAccountUk;
+			
     	if (this.selectedCategory === WireTransferPaymentCategory.Au && this.auDataForm.valid) {
-    		const data: WireTransferBankAccountAu = {
+    		paymentData = {
     			accountName: this.auDataForm.get('accountName')?.value,
     			accountNumber: this.auDataForm.get('accountNumber')?.value,
     			bsb: this.auDataForm.get('bsb')?.value
     		};
-    		paymentData = JSON.stringify(data);
+
     	} else if (this.selectedCategory === WireTransferPaymentCategory.Eu && this.euDataForm.valid) {
-    		const data: WireTransferBankAccountEu = {
+    		paymentData = {
     			bankAddress: this.euDataForm.get('bankAddress')?.value,
     			bankName: this.euDataForm.get('bankName')?.value,
     			beneficiaryAddress: this.euDataForm.get('beneficiaryAddress')?.value,
@@ -162,24 +167,23 @@ export class WidgetSellDetailsComponent implements OnInit{
     			iban: this.euDataForm.get('iban')?.value,
     			swiftBic: this.euDataForm.get('swiftBic')?.value
     		};
-    		paymentData = JSON.stringify(data);
+
     	} else if (this.selectedCategory === WireTransferPaymentCategory.Uk && this.ukDataForm.valid) {
-    		const data: WireTransferBankAccountUk = {
+				paymentData = {
     			accountName: this.ukDataForm.get('accountName')?.value,
     			accountNumber: this.ukDataForm.get('accountNumber')?.value,
     			sortCode: this.ukDataForm.get('sortCode')?.value
     		};
-    		paymentData = JSON.stringify(data);
     	}
-    	if (paymentData !== '') {
-    		const result = {
-    			id: this.selectedCategory,
-    			title: this.bankCategories.find(x => x.id === this.selectedCategory)?.title,
-    			data: paymentData
-    		} as WireTransferPaymentCategoryItem;
-    		this.done = true;
-    		this.onComplete.emit(JSON.stringify(result));
-    	}
+
+			const result = {
+				id: this.selectedCategory,
+				title: this.bankCategories.find(x => x.id === this.selectedCategory)?.title,
+				data: paymentData
+			} as WireTransferPaymentCategoryItem;
+			
+			this.done = true;
+			this.onComplete.emit(result);
     }
 		
     private getSource(widget: WidgetSettings): TransactionSource {

@@ -5,7 +5,7 @@ import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
 import { CostScheme } from 'model/cost-scheme.model';
 import { CountryFilterList } from 'model/country-code.model';
-import { PaymentInstrument, PaymentProvider, SettingsCostSimilarResult, SettingsCostTargetFilterType, TransactionType, WireTransferBankAccountListResult } from 'model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCostSimilarResult, SettingsCostTargetFilterType, TransactionType } from 'model/generated-models';
 import { CostTargetFilterList, PaymentInstrumentList, PaymentProviderView, TransactionTypeList } from 'model/payment.model';
 import { concat, Observable, of, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, map, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -40,7 +40,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 	saveInProgress = false;
 	errorMessage = '';
 	defaultSchemeName = '';
-	bankAccounts: CommonTargetValue[] = [];
 	transactionTypes = TransactionTypeList;
 	instruments = PaymentInstrumentList;
 	providers: PaymentProviderView[] = [];
@@ -65,7 +64,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 		id: [undefined],
 		name: [undefined, { validators: [Validators.required], updateOn: 'change' }],
 		description: [undefined],
-		bankAccounts: [[]],
 		isDefault: [false],
 		target: [undefined, { validators: [Validators.required], updateOn: 'change' }],
 		targetValues: [[], { validators: [Validators.required], updateOn: 'change' }],
@@ -97,7 +95,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 			
 		this.loadCommonSettings();
 		this.getPaymentProviders();
-		this.getWireTransferAccounts();
 		this.initWidgetSearch();
 	}
 
@@ -129,7 +126,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 			this.form.get('name')?.setValue(scheme?.name);
 			this.form.get('description')?.setValue(scheme?.description);
 			this.form.get('isDefault')?.setValue(scheme?.isDefault);
-			this.form.get('bankAccounts')?.setValue(scheme?.bankAccountIds);
 			this.form.get('target')?.setValue(scheme?.target);
 			this.targetType = scheme?.target ?? SettingsCostTargetFilterType.None;
 			this.setTargetValues(scheme?.targetValues);
@@ -146,7 +142,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 			this.form.get('name')?.setValue('');
 			this.form.get('description')?.setValue('');
 			this.form.get('isDefault')?.setValue('');
-			this.form.get('bankAccounts')?.setValue([]);
 			this.form.get('target')?.setValue(SettingsCostTargetFilterType.None);
 			this.form.get('targetValues')?.setValue([]);
 			this.form.get('trxType')?.setValue([]);
@@ -167,7 +162,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 		data.id = this.form.get('id')?.value;
 		data.setWidgets(this.form.get('widgetIds')?.value);
 		data.setTarget(this.targetType, this.form.get('targetValues')?.value);
-		data.bankAccountIds = this.form.get('bankAccounts')?.value;
 		data.trxType = this.form.get('trxType')?.value as TransactionType[];
 		data.instrument = this.form.get('instrument')?.value as PaymentInstrument[];
 		data.provider = this.form.get('provider')?.value as string[];
@@ -320,22 +314,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 			const providers = data.getPaymentProviders as PaymentProvider[];
 			this.providers = providers?.map((val) => new PaymentProviderView(val));
 				this.filterPaymentProviders(this.form.get('instrument')?.value);
-		});
-	}
-
-	private getWireTransferAccounts(): void {
-		this.bankAccounts = [];
-
-		this.adminService.getWireTransferBankAccounts().valueChanges.pipe(takeUntil(this.destroy$)).subscribe(({ data }) => {
-			const dataList = data.getWireTransferBankAccounts as WireTransferBankAccountListResult;
-			if (dataList?.count ?? 0 > 0) {
-				this.bankAccounts = dataList?.list?.map(val => {
-					return {
-						id: val.bankAccountId,
-						title: val.name
-					} as CommonTargetValue;
-				}) ?? [];
-			}
 		});
 	}
 

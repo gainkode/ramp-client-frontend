@@ -5,9 +5,10 @@ import {
 	PaymentInstrument, PaymentProvider, TransactionType, TransactionStatus,
 	SettingsFeeTargetFilterType, SettingsCostTargetFilterType, SettingsKycTargetFilterType,
 	UserType, KycProvider, UserMode, SettingsCurrency, Rate, TransactionSource, UserNotificationCodes, 
-	CustodyProvider, TransactionKycStatus, RiskLevel, PaymentProviderByInstrument, AccountStatus, KycStatus, 
+	CustodyProvider, TransactionKycStatus, RiskLevel, AccountStatus, KycStatus, 
 	AdminTransactionStatus, UserTransactionStatus, WireTransferPaymentCategory, CryptoInvoiceCreationResult, 
-	UserActionType, UserActionResult, CurrencyBlockchain
+	UserActionType, UserActionResult, CurrencyBlockchain,
+	WireTransferBankAccount
 } from './generated-models';
 import { WireTransferPaymentCategoryItem } from './payment-base.model';
 
@@ -19,33 +20,71 @@ export class PaymentInstrumentView {
 export class PaymentProviderInstrumentView {
 	id = '';
 	name = '';
+	componentName = '';
 	image = '';
 	instrument: PaymentInstrument = PaymentInstrument.CreditCard;
 	external = false;
+	bankAccount: WireTransferBankAccount;
+	isSingleBankAccount = false;
+	selectedBankAccount = '';
+	constructor(data: PaymentProvider, paymentMethodName: PaymentInstrument) {
+		this.id = data?.paymentProviderId ?? '';
+		this.name = data?.name ?? '';
+    this.componentName = data?.name?.toLocaleLowerCase() ?? '';
+		this.instrument = paymentMethodName;
+		this.bankAccount = data?.wrBankAccount;
 
-	constructor(data: PaymentProviderByInstrument) {
-		this.id = data.provider?.name ?? '';
-		this.name = data.provider?.name ?? '';
-		this.instrument = data.instrument ?? PaymentInstrument.CreditCard;
-		if(data.provider.external || data.provider.virtual){
-			this.external = data.provider.external;
+		if (data?.wrBankAccount) {
+			this.isSingleBankAccount = this.singleBankAccount(data?.wrBankAccount);
+
+			if (this.isSingleBankAccount) {
+				this.selectedBankAccount = this.selectBankAccount(data?.wrBankAccount);
+			}
 		}
+	
+		if(data.external || data.virtual){
+			this.external = data.external;
+		}
+		
 		if (this.instrument === PaymentInstrument.Apm) {
-			this.name = data.provider?.displayName ?? 'APM';
-			this.image = data.provider?.logo ? `${EnvService.image_host}/apm/${data.provider.logo}` : './assets/svg-providers/apm.svg';
+			this.name = data?.displayName ?? 'APM';
+			this.image = data?.logo ? `${EnvService.image_host}/apm/${data.logo}` : './assets/svg-providers/apm.svg';
 		} else if (this.instrument === PaymentInstrument.CreditCard) {
 			this.name = 'CARD PAYMENT';
 			this.image = './assets/svg-providers/credit-card.svg';
 		} else if (this.instrument === PaymentInstrument.WireTransfer) {
-			this.name = data.provider?.displayName ?? 'WIRE TRANSFER';
+			this.name = data?.displayName ?? 'WIRE TRANSFER';
 			this.image = './assets/svg-providers/wire-transfer.svg';
 		} else if (this.instrument === PaymentInstrument.FiatVault) {
 			this.name = 'FIAT VAULT';
 			this.image = './assets/svg-providers/fiat-vault.png';
 		} else if (this.instrument === PaymentInstrument.OpenBanking) {
-			this.name = data.provider?.displayName;
+			this.name = data?.displayName;
 			this.image = `./assets/svg-providers/${this.name}.svg`;
 		}
+	}
+
+	singleBankAccount(data: WireTransferBankAccount): boolean {
+		const { au, uk, eu } = data;
+		const accounts = [au, uk, eu];
+		
+		// Filter out null values and check if only one account is non-null
+		const nonNullAccounts = accounts.filter(account => account);
+		
+		return nonNullAccounts.length === 1;
+	}
+
+	selectBankAccount(data: WireTransferBankAccount): string {
+		const accounts = [
+			{ key: 'au', value: data?.au },
+			{ key: 'uk', value: data?.uk },
+			{ key: 'eu', value: data?.eu }
+	];
+		
+		// Filter out null values and check if only one account is non-null
+		const account = accounts.filter(account => account);
+		
+		return account[0].key;
 	}
 }
 
@@ -54,9 +93,10 @@ export class PaymentProviderView {
 	name = '';
 	instruments: string[] = [];
 	virtual = false;
-
+	bankAccountsRequired = false;
 	constructor(data: PaymentProvider) {
-		this.id = data.name ?? '';
+		this.id = data.paymentProviderId ?? '';
+		this.bankAccountsRequired = data.bankAccountsRequired;
 		this.name = data.displayName ?? data.name ?? '';
 		this.instruments = data.instruments?.map(val => val) ?? [];
 		this.virtual = data.virtual;
@@ -202,6 +242,7 @@ export class CurrencyView {
 		} else {
 			this.display = this.code;
 		}
+		
 		this.name = data.name ?? '';
 		this.precision = data.precision;
 		this.minAmount = data.minAmount;
@@ -292,14 +333,9 @@ export const PaymentInstrumentList: Array<PaymentInstrumentView> = [
 ];
 
 export const WireTransferPaymentCategoryList: Array<WireTransferPaymentCategoryItem> = [
-	{ id: WireTransferPaymentCategory.Au, bankAccountId: '', title: 'Australian Bank', data: '' },
-	{ id: WireTransferPaymentCategory.Uk, bankAccountId: '', title: 'UK Bank', data: '' },
-	{ id: WireTransferPaymentCategory.Eu, bankAccountId: '', title: 'SEPA / SWIFT', data: '' }
-];
-
-export const QuickCheckoutPaymentInstrumentList: Array<PaymentInstrumentView> = [
-	{ id: PaymentInstrument.CreditCard, name: 'Credit card' },
-	{ id: PaymentInstrument.Apm, name: 'APM' }
+	{ id: WireTransferPaymentCategory.Au, title: 'Australian Bank', data: {} },
+	{ id: WireTransferPaymentCategory.Uk, title: 'UK Bank', data: {} },
+	{ id: WireTransferPaymentCategory.Eu, title: 'SEPA / SWIFT', data: {} }
 ];
 
 export const TransactionTypeList: Array<TransactionTypeView> = [
@@ -687,13 +723,9 @@ export class CheckoutSummary {
 	}
 
 	setPaymentInfo(instrument: PaymentInstrument, info: string): void {
-		if (info) {
-			if (instrument === PaymentInstrument.CreditCard) {
-				this.card = new CardView();
-				if (info) {
-					this.card.setPaymentInfo(info);
-				}
-			}
+		if (info && instrument === PaymentInstrument.CreditCard) {
+			this.card = new CardView();
+			this.card.setPaymentInfo(info);
 		}
 	}
 }

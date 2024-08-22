@@ -44,9 +44,8 @@ export class TransferWidgetComponent implements OnInit, OnDestroy {
   wireTransferList: WireTransferPaymentCategoryItem[] = [];
   selectedWireTransfer: WireTransferPaymentCategoryItem = {
   	id: WireTransferPaymentCategory.Au,
-  	bankAccountId: '',
   	title: '',
-  	data: ''
+  	data: {}
   };
   requestKyc = false;
   iframeContent = '';

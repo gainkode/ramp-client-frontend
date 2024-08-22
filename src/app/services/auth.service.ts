@@ -516,11 +516,11 @@ query {
 const GET_SIGNUP_REQUIRED_FIELDS = gql`
 query {
     mySettingsKyc {
-        requireUserFullName
-        requireUserPhone
-        requireUserBirthday
-        requireUserAddress
-        requireUserFlatNumber
+			requireUserFullName
+			requireUserPhone
+			requireUserBirthday
+			requireUserAddress
+			requireUserFlatNumber
     }
 }
 `;

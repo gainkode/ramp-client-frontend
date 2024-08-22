@@ -14,7 +14,11 @@
         (onBack)="stageBack()">
     </app-payment-yapily-banks>
 
-    <app-transaction-details [isPaymentSuccess]="isPaymentSuccess" *ngSwitchCase="'payment_completed'" [yapilyRedirectObject]="yapilyRedirectObject"> </app-transaction-details>
+    <app-transaction-details 
+        *ngSwitchCase="'payment_completed'" 
+        [isPaymentSuccess]="isPaymentSuccess" 
+        [yapilyRedirectObject]="yapilyRedirectObject"> 
+    </app-transaction-details>
 </div>
 
 <ng-container *ngIf="isLoading">

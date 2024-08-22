@@ -17,7 +17,6 @@ import {
 	QueryGetFiatVaultsArgs,
 	QueryGetNotificationsArgs, QueryGetRiskAlertsArgs,
 	QueryGetSettingsFeeArgs,
-	QueryGetSettingsKycArgs,
 	QueryGetSettingsKycLevelsArgs,
 	QueryGetSettingsKycTiersArgs,
 	QueryGetTransactionsArgs,
@@ -30,7 +29,6 @@ import {
 	QueryGetWidgetsArgs, RiskAlertResultList,
 	SettingsCommon,
 	SettingsFeeListResult, SettingsKycLevelListResult,
-	SettingsKycListResult,
 	SettingsKycTier,
 	SettingsKycTierListResult,
 	TransactionListResult,
@@ -65,7 +63,7 @@ import {
   UserFilterInput,
   RiskAlertType
 } from '../model/generated-models';
-import { KycLevel, KycScheme, KycTier } from '../model/identification.model';
+import { KycLevel, KycTier } from '../model/identification.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TransactionItemFull, TransactionStatusHistoryItem } from '../model/transaction.model';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
@@ -370,7 +368,6 @@ const GET_COST_SETTINGS = gql`
         name
         default
         description
-        bankAccounts { bankAccountId, name }
         terms
         targetFilterType
         targetFilterValues
@@ -397,6 +394,10 @@ query GetWireTransferBankAccounts {
       uk
       eu
       paymentProviders
+      source
+      targetTransactionTypes
+      widgetIds
+      userTypes
     }
   }
 }
@@ -1446,6 +1447,7 @@ query GetProviders {
     countriesCode2
     instruments
     virtual
+    bankAccountsRequired
   }
 }
 `;
@@ -1712,7 +1714,6 @@ const ADD_SETTINGS_COST = gql`
   mutation AddSettingsCost(
     $name: String!
     $description: String
-    $bankAccountIds: [String!]
     $targetFilterType: SettingsCostTargetFilterType!
     $targetFilterValues: [String!]
     $targetInstruments: [PaymentInstrument!]
@@ -1725,7 +1726,6 @@ const ADD_SETTINGS_COST = gql`
       settings: {
         name: $name
         description: $description
-        bankAccountIds: $bankAccountIds
         targetFilterType: $targetFilterType
         targetFilterValues: $targetFilterValues
         targetInstruments: $targetInstruments
@@ -1771,7 +1771,6 @@ const SETTINGS_COST_SIMILARS = gql`
   mutation SettingsCostSimilars(
     $name: String!
     $description: String
-    $bankAccountIds: [String!]
     $targetFilterType: SettingsCostTargetFilterType!
     $targetFilterValues: [String!]
     $targetInstruments: [PaymentInstrument!]
@@ -1784,7 +1783,6 @@ const SETTINGS_COST_SIMILARS = gql`
       settings: {
         name: $name
         description: $description
-        bankAccountIds: $bankAccountIds
         targetFilterType: $targetFilterType
         targetFilterValues: $targetFilterValues
         targetInstruments: $targetInstruments
@@ -1809,9 +1807,6 @@ const SETTINGS_COST_SIMILARS = gql`
       widgetIds {
         ...CostObjectDetails
       }
-      bankAccounts {
-        ...CostObjectDetails
-      }
     }
   }
 `;
@@ -1824,6 +1819,10 @@ mutation AddWireTransferBankAccount(
   $uk: String
   $eu: String,
   $paymentProviders: [String]
+  $source: [String]
+  $targetTransactionTypes: [String]
+  $widgetIds: [String]
+  $userTypes: [String]
 ) {
   addWireTransferBankAccount(
     bankAccount: {
@@ -1833,6 +1832,10 @@ mutation AddWireTransferBankAccount(
       uk: $uk
       eu: $eu
       paymentProviders: $paymentProviders
+      source: $source
+      targetTransactionTypes: $targetTransactionTypes
+      widgetIds: $widgetIds
+      userTypes: $userTypes
     }
   ) {
     bankAccountId
@@ -2755,7 +2758,6 @@ const UPDATE_SETTINGS_COST = gql`
     $settingsId: ID!
     $name: String!
     $description: String
-    $bankAccountIds: [String!]
     $targetFilterType: SettingsCostTargetFilterType!
     $targetFilterValues: [String!]
     $targetInstruments: [PaymentInstrument!]
@@ -2769,7 +2771,6 @@ const UPDATE_SETTINGS_COST = gql`
       settings: {
         name: $name
         description: $description
-        bankAccountIds: $bankAccountIds
         targetFilterType: $targetFilterType
         targetFilterValues: $targetFilterValues
         targetInstruments: $targetInstruments
@@ -2793,6 +2794,10 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
     $uk: String
     $eu: String
     $paymentProviders: [String]
+    $source: [String]
+    $targetTransactionTypes: [String]
+    $widgetIds: [String]
+    $userTypes: [String]
   ) {
     updateWireTransferBankAccount(
       bankAccountId: $bankAccountId
@@ -2803,6 +2808,10 @@ const UPDATE_WIRE_TRANSFER_SETTINGS = gql`
         uk: $uk
         eu: $eu
         paymentProviders: $paymentProviders
+        source: $source
+        targetTransactionTypes: $targetTransactionTypes
+        widgetIds: $widgetIds
+        userTypes: $userTypes
       }
     ) {
       bankAccountId
@@ -3897,7 +3906,6 @@ export class AdminDataService {
 			variables: {
 				name: settings.name,
         description: settings.description,
-        bankAccountIds: settings.bankAccountIds,
         targetFilterType: settings.target,
         targetFilterValues: settings.targetValues,
         targetInstruments: settings.instrument,
@@ -3916,7 +3924,6 @@ export class AdminDataService {
 				variables: {
 					name: settings.name,
 					description: settings.description,
-					bankAccountIds: settings.bankAccountIds,
 					targetFilterType: settings.target,
 					targetFilterValues: settings.targetValues,
 					targetInstruments: settings.instrument,
@@ -3932,7 +3939,6 @@ export class AdminDataService {
 					settingsId: settings.id,
 					name: settings.name,
 					description: settings.description,
-					bankAccountIds: settings.bankAccountIds,
 					targetFilterType: settings.target,
 					targetFilterValues: settings.targetValues,
 					targetInstruments: settings.instrument,
@@ -3964,7 +3970,11 @@ export class AdminDataService {
 					au: account.au,
 					uk: account.uk,
 					eu: account.eu,
-					paymentProviders: account.paymentProviders
+					paymentProviders: account.paymentProviders,
+          source: account.source,
+          targetTransactionTypes: account.targetTransactionTypes,
+          widgetIds: account.widgetIds,
+          userTypes: account.userTypes,
 				}
 			})
 			: this.apollo.mutate({
@@ -3976,7 +3986,11 @@ export class AdminDataService {
 					au: account.au,
 					uk: account.uk,
 					eu: account.eu,
-					paymentProviders: account.paymentProviders
+					paymentProviders: account.paymentProviders,
+          source: account.source,
+          targetTransactionTypes: account.targetTransactionTypes,
+          widgetIds: account.widgetIds,
+          userTypes: account.userTypes,
 				}
 			});
 	}

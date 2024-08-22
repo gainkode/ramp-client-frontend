@@ -13,6 +13,7 @@ import { PageType } from 'model/generated-models';
 import { take, takeUntil } from 'rxjs';
 import { CommonDataService } from 'services/common-data.service';
 import { UnsubscriberBase } from 'services/unsubscriber.base';
+import { convertStringToArray } from 'utils/utils';
 
 @Component({
   selector: 'app-widget-disclaimer',
@@ -65,7 +66,7 @@ export class WidgetDisclaimerComponent extends UnsubscriberBase implements OnIni
             )?.pageText;
 
             
-            disclaimerTextData = this.convertStringToArray(disclaimerTextRaw);
+            disclaimerTextData = convertStringToArray(disclaimerTextRaw);
             this.textData = new CustomTextList(disclaimerTextData);
             this.inProgress = false;
           }
@@ -74,10 +75,5 @@ export class WidgetDisclaimerComponent extends UnsubscriberBase implements OnIni
           this.inProgress = false;
         },
       });
-  }
-
-  private convertStringToArray(input: string): string[] {
-    const lines = input.split('\n').map((line) => line.trim());
-    return lines;
   }
 }

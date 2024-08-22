@@ -14,7 +14,6 @@ export class CostScheme {
 	deleted = false;
 	description!: string;
 	name!: string;
-	bankAccountIds: string[] = [];
 	target: SettingsCostTargetFilterType | null = null;
 	targetValues: Array<string> = [];
 	trxType: Array<TransactionType> = [];
@@ -30,7 +29,6 @@ export class CostScheme {
 			this.id = data.settingsCostId;
 			this.isDefault = data.default as boolean;
 			this.description = data.description as string;
-			this.bankAccountIds = data.bankAccounts?.map(a => a.bankAccountId) ?? [];
 			this.terms = new CostShemeTerms(data.terms ?? '');
 			this.deleted = data?.deleted;
 
@@ -166,7 +164,11 @@ export class WireTransferBankAccountItem {
 	au: WireTransferBankAccountAu | undefined = undefined;
 	uk: WireTransferBankAccountUk | undefined = undefined;
 	eu: WireTransferBankAccountEu | undefined = undefined;
-	paymentProviders: String[] = [];
+	paymentProviders: string[] = [];
+	source: string[] = [];
+	targetTransactionTypes: string[] = [];
+	widgetIds: string[] = [];
+	userTypes: string[] = [];
 
 	get auAvailable(): boolean {
 		return (this.au !== undefined);
@@ -206,9 +208,12 @@ export class WireTransferBankAccountItem {
 			if (data.eu) {
 				this.eu = JSON.parse(data.eu) ?? undefined;
 			}
-			if(data.paymentProviders){
-				this.paymentProviders = data.paymentProviders;
-			}
+
+			this.paymentProviders = data.paymentProviders || [];
+			this.source = data.source || [];
+			this.targetTransactionTypes = data.targetTransactionTypes || [];
+			this.widgetIds = data.widgetIds || [];
+			this.userTypes = data.userTypes || [];
 		} else {
 			this.id = '';
 			this.name = '';
@@ -242,8 +247,7 @@ export class WireTransferUserSelection {
 	id = '';
 	selected: WireTransferPaymentCategoryItem = {
 		id: WireTransferPaymentCategory.Au,
-		bankAccountId: '',
 		title: '',
-		data: ''
+		data: {}
 	};
 }

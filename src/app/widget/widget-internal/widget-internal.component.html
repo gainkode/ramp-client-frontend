@@ -94,9 +94,21 @@
           <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="stageBack()"
             (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">
           </app-widget-register>
-          <app-widget-payment-yapily *ngSwitchCase="'payment_Yapily'" [userParamsId]="userParamsId" [source]="widget.source" [summary]="summary" (onBack)="stageBack()"
-            (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">
+          <app-widget-payment-yapily
+            *ngSwitchCase="'payment_yapily'" 
+            [userParamsId]="userParamsId" 
+            [source]="widget.source" 
+            [summary]="summary" 
+            (onBack)="stageBack()"
+            (onProgress)="progressChanged($event)" 
+            (onComplete)="onLoginRequired($event)">
           </app-widget-payment-yapily>
+          <app-widget-payment-wrbankaccount
+            *ngSwitchCase="'payment_wrbankaccount'" 
+            [bankAccount]="selectedProvider.bankAccount"
+            (onBack)="stageBack()"
+            (selectProviderBankAccount)="onBankAccountSelect($event)">
+          </app-widget-payment-wrbankaccount>
           <!-- Login Authentication -->
           <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widget]="widget"
             [requiredExtraData]="requiredExtraData" [allowCreate]="quickCheckout"
@@ -110,8 +122,14 @@
             (onRegister)="onRegister($event)" (onTransactionComplete)="transactionConfiramtionComplete($event)">
           </app-widget-code-auth>
           <!-- Payment -->
-          <app-widget-payment *ngSwitchCase="'payment'" [providers]="paymentProviders" [summary]="summary"
-            [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onBack)="stageBack()"
+          <app-widget-payment 
+            *ngSwitchCase="'payment'" 
+            [summary]="summary"
+            [widget]="widget"
+            [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" 
+            (onBack)="stageBack()"
+            (onError)="handleError($event)"
+            (onNotificationStart)="startNotificationListener()"
             (onSelect)="selectProvider($event)">
           </app-widget-payment>
           <!-- Credit card -->
@@ -142,9 +160,13 @@
             [kycSubscribeResult]="kycSubscribeResult"
             [allowToPayIfKycFailed]="widget.allowToPayIfKycFailed"
             [widgetId]="widget.widgetId"
-            [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" (onError)="handleError($event)"
-            (onAuthError)="handleAuthError()" (onProgress)="progressChanged($event)" (onBack)="stageBack()"
-            (onNext)="kycComplete()" (onReject)="handleReject()"></app-widget-kyc>
+            [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage" 
+            (onError)="handleError($event)"
+            (onAuthError)="handleAuthError()" 
+            (onProgress)="progressChanged($event)" 
+            (onBack)="stageBack()"
+            (onNext)="kycComplete()" 
+            (onReject)="handleReject()"></app-widget-kyc>
           <!-- Processing with a frame -->
           <app-widget-processing-frame *ngSwitchCase="'processing-frame'" [iframeContent]="iframeContent"
             [completed]="paymentComplete" [errorMessage]="(errorMessage === '') ? rateErrorMessage : errorMessage"

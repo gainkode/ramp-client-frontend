@@ -9,7 +9,7 @@ import { YapilyRedirectModel } from './panels/banks-page/bank.component';
 
 @Component({
 	selector: 'app-widget-payment-yapily',
-	templateUrl: 'payment.component.html',
+	templateUrl: 'yapily.component.html',
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
