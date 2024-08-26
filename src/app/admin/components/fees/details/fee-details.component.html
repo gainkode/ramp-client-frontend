@@ -84,12 +84,12 @@
             </label>
             <ng-select formControlName="widgetIds"
               bindLabel="title"
-              [minTermLength]="minTargetsLengthTerm"
-              notFoundText="No widgets found" 
-              [loading]="isWidgetsLoading" 
-              [multiple]="true"
+              notFoundText="No widgets found"
               typeToSearchText="type widget name" 
               placeholder="Start typing to search a widget" 
+              [minTermLength]="minTargetsLengthTerm"
+              [loading]="isWidgetsLoading" 
+              [multiple]="true" 
               [typeahead]="widgetsSearchInput$" 
               [items]="widgetsOptions$ | async">
             </ng-select>

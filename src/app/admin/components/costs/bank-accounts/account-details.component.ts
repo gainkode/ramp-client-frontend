@@ -2,15 +2,14 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { map, Subscription } from 'rxjs';
-import { AdminDataService } from 'services/admin-data.service';
-import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountItem, WireTransferBankAccountUk } from 'model/cost-scheme.model';
-import { PaymentInstrument, PaymentProvider, TransactionType, WireTransferBankAccount, WireTransferPaymentCategory } from 'model/generated-models';
-import { PaymentProviderView, TransactionSourceList, TransactionTypeList, UserTypeList, WireTransferPaymentCategoryList } from 'model/payment.model';
-import { AuthService } from 'services/auth.service';
-import { getProviderList } from 'utils/utils';
 import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
+import { WireTransferBankAccountAu, WireTransferBankAccountEu, WireTransferBankAccountItem, WireTransferBankAccountUk } from 'model/cost-scheme.model';
+import { PaymentProvider, TransactionType, WireTransferBankAccount, WireTransferPaymentCategory } from 'model/generated-models';
+import { PaymentProviderView, TransactionSourceList, TransactionTypeList, UserTypeList, WireTransferPaymentCategoryList } from 'model/payment.model';
+import { debounceTime, distinctUntilChanged, map, Observable, of, startWith, Subject, Subscription, switchMap, tap } from 'rxjs';
+import { AdminDataService } from 'services/admin-data.service';
+import { AuthService } from 'services/auth.service';
 
 const requiredTransactionTypes = [
 	TransactionType.Buy,
@@ -42,7 +41,10 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   createNew = false;
   saveInProgress = false;
   deleteInProgress = false;
+	isWidgetsLoading = false;
+	widgetsSearchInput$ = new Subject<string>();
 	providers: PaymentProviderView[] = [];
+	widgetIds: string[] = [];
   public errorMessage = '';
   bankCategories = WireTransferPaymentCategoryList;
 	transactionSources = TransactionSourceList;
@@ -76,12 +78,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
 		widgetIds: [],
 		userTypes: [],
   });
-
-	widgetsOptions$ = this.adminService.getWidgets(0, 200, 'name', false, <Filter>{}).pipe(
-		map(result => result.list.map(widget => ({
-			id: widget.id,
-			title: widget.name
-		} as CommonTargetValue))));
+	widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
 
   constructor(
   	private formBuilder: UntypedFormBuilder,
@@ -94,6 +91,8 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 		this.getPaymentProviders();
+		this.initWidgetSearch();
+		
   	this.auCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Au);
   	this.ukCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Uk);
   	this.euCategory = this.bankCategories.find(x => x.id === WireTransferPaymentCategory.Eu);
@@ -107,6 +106,7 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   	if (account) {
   		this.form.get('name')?.setValue(account.name);
   		this.form.get('description')?.setValue(account.description);
+
   		if (account.auAvailable) {
   			this.form.get('auSelected')?.setValue(true);
   			this.form.get('auAccountName')?.setValue(account.au?.accountName);
@@ -130,11 +130,13 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   		}
 
 			this.form.get('paymentProviders')?.setValue(account.paymentProviders);
+			
+			this.widgetIds = account.widgetIds;
 			this.form.get('widgetIds')?.setValue(account.widgetIds);
+
 			this.form.get('source')?.setValue(account.source);
 			this.form.get('targetTransactionTypes')?.setValue(account.targetTransactionTypes);
 			this.form.get('userTypes')?.setValue(account.userTypes);
-
   	} else {
   		this.form.get('name')?.setValue('');
   		this.form.get('description')?.setValue('');
@@ -217,10 +219,14 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
 		data.paymentProviders = this.form.get('paymentProviders')?.value;
 		data.source = this.form.get('source')?.value;
 		data.targetTransactionTypes = this.form.get('targetTransactionTypes')?.value;
-		data.widgetIds = this.form.get('widgetIds')?.value;
+		data.widgetIds = this.setWidgets(this.form.get('widgetIds')?.value);
 		data.userTypes = this.form.get('userTypes')?.value;
   	return data;
   }
+
+	setWidgets(values: CommonTargetValue[]): string[] {
+		return values?.map(x => x.id);
+	}
 
   onSubmit(): void {
   	this.submitted = true;
@@ -273,7 +279,46 @@ export class AdminBankAccountDetailsComponent implements OnInit, OnDestroy {
   	);
   }
 
-  deleteAccountConfirmed(id: string): void {
+	private initWidgetSearch(): void {
+		let initialLoadDone = false;
+
+		this.widgetsOptions$ = this.widgetsSearchInput$.pipe(
+			startWith(null),
+			debounceTime(300),
+			distinctUntilChanged(),
+			switchMap(searchString => {
+				if (searchString === null && !initialLoadDone && this.widgetIds?.length) {
+					this.isWidgetsLoading = true;
+					initialLoadDone = true;
+
+					return this.getFilteredWidgets(new Filter({ widgets: this.widgetIds })).pipe(
+						tap(result => {
+							this.form.get('widgetIds')?.setValue(result);
+							this.isWidgetsLoading = false;
+						}));
+				} else if (searchString !== null && searchString.length >= 1) {
+					this.isWidgetsLoading = true;
+
+					return this.getFilteredWidgets(new Filter({ search: searchString })).pipe(
+						tap(() => this.isWidgetsLoading = false));
+				} else {
+					this.isWidgetsLoading = false;
+					return of([]);
+				}
+			})
+		);
+	}
+
+	private getFilteredWidgets(filter: Filter): Observable<CommonTargetValue[]> {
+		return this.adminService.getWidgets(0, 100, 'widgetId', false, filter).pipe(
+			map(result => result.list.map(widget => ({
+				id: widget.id,
+				title: widget.name
+			} as CommonTargetValue)))
+		);
+	}
+
+  private deleteAccountConfirmed(id: string): void {
   	this.errorMessage = '';
   	this.deleteInProgress = true;
 

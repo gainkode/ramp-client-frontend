@@ -340,27 +340,28 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	this.onTransactionUpdated(type);
   }
 
-  private loadDetailsForm(initState: boolean): void {
-  	const currencyData = this.commonService.getSettingsCurrency();
-  	this.onProgress.emit(true);
-  	this.pSubscriptions.add(
-  		currencyData.valueChanges.subscribe(
-  			({ data }) => {
-  				this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
-  				
-  				if (this.auth.authenticated && this.USER.email === this.emailField?.value && this.settings.embedded) {
-  					this.loadRates();
-  					this.loadTransactionsTotal();
-  				} else {
-  					this.onProgress.emit(false);
-  				}
-  			},
-  			(error) => {
-  				this.onProgress.emit(false);
-  				this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load available list of currency types'));
-  			})
-  	);
-  }
+private loadDetailsForm(initState: boolean): void {
+	const currencyData = this.commonService.getSettingsCurrency();
+	this.onProgress.emit(true);
+	this.pSubscriptions.add(
+		currencyData.valueChanges.subscribe({
+			next: ({ data }) => {
+				this.loadCurrencyList(data.getSettingsCurrency as SettingsCurrencyWithDefaults, initState);
+
+				if (this.auth.authenticated && this.USER.email === this.emailField?.value && this.settings.embedded) {
+					this.loadRates();
+					this.loadTransactionsTotal();
+				} else {
+					this.onProgress.emit(false);
+				}
+			},
+			error: (error) => {
+				this.onProgress.emit(false);
+				this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load available list of currency types'));
+			}
+		})
+	);
+}
 
   private loadCurrencyList(currencySettings: SettingsCurrencyWithDefaults, initState: boolean): void {
   	let itemCount = 0;
@@ -423,51 +424,56 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	}
   }
 
-  private loadRates(): void {
-  	const rateCurrencies = this.pCurrencies.filter(x => x.fiat && x.symbol !== 'EUR').map((val) => val.symbol);
+private loadRates(): void {
+	const rateCurrencies = this.pCurrencies.filter(x => x.fiat && x.symbol !== 'EUR').map((val) => val.symbol);
 
-  	this.pSubscriptions.add(
-        this.paymentService.getOneToManyRates('EUR', rateCurrencies, false).valueChanges.subscribe(
-  			({ data }) => {
-            const rates = data.getOneToManyRates as Rate[];
+	this.pSubscriptions.add(
+		this.paymentService.getOneToManyRates('EUR', rateCurrencies, false).valueChanges.subscribe({
+			next: ({ data }) => {
+				const rates = data.getOneToManyRates as Rate[];
 
-            this.pCurrencies.forEach(c => {
-                if (c.symbol === 'EUR') {
-                    c.rateFactor = 1;
-                } else {
-                    const rate = rates?.find(x => x.currencyTo === c.symbol);
+				this.pCurrencies.forEach(c => {
+					if (c.symbol === 'EUR') {
+						c.rateFactor = 1;
+					} else {
+						const rate = rates?.find(x => x.currencyTo === c.symbol);
 
-                    if (rate) {
-                        c.rateFactor = rate.depositRate;
-                    }
-                }
-            });
-        }, (error) => {
-            this.onProgress.emit(false);
-            this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
-        })
-  	);
-  }
+						if (rate) {
+							c.rateFactor = rate.depositRate;
+						}
+					}
+				});
+			},
+			error: (error) => {
+				this.onProgress.emit(false);
+				this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load exchange rate'));
+			}
+		})
+	);
+}
 
-  private loadTransactionsTotal(): void {
-  	this.transactionsTotalEur = 0;
+private loadTransactionsTotal(): void {
+	this.transactionsTotalEur = 0;
 
-  	this.pSubscriptions.add(
-        this.commonService.getMyTransactionsTotal().valueChanges.subscribe(({ data }) => {
-  			if (data) {
-  				const totalState = data.myState as UserState;
-  				this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
-  			}
+	this.pSubscriptions.add(
+		this.commonService.getMyTransactionsTotal().valueChanges.subscribe({
+			next: ({ data }) => {
+				if (data) {
+					const totalState = data.myState as UserState;
+					this.transactionsTotalEur = totalState.totalAmountEur ?? 0;
+				}
 
-  			this.updateQuote();
-  			this.onQuoteChanged.emit(this.quoteLimit);
-  			this.onProgress.emit(false);
-  		}, (error) => {
-  			this.onProgress.emit(false);
-  			this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load limits'));
-  		})
-  	);
-  }
+				this.updateQuote();
+				this.onQuoteChanged.emit(this.quoteLimit);
+				this.onProgress.emit(false);
+			},
+			error: (error) => {
+				this.onProgress.emit(false);
+				this.onError.emit(this.errorHandler.getError(error.message, 'Unable to load limits'));
+			}
+		})
+	);
+}
 
   private setCurrencyValues(
   	initState: boolean,
@@ -645,41 +651,39 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	];
 
     const calculateDisplayAmount = (amount: number, rate: number): number =>
-        !this.currentCurrencySpend?.fiat && rate
-            ? parseFloat((amount * rate).toFixed(2))
-            : amount;
+        	rate ? parseFloat((amount * rate).toFixed(2)) : amount;
   
     if (this.currentTransaction === TransactionType.Sell) {
         if (this.currentCurrencySpend?.maxAmount === 0 || this.maxSellAmount < this.currentCurrencySpend?.maxAmount) {
-            maxAmount = this.maxSellAmount;
-            maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
-            currencyDisplay = this.currentCurrencyReceive?.display;
+					maxAmount = this.maxSellAmount;
+					maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
+					currencyDisplay = this.currentCurrencyReceive?.display;
 
-            const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
+					const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmountDisplay;
 
-            this.amountSpendErrorMessages['max'] = `Amount you'r request exceeds available balance: ${currencyDisplay} ${upodatedMaxAmountDisplay}`;
+					this.amountSpendErrorMessages['max'] = `Amount you'r request exceeds available balance: ${currencyDisplay} ${upodatedMaxAmountDisplay}`;
 
         } else {
-            maxAmount = this.currentCurrencySpend?.maxAmount;
-            maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
-            currencyDisplay = this.currentCurrencyReceive?.display;
+					maxAmount = this.currentCurrencySpend?.maxAmount;
+					maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
+					currencyDisplay = this.currentCurrencyReceive?.display;
 
-            const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
+					const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
 
-            this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${upodatedMaxAmountDisplay} ${currencyDisplay}` });
+					this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${upodatedMaxAmountDisplay} ${currencyDisplay}` });
         }
 
         validators = [
-            ...validators,
-            Validators.max(maxAmount)
+					...validators,
+					Validators.max(maxAmount)
         ];
     } else {
         if(!maxAmount || maxAmount === 0){
             if (maxValid !== undefined) {
                 if (maxValid > 0) {
-                    this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` });
+									this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxValid} ${currencyDisplay}` });
                 } else {
-                    this.amountSpendErrorMessages['max'] = 'widget-internal-overview.spend-max-empty';
+									this.amountSpendErrorMessages['max'] = 'widget-internal-overview.spend-max-empty';
                 }
                 validators = [
                     ...validators,
@@ -689,8 +693,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
         } else {
         this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
             validators = [
-                ...validators,
-                Validators.max(maxAmount)
+							...validators,
+							Validators.max(maxAmount)
             ];
         }
     }

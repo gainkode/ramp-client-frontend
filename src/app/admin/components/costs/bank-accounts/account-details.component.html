@@ -49,6 +49,9 @@
             placeholder="Start typing to search a widget" 
             [multiple]="true"
             [closeOnSelect]="false"
+            [minTermLength]="1"
+            [loading]="isWidgetsLoading"
+            [typeahead]="widgetsSearchInput$" 
             [items]="widgetsOptions$ | async">
           </ng-select>
         </div>
@@ -241,7 +244,7 @@
     <h4 class="tx-center">
       You are going to delete selected bank account. Confirm operation.
     </h4>
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-end">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button" (click)="modal.dismiss('Reject')">
         Reject
       </button>

@@ -18,6 +18,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   @Input() userParamsId = '';
   @Input() errorMessage = '';
   @Output() onBack = new EventEmitter();
+	@Output() onError = new EventEmitter();
   yapilyRedirectObject!: YapilyRedirectModel;
   isLoading = false;
   bankName = '';
@@ -30,7 +31,7 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
   constructor(
   	private cdr: ChangeDetectorRef,
   	private notification: NotificationService,
-  	public paymentService: PaymentDataService,
+		public paymentService: PaymentDataService,
   	public pager: WidgetPaymentPagerService
   ) {
   }
@@ -127,22 +128,29 @@ export class WidgetPaymentYapilyComponent implements OnInit, OnDestroy {
 
   	this.pSubscriptions.add(
 		  this.paymentService.createTransaction(transaction)
+			.pipe(finalize(() => {
+				this.isLoading = false;
+				this.cdr.markForCheck();
+			}))
 		  .subscribe({
   				next: ({ data }) => {
   					const order = data.createTransaction as TransactionShort;
-							
+						this.isLoading = false;
+
 						if (order) {
 							const parsedInstrumentDetails = JSON.parse(order.instrumentDetails);
 
 							this.bankName = parsedInstrumentDetails?.name ?? '';
 							this.transactionId = order.transactionId;
+						} else {
+							this.onError.emit('Transaction creation failed');
 						}
 
-						this.isLoading = false;
 						this.cdr.markForCheck();
   				},
-  				error: () => this.isLoading = false,
-  				complete: () => this.cdr.markForCheck()
+  				error: () => {
+						this.onError.emit('Transaction creation failed');
+					}
   			})
   	);
   }

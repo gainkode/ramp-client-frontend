@@ -87,7 +87,7 @@
           <app-widget-disclaimer 
             *ngSwitchCase="'disclaimer'" 
             [agreementChecked]="summary.agreementChecked"
-           [errorMessageData]="errorMessage"
+            [errorMessageData]="errorMessage"
             (onBack)="stageBack()" (onNext)="disclaimerNext()">
           </app-widget-disclaimer>
           <!-- Register -->
@@ -100,6 +100,7 @@
             [source]="widget.source" 
             [summary]="summary" 
             (onBack)="stageBack()"
+            (onError)="handleError($event)"
             (onProgress)="progressChanged($event)" 
             (onComplete)="onLoginRequired($event)">
           </app-widget-payment-yapily>

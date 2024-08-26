@@ -416,7 +416,12 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	}
   }
 
-  resetWizard(): void {
+  resetWizard(isHardReload: boolean = false): void {
+		if (isHardReload) {
+			window.location.reload();
+			return;
+		}
+
   	if (this.redirectUrl !== ''){
   		window.location.replace(this.redirectUrl);
   	} else {
@@ -465,7 +470,9 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   	if (this.widget.kycFirst && this.widget.allowToPayIfKycFailed) {
 			this.nextStage('payment', 'widget-pager.credit_card', 5);
-  	}
+  	} else {
+			this.resetWizard(true);
+		}
   }
   
   handleAuthError(): void {
@@ -496,6 +503,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   stageBack(): void {
   	this.inProgress = false;
+		this.pager.goBack();
 
 		if (this.paymentProviders.length === 1) {
 			this.resetWizard();
@@ -505,9 +513,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		if (this.isSinglePage && this.isSingleOrderDetailsCompleted) {
   			this.isSingleOrderDetailsCompleted = false;
   		}
-  	} else {
-			this.pager.goBack();
-		}
+  	}
   }
 
   private nextStage(id: string, name: string, stepId: number): void {
@@ -939,6 +945,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   	this.summary.networkFee = order.approxNetworkFee ?? 0;
   	this.summary.transactionDate = new Date().toLocaleString();
   	this.summary.transactionId = order.transactionId as string;
+
   	if (this.summary.instrument === PaymentInstrument.WireTransfer) {
   		this.nextStage('wire_transfer_result', 'widget-pager.processing-frame', 5);
   	} else {

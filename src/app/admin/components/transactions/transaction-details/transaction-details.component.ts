@@ -302,7 +302,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
   
   onOriginalOrderModal(): void {
-    if (!this.data.paymentOrder) {
+    if (!this.data.paymentOrder && this.transactionType === TransactionType.Buy) {
       this.originalOrderDialog = this.modalService.open(this.originalOrderIdDialogContent, {
         backdrop: 'static',
         keyboard: false,
