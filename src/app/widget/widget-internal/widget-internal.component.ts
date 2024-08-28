@@ -164,9 +164,8 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   	if (data) {
   		this.widget.allowToPayIfKycFailed = data.allowToPayIfKycFailed ?? false;
-  		const userParams: Record<string, any> = {};
+
   		if (data.additionalSettings) {
-  	
   			const extraData = JSON.parse(data.additionalSettings);
 
   			if (extraData.amounts && extraData.amounts.length !== 0){
@@ -191,9 +190,13 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.widget.email = data.currentUserEmail ?? '';
   		this.widget.walletAddressPreset = data.hasFixedAddress ?? false;
 		
+			let userParams: Record<string, any> = {};
+
   		if (data.currentUserParams) {
-  			const params = JSON.parse(data.currentUserParams).params;
-		
+  			userParams = JSON.parse(data.currentUserParams);
+
+				const params = userParams.params;
+
   			if (params) {
   				this.widget.amountFrom = params.amount || this.widget.amountFrom;
   				this.summary.amountFrom = this.widget.amountFrom;
