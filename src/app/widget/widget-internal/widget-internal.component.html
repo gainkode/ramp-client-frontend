@@ -182,7 +182,7 @@
             [showRestartButton]="widget.widgetId===''"
             (onFinish)="resetWizard()">
           </app-widget-complete>
-          <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" (onFinish)="resetWizard()"></app-widget-error>
+          <app-widget-error *ngSwitchCase="'error'" [title]="transactionErrorTitle" (onFinish)="resetWizard(true)"></app-widget-error>
       </div>
 
     </div>
