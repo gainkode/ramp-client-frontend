@@ -11,7 +11,7 @@
               (click)="sendMessage(message_content)">
               Send message
             </button>
-            <button *ngIf="this.adminAdditionalSettings?.tabs?.customers?.createTransaction === true" type="button" class="btn btn-outline-secondary me-2" (click)="createUserTransactionShow(create_content)">
+            <button *ngIf="adminAdditionalSettings?.tabs?.customers?.createTransaction === true" type="button" class="btn btn-outline-secondary me-2" (click)="createUserTransactionShow(create_content)">
               Create transaction
             </button>
             

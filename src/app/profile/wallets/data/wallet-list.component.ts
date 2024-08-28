@@ -54,8 +54,9 @@ export class ProfileWalletListComponent implements OnDestroy {
     	this.subscriptions.unsubscribe();
     }
 
-    private loadCommonSettings(){
+    private loadCommonSettings(): void{
     	const settingsCommon = this.auth.getLocalSettingsCommon();
+			
     	if(settingsCommon){
     		this.userAdditionalSettings = typeof settingsCommon.userAdditionalSettings == 'string' ? JSON.parse(settingsCommon.userAdditionalSettings) : settingsCommon.userAdditionalSettings;
     		this.newWalletShow = this.userAdditionalSettings?.tabs?.wallets?.newWallet !== false;

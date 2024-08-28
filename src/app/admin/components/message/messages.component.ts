@@ -10,6 +10,11 @@ import { finalize, switchMap, takeUntil } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 
+const messagesDefaultFilterFields = [
+	'search',
+	'notificationType'
+];
+
 @Component({
 	selector: 'app-admin-messages',
 	templateUrl: 'messages.component.html',
@@ -18,12 +23,8 @@ import { AuthService } from 'services/auth.service';
 })
 export class AdminMessagesComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
-
-  filterFields = [
-  	'search',
-  	'notificationType'
-  ];
-  displayedColumns: string[] = [
+	filterFields = this.auth.getCommonSettingsFilterFields('notification', messagesDefaultFilterFields);
+	displayedColumns: string[] = [
   	'details',
   	'created',
   	'user',
@@ -43,7 +44,6 @@ export class AdminMessagesComponent implements OnInit, OnDestroy, AfterViewInit 
   sortedDesc = true;
   isFilterCollapsed = true;
   filter: Filter | undefined = undefined;
-  adminAdditionalSettings: Record<string, any> = {};
   private destroy$ = new Subject<void>();
   constructor(
 		private readonly cdr: ChangeDetectorRef,
@@ -57,7 +57,7 @@ export class AdminMessagesComponent implements OnInit, OnDestroy, AfterViewInit 
 
   	this.route.queryParams
   		.subscribe(params => {
-  			if (!!params.userId) {
+  			if (params.userId) {
   				this.filter = { search: params.userId } as Filter;
   				this.isFilterCollapsed = false;
   			} else {
@@ -67,7 +67,6 @@ export class AdminMessagesComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngOnInit(): void {
-  	this.loadCommonSettings();
   	this.loadMessages();
   }
 
@@ -102,17 +101,7 @@ export class AdminMessagesComponent implements OnInit, OnDestroy, AfterViewInit 
   		windowClass: 'modalCusSty',
   	});
   }
-  private loadCommonSettings(): void {
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
-
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		
-			if(this.adminAdditionalSettings?.tabs?.notification?.filterFields){
-  			this.filterFields = this.adminAdditionalSettings.tabs.notification.filterFields;
-  		}
-  	}
-  }
+	
   private loadMessages(): void {
   	this.inProgress = true;
 

@@ -10,6 +10,12 @@ import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { UserRoleObjectCode } from 'model/generated-models';
 
+const fiatWalletDefaultFilterFields = [
+	'users',
+	'search',
+	'zeroBalance'
+];
+
 @Component({
 	selector: 'app-admin-fiat-wallets',
 	templateUrl: 'fiat-wallets.component.html',
@@ -17,12 +23,7 @@ import { UserRoleObjectCode } from 'model/generated-models';
 })
 export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
-
-  filterFields = [
-  	'users',
-  	'search',
-  	'zeroBalance'
-  ];
+	filterFields = this.auth.getCommonSettingsFilterFields('fiatWallet', fiatWalletDefaultFilterFields);
   displayedColumns: string[] = [
   	'details', 'userId', 'balance', 'asset', 'created'
   ];
@@ -36,8 +37,6 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
-  adminAdditionalSettings: Record<string, any> = {};
-  
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
 
@@ -63,7 +62,6 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnInit(): void {
-  	this.loadCommonSettings();
   	this.loadWallets();
   }
 
@@ -119,16 +117,6 @@ export class AdminFiatWalletsComponent implements OnInit, OnDestroy, AfterViewIn
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
   	});
-  }
-
-  private loadCommonSettings(): void {
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		if(this.adminAdditionalSettings?.tabs?.fiatWallet?.filterFields){
-  			this.filterFields = this.adminAdditionalSettings.tabs.fiatWallet.filterFields;
-  		}
-  	}
   }
 
   private isSelectedWallet(walletId: string): boolean {

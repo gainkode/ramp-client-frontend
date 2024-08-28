@@ -107,7 +107,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-  	this.loadCommonSettings();
+  	this.loadAdminSettings();
   	this.initUserSearch();
 
 		this.form.get('instruments')?.valueChanges
@@ -122,17 +122,17 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 		this.destroy$.complete();
   }
 
-  private loadCommonSettings(): void{
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
+  private loadAdminSettings(): void{
+		this.adminAdditionalSettings = this.auth.getAdminAdditionalSettings();
 
-  	if (settingsCommon) {
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+		if(this.adminAdditionalSettings){
   		this.transactionTypeOptions = this.transactionTypeOptions.filter(item => this.adminAdditionalSettings?.transactionType[item.id] !== false);
   		this.liquidityProviderOptions = this.liquidityProviderOptions.filter(item => this.adminAdditionalSettings?.liquidityProvider[item.id] !== false);
   		this.instrumentOptions = this.instrumentOptions.filter(item => this.adminAdditionalSettings?.paymentMethods[item.id] !== false);
   		this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings?.userType[item.id] !== false);
-  	}
+		}
   }
+
   private initUserSearch(): void {
   	this.usersOptions$ = concat(
   		of([]),

@@ -63,7 +63,6 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 	widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
 	sourceTargetsOptions = TransactionSourceFilterList;
 	minTargetsLengthTerm = 1;
-	adminAdditionalSettings: Record<string, any> = {};
 	similarSchemas$: Observable<SettingsFeeSimilarResult>;
 	widgetIds: string[] = [];
 	form = this.formBuilder.group({
@@ -103,7 +102,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(val => this.filterPaymentProviders(val));
 
-		this.loadCommonSettings();
+		this.loadAdminSettings();
 		this.getPaymentProviders();
 		this.loadCurrencies();
 		this.initWidgetSearch();
@@ -114,15 +113,14 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 		this.destroy$.complete();
 	}
 
-	private loadCommonSettings(): void{
-		const settingsCommon = this.auth.getLocalSettingsCommon();
+	private loadAdminSettings(): void{
+		const adminAdditionalSettings = this.auth.getAdminAdditionalSettings();
 
-		if(settingsCommon){
-			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-			this.userModes = this.userModes.filter(item => this.adminAdditionalSettings.userMode[item.id]);
-			this.transactionTypes = this.transactionTypes.filter(item => this.adminAdditionalSettings.transactionType[item.id]);
-			this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings.userType[item.id]);
-			this.instruments = this.instruments.filter(item => this.adminAdditionalSettings.paymentMethods[item.id]);
+		if(adminAdditionalSettings){
+			this.userModes = this.userModes.filter(item => adminAdditionalSettings.userMode[item.id]);
+			this.transactionTypes = this.transactionTypes.filter(item => adminAdditionalSettings.transactionType[item.id]);
+			this.userTypeOptions = this.userTypeOptions.filter(item => adminAdditionalSettings.userType[item.id]);
+			this.instruments = this.instruments.filter(item => adminAdditionalSettings.paymentMethods[item.id]);
 		}
 	}
 

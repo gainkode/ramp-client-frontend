@@ -10,6 +10,12 @@ import { AuthService } from 'services/auth.service';
 import { UserActionItem } from 'model/user.model';
 import { UserAction, UserActionResult, UserActionType, UserRoleObjectCode } from 'model/generated-models';
 
+const actionsDefaultFilterFields = [
+	'createdDateAction',
+	'userActionType',
+	'user',
+];
+
 @Component({
 	selector: 'app-admin-user-actions',
 	templateUrl: 'actions.component.html',
@@ -17,12 +23,7 @@ import { UserAction, UserActionResult, UserActionType, UserRoleObjectCode } from
 })
 export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
-
-  filterFields = [
-  	'createdDateAction',
-  	'userActionType',
-  	'user',
-  ];
+	filterFields = this.auth.getCommonSettingsFilterFields('actions', actionsDefaultFilterFields);
   displayedColumns: string[] = [
   	'details',
   	'date',
@@ -41,7 +42,6 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   sortedField = 'date';
   sortedDesc = true;
   filter = new Filter({});
-  adminAdditionalSettings: Record<string, any> = {};
 
   private subscriptions: Subscription = new Subscription();
 
@@ -55,7 +55,6 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnInit(): void {
-  	this.loadCommonSettings();
   	this.loadUserActions();
   }
 
@@ -89,16 +88,6 @@ export class AdminUserActionsComponent implements OnInit, OnDestroy, AfterViewIn
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
   	});
-  }
-
-  private loadCommonSettings(): void {
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		if(this.adminAdditionalSettings?.tabs?.actions?.filterFields){
-  			this.filterFields = this.adminAdditionalSettings.tabs.actions.filterFields;
-  		}
-  	}
   }
 
   private loadUserActions(): void {

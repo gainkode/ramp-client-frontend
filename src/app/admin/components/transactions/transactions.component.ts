@@ -14,6 +14,35 @@ import { CommonDataService } from 'services/common-data.service';
 import { ProfileDataService } from 'services/profile.service';
 import { TransactionService } from 'admin/services/transaction.service';
 
+const transactionDefaultFilterFields = [
+	'accountType',
+	'accountMode',
+	'country',
+	'tier',
+	'transactionKycStatus',
+	'users',
+	'widgetName',
+	'search',
+	'from',
+	'source',
+	'createdDate',
+	'completedDate',
+	'paymentInstrument',
+	'transactionIds',
+	'transactionType',
+	'transactionStatus',
+	'walletAddress',
+	'fiatCurrency',
+	'verifyWhenPaid',
+	'transactionFlag',
+	'preauthFlag',
+	'updatedDate',
+	'reversalProcessed',
+	'recallRegistered',
+	'hasRecallNumber',
+	'recallNumber'
+];
+
 @Component({
 	selector: 'app-admin-transactions',
 	templateUrl: 'transactions.component.html',
@@ -23,35 +52,7 @@ import { TransactionService } from 'admin/services/transaction.service';
 })
 export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild(MatSort) sort!: MatSort;
-
-	filterFields = [
-		'accountType',
-		'accountMode',
-		'country',
-		'tier',
-		'transactionKycStatus',
-		'users',
-		'widgetName',
-		'search',
-		'from',
-		'source',
-		'createdDate',
-		'completedDate',
-		'paymentInstrument',
-		'transactionIds',
-		'transactionType',
-		'transactionStatus',
-		'walletAddress',
-		'fiatCurrency',
-		'verifyWhenPaid',
-		'transactionFlag',
-		'preauthFlag',
-			'updatedDate',
-			'reversalProcessed',
-			'recallRegistered',
-			'hasRecallNumber',
-			'recallNumber'
-	];
+	filterFields = this.auth.getCommonSettingsFilterFields('transactions', transactionDefaultFilterFields);
 	displayedColumns: string[] = [
 		'details', 'code', 'created', 'accountName', 'email', 'accountStatus', 'type', 'widgetName', 'from', 'to',
 		'currencyToSpend', 'amountToSpend', 'currencyToReceive', 'amountToReceive',
@@ -72,9 +73,8 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 	sortedField = 'created';
 	sortedDesc = true;
 	filter = new Filter({});
-	adminAdditionalSettings: Record<string, any> = {};
 	fiatCurrencies: Array<CurrencyView> = [];
-
+	adminAdditionalSettings: Record<string, any> = {};
 	private subscriptions: Subscription = new Subscription();
 	private detailsDialog: NgbModalRef | undefined = undefined;
 	constructor(
@@ -95,10 +95,10 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 		}
 
 		this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Transactions);
+		this.adminAdditionalSettings = this.auth.getAdminAdditionalSettings();
 	}
 
 	ngOnInit(): void {
-		this.loadCommonSettings();
 		this.loadList();
 	}
 
@@ -140,7 +140,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 
 	handleFilterApplied(filter: Filter): void {
 		this.filter = filter;
-			this.pageIndex = 0;
+		this.pageIndex = 0;
 		this.loadList();
 	}
 
@@ -177,18 +177,6 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 	selectAll(): void {
 		this.transactions.forEach(x => x.selected = true);
 		this.selectedForUnbenchmark = (this.transactions.length > 0);
-	}
-
-	private loadCommonSettings(): void {
-		const settingsCommon = this.auth.getLocalSettingsCommon();
-
-		if(settingsCommon){
-			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-
-			if(this.adminAdditionalSettings?.tabs?.transactions?.filterFields){
-				this.filterFields = this.adminAdditionalSettings.tabs.transactions.filterFields;
-			}
-		}
 	}
 
 	private isSelectedTransaction(transactionId: string): boolean {
@@ -274,6 +262,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 				} else {
 					this.currencyOptions = [];
 				}
+
 				this.loadTransactions();
 			}, () => {
 				this.inProgress = false;

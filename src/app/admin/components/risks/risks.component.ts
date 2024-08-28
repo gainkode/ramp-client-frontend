@@ -10,6 +10,12 @@ import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { UserRoleObjectCode } from 'model/generated-models';
 
+const riskDefaultFilterFields = [
+	'user',
+	'riskAlertCode',
+	'search'
+];
+
 @Component({
 	selector: 'app-admin-risks',
 	templateUrl: 'risks.component.html',
@@ -17,12 +23,7 @@ import { UserRoleObjectCode } from 'model/generated-models';
 })
 export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
-
-  filterFields = [
-  	'user',
-  	'riskAlertCode',
-  	'search'
-  ];
+	filterFields = this.auth.getCommonSettingsFilterFields('risk', riskDefaultFilterFields);
   displayedColumns: string[] = [
   	'details',
   	'riskAlertId',
@@ -42,8 +43,6 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   sortedField = 'created';
   sortedDesc = true;
   filter = new Filter({});
-  adminAdditionalSettings: Record<string, any> = {};
-  
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -56,7 +55,6 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-  	this.loadCommonSettings();
   	this.loadAlerts();
   }
 
@@ -91,15 +89,7 @@ export class AdminRisksComponent implements OnInit, OnDestroy, AfterViewInit {
   		windowClass: 'modalCusSty',
   	});
   }
-  private loadCommonSettings(): void {
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		if(this.adminAdditionalSettings?.tabs?.risk?.filterFields){
-  			this.filterFields = this.adminAdditionalSettings.tabs.risk.filterFields;
-  		}
-  	}
-  }
+
   private loadAlerts(): void {
   	this.inProgress = true;
   	const listData$ = this.adminService.getRiskAlerts(

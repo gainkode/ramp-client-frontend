@@ -12,6 +12,10 @@ import { take } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 
+const widgetDefaultFilterFields = [
+	'search'
+];
+
 @Component({
 	selector: 'app-admin-widgets',
 	templateUrl: 'widgets.component.html',
@@ -19,9 +23,7 @@ import { AuthService } from 'services/auth.service';
 })
 export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
-  filterFields = [
-  	'search'
-  ];
+	filterFields = this.auth.getCommonSettingsFilterFields('widget', widgetDefaultFilterFields);
   displayedColumns: string[] = [
   	'details',
   	'name',
@@ -53,7 +55,6 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   sortedField = 'name';
   sortedDesc = false;
   filter = new Filter({});
-  adminAdditionalSettings: Record<string, any> = {};
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
 
@@ -71,7 +72,7 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-  	this.loadCommonSettings();
+
   	if (this.userIdFilter !== '') {
   		this.filter = new Filter({
   			users: [this.userIdFilter]
@@ -116,17 +117,6 @@ export class AdminWidgetsComponent implements OnInit, OnDestroy, AfterViewInit {
   		backdrop: 'static',
   		windowClass: 'modalCusSty-widget',
   	});
-  }
-
-  private loadCommonSettings(): void{
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
-
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		if(this.adminAdditionalSettings?.tabs?.widget?.filterFields){
-  			this.filterFields = this.adminAdditionalSettings.tabs.widget.filterFields;
-  		}
-  	}
   }
 
   private loadWidgets(): void {

@@ -8,17 +8,17 @@
         <div class="table-responsive">
           <div class="overflow-hidden">
             <div class="table-button-container">
-              <button type="button" (click)="refresh()" class="btn btn-primary me-2">
+              <button type="button" class="btn btn-primary me-2" (click)="refresh()">
                 Refresh
               </button>
-              <button type="button" *ngIf="this.adminAdditionalSettings?.tabs?.transactions?.createTransaction === true" (click)="createUserTransactionShow(create_content)" class="btn btn-outline-secondary me-2">
+              <button *ngIf="adminAdditionalSettings?.tabs?.transactions?.createTransaction === true" type="button" class="btn btn-outline-secondary me-2" (click)="createUserTransactionShow(create_content)">
                 Create transaction
               </button>
-              <button type="button" *ngIf="permission > 1" (click)="export(export_content)" class="btn btn-outline-secondary me-2">
+              <button *ngIf="permission > 1" type="button" class="btn btn-outline-secondary me-2" (click)="export(export_content)">
                 Export
               </button>
-              <button type="button" (click)="unbenchmark(settle_content)" class="btn btn-danger me-2"
-                [disabled]="!selectedForUnbenchmark">
+              <button type="button" class="btn btn-danger me-2" [disabled]="!selectedForUnbenchmark"
+                (click)="unbenchmark(settle_content)">
                 Settle
               </button>
             </div>

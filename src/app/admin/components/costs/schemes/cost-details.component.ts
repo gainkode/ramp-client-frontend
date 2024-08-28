@@ -57,7 +57,6 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 	targetsOptions$: Observable<CommonTargetValue[]> = of([]);
 	widgetsOptions$: Observable<CommonTargetValue[]> = of([]);
 	minTargetsLengthTerm = 1;
-	adminAdditionalSettings: Record<string, any> = {};
 	similarSchemas$: Observable<SettingsCostSimilarResult>;
 	widgetIds: string[] = [];
 	form = this.formBuilder.group({
@@ -93,7 +92,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(val => this.filterPaymentProviders(val));
 			
-		this.loadCommonSettings();
+		this.loadAdminSettings();
 		this.getPaymentProviders();
 		this.initWidgetSearch();
 	}
@@ -103,13 +102,12 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 		this.destroy$.complete();
 	}
 
-	private loadCommonSettings(): void{
-		const settingsCommon = this.auth.getLocalSettingsCommon();
+	private loadAdminSettings(): void{
+		const adminAdditionalSettings = this.auth.getAdminAdditionalSettings();
 
-		if(settingsCommon){
-			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-			this.transactionTypes = this.transactionTypes.filter(item => this.adminAdditionalSettings.transactionType[item.id] == true);
-			this.instruments = this.instruments.filter(item => this.adminAdditionalSettings.paymentMethods[item.id] == true);
+		if(adminAdditionalSettings){
+			this.transactionTypes = this.transactionTypes.filter(item => adminAdditionalSettings.transactionType[item.id] === true);
+			this.instruments = this.instruments.filter(item => adminAdditionalSettings.paymentMethods[item.id] === true);
 		}
 	}
 

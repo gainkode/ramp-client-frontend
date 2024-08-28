@@ -106,8 +106,6 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   };
   disableButtonTitle = 'Disable';
   removable = false;
-  adminAdditionalSettings: Record<string, any> = {};
-
   dataForm = this.formBuilder.group({
   	id: [''],
   	email: ['', { validators: [Validators.required], updateOn: 'change' }],
@@ -161,7 +159,7 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 		this.initUserSearch();
-  	this.loadCommonSettings();
+  	this.loadAdminSettings();
   	this.widgetOptions$ = this.getFilteredWidgets();
   }
 
@@ -192,17 +190,12 @@ export class AdminCustomerDetailsComponent implements OnInit, OnDestroy {
   	}
   }
 
-  private loadCommonSettings(): void {
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	if (settingsCommon) {
-  		this.adminAdditionalSettings =
-        typeof settingsCommon.adminAdditionalSettings == 'string'
-        	? JSON.parse(settingsCommon.adminAdditionalSettings)
-        	: settingsCommon.adminAdditionalSettings;
-  		this.kycProviders = this.kycProviders.filter(
-  			(item) => this.adminAdditionalSettings.kycProviders[item.id] === true
-  		);
-  	}
+  private loadAdminSettings(): void {
+		const adminAdditionalSettings = this.auth.getAdminAdditionalSettings();
+
+		if(adminAdditionalSettings){
+			this.kycProviders = this.kycProviders.filter((item) => adminAdditionalSettings.kycProviders[item.id] === true);
+		}
   }
   private setFormData(data: UserItem | null | undefined): void {
   	this.userData = data;

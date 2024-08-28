@@ -13,6 +13,13 @@ import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { ProfileDataService } from 'services/profile.service';
 
+const statusHistoryDefaultFilterFields = [
+	'createdDate',
+	'transactionIds',
+	'transactionStatus',
+	'users'
+];
+
 @Component({
 	selector: 'app-admin-transaction-status-history',
 	templateUrl: 'transaction-status-history.component.html',
@@ -20,13 +27,7 @@ import { ProfileDataService } from 'services/profile.service';
 })
 export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
-
-  filterFields = [
-  	'createdDate',
-  	'transactionIds',
-  	'transactionStatus',
-  	'users'
-  ];
+	filterFields = this.auth.getCommonSettingsFilterFields('transactionStatusHistory', statusHistoryDefaultFilterFields);
   displayedColumns: string[] = [
   	'transactionCode', 'created', 'userEmail', 'changedBy', 'oldStatus', 'newStatus', 'newStatusReason', 'transactionId'
   ];
@@ -36,7 +37,6 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   selectedTransaction?: TransactionStatusHistoryItem;
   selectedForUnbenchmark = false;
   transactionCount = 0;
-  adminAdditionalSettings: Record<string, any> = {};
   transactionStatusHistory: TransactionStatusHistoryItem[] = [];
   userStatuses: TransactionStatusDescriptorMap[] = [];
   currencyOptions: CurrencyView[] = [];
@@ -59,14 +59,15 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
   	private router: Router
   ) {
   	const filterUserId = activeRoute.snapshot.params['userid'];
+
   	if (filterUserId) {
   		this.filter.users = [filterUserId as string];
   	}
+		
   	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Transactions);
   }
 
   ngOnInit(): void {
-  	this.loadCommonSettings();
   	this.loadList();
   }
 
@@ -135,16 +136,6 @@ export class AdminTransactionStatusHistoryComponent implements OnInit, OnDestroy
 
   private isSelectedTransaction(transactionId: string): boolean {
   	return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
-  }
-
-  private loadCommonSettings(): void {
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		if(this.adminAdditionalSettings?.tabs?.transactionStatusHistory?.filterFields){
-  			this.filterFields = this.adminAdditionalSettings.tabs.transactionStatusHistory.filterFields;
-  		}
-  	}
   }
 
   private loadList(): void {

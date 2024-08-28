@@ -10,6 +10,12 @@ import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { UserRoleObjectCode } from 'model/generated-models';
 
+const cryptoWalletDefaultFilterFields = [
+	'users',
+	'search',
+	'zeroBalance'
+];
+
 @Component({
 	selector: 'app-admin-crypto-wallets',
 	templateUrl: 'crypto-wallets.component.html',
@@ -17,12 +23,7 @@ import { UserRoleObjectCode } from 'model/generated-models';
 })
 export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
-
-  filterFields = [
-  	'users',
-  	'search',
-  	'zeroBalance'
-  ];
+	filterFields = this.auth.getCommonSettingsFilterFields('cryptoWallet', cryptoWalletDefaultFilterFields);
   displayedColumns: string[] = [
   	'details', 'vaultName', 'userEmail', 'address', 'custodyProvider', 'legacyAddress', 'description', 'type',
   	'addressFormat', 'assetId', 'originalId', 'total', 'available', 'pending', 'lockedAmount'
@@ -37,7 +38,6 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   sortedField = 'address';
   sortedDesc = true;
   filter = new Filter({});
-  adminAdditionalSettings: Record<string, any> = {};
   
   private subscriptions: Subscription = new Subscription();
   private detailsDialog: NgbModalRef | undefined = undefined;
@@ -62,7 +62,6 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   }
 
   ngOnInit(): void {
-  	this.loadCommonSettings();
   	this.loadWallets();
   }
 
@@ -118,16 +117,6 @@ export class AdminCryptoWalletsComponent implements OnInit, OnDestroy, AfterView
   		backdrop: 'static',
   		windowClass: 'modalCusSty',
   	});
-  }
-
-  private loadCommonSettings(): void{
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		if(this.adminAdditionalSettings?.tabs?.cryptoWallet?.filterFields){
-  			this.filterFields = this.adminAdditionalSettings.tabs.cryptoWallet.filterFields;
-  		}
-  	}
   }
 
   private isSelectedWallet(walletAddress: string): boolean {

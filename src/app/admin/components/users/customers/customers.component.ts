@@ -13,6 +13,24 @@ import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { UserMessageData } from '../send-message/send-message.component';
 
+const customersDefaultFilterFields = [
+	'accountType',
+	'accountMode',
+	'country',
+	'tier',
+	'kycStatus',
+	'users',
+	'widgetName',
+	'search',
+	'riskLevel',
+	'accountStatus',
+	'registrationDate',
+	'totalBuyVolume',
+	'transactionCount',
+	'verifyWhenPaid',
+	'transactionFlag'
+];
+
 @Component({
 	selector: 'app-admin-customers',
 	templateUrl: 'customers.component.html',
@@ -20,24 +38,7 @@ import { UserMessageData } from '../send-message/send-message.component';
 })
 export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
-
-  filterFields = [
-  	'accountType',
-  	'accountMode',
-  	'country',
-  	'tier',
-  	'kycStatus',
-  	'users',
-  	'widgetName',
-  	'search',
-  	'riskLevel',
-  	'accountStatus',
-  	'registrationDate',
-  	'totalBuyVolume',
-  	'transactionCount',
-  	'verifyWhenPaid',
-  	'transactionFlag'
-  ];
+	filterFields = this.auth.getCommonSettingsFilterFields('customers', customersDefaultFilterFields);
   displayedColumns: string[] = [
   	'details',
   	'referralCode',
@@ -95,10 +96,10 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	}
   	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.Customers);
 		this.isCustomerDocsAllowed = this.auth.isPermittedObjectCode(UserRoleObjectCode.Documents);
+		this.adminAdditionalSettings = this.auth.getAdminAdditionalSettings();
   }
 
   ngOnInit(): void {
-  	this.loadCommonSettings();
   	this.loadCurrencyData();
   }
 
@@ -138,16 +139,6 @@ export class AdminCustomersComponent implements OnInit, OnDestroy, AfterViewInit
   	});
   }
   
-  private loadCommonSettings(): void{
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		if(this.adminAdditionalSettings?.tabs?.customers?.filterFields){
-  			this.filterFields = this.adminAdditionalSettings.tabs.customers.filterFields;
-  		} 
-  	}
-  }
-
   private loadCurrencyData(): void {
   	this.currencyList = [];
   	this.inProgress = true;

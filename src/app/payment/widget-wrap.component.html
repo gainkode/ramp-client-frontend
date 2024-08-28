@@ -1,8 +1,9 @@
+<!-- eslint-disable @angular-eslint/template/no-inline-styles -->
 <div class="__widget-frame-box">
-  <app-widget 
-    [ngStyle]="{'max-width': !widgetSize ? '100%' : ''}" 
-    class="widget-size-widget"
+  <app-widget-internal
+    class="widget-size-widget" 
+    [ngStyle]="{'max-width': !widgetSize ? '100%' : ''}"
     [userParamsId]="userParamsId" [quickCheckout]=false 
     (onIFramePay)="iframePay()">
-  </app-widget>
+  </app-widget-internal>
 </div>

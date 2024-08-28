@@ -890,11 +890,38 @@ export class AuthService {
 
 	getLocalSettingsCommon(): SettingsCommon | null {
 		let settings: SettingsCommon | null = null;
+
 		const str = localStorage.getItem('common');
+
 		if (str !== null) {
 			settings = JSON.parse(str);
 		}
+
 		return settings;
+	}
+
+	getCommonSettingsFilterFields(filterType: string, defaultFilterFields: string[]): string[] {
+		const settingsCommon = this.getLocalSettingsCommon();
+
+		if (settingsCommon) {
+			const adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+
+			return adminAdditionalSettings.tabs?.[`${filterType}`]?.filterFields || defaultFilterFields;
+		}
+
+		return defaultFilterFields;
+	}
+
+	getAdminAdditionalSettings(): Record<string, any> {
+		const settingsCommon = this.getLocalSettingsCommon();
+
+		if (settingsCommon) {
+			const adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+
+			return adminAdditionalSettings || {};
+		}
+
+		return {};
 	}
 
 	setUserName(firstName: string, lastName: string): void {

@@ -122,8 +122,6 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 	minWidgetsLengthTerm = 1;
 	minWidgetNamesLengthTerm = 1;
 	isPlainSearch = false;
-	adminAdditionalSettings: Record<string, any> = {};
-
 	originFields: string[] = [];
 	filteredFields: string[] = [];
 	filteredFieldsList: FilterField[] = [];
@@ -138,7 +136,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.loadCommonSettings();
+		this.loadAdminSettings();
 		this.initForm();
 		this.proceedFilters();
 		
@@ -180,7 +178,7 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 		});
 
 		/* Get user filters, if they are exists then assign them to current filteredFields */
-		if (this.auth.user?.filters && this.auth.user?.filters[this.filterType]) {
+		if (this.auth.user?.filters?.[this.filterType]) {
 			this.filteredFields = this.auth.user?.filters[this.filterType];
 			filterFieldsList();
 		} else if (this.filterType === 'dashboard') {
@@ -204,17 +202,14 @@ export class AdminFilterComponent implements OnInit, OnDestroy {
 			});
 	}
 
-	private loadCommonSettings(): void {
-		const settingsCommon = this.auth.getLocalSettingsCommon();
-		
-		if (settingsCommon) {
-			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-			if (this.adminAdditionalSettings) {
-				this.userModeOptions = this.userModeOptions.filter(item => this.adminAdditionalSettings?.userMode[item.id]);
-				this.userTypeOptions = this.userTypeOptions.filter(item => this.adminAdditionalSettings?.userType[item.id]);
-				this.paymentInstrumentsOptions = this.paymentInstrumentsOptions.filter(item => this.adminAdditionalSettings.paymentMethods[item.id]);
-				this.transactionTypeOptions = this.transactionTypeOptions.filter(item => this.adminAdditionalSettings.transactionType[item.id]);
-			}
+	private loadAdminSettings(): void {
+		const adminAdditionalSettings = this.auth.getAdminAdditionalSettings();
+
+		if(adminAdditionalSettings){
+			this.userModeOptions = this.userModeOptions.filter(item => adminAdditionalSettings?.userMode[item.id]);
+			this.userTypeOptions = this.userTypeOptions.filter(item => adminAdditionalSettings?.userType[item.id]);
+			this.paymentInstrumentsOptions = this.paymentInstrumentsOptions.filter(item => adminAdditionalSettings.paymentMethods[item.id]);
+			this.transactionTypeOptions = this.transactionTypeOptions.filter(item => adminAdditionalSettings.transactionType[item.id]);
 		}
 	}
 

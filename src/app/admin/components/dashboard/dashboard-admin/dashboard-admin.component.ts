@@ -9,6 +9,18 @@ import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { EnvService } from 'services/env.service';
 
+const dashboardDefaultfilterFields = [
+	'createdDate',
+	'completedDate',
+	'updatedDate',
+	'accountType',
+	'country',
+	'source',
+	'user',
+	'widgetName',
+	'fiatCurrency'
+];
+
 @Component({
 	selector: 'app-dashboard-admin',
 	templateUrl: './dashboard-admin.component.html',
@@ -16,17 +28,7 @@ import { EnvService } from 'services/env.service';
 	providers: [DashboardService]
 })
 export class DashboardAdminComponent implements OnInit, OnDestroy {
-	filterFields = [
-		'createdDate',
-		'completedDate',
-		'updatedDate',
-		'accountType',
-		'country',
-		'source',
-		'user',
-		'widgetName',
-		'fiatCurrency'
-	];
+	filterFields = this.auth.getCommonSettingsFilterFields('dashboard', dashboardDefaultfilterFields);
 	showDeposits = EnvService.deposit_withdrawal;
 	showWithdrawals = EnvService.deposit_withdrawal;
 	defaultFilter: Filter | undefined = undefined;
@@ -38,7 +40,8 @@ export class DashboardAdminComponent implements OnInit, OnDestroy {
 		private router: Router,
 		public dashboardService: DashboardService,
 		private auth: AuthService) {
-			
+		this.adminAdditionalSettings = this.auth.getAdminAdditionalSettings();
+
 		const currentDate = new Date();
 		const fromDate = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth(), 1, 0, 0, 0, 0));
 		const toDate = new Date(Date.UTC(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59, 999));
@@ -53,9 +56,6 @@ export class DashboardAdminComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.loadCurrencies();
-		this.loadCommonSettings();
-
-		this.auth.getLocalSettingsCommon();
 
 		if (this.auth.user?.filters?.dashboard?.includes('updatedDate') || !this.auth.user?.filters ) {
 			this.dashboardService.setFilter(this.defaultFilter);
@@ -67,18 +67,6 @@ export class DashboardAdminComponent implements OnInit, OnDestroy {
 	ngOnDestroy(): void {
 		this._destroy$.next();
 		this._destroy$.complete();
-	}
-
-	private loadCommonSettings(): void{
-		const settingsCommon = this.auth.getLocalSettingsCommon();
-
-		if(settingsCommon){
-			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-			
-			if(this.adminAdditionalSettings?.tabs?.dashboard?.filterFields){
-				this.filterFields = this.adminAdditionalSettings.tabs.dashboard.filterFields;
-			}
-		}
 	}
 
 	private loadCurrencies(): void {

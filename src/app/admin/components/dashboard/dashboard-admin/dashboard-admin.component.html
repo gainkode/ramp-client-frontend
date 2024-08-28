@@ -11,79 +11,79 @@
             <div class="__dashboard-panel-column">
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.totalEur !== false"
-                    [dashboardData]="dashboardData" 
                     title="Total volume in EUR" 
-                    source="total">
+                    source="total" 
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
                 <app-admin-dashboard-card
                     *ngIf="showDeposits && adminAdditionalSettings?.tabs?.dashboard?.Deposit !== false" 
-                    [dashboardData]="dashboardData" 
-                    title="Deposit"
-                    source="deposits">
+                    title="Deposit" 
+                    source="deposits"
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
                 <app-admin-dashboard-card
                     *ngIf="showWithdrawals && adminAdditionalSettings?.tabs?.dashboard?.Withdrawal !== false"
-                    [dashboardData]="dashboardData" 
                     title="Withdrawal" 
-                    source="withdrawals">
+                    source="withdrawals" 
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Buy !== false" 
-                    [dashboardData]="dashboardData" 
-                    title="Buy"
-                    source="buys">
+                    title="Buy" 
+                    source="buys"
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Sell !== false" 
-                    [dashboardData]="dashboardData" 
-                    title="Sell"
-                    source="sells">
+                    title="Sell" 
+                    source="sells"
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Receive !== false"
-                    [dashboardData]="dashboardData" 
                     title="Receive" 
-                    source="receives">
+                    source="receives" 
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
             </div>
             <div class="__dashboard-panel-column">
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Fees !== false"
-                    [dashboardData]="dashboardData" 
                     title="Fees collected" 
-                    source="fees">
+                    source="fees" 
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.BalanceAll !== false"
-                    [dashboardData]="dashboardData" 
                     title="Balances in all wallets" 
-                    source="balances">
+                    source="balances" 
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Openpayd !== false"
-                    [dashboardData]="dashboardData" 
                     title="Balances in all Sepa wallets" 
-                    source="openpaydBalances">
+                    source="openpaydBalances" 
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Monoova !== false"
-                    [dashboardData]="dashboardData" 
                     title="Balances in Bank Wallet" 
-                    source="monoovaBalances">
+                    source="monoovaBalances" 
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
                 <!-- Manoova was changed to Bank, get back later -->
 
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.Liquidity !== false"
+                    source="liquidityBalances" 
                     [dashboardData]="dashboardData" 
-                    [title]="'Liquidity provider balances'" 
-                    source="liquidityBalances">
+                    [title]="'Liquidity provider balances'">
                 </app-admin-dashboard-card>
                 <app-admin-dashboard-card 
                     *ngIf="adminAdditionalSettings?.tabs?.dashboard?.PaidTransaction !== false" 
-                    [dashboardData]="dashboardData" 
                     title="Paid transactions" 
-                    source="paids">
+                    source="paids" 
+                    [dashboardData]="dashboardData">
                 </app-admin-dashboard-card>
             </div>
         </ng-container>

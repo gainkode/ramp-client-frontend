@@ -14,6 +14,14 @@ import { CommonDataService } from 'services/common-data.service';
 import { UserMessageData } from '../send-message/send-message.component';
 
 const USER_ROLE_ID = '30cebffa-7e64-4be3-96d8-a96626bb81c6';
+const sysUsersDefaultFilterFields = [
+	'users',
+	'accountType',
+	'accountStatus',
+	'country',
+	'registrationDate',
+	'search'
+];
 
 @Component({
 	selector: 'app-admin-system-users',
@@ -22,15 +30,7 @@ const USER_ROLE_ID = '30cebffa-7e64-4be3-96d8-a96626bb81c6';
 })
 export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
-
-  filterFields = [
-  	'users',
-  	'accountType',
-  	'accountStatus',
-  	'country',
-  	'registrationDate',
-  	'search'
-  ];
+	filterFields = this.auth.getCommonSettingsFilterFields('systemCustomers', sysUsersDefaultFilterFields);
   displayedColumns: string[] = [
   	'details',
   	'referralCode',
@@ -89,9 +89,9 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   	this.permission = this.auth.isPermittedObjectCode(UserRoleObjectCode.SystemUsers);
   }
   ngOnInit(): void {
-  	this.loadCommonSettings();
   	this.loadRoleData();
   	this.initUserSearch();
+
   	this.subscriptions.add(
   		this.roleUserForm.controls.user.valueChanges.subscribe(val => this.roleUser = val)
   	);
@@ -143,15 +143,7 @@ export class AdminSystemUsersComponent implements OnInit, OnDestroy, AfterViewIn
   	this.users.forEach(x => x.selected = true);
   	this.selected = (this.users.length > 0);
   }
-  private loadCommonSettings(): void{
-  	const settingsCommon = this.auth.getLocalSettingsCommon();
-  	if(settingsCommon){
-  		this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
-  		if(this.adminAdditionalSettings?.tabs?.systemCustomers?.filterFields){
-  			this.filterFields = this.adminAdditionalSettings.tabs.systemCustomers.filterFields;
-  		}
-  	}
-  }
+
   private loadRoleData(): void {
   	this.roleIds = [];
   	const currencyData = this.commonService.getRoles();

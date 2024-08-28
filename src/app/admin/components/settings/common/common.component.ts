@@ -171,7 +171,7 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit(): void {
-		this.loadCommonSettings();
+		this.loadAdminSettings();
 		this.loadCurrencies();
 	}
 
@@ -179,11 +179,10 @@ export class AdminCommonSettingsComponent implements OnInit, OnDestroy {
 		this.subscriptions.unsubscribe();
 	}
 
-	private loadCommonSettings(): void{
-		const settingsCommon = this.auth.getLocalSettingsCommon();
+	private loadAdminSettings(): void{
+		this.adminAdditionalSettings = this.auth.getAdminAdditionalSettings();
 
-		if (settingsCommon) {
-			this.adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
+		if(this.adminAdditionalSettings){
 			this.kycProviderOptions = this.kycProviderOptions.filter(item => this.adminAdditionalSettings.kycProviders[item.id]);
 			this.liquidityProviderOptions = this.liquidityProviderOptions.filter(item => this.adminAdditionalSettings.liquidityProvider[item.id]);
 			this.custodyProviderOptions = this.custodyProviderOptions.filter(item => this.adminAdditionalSettings.custodyProvider[item.id]);

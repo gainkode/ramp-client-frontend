@@ -18,7 +18,7 @@
               <ng-container matColumnDef="details" sticky>
                 <th mat-header-cell *matHeaderCellDef></th>
                 <td mat-cell *matCellDef="let element" class="wallet-list-selector-column">
-                  <button mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
+                  <button type="button" mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
                     [attr.aria-label]="'Wallet details'" [attr.aria-pressed]="!!selectedWallet"
                     matTooltip="Wallet details" matTooltipClass="info-tooltip">
                     <i class="material-icons" style="font-size: 20px;">wysiwyg</i>
