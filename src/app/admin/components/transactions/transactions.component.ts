@@ -1,18 +1,19 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSort } from '@angular/material/sort';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
-import { finalize, take } from 'rxjs/operators';
 import { Filter } from 'admin/model/filter.model';
-import { AdminDataService } from 'services/admin-data.service';
+import { TransactionService } from 'admin/services/transaction.service';
 import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionType, UserRoleObjectCode } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
 import { TransactionItemFull } from 'model/transaction.model';
+import { of } from 'rxjs';
+import { finalize, switchMap, take } from 'rxjs/operators';
+import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { ProfileDataService } from 'services/profile.service';
-import { TransactionService } from 'admin/services/transaction.service';
 
 const transactionDefaultFilterFields = [
 	'accountType',
@@ -50,7 +51,7 @@ const transactionDefaultFilterFields = [
 	providers: [TransactionService],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AdminTransactionsComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort!: MatSort;
 	filterFields = this.auth.getCommonSettingsFilterFields('transactions', transactionDefaultFilterFields);
 	displayedColumns: string[] = [
@@ -75,7 +76,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 	filter = new Filter({});
 	fiatCurrencies: Array<CurrencyView> = [];
 	adminAdditionalSettings: Record<string, any> = {};
-	private subscriptions: Subscription = new Subscription();
+	destroyRef = inject(DestroyRef);
 	private detailsDialog: NgbModalRef | undefined = undefined;
 	constructor(
 		public transactionService: TransactionService,
@@ -102,30 +103,27 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 		this.loadList();
 	}
 
-	ngOnDestroy(): void {
-		this.subscriptions.unsubscribe();
-	}
-
 	ngAfterViewInit(): void {
-		this.subscriptions.add(
-			this.sort.sortChange.pipe(finalize(() => {
-					this.cdr.markForCheck();
-				})).subscribe(() => {
-				this.sortedDesc = (this.sort.direction === 'desc');
-				this.sortedField = this.sort.active;
-				this.loadList();
-			})
-		);
+		this.sort.sortChange.pipe(
+			takeUntilDestroyed(this.destroyRef), 
+			finalize(() => this.cdr.markForCheck())
+		).subscribe(() => {
+			this.sortedDesc = (this.sort.direction === 'desc');
+			this.sortedField = this.sort.active;
+			this.loadList();
+		});
 	}
 
 	onTransactionSelected(item: TransactionItemFull): void {
 		item.selected = !item.selected;
+
 		this.selectedForUnbenchmark = this.transactions.some(x =>
 			x.selected === true && x.type !== TransactionType.Receive);
 	}
 
 	onSaveTransaction(): void {
 		this.selectedTransaction = undefined;
+
 		if (this.detailsDialog) {
 			this.detailsDialog.close();
 			this.loadList();
@@ -150,11 +148,7 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 	}
 
 	toggleDetails(transaction: TransactionItemFull): void {
-		if (this.isSelectedTransaction(transaction.id)) {
-			this.selectedTransaction = undefined;
-		} else {
-			this.selectedTransaction = transaction;
-		}
+		this.selectedTransaction = this.isSelectedTransaction(transaction.id) ? transaction : undefined;
 	}
 
 	showDetails(transaction: TransactionItemFull, content: any, isScreening: boolean = false): void {
@@ -195,82 +189,65 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 		this.inProgress = true;
 		this.selectedForUnbenchmark = false;
 	
-		this.subscriptions.add(
-			this.adminService.getTransactions(this.pageIndex, this.pageSize, this.sortedField, this.sortedDesc,this.filter)
-				.pipe(finalize(() => {
-					this.inProgress = false;
-					this.cdr.markForCheck();
-				}), take(1))
-				.subscribe({
-					next: ({ list, count }) => {
-						this.transactions = list;
-						this.transactionCount = count;
-						this.transactions.forEach(val => val.statusInfo = this.userStatuses.find(x => x.key === val.status));
+		this.adminService.getTransactions(this.pageIndex, this.pageSize, this.sortedField, this.sortedDesc,this.filter)
+			.pipe(
+				takeUntilDestroyed(this.destroyRef),
+				finalize(() => { this.inProgress = false; this.cdr.markForCheck();}),
+				take(1))
+			.subscribe({
+				next: ({ list, count }) => {
+					this.transactions = list;
+					this.transactionCount = count;
+					this.transactions.forEach(val => val.statusInfo = this.userStatuses.find(x => x.key === val.status));
 
-						this.cdr.markForCheck();
-					},
-					error: () => {
-						if (this.auth.token === '') {
-							void this.router.navigateByUrl('/');
-						}
-					},
-					complete: () => this.inProgress = false
-				})
-		);
+					this.cdr.markForCheck();
+				},
+				error: () => {
+					if (this.auth.token === '') {
+						void this.router.navigateByUrl('/');
+					}
+				},
+				complete: () => this.inProgress = false
+			});
 	}
 
 	private loadTransactionStatuses(): void {
 		this.inProgress = true;
 		this.userStatuses = [];
-	
-		this.subscriptions.add(
-			this.profileService.getTransactionStatuses().valueChanges
-				.pipe(finalize(() => {
-					this.inProgress = false;
-					this.cdr.markForCheck();
-				})).subscribe({
-					next: ({ data }) => {
-						this.userStatuses = data.getTransactionStatuses as TransactionStatusDescriptorMap[];
-						this.loadCurrencies();
-					},
-					error: () => {
-						if (this.auth.token === '') {
-							void this.router.navigateByUrl('/');
+
+		this.profileService.getTransactionStatuses().valueChanges
+			.pipe(
+				takeUntilDestroyed(this.destroyRef),
+				switchMap(result => {
+					this.userStatuses = result.data.getTransactionStatuses as TransactionStatusDescriptorMap[];
+					return this.commonDataService.getSettingsCurrency()?.valueChanges ?? of(null);
+				}),
+				take(1),
+				finalize(() => this.cdr.markForCheck())
+			)
+			.subscribe({
+				next: ({ data }) => {
+					if (data) {
+						const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
+						if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
+							this.currencyOptions = currencySettings.settingsCurrency.list
+									?.map((val) => new CurrencyView(val)) as CurrencyView[];
+							this.fiatCurrencies = this.currencyOptions.filter(item => item.fiat === true);
+						} else {
+							this.currencyOptions = [];
 						}
-					},
-					complete: () => this.inProgress = false
-				})
-			);
-	}
+					}
 
-	private loadCurrencies(): void {
-		this.inProgress = true;
-		this.currencyOptions = [];
-			
-		this.subscriptions.add(
-			this.commonDataService.getSettingsCurrency()?.valueChanges
-				.pipe(take(1), finalize(() => {
+					this.loadTransactions();
+				},
+				error: () => {
 					this.inProgress = false;
-					this.cdr.markForCheck();
-				})).subscribe(({ data }) => {
-				const currencySettings = data.getSettingsCurrency as SettingsCurrencyWithDefaults;
 
-				if (currencySettings.settingsCurrency && (currencySettings.settingsCurrency.count ?? 0 > 0)) {
-					this.currencyOptions = currencySettings.settingsCurrency.list
-						?.map((val) => new CurrencyView(val)) as CurrencyView[];
-					this.fiatCurrencies = this.currencyOptions.filter(item => item.fiat === true);
-				} else {
-					this.currencyOptions = [];
+					if (this.auth.token === '') {
+							void this.router.navigateByUrl('/');
+					}
 				}
-
-				this.loadTransactions();
-			}, () => {
-				this.inProgress = false;
-				if (this.auth.token === '') {
-					void this.router.navigateByUrl('/');
-				}
-			})
-		);
+			});
 	}
 
 	showWallets(transactionId: string): void {
@@ -286,29 +263,29 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 	}
 
 	export(content: any): void {
-		this.subscriptions.add(
-			this.adminService.exportTransactionsToCsv(
-				this.transactions.filter(x => x.selected === true).map(val => val.id),
-				this.sortedField,
-				this.sortedDesc,
-				this.filter
-			).pipe(finalize(() => {
-				this.inProgress = false;
-				this.cdr.markForCheck();
-			})).subscribe({
-				next: () => {
-					this.modalService.open(content, {
-						backdrop: 'static',
-						windowClass: 'modalCusSty',
-					});
-				},
-				error: () => {
-					if (this.auth.token === '') {
-						void this.router.navigateByUrl('/');
-					}
+		this.inProgress = true;
+
+		this.adminService.exportTransactionsToCsv(
+			this.transactions.filter(x => x.selected === true).map(val => val.id),
+			this.sortedField,
+			this.sortedDesc,
+			this.filter
+		).pipe(
+			takeUntilDestroyed(this.destroyRef),
+			finalize(() => { this.inProgress = false; this.cdr.markForCheck(); })
+		).subscribe({
+			next: () => {
+				this.modalService.open(content, {
+					backdrop: 'static',
+					windowClass: 'modalCusSty',
+				});
+			},
+			error: () => {
+				if (this.auth.token === '') {
+					void this.router.navigateByUrl('/');
 				}
-			})
-		);
+			}
+		});
 	}
 
 	unbenchmark(content: any): void {
@@ -317,33 +294,30 @@ export class AdminTransactionsComponent implements OnInit, OnDestroy, AfterViewI
 			windowClass: 'modalCusSty',
 		});
 
-		this.subscriptions.add(
-			this.unbenchmarkDialog.closed.subscribe(result => {
+		this.unbenchmarkDialog.closed
+			.pipe(takeUntilDestroyed(this.destroyRef))
+			.subscribe(result => {
 				if (result === 'Confirm') {
 					this.executeUnbenchmark();
 				}
-			})
-		);
+			});
 	}
 
 
 	private executeUnbenchmark(): void {
-		this.subscriptions.add(
-			this.adminService.unbenchmarkTransaction(
-				this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id)
-			).pipe(finalize(() => {
-				this.inProgress = false;
-				this.cdr.markForCheck();
-			})).subscribe({
-				next: () => {
-					this.transactions.forEach(x => x.selected = false);
-				},
-				error: () => {
-					if (this.auth.token === '') {
-						void this.router.navigateByUrl('/');
-					}
+		this.inProgress = true;
+		const transacionsIds = this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id);
+
+		this.adminService.unbenchmarkTransaction(transacionsIds).pipe(
+			takeUntilDestroyed(this.destroyRef),
+			finalize(() => { this.inProgress = false; this.cdr.markForCheck(); })
+		).subscribe({
+			next: () => this.transactions.forEach(x => x.selected = false),
+			error: () => {
+				if (this.auth.token === '') {
+					void this.router.navigateByUrl('/');
 				}
-			})
-		);
+			}
+		});
 	}
 }
