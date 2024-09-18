@@ -124,6 +124,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   	['max']: 'widget-internal-overview.field_spend-error-max'
   };
   amountReceiveErrorMessages: { [key: string]: string; } = {
+		['min']: 'widget-internal-overview.field_spend-error-min',
+  	['max']: 'widget-internal-overview.field_spend-error-max',
   	['required']: 'widget-internal-overview.field_receive-error-required',
   	['pattern']: 'widget-internal-overview.field_receive-error-pattern',
   };
@@ -253,8 +255,8 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 	
   	this.isMasked = this.settings.masked;
 
-	this.isBuyButton = this.settings.transactionTypes?.length === 0 || this.settings.transactionTypes.includes(this.TRANSACTION_TYPE.Buy);
-	this.isSellButton = this.settings.transactionTypes?.length === 0 || this.settings.transactionTypes.includes(this.TRANSACTION_TYPE.Sell);
+		this.isBuyButton = this.settings.transactionTypes?.length === 0 || this.settings.transactionTypes.includes(this.TRANSACTION_TYPE.Buy);
+		this.isSellButton = this.settings.transactionTypes?.length === 0 || this.settings.transactionTypes.includes(this.TRANSACTION_TYPE.Sell);
 
   	this.showVerifyWhenPaid = additionalSettings?.core?.verifyWhenPaid || true;
 
@@ -659,18 +661,18 @@ private loadTransactionsTotal(): void {
 					maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
 					currencyDisplay = this.currentCurrencyReceive?.display;
 
-					const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmountDisplay;
+					const updatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmountDisplay;
 
-					this.amountSpendErrorMessages['max'] = `Amount you'r request exceeds available balance: ${currencyDisplay} ${upodatedMaxAmountDisplay}`;
+					this.amountSpendErrorMessages['max'] = `Amount you'r request exceeds available balance: ${currencyDisplay} ${updatedMaxAmountDisplay}`;
 
         } else {
 					maxAmount = this.currentCurrencySpend?.maxAmount;
 					maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
 					currencyDisplay = this.currentCurrencyReceive?.display;
 
-					const upodatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
+					const updatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmount;
 
-					this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${upodatedMaxAmountDisplay} ${currencyDisplay}` });
+					this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'], { value: `${updatedMaxAmountDisplay} ${currencyDisplay}` });
         }
 
         validators = [
@@ -691,7 +693,7 @@ private loadTransactionsTotal(): void {
                 ];
             }
         } else {
-        this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
+        	this.amountSpendErrorMessages['max'] = this.t(this.amountSpendErrorMessages['max'],{ value: `${maxAmountDisplay} ${currencyDisplay}` });
             validators = [
 							...validators,
 							Validators.max(maxAmount)
@@ -706,28 +708,81 @@ private loadTransactionsTotal(): void {
   }
   
   private setReceiveValidators(): void {
-  	this.amountReceiveErrorMessages['min'] =  `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`;
-  	
-    if(!this.initValidators){
-        this.amountReceiveField?.setValidators([
-            Validators.required,
-            Validators.pattern(NUMBER_PATTERN),
-        ]);
+  	this.amountReceiveErrorMessages['min'] = `Min. amount ${this.currentCurrencyReceive?.minAmount} ${this.currentCurrencyReceive?.display}`;
 
-        this.amountReceiveField?.updateValueAndValidity();
-  	}
+		if (this.currentTransaction === TransactionType.Sell) {
+			let minAmount = this.currentCurrencyReceive?.minAmount ?? 0;
+			let currencyDisplay = this.currentCurrencyReceive?.display;
+			let maxAmount = 0;
+			let minAmountDisplay = this.currentCurrencyReceive?.minAmount ?? 0;
+	
+			let maxAmountDisplay = 0;
+		
+			if(!this.currentCurrencyReceive?.fiat){
+				currencyDisplay = this.currentCurrencyReceive?.display;
+				if (this.pDepositRate) {
+					minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
+				}
+			}
+			
+			if(this.settings.currencyAmounts && this.settings.currencyAmounts.length !== 0){
+				const currencyAmount = this.settings.currencyAmounts.find(item => item.currency === this.currentCurrencyReceive?.display);
+
+				if(currencyAmount?.minAmount){
+					minAmount = currencyAmount.minAmount;
+	
+					if(!this.currentCurrencyReceive?.fiat && this.pDepositRate){
+						minAmountDisplay = parseFloat((minAmount * this.pDepositRate).toFixed(2));
+					} else {
+						minAmountDisplay = minAmount;
+					}
+				}
+				
+				if(currencyAmount?.maxAmount){
+					maxAmount = currencyAmount.maxAmount;
+	
+					if(!this.currentCurrencyReceive?.fiat && this.pDepositRate){
+						maxAmountDisplay = parseFloat((maxAmount * this.pDepositRate).toFixed(2));
+					} else {
+						maxAmountDisplay = maxAmount;
+					}
+				}
+			}
+
+			this.amountReceiveErrorMessages['min'] = `Min. amount ${minAmountDisplay} ${currencyDisplay}`;
+
+			let validators = [
+				Validators.required,
+				Validators.pattern(NUMBER_PATTERN),
+				Validators.min(minAmount),
+			];
+
+			if (maxAmountDisplay > 0) {
+				this.amountReceiveErrorMessages['max'] = `Max. amount ${maxAmount} ${currencyDisplay}`;
+					validators = [
+					...validators,
+					Validators.max(maxAmount)
+				];
+			}
+
+			this.amountReceiveField?.setValidators(validators);
+			this.amountReceiveField?.updateValueAndValidity();
+		} else {
+			if(!this.initValidators){
+				this.amountReceiveField?.setValidators([
+						Validators.required,
+						Validators.pattern(NUMBER_PATTERN),
+				]);
+	
+				this.amountReceiveField?.updateValueAndValidity();
+			}
+		}
   }
 
   private setAmountTitles(): void {
   	if (this.currentTransaction === TransactionType.Buy) {
-  		if(this.quickCheckout){
-  			this.spendTitle = 'widget-internal-overview.buy-spend-title';
-  			this.receiveTitle = 'widget-internal-overview.buy-receive-title';
-  		} else {
-  			this.spendTitle = 'widget-internal-overview.buy-spend-q-title';
-  			this.receiveTitle = 'widget-internal-overview.buy-receive-q-title';
-  		}
-      
+			this.spendTitle = this.quickCheckout ? 'widget-internal-overview.buy-spend-title' : 'widget-internal-overview.buy-spend-q-title';
+			this.receiveTitle = this.quickCheckout ? 'widget-internal-overview.buy-receive-title' : 'widget-internal-overview.buy-receive-q-title';
   	} else if (this.currentTransaction === TransactionType.Sell) {
   		this.spendTitle = 'widget-internal-overview.sell-spend-title';
   		this.receiveTitle = 'widget-internal-overview.sell-receive-title';
@@ -771,6 +826,7 @@ private loadTransactionsTotal(): void {
   
   		if (this.summary?.transactionType === TransactionType.Buy && this.settings.embedded && !this.settings.transfer) {
   			const emptyList = (this.filteredWallets.length === 0);
+
   			if (emptyList) {
   				this.walletField?.setValue(this.summary.address ?? '');
   				this.errorMessageData = 'Unable to find wallets for selected currency';
@@ -805,7 +861,7 @@ private loadTransactionsTotal(): void {
   			}
   		}
 
-        this.sendData();
+      this.sendData();
   	}
   }
 
@@ -876,6 +932,9 @@ private loadTransactionsTotal(): void {
   	const currencySpend = this.currentCurrencySpend?.symbol;
   	const currencyReceive = this.currentCurrencyReceive?.symbol;
 
+		this.amountSpendErrorMessages['min'] = this.amountReceiveErrorMessages['min'] = 'widget-internal-overview.field_spend-error-min';
+		this.amountSpendErrorMessages['max'] = this.amountReceiveErrorMessages['max'] = 'widget-internal-overview.field_spend-error-max';
+		
   	this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currencyReceive);
   	this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currencySpend);
   	this.setSpendValidators();
@@ -941,15 +1000,18 @@ private loadTransactionsTotal(): void {
 
   private updateQuote(): void {
   	this.currentQuote = '';
+
   	if (this.currentTransaction === TransactionType.Buy && this.currentQuoteEur !== 0) {
   		const c = this.pCurrencies.find(x => x.symbol === this.currentCurrencySpend?.symbol);
-  		if (c) {
+  		
+			if (c) {
   			this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) * c.rateFactor;
   			this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.display ?? '')}${this.quoteLimit.toFixed(c.precision)}`;
   		}
   	} else if (this.currentTransaction === TransactionType.Sell && this.currentQuoteEur !== 0) {
   		const c = this.pCurrencies.find(x => x.symbol === this.currentCurrencyReceive?.symbol);
-  		if (c) {
+  		
+			if (c) {
   			const rate = (this.pDepositRate ?? 1) / c.rateFactor;
   			this.quoteLimit = (this.currentQuoteEur - this.transactionsTotalEur) / rate;
   			this.currentQuote = `${getCurrencySign(this.currentCurrencySpend?.display ?? '')}${this.quoteLimit.toFixed(c.precision)}`;
@@ -1023,23 +1085,11 @@ private loadTransactionsTotal(): void {
   		}
   	}
 
-  	this.quoteExceed = (this.settings.embedded) ?
-  		this.quoteExceedHidden || (this.quoteLimit === 0 && !this.quoteUnlimit) :
-  		false;
+  	this.quoteExceed = (this.settings.embedded) ? this.quoteExceedHidden || (this.quoteLimit === 0 && !this.quoteUnlimit) : false;
   	this.pSpendChanged = false;
   	this.pReceiveChanged = false;
-	this.amountReceiveChanged = false;
+		this.amountReceiveChanged = false;
   	this.sendData();
-  }
-
-  showPersonalVerification(): void {
-  	void this.router.navigateByUrl(`${this.auth.getUserAccountPage()}/settings/verification`).then(() => {
-  		window.location.reload();
-  	});
-  }
-
-  sendAll(): void {
-  	this.amountSpendField?.setValue(this.selectedWallet?.total);
   }
 
   onSubmit(): void {

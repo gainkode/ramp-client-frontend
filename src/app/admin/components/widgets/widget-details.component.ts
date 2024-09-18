@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -15,9 +15,16 @@ import { UserItem } from 'model/user.model';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { getCheckedProviderList, getProviderList } from 'utils/utils';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { NUMBER_PATTERN } from 'utils/constants';
 import { AddressValidatorDirective } from 'shared/directives';
+
+interface AmountItem {
+	currency: string;
+	minAmount: number;
+	maxAmount: number;
+	selected?: boolean;
+}
 
 @Component({
 	selector: 'app-admin-widget-details',
@@ -26,6 +33,7 @@ import { AddressValidatorDirective } from 'shared/directives';
 })
 export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 	@ViewChildren(AddressValidatorDirective) inputElements!: QueryList<AddressValidatorDirective>;
+	@ViewChild('amountsTable') amountsTable: MatTable<AmountItem[]>;
 	widgetDetails!: WidgetItem;
   @Input() permission = 0;
   @Input()
@@ -43,6 +51,13 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	'destination'
   ];
 
+	displayedAmountsColumns: string[] = [
+  	'details',
+		'currency',
+  	'minAmount',
+  	'maxAmount'
+  ];
+
   isLoading = false;
   saveInProgress = false;
   deleteInProgress = false;
@@ -51,6 +66,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 	currencyMerchantDestinationOptions: CurrencyView[] = [];
   currenciesTable: any = [];
 	merchantFeeDestinationTable: any = [];
+	amountsSettingsTable: MatTableDataSource<AmountItem> = new MatTableDataSource();
   currencyOptionsFiat: CurrencyView[] = [];
   paymentProviderOptions: PaymentProviderView[] = [];
   filteredProviders: PaymentProviderView[] = [];
@@ -115,6 +131,15 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
 			.subscribe(val => this.filterPaymentProviders(val));
 
 		this.loadPaymentProvidersAndCurrencies();
+
+		const updatedCurrencyAmounts = this.widgetAdditionalSettings?.amounts?.map(item => ({
+			currency: item.currency,
+			minAmount: item.minAmount,
+			maxAmount: item.maxAmount,
+			selected: true
+		})) || [];
+		
+		this.amountsSettingsTable = new MatTableDataSource(updatedCurrencyAmounts);
   }
 
   ngOnDestroy(): void {
@@ -218,6 +243,8 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	this.widgetAdditionalSettings.maxAmountFrom = formValue.maxAmountFrom;
   	this.widgetAdditionalSettings.minAmountFrom = formValue.minAmountFrom;
   	this.widgetAdditionalSettings.disclaimer = formValue.disclaimer;
+		this.widgetAdditionalSettings.amounts = this.mapAmountSettings();
+
 		if (this.currenciesTable._data._value?.length > 0) {
 
 			// allow save with atlease one item with currency
@@ -503,6 +530,45 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	}
 
   	this.merchantFeeDestinationTable = new MatTableDataSource(merchantFeeDestinationTableDel);
+  }
+
+	addAmountSetting(): void{
+		const lastTableElement = this.amountsSettingsTable.data.at(-1);
+
+		if (lastTableElement) {
+			if (!lastTableElement.currency) return;
+		}
+
+  	this.amountsSettingsTable.data.push({ currency: null, minAmount: 0, maxAmount: 0, selected: true });
+
+  	this.amountsSettingsTable = new MatTableDataSource(this.amountsSettingsTable.data);
+  }
+
+	deleteAmountSetting(rowId: number): void {
+    if (rowId > -1) {
+      this.amountsSettingsTable.data.splice(rowId, 1);
+      this.amountsTable.renderRows();
+    }
+  }
+
+	mapAmountSettings(): AmountItem[] {
+    if (this.amountsSettingsTable.data.length > 0) {
+      const amounts: AmountItem[]  = [];
+
+  		for (const item of this.amountsSettingsTable.data) {
+  			if (item.selected) {
+					amounts.push({
+						currency: item.currency,
+						minAmount: item.minAmount,
+						maxAmount: item.maxAmount,
+					});
+  			}
+  		}
+
+      return amounts;
+  	}
+    
+    return [];
   }
 
   private deleteWidget(id: string): void {

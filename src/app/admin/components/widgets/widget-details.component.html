@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-12 col-lg-12 col-xl-12 mx-auto d-block">
-    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit()">
+    <form novalidate [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="row">
         <div class="col-lg-4 col-md-12">
           <div class="card card-body pd-20 pd-md-40 border shadow-none">
@@ -12,7 +12,7 @@
             </app-admin-details-item>
             <app-admin-details-item label="Widget link" [value]="widgetDetails?.maskLink || ''">
             </app-admin-details-item>
-            <app-admin-details-item [linkUrl]="widgetDetails?.link || ''" label="Quick Checkout link" [value]="widgetDetails?.link || ''">
+            <app-admin-details-item label="Quick Checkout link" [linkUrl]="widgetDetails?.link || ''" [value]="widgetDetails?.link || ''">
             </app-admin-details-item>
     
             <div class="form-group">
@@ -20,10 +20,10 @@
                 Owner's Email
                 <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
               </label>
-              <ng-select [items]="usersOptions$ | async" bindLabel="extendedName" [minTermLength]="minUsersLengthTerm"
-                notFoundText="No users found" [loading]="isUsersLoading" [multiple]="false" formControlName="user"
-                typeToSearchText="Type email or user name" placeholder="Start typing to search a user"
-                [typeahead]="usersSearchInput$" required>
+              <ng-select bindLabel="extendedName" notFoundText="No users found" formControlName="user"
+                typeToSearchText="Type email or user name" placeholder="Start typing to search a user" required [items]="usersOptions$ | async"
+                [minTermLength]="minUsersLengthTerm" [loading]="isUsersLoading"
+                [multiple]="false" [typeahead]="usersSearchInput$">
               </ng-select>
               <div *ngIf="(form.controls.user.touched) && (form.controls.user.errors?.['required'])"
                 class="tx-danger">
@@ -39,8 +39,8 @@
                 <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
               </label>
               <input class="form-control"
-                [ngClass]="{'has-error': (form.controls.name.touched) && !form.controls.name.valid}"
-                type="text" formControlName="name" maxlength="50" required>
+                type="text"
+                formControlName="name" maxlength="50" required [ngClass]="{'has-error': (form.controls.name.touched) && !form.controls.name.valid}">
               <div *ngIf="(form.controls.name.touched) && (form.controls.name.errors?.['required'])"
                 class="tx-danger">
                 <small>
@@ -68,7 +68,7 @@
               Settings
             </h5>
            
-            <div class="form-group">
+            <!-- <div class="form-group">
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
                 Min. Amount
               </label>
@@ -81,7 +81,7 @@
               </label>
               <input class="form-control" type="number" formControlName="maxAmountFrom">
             </div>
-    
+     -->
             <div class="form-group">
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
                 Pre. Fee
@@ -234,16 +234,16 @@
                     </th>
                     <td *matCellDef="let element" class="widget-list-data-column">
                       <ng-select 
-                        (change)="element.destination = ''"
-                        [(ngModel)]="element.currency" 
+                        bindLabel="display"
+                        bindValue="symbol" 
                         [ngModelOptions]="{standalone: true}" 
                         [items]="currencyDestinationOptions" 
-                        bindLabel="display" 
-                        bindValue="symbol" 
-                        [clearable]="false"
+                        [clearable]="false" 
                         [clearOnBackspace]="true" 
                         [hideSelected]="true"
-                        [closeOnSelect]="true">
+                        [closeOnSelect]="true" 
+                        [(ngModel)]="element.currency"
+                        (change)="element.destination = ''">
                       </ng-select>
                     </td>
                   </ng-container>
@@ -254,22 +254,22 @@
                     </th>
                     <td *matCellDef="let element; let i = index" class="widget-list-data-column">
                       <input 
-                        [id]="'input-' + i" 
-                        appAddressValidator
-                        [elCurrency]="element.currency"
-                        [elRequired]="element.destinationRequired"
+                        appAddressValidator 
                         class="form-control"
-                        [ngClass]="{'has-error': element.destinationRequired && !element.destination}"
-                        type="text" 
-                        [(ngModel)]="element.destination" 
-                        maxlength="50" 
+                        type="text"
+                        maxlength="50"
+                        [id]="'input-' + i"
+                        [elCurrency]="element.currency"
+                        [elRequired]="element.destinationRequired" 
+                        [ngClass]="{'has-error': element.destinationRequired && !element.destination}" 
                         [ngModelOptions]="{standalone: true}" 
-                        [required]="element.destinationRequired">
+                        [required]="element.destinationRequired" 
+                        [(ngModel)]="element.destination">
                     </td>
                   </ng-container>
         
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+                  <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
                 </table>
             </div>
           </div>
@@ -279,18 +279,18 @@
             </h5>
             <div class="form-group">
               <table mat-table [dataSource]="merchantFeeDestinationTable">
-                <ng-container matColumnDef="details">
-                  <th *matHeaderCellDef>
-                    <i class="material-icons cursor-icon tx-20" (click)="addMerchantFeeDestinationAddress()">
-                      add_circle
-                    </i>
-                  </th>
-                  <td *matCellDef="let element">
-                    <i class="material-icons cursor-icon tx-20" (click)="delMerchantFeeDestinationAddress(element)">
-                      cancel
-                    </i>
-                  </td>
-                </ng-container>
+w                  <ng-container matColumnDef="details">
+                    <th *matHeaderCellDef>
+                      <i class="material-icons cursor-icon tx-20" (click)="addMerchantFeeDestinationAddress()">
+                        add_circle
+                      </i>
+                    </th>
+                    <td *matCellDef="let element">
+                      <i class="material-icons cursor-icon tx-20" (click)="delMerchantFeeDestinationAddress(element)">
+                        cancel
+                      </i>
+                    </td>
+                  </ng-container>
           
                   <ng-container matColumnDef="currency">
                     <th *matHeaderCellDef>
@@ -298,16 +298,16 @@
                     </th>
                     <td *matCellDef="let element" class="widget-list-data-column">
                       <ng-select 
-                        (change)="element.destination = ''"
-                        [(ngModel)]="element.currency" 
+                        bindLabel="display"
+                        bindValue="symbol" 
                         [ngModelOptions]="{standalone: true}" 
                         [items]="currencyMerchantDestinationOptions" 
-                        bindLabel="display" 
-                        bindValue="symbol" 
-                        [clearable]="false"
+                        [clearable]="false" 
                         [clearOnBackspace]="true" 
                         [hideSelected]="true"
-                        [closeOnSelect]="true">
+                        [closeOnSelect]="true" 
+                        [(ngModel)]="element.currency"
+                        (change)="element.destination = ''">
                       </ng-select>
                     </td>
                   </ng-container>
@@ -318,22 +318,95 @@
                     </th>
                     <td *matCellDef="let element; let i = index" class="widget-list-data-column">
                       <input 
-                        [id]="'m-input-' + i" 
-                        appAddressValidator
-                        [elCurrency]="element.currency"
-                        [elRequired]="true"
+                        appAddressValidator 
                         class="was-validated form-control"
-                        [ngClass]="{'has-error': !element.destination}"
-                        type="text" 
-                        [(ngModel)]="element.destination" 
-                        [ngModelOptions]="{standalone: true}"
+                        type="text"
                         maxlength="50"
-                        [required]="true">
+                        [id]="'m-input-' + i"
+                        [elCurrency]="element.currency"
+                        [elRequired]="true" 
+                        [ngClass]="{'has-error': !element.destination}" 
+                        [ngModelOptions]="{standalone: true}"
+                        [required]="true"
+                        [(ngModel)]="element.destination">
                     </td>
                   </ng-container>
         
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+                  <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+                </table>
+            </div>
+          </div>
+          <div class="card card-body pd-20 pd-md-40 border shadow-none">
+            <h5 class="card-title mg-b-20">
+              Fiat Amount Setitngs
+            </h5>
+            <div class="form-group">
+              <table #amountsTable mat-table [dataSource]="amountsSettingsTable">
+                  <ng-container matColumnDef="details">
+                    <th *matHeaderCellDef>
+                      <i class="material-icons cursor-icon tx-20" (click)="addAmountSetting()">
+                        add_circle
+                      </i>
+                    </th>
+                    <td *matCellDef="let element; let i = index">
+                      <i class="material-icons cursor-icon tx-20" (click)="deleteAmountSetting(i)">
+                        cancel
+                      </i>
+                    </td>
+                  </ng-container>
+          
+                  <ng-container matColumnDef="currency">
+                    <th *matHeaderCellDef>
+                      Currency
+                    </th>
+                    <td *matCellDef="let element" class="widget-list-data-column">
+                      <ng-select 
+                        bindLabel="display" 
+                        bindValue="symbol" 
+                        [ngModelOptions]="{standalone: true}" 
+                        [items]="currencyOptionsFiat" 
+                        [clearable]="false" 
+                        [clearOnBackspace]="true"
+                        [hideSelected]="true" 
+                        [closeOnSelect]="true"
+                        [(ngModel)]="element.currency">
+                      </ng-select>
+                    </td>
+                  </ng-container>
+        
+                  <ng-container matColumnDef="minAmount">
+                    <th *matHeaderCellDef>
+                      Min. Amount
+                    </th>
+                    <td *matCellDef="let element; let i = index" class="widget-list-data-column">
+                      <input 
+                        class="was-validated form-control" 
+                        type="text"
+                        maxlength="10" 
+                        [id]="'min-input-' + i" 
+                        [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="element.minAmount">
+                    </td>
+                  </ng-container>
+      
+                  <ng-container matColumnDef="maxAmount">
+                    <th *matHeaderCellDef>
+                      Max. Amount
+                    </th>
+                    <td *matCellDef="let element; let i = index" class="widget-list-data-column">
+                      <input 
+                        class="was-validated form-control" 
+                        type="text"
+                        maxlength="10" 
+                        [id]="'max-input-' + i" 
+                        [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="element.maxAmount">
+                    </td>
+                  </ng-container>
+        
+                  <tr *matHeaderRowDef="displayedAmountsColumns; sticky: true" mat-header-row></tr>
+                  <tr *matRowDef="let row; columns: displayedAmountsColumns;" mat-row></tr>
                 </table>
             </div>
           </div>
@@ -351,7 +424,7 @@
               <ng-select formControlName="countries" [clearable]=true [clearOnBackspace]=true [multiple]="true"
                 [closeOnSelect]="false">
                 <ng-option *ngFor="let country of countryOptions" [value]="country">
-                  <app-dropdown-item itemValue="{{country.name}}" imageClass="country-flag-admin"
+                  <app-dropdown-item imageClass="country-flag-admin" itemValue="{{country.name}}"
                     imageSource="assets/svg-country-flags/{{getCountryFlag(country.code2)}}">
                   </app-dropdown-item>
                 </ng-option>
@@ -362,8 +435,8 @@
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
                 Fiat Currencies
               </label>
-              <ng-select [items]="currencyOptionsFiat" bindLabel="display" bindValue="symbol"
-                formControlName="currenciesFiat" [clearable]=true [clearOnBackspace]=true [multiple]="true"
+              <ng-select bindLabel="display" bindValue="symbol" formControlName="currenciesFiat"
+                [items]="currencyOptionsFiat" [clearable]=true [clearOnBackspace]=true [multiple]="true"
                 [closeOnSelect]="false">
               </ng-select>
             </div>
@@ -372,7 +445,7 @@
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
                 Payment Methods
               </label>
-              <ng-select [items]="instrumentOptions" bindLabel="name" bindValue="id" formControlName="instruments"
+              <ng-select bindLabel="name" bindValue="id" formControlName="instruments" [items]="instrumentOptions"
                 [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
               </ng-select>
             </div>
@@ -382,8 +455,8 @@
                 Liquidity provider
                 <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
               </label>
-              <ng-select [items]="liquidityProviderOptions" bindLabel="name" bindValue="id"
-                formControlName="liquidityProvider" [clearable]=false [clearOnBackspace]=false required>
+              <ng-select bindLabel="name" bindValue="id" formControlName="liquidityProvider"
+                required [items]="liquidityProviderOptions" [clearable]=false [clearOnBackspace]=false>
               </ng-select>
               <div
                 *ngIf="(form.controls.liquidityProvider.touched) && (form.controls.liquidityProvider.errors?.['required'])"
@@ -398,7 +471,7 @@
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
                 Payment Providers
               </label>
-              <ng-select [items]="filteredProviders" bindLabel="name" bindValue="id" formControlName="paymentProviders"
+              <ng-select bindLabel="name" bindValue="id" formControlName="paymentProviders" [items]="filteredProviders"
                 [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
               </ng-select>
             </div>
@@ -407,7 +480,7 @@
               <label class="main-content-label tx-11 tx-medium tx-gray-600">
                 Transaction types
               </label>
-              <ng-select [items]="transactionTypeOptions" bindLabel="name" bindValue="id" formControlName="transactionTypes"
+              <ng-select bindLabel="name" bindValue="id" formControlName="transactionTypes" [items]="transactionTypeOptions"
                 [clearable]=true [clearOnBackspace]=true [multiple]="true" [closeOnSelect]="false">
               </ng-select>
             </div>
@@ -416,8 +489,8 @@
               User Type
               <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
             </label>
-            <ng-select [items]="userTypeOptions" bindLabel="name" bindValue="id" formControlName="userType"
-              [clearable]=false [clearOnBackspace]=false required>
+            <ng-select bindLabel="name" bindValue="id" formControlName="userType" required
+              [items]="userTypeOptions" [clearable]=false [clearOnBackspace]=false>
             </ng-select>
           </div>
 
