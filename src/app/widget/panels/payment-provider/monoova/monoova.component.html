@@ -1,0 +1,27 @@
+<div class="__widget-data-box" [formGroup]="form">
+  <div class="__form-label">
+      {{'widget-monoova-details.title' | transloco}}
+  </div>
+  
+  <mat-form-field appearance="outline">
+    <mat-label>BSB Number</mat-label>
+    <input matInput type="text" placeholder="AAB-CCC" mask="999-999" formControlName="bsbNumber"/>
+    <mat-error *ngIf="form.controls.bsbNumber.invalid" class="field-error">BSB Number is required</mat-error>
+  </mat-form-field>
+
+  <div class="__form-separator"></div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Account Numbert</mat-label>
+    <input matInput type="text" placeholder="XXXXXXX" formControlName="accountNumber"/>
+    <mat-error *ngIf="form.controls.accountNumber.invalid" class="field-error">Account Number is required</mat-error>
+  </mat-form-field>
+
+  <div class="__widget-buttons-area">
+    <button class="__outlined-button" type="button" (click)="stageBackEvent.emit()">
+        {{'global.widget_btn-back' | transloco}}
+    </button>
+    <button class="__main-button __button-wide-separator" type="button" [disabled]="!form.valid" (click)="onSubmit()">
+        {{'global.widget_btn-next' | transloco}}
+    </button>
+</div>
