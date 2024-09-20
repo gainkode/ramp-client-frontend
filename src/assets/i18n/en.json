@@ -201,5 +201,6 @@
   "widget-payment-transaction-details.msg-failed-2": "To refund the received crypto assets please contact us",
 
   "kyc.btn_verify-later":"Verify Later",
-  "widget-pager.bank-details": "Bank details"
+  "widget-pager.bank-details": "Bank details",
+  "widget-monoova-details.title": "Please fill in the details of your bank account from which the payment will be made."
 }

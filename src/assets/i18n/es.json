@@ -197,5 +197,6 @@
   "widget-payment-transaction-details.msg-failed-1": "Por favor, ten en cuenta que tu orden ha sido cancelada debido a que se excedió el límite de tiempo de la orden.",
   "widget-payment-transaction-details.msg-failed-2": "Para reembolsar los activos cripto recibidos por favor contáctanos",
   "kyc.btn_verify-later": "Verificar Después",
-  "widget-pager.bank-details": "Detalles del banco"
+  "widget-pager.bank-details": "Detalles del banco",
+  "widget-monoova-details.title": "Rellene los datos de la cuenta bancaria desde la que se efectuará el pago."
 }

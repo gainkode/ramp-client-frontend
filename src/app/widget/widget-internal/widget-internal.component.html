@@ -94,6 +94,7 @@
           <app-widget-register *ngSwitchCase="'register'" [email]="summary.email" (onBack)="stageBack()"
             (onProgress)="progressChanged($event)" (onComplete)="onLoginRequired($event)">
           </app-widget-register>
+
           <app-widget-payment-yapily
             *ngSwitchCase="'payment_yapily'" 
             [userParamsId]="userParamsId" 
@@ -104,12 +105,20 @@
             (onProgress)="progressChanged($event)" 
             (onComplete)="onLoginRequired($event)">
           </app-widget-payment-yapily>
+
           <app-widget-payment-wrbankaccount
             *ngSwitchCase="'payment_wrbankaccount'" 
             [bankAccount]="selectedProvider.bankAccount"
             (onBack)="stageBack()"
             (selectProviderBankAccount)="onBankAccountSelect($event)">
           </app-widget-payment-wrbankaccount>
+
+          <app-widget-payment-monoova
+            *ngSwitchCase="'payment_monoova'" 
+            (stageBackEvent)="stageBack()"
+            (selectedForm)="onMonoovaFormComplete($event)">
+          </app-widget-payment-monoova>
+
           <!-- Login Authentication -->
           <app-widget-login-auth *ngSwitchCase="'login_auth'" [email]="summary.email" [widget]="widget"
             [requiredExtraData]="requiredExtraData" [allowCreate]="quickCheckout"

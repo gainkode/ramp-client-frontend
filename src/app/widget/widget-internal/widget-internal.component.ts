@@ -796,6 +796,19 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			bankAccount);
 	}
 
+
+	onMonoovaFormComplete(monoovaBankDetails: { bsbNumber: string; accountNumber: string; }): void {
+		const instrumentDetails = JSON.stringify({
+			userDetails: monoovaBankDetails
+		});
+1
+		this.createTransaction(
+			this.selectedProvider.id,
+			this.selectedProvider.instrument, 
+			instrumentDetails
+		);
+	}
+
   // == Payment info ==
   selectProvider(data: { selectedProvider: PaymentProviderInstrumentView; providers?: PaymentProviderInstrumentView[]; }): void {
 		this.paymentProviders = data.providers;
@@ -805,8 +818,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		this.summary.providerView = this.paymentProviders.find(x => x.id === this.selectedProvider.id);
 			
 			const currentCase = `payment_${this.selectedProvider.componentName}`;
-			const knownCases: string[] = ['payment_yapily', 'payment_wrbankaccount'];
-
+			const knownCases: string[] = ['payment_yapily', 'payment_wrbankaccount', 'payment_monoova'];
 			if (knownCases.includes(currentCase)) {
 				if (this.selectedProvider.isSingleBankAccount) {
 
@@ -1014,6 +1026,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			wireTransferBankAccountId?: string,
 			wireTransferPaymentCategory?: string,
 			): void {
+
   	const transactionSourceVaultId = (this.summary.vaultId === '') ? undefined : this.summary.vaultId;
   	const destination = this.summary.transactionType === TransactionType.Buy ? this.summary.address : '';
 

@@ -196,5 +196,6 @@
   "widget-payment-transaction-details.msg-failed-1": "Veuillez noter que votre commande a été annulée en raison du dépassement du délai de commande.",
   "widget-payment-transaction-details.msg-failed-2": "Pour rembourser les actifs crypto reçus, veuillez nous contacter",
   "kyc.btn_verify-later": "Vérifier plus tard",
-  "widget-pager.bank-details": "Détails de la banque"
+  "widget-pager.bank-details": "Détails de la banque",
+  "widget-monoova-details.title": "Veuillez indiquer les coordonnées du compte bancaire à partir duquel le paiement sera effectué."
 }

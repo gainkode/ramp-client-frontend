@@ -80,6 +80,7 @@ import { WidgetPagerService } from 'services/widget-pager.service';
 import { TransactionDetailsComponent } from './panels/payment-provider/yapily/panels/transaction-details/transaction-details.component';
 import { PaymentInstructionComponent } from './panels/payment-provider/yapily/panels/payment-instruction/payment-instruction.component';
 import { WidgeInternalOverviewDetailsComponent } from './widget-internal/widget-internal-overview/widge-internal-overview-details/widge-internal-overview-details.component';
+import { WidgetPaymentMonoovaComponent } from './panels/payment-provider/monoova/monoova.component';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -158,6 +159,7 @@ export class MaterialModule {}
 		WidgetPaymentComponent,
 		WidgetPaymentYapilyComponent,
 		WidgetPaymentWrBankAccountComponent,
+		WidgetPaymentMonoovaComponent,
 		PaymentYapilyBankComponent,
 		WidgetProcessingFrameComponent,
 		WidgetCryptoDetailsComponent,
