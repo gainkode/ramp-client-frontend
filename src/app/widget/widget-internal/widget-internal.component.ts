@@ -801,7 +801,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 		const instrumentDetails = JSON.stringify({
 			userDetails: monoovaBankDetails
 		});
-1
+
 		this.createTransaction(
 			this.selectedProvider.id,
 			this.selectedProvider.instrument, 
@@ -1116,7 +1116,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
   		if (this.transactionInput.instrument === PaymentInstrument.WireTransfer) {
   			if(order.instrumentDetails) {
   				const instrumentDetails = typeof order.instrumentDetails == 'string' ? JSON.parse(order.instrumentDetails) : order.instrumentDetails;
-					this.selectedWireTransfer.data = instrumentDetails;
+					this.selectedWireTransfer.data = instrumentDetails.paymentDetails;
   			}
 			
   			this.nextStage('wire_transfer_result', 'widget-pager.wire_transfer_result', 5);
