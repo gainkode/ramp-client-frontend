@@ -183,7 +183,7 @@ export const routes: Routes = [
 			},
 			{
 				path: 'bank-accounts',
-				data: { header: 'Bank accounts', code: UserRoleObjectCode.Costs },
+				data: { header: 'Bank accounts', code: UserRoleObjectCode.BankAccounts },
 				canActivate: [AdminGuard],
 				component: AdminBankAccountsComponent
 			},
