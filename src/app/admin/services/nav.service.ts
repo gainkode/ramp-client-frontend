@@ -134,7 +134,7 @@ export class NavService implements OnDestroy {
 		{
 			title: 'Costs', icon: 'attach_money', type: 'sub', active: false, code: UserRoleObjectCode.Costs, children: [
 				{ path: '/admin/costs', title: 'Schemes', type: 'link' },
-				{ path: '/admin/bank-accounts', title: 'Bank accounts', type: 'link' },
+				{ path: '/admin/bank-accounts', title: 'Bank accounts', type: 'link', code: UserRoleObjectCode.BankAccounts },
 			]
 		},
 		{
