@@ -906,7 +906,7 @@ export class AuthService {
 		if (settingsCommon) {
 			const adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
 
-			return adminAdditionalSettings.tabs?.[`${filterType}`]?.filterFields || defaultFilterFields;
+			return adminAdditionalSettings?.tabs?.[`${filterType}`]?.filterFields || defaultFilterFields;
 		}
 
 		return defaultFilterFields;
