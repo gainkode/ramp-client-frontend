@@ -918,10 +918,10 @@ export class AuthService {
 		if (settingsCommon) {
 			const adminAdditionalSettings = typeof settingsCommon.adminAdditionalSettings == 'string' ? JSON.parse(settingsCommon.adminAdditionalSettings) : settingsCommon.adminAdditionalSettings;
 
-			return adminAdditionalSettings || {};
+			return adminAdditionalSettings || undefined;
 		}
 
-		return {};
+		return undefined;
 	}
 
 	setUserName(firstName: string, lastName: string): void {
