@@ -334,7 +334,6 @@ const GET_FEE_SETTINGS = gql`
         default
         description
         terms
-        wireDetails
         targetInstruments
         targetUserTypes
         targetUserModes
@@ -1607,7 +1606,6 @@ const ADD_SETTINGS_FEE = gql`
     $targetCurrenciesFrom: [String!]
     $targetCurrenciesTo: [String!]
     $terms: String!
-    $wireDetails: String!
     $widgetIds: [String]
   ) {
     addSettingsFee(
@@ -1624,7 +1622,6 @@ const ADD_SETTINGS_FEE = gql`
         targetCurrenciesFrom: $targetCurrenciesFrom
         targetCurrenciesTo: $targetCurrenciesTo
         terms: $terms
-        wireDetails: $wireDetails
         widgetIds: $widgetIds
       }
     ) {
@@ -1658,7 +1655,6 @@ const SETTINGS_FEE_SIMILARS = gql`
     $targetCurrenciesFrom: [String!]
     $targetCurrenciesTo: [String!]
     $terms: String!
-    $wireDetails: String!
     $widgetIds: [String]
   ) {
     settingsFeeSimilars(
@@ -1675,7 +1671,6 @@ const SETTINGS_FEE_SIMILARS = gql`
         targetCurrenciesFrom: $targetCurrenciesFrom
         targetCurrenciesTo: $targetCurrenciesTo
         terms: $terms
-        wireDetails: $wireDetails
         widgetIds: $widgetIds
       }
     ) {
@@ -2715,7 +2710,6 @@ const UPDATE_SETTINGS_FEE = gql`
     $targetTransactionTypes: [TransactionType!]
     $targetPaymentProviders: [String!]
     $terms: String!
-    $wireDetails: String!
     $targetCurrenciesFrom: [String!]
     $targetCurrenciesTo: [String!]
     $widgetIds: [String]
@@ -2733,7 +2727,6 @@ const UPDATE_SETTINGS_FEE = gql`
         targetTransactionTypes: $targetTransactionTypes
         targetPaymentProviders: $targetPaymentProviders
         terms: $terms
-        wireDetails: $wireDetails
         targetCurrenciesFrom: $targetCurrenciesFrom
         targetCurrenciesTo: $targetCurrenciesTo
         widgetIds: $widgetIds
@@ -3855,7 +3848,6 @@ export class AdminDataService {
 				targetCurrenciesFrom: feeScheme.currenciesFrom,
 				targetCurrenciesTo: feeScheme.currenciesTo,
 				terms: feeScheme.terms.getObject(),
-				wireDetails: feeScheme.details.getObject(),
         widgetIds: feeScheme.widgetIds
 			}
 		}).pipe(map(res => res.data['settingsFeeSimilars']));
@@ -3878,7 +3870,6 @@ export class AdminDataService {
 					targetCurrenciesFrom: feeScheme.currenciesFrom,
 					targetCurrenciesTo: feeScheme.currenciesTo,
 					terms: feeScheme.terms.getObject(),
-					wireDetails: feeScheme.details.getObject(),
           widgetIds: feeScheme.widgetIds
 				}
 			})
@@ -3896,7 +3887,6 @@ export class AdminDataService {
 					targetTransactionTypes: feeScheme.trxType,
 					targetPaymentProviders: feeScheme.provider,
 					terms: feeScheme.terms.getObject(),
-					wireDetails: feeScheme.details.getObject(),
 					targetCurrenciesFrom: feeScheme.currenciesFrom,
 					targetCurrenciesTo: feeScheme.currenciesTo,
           widgetIds: feeScheme.widgetIds
