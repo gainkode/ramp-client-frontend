@@ -31,7 +31,6 @@ export class FeeScheme {
 	userMode: Array<UserMode> = [];
 	provider: string[] = [];
 	terms!: FeeShemeTerms;
-	details!: FeeShemeWireDetails;
 	currency!: string;
 	rateToEur!: number;
 	deleted?: Date;
@@ -44,8 +43,7 @@ export class FeeScheme {
 			this.id = data.settingsFeeId;
 			this.isDefault = data.default as boolean;
 			this.description = data.description as string;
-			this.terms = new FeeShemeTerms(data.terms);
-			this.details = new FeeShemeWireDetails(data.wireDetails);
+			this.terms = new FeeShemeTerms(data.terms ?? '');
 			this.currency = data.currency as string ?? 'euro';
 			this.currenciesFrom = data.targetCurrenciesFrom as Array<string> ?? [];
 			this.currenciesTo = data.targetCurrenciesTo as Array<string> ?? [];
@@ -71,7 +69,6 @@ export class FeeScheme {
 			}
 		} else {
 			this.terms = new FeeShemeTerms('');
-			this.details = new FeeShemeWireDetails('');
 		}
 	}
 
@@ -198,38 +195,6 @@ export class FeeShemeTerms {
 			Monthly_fees: this.monthlyFees,
 			Min_monthly_fees: this.minMonthlyFees,
 			Risk_fees: this.riskFees,
-		});
-	}
-}
-
-export class FeeShemeWireDetails {
-	beneficiaryName!: string;
-	beneficiaryAddress!: string;
-	iban!: string;
-	bankName!: string;
-	bankAddress!: string;
-	swift!: string;
-
-	constructor(data: string) {
-		if (data !== '') {
-			const details = JSON.parse(data);
-			this.bankAddress = details.Bank_address;
-			this.bankName = details.Bank_name;
-			this.beneficiaryAddress = details.Beneficiary_address;
-			this.beneficiaryName = details.Beneficiary_name;
-			this.iban = details.Iban;
-			this.swift = details.Swift;
-		}
-	}
-
-	getObject(): string {
-		return JSON.stringify({
-			Bank_address: this.bankAddress,
-			Bank_name: this.bankName,
-			Beneficiary_address: this.beneficiaryAddress,
-			Beneficiary_name: this.beneficiaryName,
-			Iban: this.iban,
-			Swift: this.swift
 		});
 	}
 }
