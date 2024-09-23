@@ -162,15 +162,15 @@ export class TransactionItemFull {
 
 			this.created = datepipe.transform(
 				data.created,
-				'dd-MM-YYYY HH:mm:ss:SSS'
+				'dd-MM-YYYY HH:mm:ss'
 			) as string;
 			this.executed = datepipe.transform(
 				data.executed,
-				'dd-MM-YYYY HH:mm:ss:SSS'
+				'dd-MM-YYYY HH:mm:ss'
 			) as string;
 			this.updated = datepipe.transform(
 				data.updated,
-				'dd-MM-YYYY HH:mm:ss:SSS'
+				'dd-MM-YYYY HH:mm:ss'
 			) as string;
 
 			this.reversalProcessed = (data.reversalProcessed) ? new Date(data.reversalProcessed) : undefined;

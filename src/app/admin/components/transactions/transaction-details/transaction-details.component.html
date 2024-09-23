@@ -662,6 +662,14 @@
     </ng-template>
   </mat-tab>
 
+  <mat-tab label="Lifeline">
+    <ng-template matTabContent>
+      <div class="json-wrapper">
+        <app-transaction-lifeline [transactionId]="data?.id"></app-transaction-lifeline>
+      </div>
+    </ng-template>
+  </mat-tab>
+
   <mat-tab *ngIf="false" label="Transaction Docs">
     <ng-template matTabContent>
       <app-admin-transaction-docs [transactionId]="data?.id"></app-admin-transaction-docs>
