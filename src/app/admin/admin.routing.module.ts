@@ -17,7 +17,7 @@ import { AdminUserDevicesComponent } from './components/users/devices/devices.co
 import { AdminKycTiersComponent } from './components/kyc/tiers/tiers.component';
 import { AdminUserActionsComponent } from './components/users/actions/actions.component';
 import { UserRoleObjectCode } from 'model/generated-models';
-import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, TransactionLifelineComponent, TransactionSimulationComponent } from './components/transactions';
+import { AdminTransactionsComponent, AdminTransactionStatusHistoryComponent, TransactionSimulationComponent } from './components/transactions';
 import { AdminDashboardWrapperComponent } from './components/dashboard';
 import { AdminApiKeysComponent, AdminCommonSettingsComponent, AdminCurrencyPairsComponent, FaqPageComponent } from './components/settings';
 import { AdminCustomersComponent } from './components/users/customers';
