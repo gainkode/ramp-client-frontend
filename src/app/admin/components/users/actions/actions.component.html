@@ -109,7 +109,9 @@
                 </mat-tab>
                 <mat-tab *ngIf="selectedAction.info" label="Action Info">
                   <ng-template matTabContent>
-                    <app-raw-json [data]="selectedAction.info"></app-raw-json>
+                    <div class="json-wrapper">
+                      <app-raw-json [data]="selectedAction.info"></app-raw-json>
+                    </div>
                   </ng-template>
                 </mat-tab>
               </mat-tab-group>

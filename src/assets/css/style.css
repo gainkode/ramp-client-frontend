@@ -3871,9 +3871,9 @@ dd {
     height: 16px;
     background: var(--primary-bg-color);
     position: absolute;
-    left: 11px;
+    left: 8px;
     display: block;
-    top: 21px;
+    top: 18px;
 }
 
 .card-title2:before {

@@ -246,6 +246,8 @@ export class TransactionItemFull {
 				this.amountToReceive = this.transferOrder.amount ?? paymentData.amountToReceive;
 				this.transferStatus = this.transferOrder.status ?? '';
 				this.transferSubStatus = this.transferOrder.subStatus ?? '';
+			} else {
+				this.amountToReceive = paymentData.amountToReceive;
 			}
 
 			this.screeningAnswer = <TransactionScreeningAnswer>data.screeningAnswer ?? undefined;

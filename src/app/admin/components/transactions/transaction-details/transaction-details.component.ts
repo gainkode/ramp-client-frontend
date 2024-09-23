@@ -7,7 +7,7 @@ import { Filter } from 'admin/model/filter.model';
 import { CommonTargetValue } from 'model/common.model';
 import { AccountStatus, Rate, SettingsCommon, TransactionKycStatus, TransactionScreeningAnswer, TransactionStatus, TransactionStatusDescriptorMap, TransactionType, TransactionTypeSetting, TransactionUpdateInput, TransactionUpdatePaymentOrderChanges, UserRoleObjectCode } from 'model/generated-models';
 import { AdminTransactionStatusList, CurrencyView, TransactionKycStatusList, TransactionStatusList, TransactionStatusView, TransactionTypeList, UserStatusList } from 'model/payment.model';
-import { ScreeningAnswer, TransactionItemFull } from 'model/transaction.model';
+import { TransactionItemFull } from 'model/transaction.model';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
@@ -209,6 +209,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.form.controls.transactionStatus.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(value => {
+        if (this.isTransactionRefreshing) return;
+        
         const recallNumber = this.form.controls.recallNumber;
 
         if (value === TransactionStatus.Chargeback) {
@@ -478,8 +480,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (transaction) => {
-          this.isTransactionRefreshing = false;
           this.setFormData(transaction);
+
+          this.isTransactionRefreshing = false;
         }
       });
   }
