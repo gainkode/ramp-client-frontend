@@ -876,7 +876,21 @@ const GET_TRANSACTIONS = gql`
           screeningData
         }
         widgetUserParams {
+          widgetUserParamsId
+          created
+          executed
           merchantFeePercent
+          merchantFeeMinAmount
+          merchantFeeAddress
+          userAddress
+          userBirthday
+          userFirstName
+          userGender
+          userId
+          userLastName
+          userPhone
+          params
+          widgetId
         }
         transferOrderBlockchainLink
         type        
