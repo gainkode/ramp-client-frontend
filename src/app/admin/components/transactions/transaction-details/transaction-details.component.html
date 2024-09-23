@@ -640,9 +640,9 @@
     </ng-template>
   </mat-tab>
 
-  <mat-tab *ngIf="data?.screeningAnswer && data?.screeningData?.paymentChecks?.length > 0" label="Transaction screening info">
+  <mat-tab *ngIf="data?.screeningAnswer && data?.screeningData " label="Transaction screening info">
     <ng-template matTabContent>
-     <app-raw-json [data]="data?.screeningData?.paymentChecks[0]"></app-raw-json>
+     <app-raw-json [data]="data.screeningData"></app-raw-json>
      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
       <h4 class="card-title2 mg-b-20 color_brown">
         {{errorMessage}}

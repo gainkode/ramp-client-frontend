@@ -60,7 +60,7 @@
                     matTooltip="Transaction lifeline" matTooltipClass="info-tooltip">
                     <i class="material-icons tx-20">timeline</i>
                   </button>
-                  <button type="button" *ngIf="element?.screeningAnswer && element?.screeningData?.paymentChecks?.length > 0" mat-icon-button class="row-button" (click)="showDetails(element, details_content, true)"
+                  <button type="button" *ngIf="element?.screeningAnswer && element?.screeningData" mat-icon-button class="row-button" (click)="showDetails(element, details_content, true)"
                     [attr.aria-label]="'Transaction screening details'" [attr.aria-pressed]="!!selectedTransaction"
                     matTooltip="Transaction screening details" matTooltipClass="info-tooltip">
                     <i class="material-icons tx-20" [ngClass]="element?.screeningAnswerColor ?? ''">fact_check</i>
