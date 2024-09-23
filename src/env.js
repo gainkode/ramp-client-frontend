@@ -11,34 +11,14 @@
     window.__env_data.client_host = 'http://localhost:4000';
     // API server address
     // window.__env_data.api_server = 'http://localhost:4001';
-    window.__env_data.api_server = 'https://app-pre.iramp.io';
+    window.__env_data.api_server = 'https://app.getcoins.com.au';
     // API WebSocket address
     // window.__env_data.ws_server = 'ws://localhost:4001';
-    window.__env_data.ws_server = 'wss://app-pre.iramp.io';
+    window.__env_data.ws_server = 'wss://app.getcoins.com.au';
     // Image hosting address
     window.__env_data.image_host = './assets';
     window.__env_data.widget_secret = '15b78abfe32712f21f0f6eb43d1b5732691bec08';
     window.__env_data.widget_api_key = '99b90c7a-2b56-4edd-8940-09ddceee0e69';
-
-    // window.__env_data.cookieDomain = 'https://app.crunchywallet.io';
-    // window.__env_data.client_host = 'https://app.crunchywallet.io';
-    // window.__env_data.api_server = 'https://app.crunchywallet.io';
-    // window.__env_data.ws_server = 'wss://app.crunchywallet.io';
-    // window.__env_data.image_host = 'https://app.crunchywallet.io';
-    
-    // window.__env_data.cookieDomain = 'https://app.getcoins.com.au';
-    // window.__env_data.client_host = 'https://app.getcoins.com.au';
-    // window.__env_data.api_server = 'https://app.getcoins.com.au';
-    // window.__env_data.ws_server = 'wss://app.getcoins.com.au';
-    // window.__env_data.image_host = 'https://app.getcoins.com.au';
-    // window.__env_data.widget_secret = '072c10b958e4e67348be4a5ab2e7def687c64a0d';
-    // window.__env_data.widget_api_key = '0e63b374-d1bd-4e95-b2b5-368866dd1380';
-
-    // window.__env_data.cookieDomain = 'app.genesisxchange.com';
-    // window.__env_data.client_host = 'https://app.genesisxchange.com';
-    // window.__env_data.api_server = 'https://app.genesisxchange.com';
-    // window.__env_data.ws_server = 'wss://app.genesisxchange.com';
-    // window.__env_data.image_host = 'https://app.genesisxchange.com';
 
     // API time out
     window.__env_data.api_timeout = 60000;
@@ -151,7 +131,3 @@
     window.__env_data.color_main_blue_50 = '#f6fcff';
 
 }(this));
-
-// 1BMv3sM3AbT3jDEbt4v3zLv5HjRB2ucbT7
-
-// a09c222b-fa5e-4ffa-8c25-101cf309803e

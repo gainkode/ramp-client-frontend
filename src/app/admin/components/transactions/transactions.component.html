@@ -40,49 +40,71 @@
           </div>
 
           <div class="data-table">
-            <mat-table matSort [matSortActive]="sortedField" matSortDirection="desc" matSortDisableClear
+            <mat-table matSort matSortDirection="desc" matSortDisableClear [matSortActive]="sortedField"
               [dataSource]="transactions">
               <!-- Details Column -->
               <ng-container matColumnDef="details" sticky>
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let element" [ngClass]="element.transactionListSelectorColumnStyle">
-                    <input class="me-2" [checked]="element.selected" type="checkbox"
+                <th *matHeaderCellDef mat-header-cell></th>
+                <td *matCellDef="let element" mat-cell [ngClass]="element.transactionListSelectorColumnStyle">
+                    <input class="me-2" type="checkbox" [checked]="element.selected"
                     (change)="onTransactionSelected(element)">
-                    <button type="button" mat-icon-button class="row-button" (click)="showDetails(element, details_content)"
-                    [attr.aria-label]="'Transaction details'" [attr.aria-pressed]="!!selectedTransaction"
-                    matTooltip="Transaction details" matTooltipClass="info-tooltip">
+                    <button 
+                      type="button" 
+                      mat-icon-button 
+                      class="row-button"
+                      matTooltip="Transaction details"
+                      matTooltipClass="info-tooltip" 
+                      [attr.aria-label]="'Transaction details'"
+                      [attr.aria-pressed]="!!selectedTransaction" 
+                      (click)="showDetails(element, details_content)">
                     <i class="material-icons tx-20">wysiwyg</i>
                   </button>
-
-                  <button type="button" mat-icon-button class="row-button"
-                    [routerLink]="'/admin/transaction-lifeline'"
-                    [queryParams]="{transactionId: element.id}"
-                    matTooltip="Transaction lifeline" matTooltipClass="info-tooltip">
+                  <button 
+                    type="button" 
+                    mat-icon-button class="row-button"
+                    matTooltip="Transaction lifeline"
+                    matTooltipClass="info-tooltip"
+                    (click)="showDetails(element, details_content, false, true)">
                     <i class="material-icons tx-20">timeline</i>
                   </button>
-                  <button type="button" *ngIf="element?.screeningAnswer && element?.screeningData?.paymentChecks?.length > 0" mat-icon-button class="row-button" (click)="showDetails(element, details_content, true)"
-                    [attr.aria-label]="'Transaction screening details'" [attr.aria-pressed]="!!selectedTransaction"
-                    matTooltip="Transaction screening details" matTooltipClass="info-tooltip">
+                  <button 
+                    *ngIf="element?.screeningAnswer && element?.screeningData" 
+                    type="button" mat-icon-button class="row-button" 
+                    matTooltip="Transaction screening details"
+                    matTooltipClass="info-tooltip" 
+                    [attr.aria-label]="'Transaction screening details'"
+                    [attr.aria-pressed]="!!selectedTransaction" 
+                    (click)="showDetails(element, details_content, true)">
                     <i class="material-icons tx-20" [ngClass]="element?.screeningAnswerColor ?? ''">fact_check</i>
                   </button>
-                  <button type="button" *ngIf="element.vaultIds.length > 0" mat-icon-button class="row-button"
-                    (click)="showWallets(element.id)" [attr.aria-label]="'Transaction wallet'"
-                    [matTooltip]="'Transaction wallet'" matTooltipClass="info-tooltip">
-                    <i class="material-icons tx-20">
-                      account_balance_wallet
-                    </i>
+                  <button
+                    *ngIf="element.vaultIds.length > 0" 
+                    type="button" 
+                    mat-icon-button class="row-button"
+                    matTooltipClass="info-tooltip" 
+                    [attr.aria-label]="'Transaction wallet'"
+                    [matTooltip]="'Transaction wallet'" 
+                    (click)="showWallets(element.id)">
+                    <i class="material-icons tx-20"> account_balance_wallet </i>
                   </button>
-                  <button type="button" *ngIf="element.paymentOrderPreauth" mat-icon-button class="row-button" [attr.aria-label]="'PreAuth'" 
-                  [matTooltip]="'PreAuth'" matTooltipClass="info-tooltip">
-                    <i class="material-icons tx-20">
-                      update
-                    </i>
+                  <button 
+                    *ngIf="element.paymentOrderPreauth" 
+                    type="button" 
+                    mat-icon-button class="row-button" 
+                    matTooltipClass="info-tooltip" 
+                    [attr.aria-label]="'PreAuth'" 
+                    [matTooltip]="'PreAuth'">
+                    <i class="material-icons tx-20">update</i>
                   </button>
-                  <button type="button" *ngIf="element.flag" mat-icon-button class="row-button" [attr.aria-label]="'Flaged Transaction'" 
-                  [matTooltip]="'Flaged Transaction'" matTooltipClass="info-tooltip">
-                  <i class="material-icons tx-20 color_brown">
-                      flag
-                  </i>
+                  <button 
+                    *ngIf="element.flag" 
+                    type="button" 
+                    mat-icon-button 
+                    class="row-button"
+                    matTooltipClass="info-tooltip" 
+                    [attr.aria-label]="'Flaged Transaction'" 
+                    [matTooltip]="'Flaged Transaction'">
+                  <i class="material-icons tx-20 color_brown">flag</i>
                   </button>
                 </td>
               </ng-container>
@@ -276,6 +298,7 @@
                 [transaction]="selectedTransaction"
                 [currencies]="currencyOptions" 
                 [isScreeningInfo]="isScreeningInfo" 
+                [isLifeLine]="isLifeLine" 
                 [userStatuses]="userStatuses" 
                 (save)="onSaveTransaction()"
                 (close)="onCloseDetails()">

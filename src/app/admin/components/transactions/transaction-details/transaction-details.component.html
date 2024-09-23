@@ -640,9 +640,20 @@
     </ng-template>
   </mat-tab>
 
-  <mat-tab *ngIf="data?.screeningAnswer && data?.screeningData?.paymentChecks?.length > 0" label="Transaction screening info">
+  <mat-tab label="Lifeline">
     <ng-template matTabContent>
-     <app-raw-json [data]="data?.screeningData?.paymentChecks[0]"></app-raw-json>
+      <div class="json-wrapper">
+        <app-transaction-lifeline [transaction]="data"> </app-transaction-lifeline>
+      </div>
+    </ng-template>
+  </mat-tab>
+
+  <mat-tab *ngIf="data?.screeningAnswer && data?.screeningData " label="Transaction screening info">
+    <ng-template matTabContent>
+      <div class="json-wrapper">
+          <app-raw-json [data]="data?.screeningData.paymentChecks[0] || data?.screeningData"></app-raw-json>
+      </div>
+
      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
       <h4 class="card-title2 mg-b-20 color_brown">
         {{errorMessage}}
@@ -653,7 +664,9 @@
   
   <mat-tab *ngIf="data?.widgetUserParams" label="Widget Params">
     <ng-template matTabContent>
-     <app-raw-json [data]="data?.widgetUserParams"></app-raw-json>
+      <div class="json-wrapper">
+        <app-raw-json [data]="data?.widgetUserParams"></app-raw-json>
+      </div>
     </ng-template>
   </mat-tab>
 

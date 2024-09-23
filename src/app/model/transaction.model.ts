@@ -162,15 +162,15 @@ export class TransactionItemFull {
 
 			this.created = datepipe.transform(
 				data.created,
-				'dd-MM-YYYY HH:mm:ss:SSS'
+				'dd-MM-YYYY HH:mm:ss'
 			) as string;
 			this.executed = datepipe.transform(
 				data.executed,
-				'dd-MM-YYYY HH:mm:ss:SSS'
+				'dd-MM-YYYY HH:mm:ss'
 			) as string;
 			this.updated = datepipe.transform(
 				data.updated,
-				'dd-MM-YYYY HH:mm:ss:SSS'
+				'dd-MM-YYYY HH:mm:ss'
 			) as string;
 
 			this.reversalProcessed = (data.reversalProcessed) ? new Date(data.reversalProcessed) : undefined;
@@ -246,6 +246,8 @@ export class TransactionItemFull {
 				this.amountToReceive = this.transferOrder.amount ?? paymentData.amountToReceive;
 				this.transferStatus = this.transferOrder.status ?? '';
 				this.transferSubStatus = this.transferOrder.subStatus ?? '';
+			} else {
+				this.amountToReceive = paymentData.amountToReceive;
 			}
 
 			this.screeningAnswer = <TransactionScreeningAnswer>data.screeningAnswer ?? undefined;

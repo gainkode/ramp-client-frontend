@@ -1,7 +1,6 @@
 <app-admin-page-header
-  [title]="'Transaction Lifeline'"
-  [items]="['Home', 'Transactions']"
-  [active_item]="'Transaction: ' + transactionId"
+  [title]="'Transaction - ' + transaction?.code"
+  [active_item]="'Transaction: ' + transaction?.id"
 >
 </app-admin-page-header>
 
@@ -11,11 +10,13 @@
       <h3>No Data</h3>
     </mat-card-content>
   </mat-card>
-  <mat-card class="mb-3" *ngIf="liflinesStatusItems.length">
+  <mat-card *ngIf="liflinesStatusItems.length" class="mb-3">
     <mat-card-content>
-      Creating: <span class="lifeLine-label">{{ liflinesStatusItems[0]?.['newCreated'] | date : 'yyyy-MM-dd hh:mm:ss' }}</span> 
+      Creating: <span class="lifeLine-label">
+        {{ transaction?.created }}
+      </span> 
  
-      <mat-stepper [linear]="false" #stepper labelPosition="bottom">
+      <mat-stepper #createStepper labelPosition="bottom" [linear]="false">
         <mat-step
           *ngFor="let status of liflinesStatusItems[0].lifelineStatus" 
           [editable]="status.transactionLifelineStatusId"
@@ -49,7 +50,7 @@
                       Status Result: <span>
                         {{ status.transactionStatusResult}}
 
-                        <button type="button" (click)="onOpenJsonParameter(status)" class="view-json">
+                        <button type="button" class="view-json" (click)="onOpenJsonParameter(status)">
                           View Raw JSON
                         </button>
                       </span>
@@ -101,7 +102,7 @@
                     </div>
                   </div>
 
-                  <div class="overview__data" *ngIf="paymentOrder.preauthOperationSn">
+                  <div *ngIf="paymentOrder.preauthOperationSn" class="overview__data">
                     <div class="overview__container">
                       <h4 class="overview__title">Preauth Operation</h4>
                       <p>
@@ -119,7 +120,7 @@
                     </div>
                   </div>
 
-                  <div class="overview__data" *ngIf="paymentOrder.captureOperationSn">
+                  <div *ngIf="paymentOrder.captureOperationSn" class="overview__data">
                     <div class="overview__container">
                       <h4 class="overview__title">Capture Operation</h4>
                       <p>
@@ -137,7 +138,7 @@
                     </div>
                   </div>
 
-                  <div class="overview__data" *ngIf="paymentOrder.refundOperationSn">
+                  <div *ngIf="paymentOrder.refundOperationSn" class="overview__data">
                     <div class="overview__container">
                       <h4 class="overview__title">Refund Operation</h4>
                       <p>
@@ -379,7 +380,7 @@
             </span> 
           </ng-template>
 
-          <mat-stepper [linear]="false" #updatingStepper labelPosition="bottom" animationDuration="300">
+          <mat-stepper #updatingStepper labelPosition="bottom" animationDuration="300" [linear]="false">
             <mat-step
               *ngFor="let lineStatus of statusItem.lifelineStatus"
               [editable]="lineStatus.transactionLifelineStatusId"
