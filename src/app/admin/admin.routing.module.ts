@@ -30,7 +30,7 @@ export const routes: Routes = [
 			{
 				path: 'transaction-simulation',
 				component: TransactionSimulationComponent,
-				data: { header: 'Transaction Lifeline', code: UserRoleObjectCode.Transactions, hideWrapper: true },
+				data: { header: 'Transaction Simulation', code: UserRoleObjectCode.Transactions, hideWrapper: true },
 				canActivate: [AdminGuard]
 			},
 			{
@@ -66,12 +66,6 @@ export const routes: Routes = [
 						data: { header: 'Transactions' }
 					}
 				]
-			},
-			{
-				path: 'transaction-lifeline',
-				component: TransactionLifelineComponent,
-				data: { header: 'Transaction Lifeline', code: UserRoleObjectCode.Transactions },
-				canActivate: [AdminGuard]
 			},
 			{
 				path: 'transaction-status-history',

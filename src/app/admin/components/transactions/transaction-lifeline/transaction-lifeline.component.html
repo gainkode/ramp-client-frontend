@@ -1,6 +1,6 @@
 <app-admin-page-header
-  [title]="'Transaction Lifeline'"
-  [active_item]="'Transaction: ' + transactionId"
+  [title]="'Transaction - ' + transaction?.code"
+  [active_item]="'Transaction: ' + transaction?.id"
 >
 </app-admin-page-header>
 
@@ -12,7 +12,9 @@
   </mat-card>
   <mat-card *ngIf="liflinesStatusItems.length" class="mb-3">
     <mat-card-content>
-      Creating: <span class="lifeLine-label">{{ liflinesStatusItems[0]?.['newCreated'] | date : 'yyyy-MM-dd hh:mm:ss' }}</span> 
+      Creating: <span class="lifeLine-label">
+        {{ transaction?.created }}
+      </span> 
  
       <mat-stepper #createStepper labelPosition="bottom" [linear]="false">
         <mat-step

@@ -60,6 +60,7 @@ export class AdminTransactionsComponent implements OnInit, AfterViewInit {
 		'address', 'instrument', 'paymentProvider', 'status', 'userType', 'source', 'kycStatus', 'id'
 	];
 	isScreeningInfo = false;
+	isLifeLine = false;
 	inProgress = false;
 	permission = 0;
 	unbenchmarkDialog?: NgbModalRef;
@@ -151,10 +152,15 @@ export class AdminTransactionsComponent implements OnInit, AfterViewInit {
 		this.selectedTransaction = this.isSelectedTransaction(transaction.id) ? transaction : undefined;
 	}
 
-	showDetails(transaction: TransactionItemFull, content: any, isScreening: boolean = false): void {
+	showDetails(
+		transaction: TransactionItemFull, 
+		content: any, 
+		isScreening: boolean = false,
+		isLifeLine: boolean = false): void {
 		this.selectedTransaction = transaction;
 		this.isScreeningInfo = isScreening;
-		
+		this.isLifeLine = isLifeLine;
+
 		this.detailsDialog = this.modalService.open(content, {
 			backdrop: 'static',
 			windowClass: 'modalCusSty-transacion',

@@ -640,6 +640,14 @@
     </ng-template>
   </mat-tab>
 
+  <mat-tab label="Lifeline">
+    <ng-template matTabContent>
+      <div class="json-wrapper">
+        <app-transaction-lifeline [transaction]="data"> </app-transaction-lifeline>
+      </div>
+    </ng-template>
+  </mat-tab>
+
   <mat-tab *ngIf="data?.screeningAnswer && data?.screeningData " label="Transaction screening info">
     <ng-template matTabContent>
       <div class="json-wrapper">
@@ -658,14 +666,6 @@
     <ng-template matTabContent>
       <div class="json-wrapper">
         <app-raw-json [data]="data?.widgetUserParams"></app-raw-json>
-      </div>
-    </ng-template>
-  </mat-tab>
-
-  <mat-tab label="Lifeline">
-    <ng-template matTabContent>
-      <div class="json-wrapper">
-        <app-transaction-lifeline [transactionId]="data?.id"></app-transaction-lifeline>
       </div>
     </ng-template>
   </mat-tab>

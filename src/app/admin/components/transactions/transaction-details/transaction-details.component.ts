@@ -39,6 +39,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   @Input() permission = 0;
   @Input() isScreeningInfo = false;
+  @Input() isLifeLine = false;
   @Input() set transaction(val: TransactionItemFull | undefined) {
     this.setFormData(val);
     this.setCurrencies(this.pCurrencies);
@@ -210,7 +211,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(value => {
         if (this.isTransactionRefreshing) return;
-        
         const recallNumber = this.form.controls.recallNumber;
 
         if (value === TransactionStatus.Chargeback) {
@@ -256,6 +256,10 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
 
     if (this.isScreeningInfo) {
+      this.selectedTabIndex = 2;
+    }
+
+    if (this.isLifeLine) {
       this.selectedTabIndex = 1;
     }
   }
