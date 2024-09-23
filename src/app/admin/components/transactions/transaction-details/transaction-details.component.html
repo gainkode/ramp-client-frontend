@@ -651,7 +651,7 @@
   <mat-tab *ngIf="data?.screeningAnswer && data?.screeningData " label="Transaction screening info">
     <ng-template matTabContent>
       <div class="json-wrapper">
-          <app-raw-json [data]="data?.screeningData.paymentChecks[0] || data?.screeningData"></app-raw-json>
+          <app-raw-json [data]="data?.screeningData.paymentChecks?.length > 0 ? data?.screeningData.paymentChecks[0] : data?.screeningData"></app-raw-json>
       </div>
 
      <div *ngIf="errorMessage!==''" class="card card-body card-danger pd-20 pd-md-40 border shadow-none">
