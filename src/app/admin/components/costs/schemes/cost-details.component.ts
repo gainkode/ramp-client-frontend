@@ -71,7 +71,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 		provider: [[]],
 		mdr: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
 		transactionCost: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-		widgetIds: [undefined]
+		widgetIds: [[]]
 	});
 
 	private readonly destroy$ = new Subject<void>();
@@ -231,7 +231,7 @@ export class AdminCostSchemeDetailsComponent implements OnInit, OnDestroy {
 				debounceTime(300),
 				distinctUntilChanged(),
 				switchMap(searchString => {
-					if (searchString === null && !initialLoadDone && this.widgetIds.length) {
+					if (searchString === null && !initialLoadDone && this.widgetIds?.length) {
 						this.isWidgetsLoading = true;
 						initialLoadDone = true;
 						return this.getFilteredWidgets(new Filter({ widgets: this.widgetIds })).pipe(

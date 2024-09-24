@@ -81,7 +81,7 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 		provider: [undefined],
 		transactionFees: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
 		minTransactionFee: [undefined, { validators: [Validators.required, Validators.pattern('^[0-9.]+$')], updateOn: 'change' }],
-		widgetIds: [undefined]
+		widgetIds: [[]]
 	});
 
 	private readonly destroy$ = new Subject<void>();
@@ -330,8 +330,8 @@ export class AdminFeeSchemeDetailsComponent implements OnInit, OnDestroy {
 			));
 	}
 
-		private initWidgetSearch(): void {
-			let initialLoadDone = false;
+	private initWidgetSearch(): void {
+		let initialLoadDone = false;
 
 		this.widgetsOptions$ = this.widgetsSearchInput$.pipe(
 				startWith(null),
