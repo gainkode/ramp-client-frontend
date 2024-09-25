@@ -82,7 +82,7 @@ export class PaymentProviderInstrumentView {
 	];
 		
 		// Filter out null values and check if only one account is non-null
-		const account = accounts.filter(account => account);
+		const account = accounts.filter(account => account?.value);
 		
 		return account[0].key;
 	}
