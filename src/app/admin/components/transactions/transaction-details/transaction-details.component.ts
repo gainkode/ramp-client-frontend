@@ -859,7 +859,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   addInstrumentDetail = (label: string, ...values): any => {
     const value = values.find(v => v !== undefined && v !== null);
 
-    console.log(value);
     if (value) {
       return `${label}: ${value}`;
     }
