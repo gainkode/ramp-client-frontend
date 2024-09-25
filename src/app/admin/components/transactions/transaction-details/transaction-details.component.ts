@@ -180,6 +180,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   isTransactionRefreshing = false;
   isTransactionDocsAllowed = 0;
   instrumentDetailsData: string[] = [];
+  userDetailsData: string[] = [];
   paymentOrderChanges: TransactionUpdatePaymentOrderChanges = {};
 	private readonly unsubscribe$ = new Subject<void>();
   constructor(
@@ -455,7 +456,16 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   if (this.transactionType === TransactionType.Sell || this.transactionType === TransactionType.Buy ||
       this.transactionType === TransactionType.Deposit || this.transactionType === TransactionType.Withdrawal) {
-      this.instrumentDetailsData = this.getInstrumentDetails(this.data.instrumentDetailsRaw);
+
+      const details = JSON.parse(this.data.instrumentDetailsRaw);
+
+      if (details?.paymentDetails) {
+        this.instrumentDetailsData = this.getInstrumentDetails(details?.paymentDetails);
+      }
+
+      if (details?.userDetails) {
+        this.userDetailsData = this.getUserDetails(details?.userDetails);
+      }
     }
   }
 
@@ -816,49 +826,42 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
   
-  getInstrumentDetails(data: string): string[] {
+  getInstrumentDetails(data: any): string[] {
     const result: string[] = [];
 
-    try {
-      const details = JSON.parse(data);
+    result.push(this.addInstrumentDetail('Account name', data.bankAccountName, data.accountName));
+    result.push(this.addInstrumentDetail('Account number', data.bankAccountNumber, data.accountNumber));
+    result.push(this.addInstrumentDetail('Bank name', data.bankName));
+    result.push(this.addInstrumentDetail('Bank address', data.bankAddress));
+    result.push(this.addInstrumentDetail('Beneficiary name', data.beneficiaryName));
+    result.push(this.addInstrumentDetail('Beneficiary address', data.beneficiaryAddress));
+    result.push(this.addInstrumentDetail('Holder', data.bankAccountHolderName));
+    result.push(this.addInstrumentDetail('BSB', data.bsb));
+    result.push(this.addInstrumentDetail('Sort code', data.sortCode));
+    result.push(this.addInstrumentDetail('IBAN', data.iban));
+    result.push(this.addInstrumentDetail('SWIFT / BIC', data.swiftBic));
+    result.push(this.addInstrumentDetail('Routing Number', data.routingNumber));
+    result.push(this.addInstrumentDetail('Reference', data.reference));
+    result.push(this.addInstrumentDetail('Credit to', data.creditTo));
+    
+    return result;
+  }
 
-      if (details) {
-        const paymentData = details.data;
+  getUserDetails(data: any): string[] {
+    const result: string[] = [];
 
-        if (paymentData) {
-          if (details.id === 'AU') {
-            result.push('Australian bank');
-          } else if (details.id === 'UK') {
-            result.push('United Kingdom bank');
-          } else if (details.id === 'EU') {
-            result.push('European bank');
-          } 
-
-          const addInstrumentDetail = (label: string, ...values): void => {
-            const value = values.find(v => v !== undefined && v !== null);
-            if (value) {
-              result.push(`${label}: ${value}`);
-            }
-          };
-
-          addInstrumentDetail('Account name', paymentData.bankAccountName, paymentData.accountName);
-          addInstrumentDetail('Account number', paymentData.bankAccountNumber, paymentData.accountNumber);
-          addInstrumentDetail('Bank name', paymentData.bankName);
-          addInstrumentDetail('Bank address', paymentData.bankAddress);
-          addInstrumentDetail('Beneficiary name', paymentData.beneficiaryName);
-          addInstrumentDetail('Beneficiary address', paymentData.beneficiaryAddress);
-          addInstrumentDetail('Holder', paymentData.bankAccountHolderName);
-          addInstrumentDetail('BSB', paymentData.bsb);
-          addInstrumentDetail('Sort code', paymentData.sortCode);
-          addInstrumentDetail('IBAN', paymentData.iban);
-          addInstrumentDetail('SWIFT / BIC', paymentData.swiftBic);
-          addInstrumentDetail('Routing Number', paymentData.routingNumber);
-          addInstrumentDetail('Reference', paymentData.reference);
-          addInstrumentDetail('Credit to', paymentData.creditTo);
-        }
-      }
-    } catch (e) { /* empty */ }
+    result.push(this.addInstrumentDetail('Account number', data.accountNumber));
+    result.push(this.addInstrumentDetail('BSB', data.bsbNumber));
 
     return result;
   }
+
+  addInstrumentDetail = (label: string, ...values): any => {
+    const value = values.find(v => v !== undefined && v !== null);
+
+    console.log(value);
+    if (value) {
+      return `${label}: ${value}`;
+    }
+  };
 }
