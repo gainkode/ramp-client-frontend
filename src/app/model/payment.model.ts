@@ -79,11 +79,10 @@ export class PaymentProviderInstrumentView {
 			{ key: 'au', value: data?.au },
 			{ key: 'uk', value: data?.uk },
 			{ key: 'eu', value: data?.eu }
-	];
+		];
 		
 		// Filter out null values and check if only one account is non-null
 		const account = accounts.filter(account => account?.value);
-		
 		return account[0].key;
 	}
 }
