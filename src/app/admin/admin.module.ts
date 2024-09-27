@@ -113,6 +113,7 @@ import { SharedModule } from 'shared/shared.module';
 
 import { SigntatureDocDetailsComponent } from './components/transactions/transaction-docs/signtature-doc-details/signtature-doc-details.component';
 import { FeeRiskCodesComponent } from './components/fees/details/fee-risk-codes/fee-risk-codes.component';
+import { CustomNumberFormatModule } from 'pipes/custom-number-format/custom-number-format.module';
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 
@@ -155,6 +156,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) | null = null;
 		AdminRoutingModule,
 		MaterialModule,
 		DirectiveModule,
+		CustomNumberFormatModule,
 
 		FeeSimiliarPanelComponent,
 		CostSimiliarPanelComponent

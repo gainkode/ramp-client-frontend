@@ -7,14 +7,32 @@
             [ngClass]="{'__dashboard-card-column': true, 'align-right': col.type !== 'text'}">
             <div class="__dashboard-card-header">{{col.label}}</div>
             <div *ngFor="let row of data.rows">
-                <ng-container *ngIf="col.type === 'count-volume' && row[col.key + 'Volume']">
-                    <span *ngIf="row[col.key + 'Count']">({{row[col.key + 'Count']}})</span>
-                    <span>&nbsp;&euro;</span>
-                    <span>{{row[col.key + 'Volume']}}</span>
-                </ng-container>
-                <ng-container *ngIf="col.type !== 'count-volume'">
-                    <p>{{row[col.key]}}</p>
-                </ng-container>
+                @switch (col.type) {
+                    @case ('count-volume') {
+                        @if (row[col.key + 'Volume']) {
+                            @if (row[col.key + 'Count']) {
+                                <span>({{row[col.key + 'Count']}})</span>
+                            }
+                            <span>&nbsp;&euro;</span>
+                            <span>{{row[col.key + 'Volume'] | customNumberFormat}}</span>
+                        }
+                    }
+                    @case ('number') {
+                        @if (source === 'fees' && col.label === 'Value') {
+                            <span>&nbsp;&euro;</span>
+                        }
+                        @if (source === 'fees' && col.label === 'Count' ||
+                            source === 'balances' && col.label === 'Wallets' ||
+                            source === 'paids' && col.label === 'Count') {
+                            <span>{{row[col.key]}}</span>
+                        } @else {
+                            <span>{{row[col.key] | customNumberFormat}}</span>
+                        }
+                    }
+                    @default {
+                        <span>{{row[col.key]}}</span>
+                   }
+                }
             </div>
         </div>
     </div>
