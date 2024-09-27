@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { AppConfig } from 'core/app-config';
 import { completeDataDefault } from 'model/custom-data.model';
 import { CustomTextList, CustomTextType } from 'model/custom-text.model';
 import { PageType } from 'model/generated-models';
@@ -25,14 +26,14 @@ export class WidgetCompleteComponent extends UnsubscriberBase implements OnInit 
   }
   @Output() onFinish = new EventEmitter();
   inProgress = false;
-  supportEmail = EnvService.support_email ?? 'support@test.com';
-  supportEmailLink = `mailto: ${EnvService.support_email}` ?? 'mailto: support@test.com';
+  supportEmail = this.config.platformInfo.supportEmail ?? 'support@test.com';
+  supportEmailLink = `mailto: ${this.config.platformInfo.supportEmail}` ?? 'mailto: support@test.com';
   productName = EnvService.productFull;
   textData = new CustomTextList([]);
   TEXT_TYPE: typeof CustomTextType = CustomTextType;
   finishLink = EnvService.crypto_widget_finish_link;
 
-  constructor(private router: Router) { super(); }
+  constructor(private router: Router, private config: AppConfig) { super(); }
   
   ngOnInit(): void {
     this.loadCustomData();

@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { EnvService } from 'services/env.service';
 import { YapilyRedirectModel } from '../banks-page/bank.component';
+import { AppConfig } from 'core/app-config';
 
 @Component({
 	selector: 'app-transaction-details',
@@ -16,12 +17,12 @@ export class TransactionDetailsComponent {
   @Input() isPaymentSuccess: boolean;
   @Output() transactionDone = new EventEmitter();
   productName = EnvService.productFull;
-  supportEmail = EnvService.support_email ?? 'support@test.com';
-  supportEmailLink = `mailto: ${EnvService.support_email}` ?? 'mailto: support@test.com';
+  supportEmail = this.config.platformInfo.supportEmail ?? 'support@test.com';
+  supportEmailLink = `mailto: ${this.config.platformInfo.supportEmail}` ?? 'mailto: support@test.com';
   finishLink = EnvService.crypto_widget_finish_link;
-
   constructor(
   	private _snackBar: MatSnackBar,
+    private config: AppConfig,
   	public router: Router, 
   	public clipboard: Clipboard) {
 

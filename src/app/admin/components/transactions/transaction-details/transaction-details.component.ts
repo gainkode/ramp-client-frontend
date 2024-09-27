@@ -459,6 +459,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
       const details = JSON.parse(this.data.instrumentDetailsRaw);
 
+      if (details?.data) {
+        const bankName = details?.id === 'AU' ? 'Australian bank' :
+          details.id === 'UK' ? 'United Kingdom bank' :
+          details.id === 'EU' ? 'European bank' : '';
+
+        this.instrumentDetailsData = this.getInstrumentDetails(details?.data, bankName);
+      }
+
       if (details?.paymentDetails) {
         this.instrumentDetailsData = this.getInstrumentDetails(details?.paymentDetails);
       }
@@ -826,8 +834,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
   
-  getInstrumentDetails(data: any): string[] {
+  getInstrumentDetails(data: any, bankName?: string): string[] {
     const result: string[] = [];
+
+    if (bankName) {
+      result.push(bankName);
+    }
 
     result.push(this.addInstrumentDetail('Account name', data.bankAccountName, data.accountName));
     result.push(this.addInstrumentDetail('Account number', data.bankAccountNumber, data.accountNumber));

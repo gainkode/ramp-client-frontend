@@ -7,6 +7,7 @@ import { ErrorService } from '../../services/error.service';
 import { Subscription } from 'rxjs';
 import { CommonDialogBoxComponent } from 'components/dialogs/common-box.dialog';
 import { EnvService } from 'services/env.service';
+import { AppConfig } from 'core/app-config';
 
 @Component({
 	templateUrl: 'login.component.html',
@@ -25,6 +26,7 @@ export class PersonalLoginComponent implements OnDestroy {
 	constructor(
 		private auth: AuthService,
 		private errorHandler: ErrorService,
+		private config: AppConfig,
 		public router: Router,
 		public dialog: MatDialog) { 
 	}
@@ -57,7 +59,7 @@ export class PersonalLoginComponent implements OnDestroy {
 				paragraphs: [
 					'Dear Customer,', 
 					'Seems like the account you are trying to access has only been registered to Exchange Services.', 
-					`You may Create a Wallet using the same email or Contact us <a href="mailto: ${EnvService.support_email}">${EnvService.support_email}</a>.`
+					`You may Create a Wallet using the same email or Contact us <a href="mailto: ${this.config.platformInfo.supportEmail}">${this.config.platformInfo.supportEmail}</a>.`
 				]
 			}
 		});
