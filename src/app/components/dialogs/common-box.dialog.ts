@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DialogData } from 'model/dialog.model';
-import { EnvService } from 'services/env.service';
 
 @Component({
 	selector: 'app-common-dialog-box',
@@ -10,7 +9,6 @@ import { EnvService } from 'services/env.service';
 })
 export class CommonDialogBoxComponent {
 	buttonTitle = '';
-	supportEmail = EnvService.support_email;
 	constructor(public dialogRef: MatDialogRef<CommonDialogBoxComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: DialogData) {
 		this.buttonTitle = data.button ?? 'OK';
