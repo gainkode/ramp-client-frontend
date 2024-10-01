@@ -9,7 +9,7 @@ import { LiquidityProviderList } from 'admin/model/lists.model';
 import { WidgetItem } from 'admin/model/widget.model';
 import { AdminDataService } from 'services/admin-data.service';
 import { Countries } from 'model/country-code.model';
-import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, UserType } from 'model/generated-models';
+import { PaymentInstrument, PaymentProvider, SettingsCurrencyWithDefaults, TransactionType, UserType } from 'model/generated-models';
 import { CurrencyView, PaymentInstrumentList, PaymentProviderView, TransactionTypeList, UserTypeList } from 'model/payment.model';
 import { UserItem } from 'model/user.model';
 import { AuthService } from 'services/auth.service';
@@ -104,6 +104,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	twoFA: false,
   	showRate: true,
 		masked: false,
+		ignoreMaxSellAmount: false,
   	minAmountFrom: [0, { validators: [Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
   	maxAmountFrom: [0, { validators: [Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
   	fee: [0, { validators: [Validators.pattern(NUMBER_PATTERN)], updateOn: 'change' }],
@@ -119,9 +120,14 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	private modalService: NgbModal,
   	private commonService: CommonDataService,
   	private adminService: AdminDataService) {
-
   }
 
+	get isMaxSellAmountDisabled(): boolean {
+		const transactionTypes = this.form.get('transactionTypes')?.value;
+
+		return transactionTypes?.length === 0 || transactionTypes.includes(TransactionType.Sell);
+	}
+	
   ngOnInit(): void {
   	this.loadAdminSettings();
   	this.initUserSearch();
@@ -215,6 +221,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   					showRate: this.widgetAdditionalSettings?.showRate ?? true,
 						masked: widget.masked ?? false,
   					twoFA: this.widgetAdditionalSettings?.twoFA ?? false,
+						ignoreMaxSellAmount: this.widgetAdditionalSettings?.ignoreMaxSellAmount ?? false,
   					disclaimer: this.widgetAdditionalSettings?.disclaimer ?? false,
   					minAmountFrom: this.widgetAdditionalSettings?.minAmountFrom ?? 0,
   					maxAmountFrom: this.widgetAdditionalSettings?.maxAmountFrom ?? 0,
@@ -239,6 +246,7 @@ export class AdminWidgetDetailsComponent implements OnInit, OnDestroy {
   	this.widgetAdditionalSettings.userType = formValue.userType;
   	this.widgetAdditionalSettings.kycBeforePayment = formValue.kycBeforePayment;
   	this.widgetAdditionalSettings.twoFA = formValue.twoFA;
+		this.widgetAdditionalSettings.ignoreMaxSellAmount = formValue.ignoreMaxSellAmount;
   	this.widgetAdditionalSettings.showRate = formValue.showRate;
   	this.widgetAdditionalSettings.maxAmountFrom = formValue.maxAmountFrom;
   	this.widgetAdditionalSettings.minAmountFrom = formValue.minAmountFrom;

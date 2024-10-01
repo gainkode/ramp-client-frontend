@@ -870,7 +870,9 @@ private loadTransactionsTotal(): void {
 			this.profileService.maxSellAmount(this.currentCurrencySpend.symbol)
 				.pipe(take(1), takeUntil(this.destroy$))
 				.subscribe(maxSellAmount => {
-					this.maxSellAmount = maxSellAmount;
+					if (!this.settings.ignoreMaxSellAmount) {
+						this.maxSellAmount = maxSellAmount;
+					}
 					this.onAmountSpendUpdated(this.amountSpendField.value);
 				});
 		}

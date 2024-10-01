@@ -206,6 +206,22 @@
                 </div>
               </div>
             </div>
+
+            <div *ngIf="isMaxSellAmountDisabled" class="form-group">
+              <div class="__row-per-checkbox">
+                <div class="__tool-bar-block">
+                    <div class="__tool-bar-label">
+                      Ignore sell quote
+                    </div>
+                </div>
+                <div class="__tool-bar-block mg-l-10-f">
+                    <div class="__toggle-switch">
+                        <input type="checkbox" id="toggle-button" class="__toggle-switch-slider"
+                            formControlName="ignoreMaxSellAmount">
+                    </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-lg-4 col-md-12">
