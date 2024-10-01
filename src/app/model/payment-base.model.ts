@@ -19,6 +19,7 @@ export class WidgetSettings {
 	transactionTypes: TransactionType[];
 	source: TransactionSource = TransactionSource.QuickCheckout;
 	walletAddressPreset = false;
+	ignoreMaxSellAmount = false;
 	widgetId = '';
 	kycFirst = false;
 	disclaimer = false;

@@ -174,6 +174,7 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 
   			this.widget.disclaimer = extraData.disclaimer ?? true;
   			this.widget.kycFirst = extraData.kycBeforePayment ?? false;
+				this.widget.ignoreMaxSellAmount = extraData.ignoreMaxSellAmount ?? false;
   			this.widget.minAmountFrom = extraData.minAmountFrom;
   			this.widget.maxAmountFrom = extraData.maxAmountFrom;
   			this.widget.showRate = extraData.showRate;
@@ -837,20 +838,20 @@ export class WidgetEmbeddedComponent implements OnInit, OnDestroy {
 			}
   	} else {
 			this.profileService.maxSellAmount(this.summary.currencyFrom)
-				.pipe(take(1), takeUntil(this.destroy$))
-				.subscribe(maxSellAmount => {
-					if (this.summary.amountFrom > maxSellAmount ) {
-						
-						// Back to first page in order to validate maxSellAmount to SELL transaction type
-						this.nextStage('order_details', 'widget-pager.order_details', 1);
+			.pipe(take(1), takeUntil(this.destroy$))
+			.subscribe(maxSellAmount => {
+				if (!this.widget.ignoreMaxSellAmount && this.summary.amountFrom > maxSellAmount ) {
+					
+					// Back to first page in order to validate maxSellAmount to SELL transaction type
+					this.nextStage('order_details', 'widget-pager.order_details', 1);
+				} else {
+					if (this.selectedProvider.instrument === PaymentInstrument.WireTransfer) {
+						this.nextStage('sell_details', 'widget-pager.bank-details', 2);
 					} else {
-						if (this.selectedProvider.instrument === PaymentInstrument.WireTransfer) {
-							this.nextStage('sell_details', 'widget-pager.bank-details', 2);
-						} else {
-							this.createTransaction(this.selectedProvider.id, this.selectedProvider.instrument, '');
-						}
+						this.createTransaction(this.selectedProvider.id, this.selectedProvider.instrument, '');
 					}
-				});
+				}
+			});
   	}
   }
   // ====================
