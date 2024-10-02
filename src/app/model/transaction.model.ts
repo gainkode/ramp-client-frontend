@@ -238,7 +238,6 @@ export class TransactionItemFull {
 			this.transferOrder = data.transferOrder;
 
 			if (this.transferOrder) {
-				this.sourceWallet = this.transferOrder.sourceVaultId ?? '';
 				this.transferOrderId =  this.transferOrder.orderId ?? '';
 				this.transferOriginalOrderId = this.transferOrder.originalOrderId ?? '-';
 				this.transferOrderHash = this.transferOrder.transferHash ?? '';
@@ -248,6 +247,7 @@ export class TransactionItemFull {
 				this.transferSubStatus = this.transferOrder.subStatus ?? '';
 			} else {
 				this.amountToReceive = paymentData.amountToReceive;
+				this.sourceWallet = data.sourceAddress ?? '';
 			}
 
 			this.screeningAnswer = <TransactionScreeningAnswer>data.screeningAnswer ?? undefined;

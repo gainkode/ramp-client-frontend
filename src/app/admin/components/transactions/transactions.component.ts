@@ -8,8 +8,8 @@ import { TransactionService } from 'admin/services/transaction.service';
 import { SettingsCurrencyWithDefaults, TransactionStatusDescriptorMap, TransactionType, UserRoleObjectCode } from 'model/generated-models';
 import { CurrencyView } from 'model/payment.model';
 import { TransactionItemFull } from 'model/transaction.model';
-import { of } from 'rxjs';
-import { finalize, switchMap, take } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { finalize, switchMap, take, takeUntil } from 'rxjs/operators';
 import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
@@ -79,6 +79,8 @@ export class AdminTransactionsComponent implements OnInit, AfterViewInit {
 	adminAdditionalSettings: Record<string, any> = {};
 	destroyRef = inject(DestroyRef);
 	private detailsDialog: NgbModalRef | undefined = undefined;
+	private cancelTransactions$ = new Subject<void>();
+
 	constructor(
 		public transactionService: TransactionService,
 		private modalService: NgbModal,
@@ -115,70 +117,6 @@ export class AdminTransactionsComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	onTransactionSelected(item: TransactionItemFull): void {
-		item.selected = !item.selected;
-
-		this.selectedForUnbenchmark = this.transactions.some(x =>
-			x.selected === true && x.type !== TransactionType.Receive);
-	}
-
-	onSaveTransaction(): void {
-		this.selectedTransaction = undefined;
-
-		if (this.detailsDialog) {
-			this.detailsDialog.close();
-			this.loadList();
-		}
-	}
-
-	onCloseDetails(): void {
-		if (this.detailsDialog) {
-			this.detailsDialog.dismiss();
-		}
-	}
-
-	handleFilterApplied(filter: Filter): void {
-		this.filter = filter;
-		this.pageIndex = 0;
-		this.loadList();
-	}
-
-	handlePage(index: number): void {
-		this.pageIndex = index - 1;
-		this.loadList();
-	}
-
-	toggleDetails(transaction: TransactionItemFull): void {
-		this.selectedTransaction = this.isSelectedTransaction(transaction.id) ? transaction : undefined;
-	}
-
-	showDetails(
-		transaction: TransactionItemFull, 
-		content: any, 
-		isScreening: boolean = false,
-		isLifeLine: boolean = false): void {
-		this.selectedTransaction = transaction;
-		this.isScreeningInfo = isScreening;
-		this.isLifeLine = isLifeLine;
-
-		this.detailsDialog = this.modalService.open(content, {
-			backdrop: 'static',
-			windowClass: 'modalCusSty-transacion',
-		});
-	}
-
-	createUserTransactionShow(content: any): void {
-		this.detailsDialog = this.modalService.open(content, {
-			backdrop: 'static',
-			windowClass: 'modalCusSty',
-		});
-	}
-
-	selectAll(): void {
-		this.transactions.forEach(x => x.selected = true);
-		this.selectedForUnbenchmark = (this.transactions.length > 0);
-	}
-
 	private isSelectedTransaction(transactionId: string): boolean {
 		return !!this.selectedTransaction && this.selectedTransaction.id === transactionId;
 	}
@@ -187,9 +125,17 @@ export class AdminTransactionsComponent implements OnInit, AfterViewInit {
 		if (this.userStatuses.length === 0) {
 			this.loadTransactionStatuses();
 		} else {
-			this.loadTransactions();
+			this.cancelTansactionsObservable();
 		}
 	}
+
+	private cancelTansactionsObservable(): void {
+    this.cancelTransactions$.next();
+    this.cancelTransactions$.complete();
+
+		this.cancelTransactions$ = new Subject();
+    this.loadTransactions();
+  }
 
 	private loadTransactions(): void {
 		this.inProgress = true;
@@ -197,6 +143,7 @@ export class AdminTransactionsComponent implements OnInit, AfterViewInit {
 	
 		this.adminService.getTransactions(this.pageIndex, this.pageSize, this.sortedField, this.sortedDesc,this.filter)
 			.pipe(
+				takeUntil(this.cancelTransactions$),
 				takeUntilDestroyed(this.destroyRef),
 				finalize(() => { this.inProgress = false; this.cdr.markForCheck();}),
 				take(1))
@@ -256,12 +203,21 @@ export class AdminTransactionsComponent implements OnInit, AfterViewInit {
 			});
 	}
 
-	showWallets(transactionId: string): void {
-		const transaction = this.transactions.find(x => x.id === transactionId);
+	private executeUnbenchmark(): void {
+		this.inProgress = true;
+		const transacionsIds = this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id);
 
-		if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
-			void this.router.navigateByUrl(`/admin/fiat-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
-		} 
+		this.adminService.unbenchmarkTransaction(transacionsIds).pipe(
+			takeUntilDestroyed(this.destroyRef),
+			finalize(() => { this.inProgress = false; this.cdr.markForCheck(); })
+		).subscribe({
+			next: () => this.transactions.forEach(x => x.selected = false),
+			error: () => {
+				if (this.auth.token === '') {
+					void this.router.navigateByUrl('/');
+				}
+			}
+		});
 	}
 
 	refresh(): void {
@@ -309,21 +265,76 @@ export class AdminTransactionsComponent implements OnInit, AfterViewInit {
 			});
 	}
 
+	showWallets(transactionId: string): void {
+		const transaction = this.transactions.find(x => x.id === transactionId);
 
-	private executeUnbenchmark(): void {
-		this.inProgress = true;
-		const transacionsIds = this.transactions.filter(x => x.selected === true && x.type !== TransactionType.Receive).map(val => val.id);
+		if (transaction?.type === TransactionType.Deposit || transaction?.type === TransactionType.Withdrawal) {
+			void this.router.navigateByUrl(`/admin/fiat-wallets/vaults/${transaction?.vaultIds.join('#') ?? ''}`);
+		} 
+	}
 
-		this.adminService.unbenchmarkTransaction(transacionsIds).pipe(
-			takeUntilDestroyed(this.destroyRef),
-			finalize(() => { this.inProgress = false; this.cdr.markForCheck(); })
-		).subscribe({
-			next: () => this.transactions.forEach(x => x.selected = false),
-			error: () => {
-				if (this.auth.token === '') {
-					void this.router.navigateByUrl('/');
-				}
-			}
+	selectAll(): void {
+		this.transactions.forEach(x => x.selected = true);
+		this.selectedForUnbenchmark = (this.transactions.length > 0);
+	}
+
+	createUserTransactionShow(content: any): void {
+		this.detailsDialog = this.modalService.open(content, {
+			backdrop: 'static',
+			windowClass: 'modalCusSty',
 		});
+	}
+
+	showDetails(
+		transaction: TransactionItemFull, 
+		content: any, 
+		isScreening: boolean = false,
+		isLifeLine: boolean = false): void {
+		this.selectedTransaction = transaction;
+		this.isScreeningInfo = isScreening;
+		this.isLifeLine = isLifeLine;
+
+		this.detailsDialog = this.modalService.open(content, {
+			backdrop: 'static',
+			windowClass: 'modalCusSty-transacion',
+		});
+	}
+
+	handlePage(index: number): void {
+		this.pageIndex = index - 1;
+		this.loadList();
+	}
+
+	onTransactionSelected(item: TransactionItemFull): void {
+		item.selected = !item.selected;
+
+		this.selectedForUnbenchmark = this.transactions.some(x =>
+			x.selected === true && x.type !== TransactionType.Receive);
+	}
+
+	toggleDetails(transaction: TransactionItemFull): void {
+		this.selectedTransaction = this.isSelectedTransaction(transaction.id) ? transaction : undefined;
+	}
+
+	onSaveTransaction(): void {
+		this.selectedTransaction = undefined;
+
+		if (this.detailsDialog) {
+			this.detailsDialog.close();
+			this.loadList();
+		}
+	}
+
+	onCloseDetails(): void {
+		if (this.detailsDialog) {
+			this.detailsDialog.dismiss();
+		}
+	}
+
+	handleFilterApplied(filter: Filter): void {
+		this.filter = filter;
+		this.pageIndex = 0;
+
+		this.loadList();
 	}
 }
