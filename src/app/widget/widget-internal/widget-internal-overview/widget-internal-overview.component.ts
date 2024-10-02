@@ -663,7 +663,7 @@ private loadTransactionsTotal(): void {
 
 					const updatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmountDisplay;
 
-					this.amountSpendErrorMessages['max'] = `Amount you'r request exceeds available balance: ${currencyDisplay} ${updatedMaxAmountDisplay}`;
+					this.amountSpendErrorMessages['max'] = `Amount exceeds available balance: ${currencyDisplay} ${updatedMaxAmountDisplay}`;
 
         } else {
 					maxAmount = this.currentCurrencySpend?.maxAmount;
