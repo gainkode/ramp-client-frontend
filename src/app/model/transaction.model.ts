@@ -252,6 +252,10 @@ export class TransactionItemFull {
 				this.sourceWallet = data.sourceAddress ?? '';
 			}
 
+			if (data.type === TransactionType.Sell) {
+				this.amountToReceive = paymentData.amountToReceive;
+			}
+
 			this.screeningAnswer = <TransactionScreeningAnswer>data.screeningAnswer ?? undefined;
 			this.screeningAnswerColor = this.getScreeningAnswerColor(this.screeningAnswer);
 
