@@ -7,7 +7,7 @@
           <button *ngIf="permission > 1" class="btn btn-primary pd-x-30 mg-t-5" type="button" (click)="flagValue()">
             <span *ngIf="flagInProgress" class="spinner-border spinner-border-sm" role="status"
                 aria-hidden="true"></span>
-            {{flagText()}}
+            {{this.flag ? 'Unflag' : 'Flag'}}
           </button>
 
           <button class="btn btn-outline-secondary pd-x-30 mg-l-10 mg-t-5" type="button" (click)="refreshTransaction(data?.id)">
@@ -47,7 +47,6 @@
               </div>
             
               <app-admin-details-item label="From" [value]="data?.sender"></app-admin-details-item>
-              <!-- *ngIf="data?.recipient !== data?.address"  -->
               <app-admin-details-item label="To" [value]="data?.recipient"></app-admin-details-item>
             </div>
           </div>
@@ -74,16 +73,16 @@
                     <app-admin-details-item 
                       *ngIf="isTransactionNotDepositOrWithdrawal && !editableDestination"
                       label="End User Address" 
-                      [value]="data?.address">
+                      [value]="data?.destination">
                     </app-admin-details-item>
           
                     <div *ngIf="isTransactionNotDepositOrWithdrawal && editableDestination" class="form-group">
                       <label class="main-content-label tx-11 tx-medium tx-gray-600">
                         End User Address <span class="main-content-label tx-11 tx-medium tx-danger">*</span>
                       </label>
-                      <input class="form-control" type="text" formControlName="address"
-                        required [ngClass]="{'has-error': !form.controls.address.valid}">
-                      <div *ngIf="(form.controls.address.touched || submitted) && (form.controls.address.errors?.['required'])"
+                      <input class="form-control" type="text" formControlName="destination"
+                        required [ngClass]="{'has-error': !form.controls.destination.valid}">
+                      <div *ngIf="(form.controls.destination.touched || submitted) && (form.controls.destination.errors?.['required'])"
                         class="tx-danger">
                         <small>
                           Address is required
@@ -627,7 +626,7 @@
                       aria-hidden="true"></span>
                     Save
                   </button>
-                  <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="onClose()">
+                  <button class="btn btn-outline-primary pd-x-30 mg-t-5" type="button" (click)="close.emit()">
                     Close
                   </button>
                 </div>
@@ -808,10 +807,10 @@
     </h4>
     <div class="d-flex justify-content-center align-items-center">
       <button class="btn btn-outline-secondary pd-x-30 me-2 mg-t-5" type="button"
-        (click)="onChangeTransactionAmountConfirm(0)">
+        (click)="onChangeTransactionAmountConfirm(false)">
         No
       </button>
-      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionAmountConfirm(1)">
+      <button type="button" class="btn btn-primary pd-x-30 mg-t-5" (click)="onChangeTransactionAmountConfirm(true)">
         Yes
       </button>
     </div>

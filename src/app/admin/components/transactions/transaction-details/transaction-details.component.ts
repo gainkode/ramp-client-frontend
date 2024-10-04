@@ -13,12 +13,13 @@ import { AdminDataService } from 'services/admin-data.service';
 import { AuthService } from 'services/auth.service';
 import { ErrorService } from 'services/error.service';
 import { ExchangeRateService } from 'services/rate.service';
-import { getFormattedUtcDate, getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
+import { getChangedFields, getFormattedUtcDate, getTransactionAmountHash, getTransactionStatusHash } from 'utils/utils';
 import { TransactionRefundModalComponent } from '..';
 import { NUMBER_PATTERN } from 'utils/constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateParserFormatter } from 'admin/misc/date-range/date.formatter';
 import { DateFormatAdapter } from 'admin/misc/date-range/date-format.adapter';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-admin-transaction-details',
@@ -74,14 +75,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
   @Output() save = new EventEmitter();
   @Output() close = new EventEmitter();
+  originalTransaction: TransactionItemFull;
 
   form = this.fb.group({
-    address: this.fb.control<string>(undefined),
+    destination: this.fb.control<string>(undefined),
     currencyToSpend: this.fb.control<string>(undefined, Validators.required),
     currencyToReceive: this.fb.control<string>(undefined, Validators.required),
     amountToSpend: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(NUMBER_PATTERN)]),
     rate: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(NUMBER_PATTERN)]),
-    fees: this.fb.control<number>(undefined, [Validators.required, Validators.pattern(NUMBER_PATTERN)]),
     transactionStatus: this.fb.control<TransactionStatus>(TransactionStatus.New, Validators.required),
     kycStatus: this.fb.control<TransactionKycStatus>(undefined, Validators.required),
     accountStatus: this.fb.control<AccountStatus>(AccountStatus.Closed, Validators.required),
@@ -108,7 +109,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   private amountChanged = false;
   private originalOrderIdChanged = false;
   private restartTransaction = false;
-  private recalculateAmounts = false;
   private transactionToUpdate: TransactionUpdateInput | undefined = undefined;
   private pDefaultRate = 0;
   private pCurrencies: CurrencyView[] = [];
@@ -211,7 +211,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.form.controls.transactionStatus.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(value => {
-        if (this.isTransactionRefreshing) return;
+        if (this.isTransactionRefreshing || this.saveInProgress) return;
         const recallNumber = this.form.controls.recallNumber;
 
         if (value === TransactionStatus.Chargeback) {
@@ -226,13 +226,11 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
         }
 
         if (value === TransactionStatus.Paid) {
-          if (this.data.paymentOrder) {
-            if (!this.isTransactionCompleted && !this.isFastPaid) {
-              this.paymentStatusChangeDialog = this.modalService.open(this.paymentStatusConfirmContent, {
-                backdrop: 'static',
-                windowClass: 'modalCusSty',
-              });
-            } 
+          if (this.data.paymentOrder && !this.isTransactionCompleted && !this.isFastPaid) {
+            this.paymentStatusChangeDialog = this.modalService.open(this.paymentStatusConfirmContent, {
+              backdrop: 'static',
+              windowClass: 'modalCusSty',
+            });
           } else {
             this.onOriginalOrderModal();
           }
@@ -389,6 +387,8 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
   private setFormData(val: TransactionItemFull | undefined): void {
     this.data = val;
+    this.originalTransaction = cloneDeep(val);
+
     this.transactionId = val?.id ?? '';
     this.transactionType = val?.type ?? TransactionType.System;
 
@@ -401,15 +401,14 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
 
       this.form.patchValue({
         transactionType: this.data.type,
-        address: this.data.address,
+        destination: this.data.destination,
         rate: this.data.rate,
-        fees: this.data.fees,
         amountToSpend: this.data.amountToSpend,
         currencyToSpend: this.data.currencyToSpend,
         currencyToReceive: this.data.currencyToReceive,
         transactionStatus: this.data.status,
         recallNumber: this.data.recallNumber,
-        kycStatus: this.data.kycStatusValue,
+        kycStatus: this.data.kycStatus,
         widgetId: this.data.widgetId,
         accountStatus: this.data.accountStatusValue,
         transferOrderHash: this.data.transferOrderHash,
@@ -449,12 +448,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
 
     if (this.transactionType === TransactionType.Withdrawal || this.transactionType === TransactionType.Deposit) {
-      this.form.controls.address.setValidators([]);
+      this.form.controls.destination.setValidators([]);
       this.form.updateValueAndValidity();
     }
 
 
-  if (this.transactionType === TransactionType.Sell || this.transactionType === TransactionType.Buy ||
+    if (this.transactionType === TransactionType.Sell || this.transactionType === TransactionType.Buy ||
       this.transactionType === TransactionType.Deposit || this.transactionType === TransactionType.Withdrawal) {
 
       const details = JSON.parse(this.data.instrumentDetailsRaw);
@@ -510,70 +509,61 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
   }
 
   getTransactionToUpdate(): TransactionUpdateInput {
-    let widgetUserParamsChanges = undefined;
-
-    if (this.form.controls.merchantFeePercent.value) {
-      widgetUserParamsChanges = {
-        merchantFeePercent: this.form.controls.merchantFeePercent.value ?? ''
-      };
-    }
-
-    if (this.form.controls.merchantFeePercent.value) {
-      widgetUserParamsChanges = {
-        merchantFeePercent: this.form.controls.merchantFeePercent.value ?? ''
-      };
-    }
-
     this.paymentOrderChanges.recallNumber = this.form.controls.recallNumber.value ?? undefined;
 
-    if (this.transactionStatusField.value === TransactionStatus.Chargeback || this.transactionStatusField.value === TransactionStatus.Refund) {
-        this.paymentOrderChanges.reversalProcessed = this.form.controls.reversalProcessed.value ? getFormattedUtcDate(
-          this.form.controls.reversalProcessed.value ?? '',
-          '-'
-        ) : null;
+    const { value: status } = this.transactionStatusField;
 
-        this.paymentOrderChanges.recallRegistered = this.form.controls.recallRegistered.value && this.form.controls.recallNumber.value ? getFormattedUtcDate(
-          this.form.controls.recallRegistered.value ?? '',
-          '-'
-        ) : null;
+    if ([TransactionStatus.Chargeback, TransactionStatus.Refund].includes(status)) {
+      const { reversalProcessed, recallRegistered, recallNumber } = this.form.controls;
+      
+      this.paymentOrderChanges.reversalProcessed = reversalProcessed.value 
+        ? getFormattedUtcDate(reversalProcessed.value, '-') 
+        : null;
+
+      this.paymentOrderChanges.recallRegistered = recallRegistered.value && recallNumber.value 
+        ? getFormattedUtcDate(recallRegistered.value, '-') 
+        : null;
     }
-    
+
     const transactionToUpdate: TransactionUpdateInput = {
-      destination: this.form.controls.address.value,
+      destination: this.form.controls.destination.value,
       currencyToSpend: this.form.controls.currencyToSpend.value,
       currencyToReceive: this.form.controls.currencyToReceive.value,
       amountToSpend: this.form.controls.amountToSpend.value ?? 0,
       rate: this.form.controls.rate.value,
-      feeFiat: this.form.controls.fees.value ?? 0,
       status: this.form.controls.transactionStatus.value,
       widgetId: this.form.controls.widgetId.value,
       kycStatus: this.form.controls.kycStatus.value,
       accountStatus: this.form.controls.accountStatus.value,
-      transferOrderChanges: {
-        orderId: this.data?.transferOrderId,
-        hash: this.form.controls.transferOrderHash.value ?? ''
-      },
-      benchmarkTransferOrderChanges: {
-        orderId: this.data?.benchmarkTransferOrderId,
-        hash: this.form.controls.benchmarkTransferOrderHash.value ?? ''
-      },
-      refundTransferOrderChanges: {
-        address: this.form.controls.refundOrderAddress.value,
-        amount: this.form.controls.refundOrderAmount.value
-      },
       type: this.form.controls.transactionType.value ?? undefined,
-      widgetUserParamsChanges,
+      widgetUserParamsChanges: this.form.controls.merchantFeePercent.value ? { merchantFeePercent: this.form.controls.merchantFeePercent.value ?? null } : undefined,
       comment: this.form.controls.comment.value ?? '',
       flag: this.flag,
-      feePercent: this.feePercentField?.value ?? undefined,
-      merchantFeePercent: this.merchantFeePercentField?.value ?? undefined
+      feePercent: this.form.controls.feePercent.value ?? undefined,
+      merchantFeePercent: this.form.controls.merchantFeePercent.value  ?? undefined
     };
 
-    return transactionToUpdate;
-  }
+    if (this.form.controls.transferOrderHash.value) {
+      transactionToUpdate.transferOrderChanges = {
+        orderId: this.data?.transferOrderId,
+        hash: this.form.controls.transferOrderHash.value ?? ''
+      };
+    }
 
-  flagText(): string {
-    return this.flag ? 'Unflag' : 'Flag';
+    if (this.form.controls.benchmarkTransferOrderHash.value) {
+      transactionToUpdate.benchmarkTransferOrderChanges = {
+        orderId: this.data?.benchmarkTransferOrderId,
+        hash: this.form.controls.benchmarkTransferOrderHash.value ?? ''
+      };
+    }
+
+    if (this.form.controls.refundOrderAddress.value || this.form.controls.refundOrderAmount.value) {
+      transactionToUpdate.refundTransferOrderChanges = {
+        address: this.form.controls.refundOrderAddress.value,
+        amount: this.form.controls.refundOrderAmount.value
+      };
+    }
+    return transactionToUpdate;
   }
 
   flagValue(): void {
@@ -584,11 +574,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.adminService.updateTransactionFlag(this.flag, this.transactionId)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: () => {
-          this.saveInProgress = false;
-          this.flagInProgress = false;
-          this.save.emit();
-        },
+        next: () => this.save.emit(),
         error: error => {
           this.saveInProgress = false;
           this.flagInProgress = false;
@@ -607,24 +593,22 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateTransaction(): void {
+  updateTransaction(recalculateAmounts: boolean = false): void {
     this.saveInProgress = true;
     this.transactionToUpdate = this.getTransactionToUpdate();
 
     this.transactionToUpdate.paymentOrderChanges = this.paymentOrderChanges;
 
+    const transactionChangedFields: TransactionUpdateInput = getChangedFields(this.originalTransaction, this.transactionToUpdate);
+
     this.adminService.updateTransaction(
       this.transactionId,
-      this.transactionToUpdate,
+      transactionChangedFields,
       this.restartTransaction,
-      this.recalculateAmounts)
+      recalculateAmounts)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: () => {
-          this.saveInProgress = false;
-          this.flagInProgress = false;
-          this.save.emit();
-        },
+        next: () => this.save.emit(),
         error: error => {
           this.saveInProgress = false;
           this.flagInProgress = false;
@@ -652,8 +636,9 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
       this.transactionToUpdate.amountToSpend ?? 0,
       this.transactionToUpdate.feePercent ?? 0,
       this.transactionToUpdate.merchantFeePercent ?? 0);
-      this.statusChanged = this.pStatusHash !== statusHash;
-      this.amountChanged = this.pAmountHash !== amountHash;
+
+    this.statusChanged = this.pStatusHash !== statusHash;
+    this.amountChanged = this.pAmountHash !== amountHash;
     
     this.onUpdateDialogOpen();
   }
@@ -671,10 +656,7 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.adminService.deleteTransaction(this.transactionId)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: () => {
-          this.cancelInProgress = false;
-          this.save.emit();
-        },
+        next: () => this.save.emit(),
         error: (error) => {
           this.errorMessage = error;
           this.cancelInProgress = false;
@@ -742,10 +724,6 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     this.onUpdateDialogOpen();
   }
 
-  onClose(): void {
-    this.close.emit();
-  }
-
   onConfirmDelete(): void {
     if (this.deleteDialog) {
       this.deleteDialog.close('');
@@ -810,14 +788,12 @@ export class AdminTransactionDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChangeTransactionAmountConfirm(recalcTransaction: number): void {
-    this.recalculateAmounts = (recalcTransaction === 1);
-    
+  onChangeTransactionAmountConfirm(recalcTransaction: boolean): void {
     if (this.amountDialog) {
       this.amountDialog.close('');
     }
 
-    this.updateTransaction();
+    this.updateTransaction(recalcTransaction);
   }
 
   navigateToKrakenTrades(uuid: string): void {

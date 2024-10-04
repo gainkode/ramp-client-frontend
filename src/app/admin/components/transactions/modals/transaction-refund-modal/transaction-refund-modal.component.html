@@ -17,9 +17,9 @@
   
     <mat-card-actions align="end">
       <button
-        [disabled]="!form.valid"
         type="button"
-        class="btn btn-primary me-sm-4 mb-sm-4" (click)="onSubmit()">
+        class="btn btn-primary me-sm-4 mb-sm-4"
+        [disabled]="!form.valid" (click)="onSubmit()">
         Proceed
       </button>
     </mat-card-actions>

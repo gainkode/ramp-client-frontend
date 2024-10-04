@@ -4,6 +4,7 @@ import { PaymentWidgetType } from '../model/payment-base.model';
 import { PaymentProviderView } from '../model/payment.model';
 import { EnvService } from '../services/env.service';
 import { SHA1, enc } from 'crypto-js';
+import { isEqual } from 'lodash';
 
 export interface PaymentTitleInfo {
 	panelTitle: string;
@@ -235,4 +236,24 @@ export function getMinSec(seconds: number): string {
 
 export function convertStringToArray(input: string): string[] {
 	return input.split('\n').map(line => line.trim());
+}
+
+export function getChangedFields(original: any, current: any): any {
+	// Compare two object and return changed fields as an object
+	
+	const changes: any = {};
+
+	for (const key in current) {
+		// Handle nested objects
+		if (typeof current[key] === 'object' && !Array.isArray(current[key]) && current[key] !== null) {
+			const nestedChanges = getChangedFields(original[key] || {}, current[key]);
+			if (Object.keys(nestedChanges).length > 0) {
+				changes[key] = nestedChanges;
+			}
+		} else if (!isEqual(current[key], original[key])) {
+			changes[key] = current[key];
+		}
+	}
+
+	return changes;
 }

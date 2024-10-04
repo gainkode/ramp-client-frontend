@@ -97,7 +97,7 @@ export class TransactionItemFull {
 	transferOrderBlockchainLink = '';
 	benchmarkTransferOrderBlockchainLink = '';
 	paymentOrderPreauth = false;
-	address = '';
+	destination = '';
 	sender = '';
 	recipient = '';
 	ip = '';
@@ -109,7 +109,8 @@ export class TransactionItemFull {
 	user: UserItem | undefined;
 	accountStatus = '';
 	accountStatusValue = AccountStatus.Closed;
-	kycStatus = '';
+	kycStatus: TransactionKycStatus;
+	kycStatusName = '';
 	kycStatusValue = TransactionKycStatus.KycWaiting;
 	kycStatusColor: string;
 	kycTier = '';
@@ -158,6 +159,7 @@ export class TransactionItemFull {
 		if (data !== null) {
 			this.code = data.code ?? '';
 			this.id = data.transactionId;
+
 			const datepipe: DatePipe = new DatePipe('en-US');
 
 			this.created = datepipe.transform(
@@ -256,9 +258,11 @@ export class TransactionItemFull {
 			this.risk = data?.risk;
 			this.riskCodes = data?.riskCodes.map(riskAlert => JSON.parse(riskAlert).riskAlertTypeCode) ?? undefined;
 
+			// debugger
+
 			this.screeningRiskscore = data.screeningRiskscore ?? 0;
 			this.screeningStatus = data.screeningStatus ?? '';
-			this.screeningData = JSON.parse(data.screeningData ?? '{}');
+			// this.screeningData = JSON.parse(data.screeningData ?? '{}');
 			this.widgetUserParams = data.widgetUserParams ?? null;
 	
 			this.transferOrderBlockchainLink = transactionData.transferOrderBlockchainLink ?? '';
@@ -297,17 +301,19 @@ export class TransactionItemFull {
 			this.feePercent = data.feePercent ?? 0;
 
 			if (data.type === TransactionType.Deposit) {
-				this.address = this.recipient ?? '-';
+				this.destination = this.recipient ?? '-';
 			} else if (data.type === TransactionType.Withdrawal) {
-				this.address = this.sender ?? '-';
+				this.destination = this.sender ?? '-';
 			} else {
-				this.address = data.destination ?? '-';
+				this.destination = data.destination ?? '-';
 			}
+
+			this.kycStatus = (data as Transaction).kycStatus;
 
 			const kycStatus = TransactionKycStatusList.find((x) => x.id === (data as Transaction).kycStatus);
 			const widgetData = JSON.parse(data.widget ?? '{}');
 
-			this.kycStatus = kycStatus ? kycStatus.name : '';
+			this.kycStatusName = kycStatus ? kycStatus.name : '';
 			this.kycStatusValue = kycStatus ? kycStatus.id : TransactionKycStatus.KycWaiting;
 			this.kycStatusColor = this.getKysStatusColor(this.kycStatusValue);
 
