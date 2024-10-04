@@ -249,8 +249,9 @@ export class TransactionItemFull {
 				this.transferSubStatus = this.transferOrder.subStatus ?? '';
 			} else {
 				this.amountToReceive = paymentData.amountToReceive;
-				this.sourceWallet = data.sourceAddress ?? '';
 			}
+
+			this.sourceWallet = data.sourceAddress ?? '';
 
 			if (data.type === TransactionType.Sell) {
 				this.amountToReceive = paymentData.amountToReceive;
