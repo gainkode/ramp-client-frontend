@@ -31,7 +31,7 @@
 							</ng-container>
 
 							<ng-container *ngIf="column.columnType === columnTypes.shortDate">
-								{{ getRowColumnValue(element, column) | date : 'MM/dd/y' | emptyValue }}
+								{{ getRowColumnValue(element, column) | date : 'dd/mm/yyyy' | emptyValue }}
 							</ng-container>
 
 							<ng-container *ngIf="column.columnType === columnTypes.fullDate">

@@ -6,7 +6,7 @@ import { TransactionType, SettingsCurrencyWithDefaults, Rate, UserState, AssetAd
 import { WidgetSettings } from 'model/payment-base.model';
 import { CheckoutSummary, CurrencyView, QuickCheckoutTransactionTypeList } from 'model/payment.model';
 import { WalletItem } from 'model/wallet.model';
-import { Subject, Subscription, distinctUntilChanged, take, takeUntil } from 'rxjs';
+import { Subject, Subscription, distinctUntilChanged, finalize, take, takeUntil } from 'rxjs';
 import { AuthService } from 'services/auth.service';
 import { CommonDataService } from 'services/common-data.service';
 import { ErrorService } from 'services/error.service';
@@ -92,6 +92,7 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
   TRANSACTION_TYPE: typeof TransactionType = TransactionType;
   validData = false;
   mobileSummary = false;
+	maxSellAmountLoading = false;
   currentCurrencySpend: CurrencyView | undefined = undefined;
   currentCurrencyReceive: CurrencyView | undefined = undefined;
   currentTransaction: TransactionType = TransactionType.Buy;
@@ -305,7 +306,23 @@ export class WidgetEmbeddedOverviewComponent implements OnInit, OnDestroy, After
 
   	this.pSubscriptions.add(this.currencySpendField?.valueChanges
   		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
-  		.subscribe(val => this.onCurrenciesUpdated(val, 'Spend')));
+  		.subscribe(val => {
+				if (this.summary?.transactionType === TransactionType.Sell && this.USER) {
+					this.maxSellAmountLoading = true;
+					this.profileService.maxSellAmount(val)
+						.pipe(take(1), takeUntil(this.destroy$), finalize(() => this.maxSellAmountLoading = false))
+						.subscribe(maxSellAmount => {
+							if (!this.settings.ignoreMaxSellAmount) {
+								this.maxSellAmount = maxSellAmount;
+							}
+
+							this.onCurrenciesUpdated(val, 'Spend');
+						});
+				} else {
+					this.onCurrenciesUpdated(val, 'Spend');
+				}
+
+			}));
 
   	this.pSubscriptions.add(this.currencyReceiveField?.valueChanges
   		.pipe(distinctUntilChanged((prev, curr) => prev === curr))
@@ -657,14 +674,13 @@ private loadTransactionsTotal(): void {
   
     if (this.currentTransaction === TransactionType.Sell) {
         if (this.currentCurrencySpend?.maxAmount === 0 || this.maxSellAmount < this.currentCurrencySpend?.maxAmount) {
-					maxAmount = this.maxSellAmount;
-					maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
-					currencyDisplay = this.currentCurrencyReceive?.display;
+
+					maxAmount = maxAmountDisplay = this.maxSellAmount;
+					currencyDisplay = this.currentCurrencySpend?.display;
 
 					const updatedMaxAmountDisplay = this.defaultFee ? (maxAmountDisplay - (maxAmountDisplay/100 * this.defaultFee)) : maxAmountDisplay;
 
 					this.amountSpendErrorMessages['max'] = `Amount exceeds available balance: ${currencyDisplay} ${updatedMaxAmountDisplay}`;
-
         } else {
 					maxAmount = this.currentCurrencySpend?.maxAmount;
 					maxAmountDisplay = calculateDisplayAmount(maxAmount, this.pDepositRate);
@@ -846,14 +862,14 @@ private loadTransactionsTotal(): void {
   	if (!this.pTransactionChanged) {
 
   		if(typeCurrency === 'Spend'){
+				// this.getMaxSellAmount();
+
   			this.currentCurrencySpend = this.pCurrencies.find((x) => x.symbol === currency);
 
   			if(!this.currentCurrencySpend?.fiat){
   				this.checkWalletExisting(currency);
   			}
   		} else if (typeCurrency === 'Receive'){
-				this.getMaxSellAmount();
-
   			this.currentCurrencyReceive = this.pCurrencies.find((x) => x.symbol === currency);
 		
   			if(!this.currentCurrencyReceive?.fiat){
@@ -867,8 +883,9 @@ private loadTransactionsTotal(): void {
 
 	private getMaxSellAmount(): void {
 		if (this.summary?.transactionType === TransactionType.Sell && this.USER) {
+			this.maxSellAmountLoading = true;
 			this.profileService.maxSellAmount(this.currentCurrencySpend.symbol)
-				.pipe(take(1), takeUntil(this.destroy$))
+				.pipe(take(1), takeUntil(this.destroy$), finalize(() => this.maxSellAmountLoading = false))
 				.subscribe(maxSellAmount => {
 					if (!this.settings.ignoreMaxSellAmount) {
 						this.maxSellAmount = maxSellAmount;

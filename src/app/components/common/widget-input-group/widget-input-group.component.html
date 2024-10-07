@@ -10,16 +10,16 @@
             min="0"
             step="0.01"
             placeholder="0.00"
-            [formControlName]="boxFieldName"
             maxlength="14"
+            [formControlName]="boxFieldName"
           />
         </div>
-        <button type="button" class="widget-input__item-select" (click)="showCurrencyList = true">
+        <button type="button" class="widget-input__item-select" [class.disabled]="disabled" (click)="showCurrencyList = true">
             <div class="widget-input__item-select-img">
                 <img 
+                    alt="Currency icon" 
                     [hidden]="!selectedComboValue?.img" 
-                    [src]="selectedComboValue?.img + '.svg'" 
-                    alt="Currency icon">
+                    [src]="selectedComboValue?.img + '.svg'">
             </div>
             <span class="widget-input__item-select-label">{{selectedComboValue?.display}}</span>
             <mat-icon>keyboard_arrow_down</mat-icon>
@@ -32,7 +32,7 @@
     </div>
 </div>
 
-<div class="widget-list__container" *ngIf="showCurrencyList">
+<div *ngIf="showCurrencyList" class="widget-list__container">
     <div class="widget-list__header">
       <div class="widget-list__header-search">
           <mat-form-field appearance="outline">

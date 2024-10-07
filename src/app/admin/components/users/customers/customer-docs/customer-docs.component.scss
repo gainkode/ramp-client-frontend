@@ -6,6 +6,11 @@
   width: 500px; 
 }
 
+.w-900px {
+  width: auto;
+  max-width: 900px;
+}
+
 mat-form-field {
     margin: 0 16px;
     width: calc(100% - 32px) !important;
@@ -36,7 +41,7 @@ mat-form-field {
 
 .docs-wrapper {
   position: relative;
-  min-height: 300px;
+  min-height: 500px;
 
 		&.emptyData:after {
       content: 'No Data';

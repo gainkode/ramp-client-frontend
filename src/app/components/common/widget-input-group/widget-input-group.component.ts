@@ -23,6 +23,7 @@ export class WidgetInputGroupComponent {
   @Input() placeholder = '...';
   @Input() boxFieldName = '';
   @Input() comboFieldName = '';
+	@Input() disabled = false;
   @Input() boxField: AbstractControl | null = null;
   @Input() comboField: AbstractControl | null = null;
   @Input() comboList: CurrencyView[] = [];
