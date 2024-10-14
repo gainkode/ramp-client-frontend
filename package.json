@@ -7,6 +7,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4000 --open",
+    "buildDigitalOcean": "npm install --force",
     "build": "ng build",
     "build-prod": "ng build --configuration=production",
     "test": "jest --coverage",
