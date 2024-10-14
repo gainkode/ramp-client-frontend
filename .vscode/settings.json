@@ -14,5 +14,8 @@
     },
     "[typescript]": {
         "editor.tabSize": 2
-    }
+    },
+    "i18n-ally.localesPaths": [
+      "src/assets/i18n"
+    ]
   }
