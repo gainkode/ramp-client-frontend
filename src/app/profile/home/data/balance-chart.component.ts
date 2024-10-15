@@ -94,7 +94,7 @@ export class ProfileBalanceChartComponent implements OnInit, OnDestroy {
     markers: ApexMarkers = {
     	colors: [EnvService.base_color],
     	shape: 'circle',
-    	radius: 4.5
+    
     };
     gridSettings: ApexGrid = {
     	show: true,
