@@ -4,7 +4,7 @@ import { firstValueFrom, Subscription } from 'rxjs';
 import { AuthService } from 'services/auth.service';
 import { EnvService } from 'services/env.service';
 import { isSumsubVerificationComplete } from 'utils/utils';
-import * as snsWebSdk from '@sumsub/websdk';
+import snsWebSdk from '@sumsub/websdk';
 
 @Component({
   selector: 'app-sumsub-panel',
